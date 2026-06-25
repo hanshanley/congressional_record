@@ -1,0 +1,14 @@
+# Secrets
+.env
+
+# Downloaded data (large)
+data/raw/
+data/manifest.jsonl
+cache/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.DS_Store
