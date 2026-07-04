@@ -1,10 +1,22 @@
 # Secrets
 .env
 
-# Downloaded data (large)
+# Downloaded + generated data (large)
 data/raw/
+data/interim/
+data/processed/
+data/reports/
 data/manifest.jsonl
 cache/
+logs/
+*.log
+
+# Any stray large archives / parquet anywhere
+*.zip
+*.parquet
+
+# Bug-hunter report artifact
+bug-hunter-report.md
 
 # Python
 __pycache__/
