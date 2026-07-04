@@ -1,0 +1,7 @@
+# Analysis pipeline dependencies (the downloader in requirements.txt does not need these).
+pandas>=2.2
+pyarrow>=16
+duckdb>=1.0
+matplotlib>=3.8
+vaderSentiment>=3.3
+better_profanity>=0.7

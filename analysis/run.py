@@ -1,0 +1,116 @@
+#!/usr/bin/env python3
+"""Orchestrate the congressional-comity analysis pipeline.
+
+Subcommands:
+    ingest-hein     Parse the Stanford hein zips into unified turn parquet.
+    ingest-govinfo  Segment downloaded GovInfo CREC granules into turn parquet.
+    aggregate       Score all turns and write the civility metrics table.
+    viz             Render charts from the metrics table.
+    all             ingest-hein -> aggregate -> viz.
+
+Examples
+--------
+    python -m analysis.run ingest-hein --congresses 097 104 114
+    python -m analysis.run aggregate --sentiment
+    python -m analysis.run viz
+    python -m analysis.run all
+"""
+
+from __future__ import annotations
+
+import argparse
+import logging
+from pathlib import Path
+
+LOG = logging.getLogger("analysis.run")
+
+ROOT = Path(__file__).resolve().parent.parent
+DATA = ROOT / "data"
+RAW = DATA / "raw"
+INTERIM = DATA / "interim"
+PROCESSED = DATA / "processed"
+
+
+def _p(args) -> None:
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
+
+
+def cmd_ingest_hein(args) -> int:
+    from analysis.ingest.hein import ingest_hein
+
+    counts = ingest_hein(
+        RAW / "hein-bound.zip" if (RAW / "hein-bound.zip").exists() else None,
+        RAW / "hein-daily.zip" if (RAW / "hein-daily.zip").exists() else None,
+        INTERIM,
+        congresses=args.congresses,
+    )
+    LOG.info("ingested %d congresses; %d total turns", len(counts), sum(counts.values()))
+    return 0
+
+
+def cmd_ingest_govinfo(args) -> int:
+    from analysis.ingest.govinfo import ingest_govinfo
+
+    n = ingest_govinfo(DATA / "manifest.jsonl", DATA, INTERIM)
+    LOG.info("ingested %d GovInfo turns", n)
+    return 0
+
+
+def cmd_aggregate(args) -> int:
+    from analysis.aggregate import score_and_aggregate
+
+    df = score_and_aggregate(
+        INTERIM / "turns", PROCESSED,
+        use_sentiment=args.sentiment,
+        include_procedural=args.include_procedural,
+    )
+    LOG.info("metrics rows: %d", len(df))
+    return 0
+
+
+def cmd_viz(args) -> int:
+    from analysis.viz import render
+
+    render(PROCESSED / "metrics" / "civility_metrics.parquet", DATA)
+    return 0
+
+
+def cmd_all(args) -> int:
+    cmd_ingest_hein(args)
+    cmd_aggregate(args)
+    cmd_viz(args)
+    return 0
+
+
+def main(argv=None) -> int:
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    sub = ap.add_subparsers(dest="cmd", required=True)
+
+    ph = sub.add_parser("ingest-hein")
+    ph.add_argument("--congresses", nargs="+", default=None, help="e.g. 097 104 114 (default: all).")
+    ph.set_defaults(func=cmd_ingest_hein)
+
+    pg = sub.add_parser("ingest-govinfo")
+    pg.set_defaults(func=cmd_ingest_govinfo)
+
+    pa = sub.add_parser("aggregate")
+    pa.add_argument("--sentiment", action="store_true", help="Also compute VADER sentiment (slower).")
+    pa.add_argument("--include-procedural", action="store_true", help="Keep procedural/chair turns.")
+    pa.set_defaults(func=cmd_aggregate)
+
+    pv = sub.add_parser("viz")
+    pv.set_defaults(func=cmd_viz)
+
+    pall = sub.add_parser("all")
+    pall.add_argument("--congresses", nargs="+", default=None)
+    pall.add_argument("--sentiment", action="store_true")
+    pall.add_argument("--include-procedural", action="store_true")
+    pall.set_defaults(func=cmd_all)
+
+    args = ap.parse_args(argv)
+    _p(args)
+    return args.func(args)
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

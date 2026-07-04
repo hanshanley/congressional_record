@@ -111,6 +111,18 @@ def _finalize(acc: Dict[Tuple[int, str, str], Dict[str, float]]) -> pd.DataFrame
                 "party": party,
                 "turns": int(a["turns"]),
                 "words": int(a["n_words"]),
+                # raw sums (kept so viz can re-aggregate across chambers correctly)
+                "comity_hits": int(a["comity_hits"]),
+                "hostility_hits": int(a["hostility_hits"]),
+                "profanity_hits": int(a["profanity_hits"]),
+                "profanity_mild_hits": int(a["profanity_mild"]),
+                "profanity_strong_hits": int(a["profanity_strong"]),
+                "profanity_slurs_hits": int(a["profanity_slurs"]),
+                "outgroup_refs": int(a["outgroup_refs"]),
+                "democrat_party_pej": int(a["democrat_party_pej"]),
+                "directed_comity_hits": int(a["directed_comity_hits"]),
+                "directed_hostility_hits": int(a["directed_hostility_hits"]),
+                # convenience rates at this (congress, chamber, party) granularity
                 "comity_per_1k": per1k(a["comity_hits"]),
                 "hostility_per_1k": per1k(a["hostility_hits"]),
                 "profanity_per_1k": per1k(a["profanity_hits"]),

@@ -95,17 +95,65 @@ hanging.
   Representatives") can differ from its class (e.g. a House proceeding may appear in the
   `SENATE`-numbered page sequence). Filter on `granuleClass` for the chamber.
 
+## Analysis: measuring the decline of comity between the parties
+
+Beyond downloading, this repo includes a reusable **analysis pipeline** (`analysis/`) that
+scores every speaker turn for markers of cross-party civility vs. hostility and produces
+time-series charts. It unifies two corpora into one speaker-turn table:
+
+* **Stanford *hein* corpus** (1873–2017, congresses 043–114) — already speaker-segmented with
+  party labels. Download the `hein-bound.zip` / `hein-daily.zip` from
+  <https://data.stanford.edu/congress_text> into `data/raw/` (extract not required; the
+  ingester reads the zips directly). On macOS these are zip64 >4 GB — use `ditto`/Python
+  `zipfile`, not `unzip`, if you do extract them.
+* **GovInfo CREC** (2017→present) — the `fetch_crec.py` output above; granules are segmented
+  into speaker turns and party is attributed from MODS.
+
+### What it measures
+
+* **Comity/deference** phrases ("my distinguished colleague", "the gentleman from", "I yield to")
+* **Hostility/attack** language and **profanity** (a comprehensive, tiered lexicon: mild/strong/slurs)
+* **Cross-party reference tone** — out-group references resolved to the speaker's party, plus
+  **directed** hostility/comity in the text window around each reference
+* The **"Democrat party"** pejorative marker; optional **VADER sentiment**
+
+All rates are per 1,000 words, grouped by `(congress, chamber, party)`, so both overall trends
+split by party and directed D↔R asymmetry can be plotted.
+
+### Run it
+
+```bash
+uv pip install -r requirements-analysis.txt        # pandas, pyarrow, matplotlib, vader, ...
+
+python -m analysis.run ingest-hein                 # hein zips -> data/interim/turns/*.parquet
+python -m analysis.run ingest-govinfo              # downloaded CREC granules -> turns
+python -m analysis.run aggregate                   # score all turns -> data/processed/metrics/
+python -m analysis.run viz                         # charts -> data/reports/figures/
+
+# or the whole hein pipeline in one go (add --sentiment for VADER):
+python -m analysis.run all
+```
+
+Outputs: `data/processed/metrics/civility_metrics.{parquet,csv}` and PNG charts under
+`data/reports/figures/` (an `overview.png` small-multiples plus one chart per metric). All
+`data/` outputs are git-ignored.
+
 ## Source & attribution
 
 Congressional Record data courtesy of the U.S. Government Publishing Office via GovInfo
 (<https://www.govinfo.gov/>). See the GovInfo API docs at <https://api.govinfo.gov/docs/>.
+The parsed hein corpus is from Gentzkow, Shapiro & Taddy, *Congressional Record for the
+43rd–114th Congresses* (Stanford Libraries, 2018), ODC-BY 1.0.
 
 ## Tests
 
-Offline unit tests (no network) cover MODS parsing and HTML-to-text extraction:
+Offline unit tests (no network) cover MODS parsing, the downloader hardening, and the
+analysis scorers/ingesters:
 
 ```bash
 .venv/bin/python -m pytest tests/ -q   # if pytest installed
-# or
+# or run each file directly:
 .venv/bin/python tests/test_parsing.py
+.venv/bin/python tests/test_hardening.py
+.venv/bin/python tests/test_analysis.py
 ```
