@@ -158,11 +158,16 @@ def available_congresses(zip_path: Path, edition: str) -> list[str]:
     root = "hein-bound" if edition == "bound" else "hein-daily"
     pat = re.compile(rf"^{root}/speeches_(\d{{3}})\.txt$")
     out = []
-    with zipfile.ZipFile(zip_path) as z:
-        for n in z.namelist():
-            m = pat.match(n)
-            if m:
-                out.append(m.group(1))
+    try:
+        with zipfile.ZipFile(zip_path) as z:
+            for n in z.namelist():
+                m = pat.match(n)
+                if m:
+                    out.append(m.group(1))
+    except (zipfile.BadZipFile, OSError) as exc:
+        # e.g. a partial/corrupt download still in progress -> treat as unavailable.
+        LOG.warning("cannot read %s (%s); skipping this edition", zip_path, exc)
+        return []
     return sorted(out)
 
 
