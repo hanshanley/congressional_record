@@ -30,8 +30,8 @@ from typing import Optional, Set
 from tqdm import tqdm
 
 from crec.api import GovInfoClient, GovInfoError, RetryableError
-from crec.download import download_granule, granule_paths
-from crec.enumerate import daterange_months, iter_granules, iter_packages
+from crec.download import download_granule, read_manifest_row
+from crec.enumerate import daterange_months, iter_granules, iter_packages, next_month
 
 LOG = logging.getLogger("crec")
 
@@ -74,11 +74,7 @@ def parse_args(argv: Optional[list[str]] = None) -> argparse.Namespace:
 def resolve_dates(args: argparse.Namespace) -> tuple[str, str]:
     if args.sample_month:
         start = dt.date.fromisoformat(args.sample_month + "-01")
-        if start.month == 12:
-            nxt = start.replace(year=start.year + 1, month=1)
-        else:
-            nxt = start.replace(month=start.month + 1)
-        end = nxt - dt.timedelta(days=1)
+        end = next_month(start) - dt.timedelta(days=1)
         return start.isoformat(), end.isoformat()
     if not args.start:
         raise SystemExit("error: provide --start (and optionally --end) or --sample-month")
@@ -129,8 +125,11 @@ def main(argv: Optional[list[str]] = None) -> int:
     new_count = 0
     skip_count = 0
     fail_count = 0
+    backfill_count = 0
     pkg_count = 0
     consecutive_rate_limits = 0
+    rows_since_flush = 0
+    FLUSH_EVERY = 50
 
     manifest_fh = manifest_path.open("a", encoding="utf-8")
     try:
@@ -152,68 +151,82 @@ def main(argv: Optional[list[str]] = None) -> int:
                         )
                         consecutive_rate_limits = 0
                     except RetryableError:
+                        # Count the failure, then decide whether to abort. Only
+                        # consecutive rate limits count toward the give-up threshold.
+                        fail_count += 1
                         consecutive_rate_limits += 1
                         if consecutive_rate_limits >= RATE_LIMIT_GIVE_UP:
                             raise  # surface to the clean handler below
                         LOG.warning("granule %s rate-limited; continuing.", gid)
-                        fail_count += 1
                         continue
                     except GovInfoError as exc:
+                        consecutive_rate_limits = 0
                         LOG.warning("granule %s failed: %s", gid, exc)
                         fail_count += 1
                         continue
                     except Exception as exc:  # noqa: BLE001 - isolate per-granule failures
+                        consecutive_rate_limits = 0
                         LOG.warning("granule %s unexpected error: %s", gid, exc)
                         fail_count += 1
                         continue
 
-                    if row is None:  # files already on disk (manifest lost)
-                        # Re-read to backfill manifest deterministically.
-                        paths = granule_paths(out_dir, package_id, gid)
-                        row = {
-                            "granuleId": gid,
-                            "packageId": package_id,
-                            "granuleClass": granule.get("granuleClass"),
-                            "title": granule.get("title"),
-                            "dateIssued": granule.get("dateIssued"),
-                            "txt_path": str(paths["txt"].relative_to(out_dir)),
-                            "mods_path": str(paths["mods"].relative_to(out_dir)),
-                            "backfilled": True,
-                        }
+                    is_backfill = row is None
+                    if is_backfill:  # files already on disk (manifest lost)
+                        try:
+                            row = read_manifest_row(package_id, granule, out_dir)
+                        except Exception as exc:  # noqa: BLE001
+                            LOG.warning("granule %s backfill read failed: %s", gid, exc)
+                            fail_count += 1
+                            continue
+
+                    if gid in processed:
+                        # Already indexed (e.g. --overwrite re-download): refresh the
+                        # files but do not append a duplicate manifest row.
                         skip_count += 1
+                        continue
+
+                    manifest_fh.write(json.dumps(row, ensure_ascii=False) + "\n")
+                    rows_since_flush += 1
+                    if rows_since_flush >= FLUSH_EVERY:
+                        manifest_fh.flush()
+                        rows_since_flush = 0
+                    processed.add(gid)
+                    if is_backfill:
+                        backfill_count += 1
                     else:
                         new_count += 1
 
-                    manifest_fh.write(json.dumps(row, ensure_ascii=False) + "\n")
-                    manifest_fh.flush()
-                    processed.add(gid)
-
-                    if args.limit and new_count >= args.limit:
+                    if args.limit is not None and new_count >= args.limit:
                         LOG.info("Reached --limit %d new granules; stopping.", args.limit)
-                        return _summary(pkg_count, new_count, skip_count, fail_count, manifest_path)
+                        return _summary(pkg_count, new_count, skip_count, fail_count, backfill_count, manifest_path)
     except KeyboardInterrupt:
         LOG.warning("Interrupted; progress is saved. Re-run the same command to resume.")
-        _summary(pkg_count, new_count, skip_count, fail_count, manifest_path)
+        _summary(pkg_count, new_count, skip_count, fail_count, backfill_count, manifest_path)
         return 130
     except RetryableError as exc:
-        LOG.error(
-            "Giving up after repeated rate limiting: %s\n"
-            "DEMO_KEY allows only ~50 requests/day. Set a free key in GOVINFO_API_KEY "
-            "(https://api.data.gov/signup/) and re-run -- progress is saved and will resume.",
-            exc,
-        )
-        _summary(pkg_count, new_count, skip_count, fail_count, manifest_path)
+        if using_demo:
+            hint = (
+                "DEMO_KEY allows only ~50 requests/day. Set a free key in GOVINFO_API_KEY "
+                "(https://api.data.gov/signup/) and re-run"
+            )
+        else:
+            hint = (
+                "The API key hit its rate ceiling (~1000/hr). Wait and re-run, or raise "
+                "--min-interval"
+            )
+        LOG.error("Giving up after repeated rate limiting: %s\n%s -- progress is saved and will resume.", exc, hint)
+        _summary(pkg_count, new_count, skip_count, fail_count, backfill_count, manifest_path)
         return 2
     finally:
         manifest_fh.close()
 
-    return _summary(pkg_count, new_count, skip_count, fail_count, manifest_path)
+    return _summary(pkg_count, new_count, skip_count, fail_count, backfill_count, manifest_path)
 
 
-def _summary(pkg_count: int, new: int, skip: int, fail: int, manifest_path: Path) -> int:
+def _summary(pkg_count: int, new: int, skip: int, fail: int, backfill: int, manifest_path: Path) -> int:
     LOG.info(
-        "Done. packages=%d new=%d skipped=%d failed=%d | manifest=%s",
-        pkg_count, new, skip, fail, manifest_path,
+        "Done. packages=%d new=%d backfilled=%d skipped=%d failed=%d | manifest=%s",
+        pkg_count, new, backfill, skip, fail, manifest_path,
     )
     return 0
 

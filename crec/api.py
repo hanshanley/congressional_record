@@ -9,7 +9,7 @@ import logging
 import os
 import time
 from typing import Any, Dict, Iterator, Optional
-from urllib.parse import parse_qs, urlparse
+from urllib.parse import parse_qsl, urlencode, urlparse, urlunparse
 
 import requests
 from tenacity import (
@@ -30,6 +30,21 @@ except Exception:  # pragma: no cover - dotenv is optional at runtime
 LOG = logging.getLogger("crec.api")
 
 BASE_URL = "https://api.govinfo.gov"
+
+
+def _redact(url: str) -> str:
+    """Return ``url`` with any ``api_key`` query value masked, for safe logging."""
+    try:
+        parts = urlparse(url)
+        if not parts.query:
+            return url
+        q = [
+            (k, "REDACTED" if k == "api_key" else v)
+            for k, v in parse_qsl(parts.query, keep_blank_values=True)
+        ]
+        return urlunparse(parts._replace(query=urlencode(q)))
+    except Exception:  # pragma: no cover - never let logging redaction fail a request
+        return url
 
 
 class GovInfoError(Exception):
@@ -96,7 +111,7 @@ class GovInfoClient:
         try:
             resp = self.session.request(method, url, params=params, timeout=self.timeout)
         except requests.RequestException as exc:
-            LOG.warning("Network error for %s: %s", url, exc)
+            LOG.warning("Network error for %s: %s", _redact(url), exc)
             raise
         finally:
             self._last_request = time.monotonic()
@@ -108,27 +123,36 @@ class GovInfoClient:
                     time.sleep(min(30.0, float(retry_after)))
                 except ValueError:
                     pass
-            raise RetryableError(f"429 rate limited for {url}")
+            raise RetryableError(f"429 rate limited for {_redact(url)}")
         if resp.status_code >= 500:
-            raise RetryableError(f"{resp.status_code} server error for {url}")
+            raise RetryableError(f"{resp.status_code} server error for {_redact(url)}")
+        # Non-retryable 4xx (400/401/403/404/406...) must fail fast, not retry: an
+        # invalid api_key (401/403) otherwise triggers a futile 5x backoff storm.
         if resp.status_code == 404:
-            raise GovInfoError(f"404 not found: {url}")
+            raise GovInfoError(f"404 not found: {_redact(url)}")
+        if 400 <= resp.status_code < 500:
+            raise GovInfoError(f"{resp.status_code} client error for {_redact(url)}")
         resp.raise_for_status()
 
         # api.data.gov sometimes returns HTTP 200 with a JSON error body for the
-        # hourly GovInfo rate limit; detect it so we retry instead of silently
-        # treating the page as empty.
+        # hourly GovInfo rate limit; detect it (by parsing, not substring-scanning,
+        # to avoid false positives on data whose value happens to be "error") so we
+        # retry instead of silently treating the page as empty.
         ctype = resp.headers.get("Content-Type", "")
-        if "json" in ctype and b'"error"' in resp.content[:4096]:
+        if "json" in ctype:
             try:
-                err = resp.json().get("error", {})
+                body = resp.json()
             except ValueError:
-                err = {}
-            code = (err.get("code") or "").upper()
-            message = err.get("message") or "unknown API error"
-            if "RATE" in code or "LIMIT" in code:
-                raise RetryableError(f"rate limited ({code}) for {url}: {message}")
-            raise GovInfoError(f"API error ({code}) for {url}: {message}")
+                body = None
+            err = body.get("error") if isinstance(body, dict) else None
+            if err is not None:
+                if isinstance(err, str):
+                    err = {"message": err}
+                code = (err.get("code") or "").upper()
+                message = err.get("message") or "unknown API error"
+                if "RATE" in code or "LIMIT" in code:
+                    raise RetryableError(f"rate limited ({code}) for {_redact(url)}: {message}")
+                raise GovInfoError(f"API error ({code}) for {_redact(url)}: {message}")
         return resp
 
     # ------------------------------------------------------------------ #
@@ -149,6 +173,10 @@ class GovInfoClient:
             return path
         return f"{self.base_url}/{path.lstrip('/')}"
 
+    def _same_host(self, url: str) -> bool:
+        """True if ``url`` targets the configured API host (blocks SSRF/key leak)."""
+        return urlparse(url).netloc == urlparse(self.base_url).netloc
+
     # ------------------------------------------------------------------ #
     # Pagination
     # ------------------------------------------------------------------ #
@@ -160,9 +188,9 @@ class GovInfoClient:
     ) -> Iterator[Dict[str, Any]]:
         """Yield items across all pages of a cursor-paginated GovInfo endpoint.
 
-        Follows the ``nextPage`` link returned by the API until it is null or a
-        page returns no items. ``items_key`` is the JSON array field to iterate
-        (e.g. ``"packages"`` or ``"granules"``).
+        Follows the ``nextPage`` link returned by the API until it is null.
+        ``items_key`` is the JSON array field to iterate (e.g. ``"packages"`` or
+        ``"granules"``).
         """
         params = dict(params or {})
         params.setdefault("offsetMark", "*")
@@ -174,8 +202,14 @@ class GovInfoClient:
             for item in items:
                 yield item
             next_page = data.get("nextPage")
-            if not next_page or not items:
+            # Terminate only when the API says there is no next page. An empty
+            # intermediate page must NOT stop enumeration or we silently truncate.
+            if not next_page:
                 break
-            # nextPage is a full URL already carrying offsetMark; follow it directly.
+            # nextPage is a full URL already carrying offsetMark; follow it directly,
+            # but only if it stays on the trusted host (prevents SSRF / api_key leak).
+            if not self._same_host(next_page):
+                LOG.warning("Refusing cross-host nextPage: %s", _redact(next_page))
+                break
             next_url = next_page
             next_params = None

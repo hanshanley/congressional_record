@@ -22,12 +22,15 @@ Each `manifest.jsonl` row includes: `granuleId`, `packageId`, `granuleClass`
 (`HOUSE` / `SENATE` / `EXTENSIONS` / `DAILYDIGEST` / `FRONTMATTER`), `title`, `dateIssued`,
 `congress`, `session`, `chamber`, the Congressional Record `citation`, the list of
 `member_names` and `bioguide_ids` mentioned, character count, and the relative file paths.
+Rows recovered from files already on disk (when the manifest was lost) carry the same fields
+plus `"backfilled": true`.
 
 ## Coverage
 
 The GovInfo `CREC` digital collection runs from **1994-01-01 to the present**. (Earlier years
 exist only in the scanned *Bound* Congressional Record and are not covered here.) This pipeline
-collects **all sections** of the daily Record — House, Senate, and Extensions of Remarks.
+collects **all sections** of the daily Record by default — `HOUSE`, `SENATE`, `EXTENSIONS`,
+`DAILYDIGEST`, and `FRONTMATTER` (narrow with `--classes`).
 
 ## Setup
 

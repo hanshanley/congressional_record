@@ -13,6 +13,13 @@ LOG = logging.getLogger("crec.enumerate")
 COLLECTION = "CREC"
 
 
+def next_month(d: dt.date) -> dt.date:
+    """Return the first day of the month after ``d``."""
+    if d.month == 12:
+        return d.replace(year=d.year + 1, month=1, day=1)
+    return d.replace(month=d.month + 1, day=1)
+
+
 def iter_packages(
     client: GovInfoClient,
     start_date: str,
@@ -59,10 +66,7 @@ def daterange_months(start_date: str, end_date: str) -> Iterator[tuple[str, str]
     end = dt.date.fromisoformat(end_date)
     cur = start.replace(day=1)
     while cur <= end:
-        if cur.month == 12:
-            nxt = cur.replace(year=cur.year + 1, month=1)
-        else:
-            nxt = cur.replace(month=cur.month + 1)
+        nxt = next_month(cur)
         chunk_start = max(cur, start)
         chunk_end = min(nxt - dt.timedelta(days=1), end)
         yield chunk_start.isoformat(), chunk_end.isoformat()

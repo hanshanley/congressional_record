@@ -14,6 +14,17 @@ from .metadata import parse_mods
 
 LOG = logging.getLogger("crec.download")
 
+# GovInfo package/granule ids are dot/dash/underscore alphanumerics. Enforce this
+# before using them to build filesystem paths so a malicious or malformed id
+# (e.g. containing "../" or "/") cannot escape the output directory.
+_SAFE_ID = re.compile(r"^[A-Za-z0-9._-]+$")
+
+
+def _validate_id(kind: str, value: str) -> str:
+    if not isinstance(value, str) or not _SAFE_ID.match(value):
+        raise GovInfoError(f"unsafe {kind} id (rejected for path safety): {value!r}")
+    return value
+
 
 def html_to_text(html: str) -> str:
     """Extract the plain-text body of a CREC granule HTML rendition.
@@ -24,7 +35,8 @@ def html_to_text(html: str) -> str:
     soup = BeautifulSoup(html, "html.parser")
     pre = soup.find("pre")
     text = pre.get_text() if pre else soup.get_text()
-    # Normalize whitespace: strip trailing spaces, collapse >2 blank lines.
+    # Normalize whitespace: strip trailing spaces, collapse runs of 2+ blank
+    # lines down to a single blank line.
     lines = [ln.rstrip() for ln in text.splitlines()]
     text = "\n".join(lines).strip()
     text = re.sub(r"\n{3,}", "\n\n", text)
@@ -33,6 +45,8 @@ def html_to_text(html: str) -> str:
 
 def granule_paths(out_dir: Path, package_id: str, granule_id: str) -> Dict[str, Path]:
     """Compute output file paths for a granule, partitioned by year/package."""
+    _validate_id("package", package_id)
+    _validate_id("granule", granule_id)
     year = package_id.split("-")[1] if "-" in package_id else "unknown"
     base = out_dir / "raw" / year / package_id
     return {
@@ -40,6 +54,60 @@ def granule_paths(out_dir: Path, package_id: str, granule_id: str) -> Dict[str, 
         "txt": base / f"{granule_id}.txt",
         "mods": base / f"{granule_id}.mods.xml",
     }
+
+
+def build_manifest_row(
+    package_id: str,
+    granule: Dict[str, Any],
+    out_dir: Path,
+    text: str,
+    mods_bytes: bytes,
+    *,
+    backfilled: bool = False,
+) -> Dict[str, Any]:
+    """Assemble the canonical manifest row for a granule from its text + MODS.
+
+    Single source of truth for the manifest schema so the fresh-download and
+    on-disk-backfill paths never drift.
+    """
+    granule_id = granule["granuleId"]
+    paths = granule_paths(out_dir, package_id, granule_id)
+    meta = parse_mods(mods_bytes)
+    row: Dict[str, Any] = {
+        "granuleId": granule_id,
+        "packageId": package_id,
+        "granuleClass": granule.get("granuleClass") or meta.get("granuleClass"),
+        "title": granule.get("title") or meta.get("title"),
+        "dateIssued": granule.get("dateIssued") or meta.get("dateIssued"),
+        "congress": meta.get("congress"),
+        "session": meta.get("session"),
+        "chamber": meta.get("chamber"),
+        "citation": meta.get("citation"),
+        "member_names": meta.get("member_names", []),
+        "bioguide_ids": meta.get("bioguide_ids", []),
+        "char_count": len(text),
+        "txt_path": str(paths["txt"].relative_to(out_dir)),
+        "mods_path": str(paths["mods"].relative_to(out_dir)),
+    }
+    if backfilled:
+        row["backfilled"] = True
+    return row
+
+
+def read_manifest_row(
+    package_id: str,
+    granule: Dict[str, Any],
+    out_dir: Path,
+) -> Dict[str, Any]:
+    """Rebuild a full manifest row for a granule whose files are already on disk.
+
+    Used to recover manifest entries (with the same schema as a fresh download)
+    when the transcript/MODS exist but the manifest was lost.
+    """
+    paths = granule_paths(out_dir, package_id, granule["granuleId"])
+    text = paths["txt"].read_text(encoding="utf-8")
+    mods_bytes = paths["mods"].read_bytes()
+    return build_manifest_row(package_id, granule, out_dir, text, mods_bytes, backfilled=True)
 
 
 def download_granule(
@@ -77,21 +145,4 @@ def download_granule(
     paths["txt"].write_text(text, encoding="utf-8")
     paths["mods"].write_bytes(mods_bytes)
 
-    meta = parse_mods(mods_bytes)
-    row: Dict[str, Any] = {
-        "granuleId": granule_id,
-        "packageId": package_id,
-        "granuleClass": granule.get("granuleClass") or meta.get("granuleClass"),
-        "title": granule.get("title") or meta.get("title"),
-        "dateIssued": granule.get("dateIssued") or meta.get("dateIssued"),
-        "congress": meta.get("congress"),
-        "session": meta.get("session"),
-        "chamber": meta.get("chamber"),
-        "citation": meta.get("citation"),
-        "member_names": meta.get("member_names", []),
-        "bioguide_ids": meta.get("bioguide_ids", []),
-        "char_count": len(text),
-        "txt_path": str(paths["txt"].relative_to(out_dir)),
-        "mods_path": str(paths["mods"].relative_to(out_dir)),
-    }
-    return row
+    return build_manifest_row(package_id, granule, out_dir, text, mods_bytes)

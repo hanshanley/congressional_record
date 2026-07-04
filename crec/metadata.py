@@ -3,8 +3,13 @@
 from __future__ import annotations
 
 import logging
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Iterable, List, Optional
 from xml.etree import ElementTree as ET
+
+try:  # defusedxml guards against entity-expansion ("billion laughs") DoS on remote XML.
+    from defusedxml.ElementTree import fromstring as _safe_fromstring
+except Exception:  # pragma: no cover - fallback if defusedxml is unavailable
+    _safe_fromstring = ET.fromstring
 
 LOG = logging.getLogger("crec.metadata")
 
@@ -15,12 +20,22 @@ def _localname(tag: str) -> str:
     return tag.rsplit("}", 1)[-1]
 
 
-def _find_text(elem: ET.Element, localname: str) -> Optional[str]:
-    """Depth-first search for the first descendant with the given local name."""
+def _first_texts(elem: ET.Element, wanted: Iterable[str]) -> Dict[str, str]:
+    """Single-pass collection of the first non-empty text for each wanted local name.
+
+    Traverses ``elem`` exactly once instead of once per field, returning a map of
+    ``localname -> first non-empty stripped text``.
+    """
+    want = set(wanted)
+    found: Dict[str, str] = {}
     for node in elem.iter():
-        if _localname(node.tag) == localname and node.text and node.text.strip():
-            return node.text.strip()
-    return None
+        if not want:
+            break
+        name = _localname(node.tag)
+        if name in want and node.text and node.text.strip():
+            found[name] = node.text.strip()
+            want.discard(name)
+    return found
 
 
 def _granule_part(root: ET.Element) -> Optional[ET.Element]:
@@ -44,9 +59,8 @@ def parse_members(scope: ET.Element) -> List[Dict[str, str]]:
     for node in scope.iter():
         if _localname(node.tag) != "congMember":
             continue
-        member: Dict[str, str] = {
-            k: v for k, v in node.attrib.items()
-        }  # bioGuideId, chamber, congress, party, role, state
+        # bioGuideId, chamber, congress, party, role, state
+        member: Dict[str, str] = dict(node.attrib)
         # Preferred display name: first-name-first authority form.
         names = {}
         for name in node.iter():
@@ -68,23 +82,31 @@ def parse_mods(xml_bytes: bytes) -> Dict[str, Any]:
     """Parse MODS XML bytes into a flat, JSON-serializable metadata dict."""
     meta: Dict[str, Any] = {}
     try:
-        root = ET.fromstring(xml_bytes)
+        root = _safe_fromstring(xml_bytes)
     except ET.ParseError as exc:
         LOG.warning("MODS parse error: %s", exc)
         return {"mods_parse_error": str(exc)}
 
     granule = _granule_part(root) or root
 
-    meta["granuleClass"] = _find_text(granule, "granuleClass")
-    meta["subGranuleClass"] = _find_text(granule, "subGranuleClass")
-    meta["title"] = _find_text(granule, "searchTitle") or _find_text(granule, "title")
-    meta["congress"] = _find_text(root, "congress")
-    meta["session"] = _find_text(root, "session")
-    meta["volume"] = _find_text(root, "volume")
-    meta["issue"] = _find_text(root, "issue")
-    meta["dateIssued"] = _find_text(root, "dateIssued")
-    meta["pagePrefix"] = _find_text(granule, "pagePrefix")
-    meta["chamber"] = _find_text(granule, "chamber")
+    # Granule-scoped fields in one traversal.
+    g = _first_texts(
+        granule,
+        ("granuleClass", "subGranuleClass", "searchTitle", "title", "pagePrefix", "chamber"),
+    )
+    meta["granuleClass"] = g.get("granuleClass")
+    meta["subGranuleClass"] = g.get("subGranuleClass")
+    meta["title"] = g.get("searchTitle") or g.get("title")
+    meta["pagePrefix"] = g.get("pagePrefix")
+    meta["chamber"] = g.get("chamber")
+
+    # Root-scoped issue-level fields in one traversal.
+    r = _first_texts(root, ("congress", "session", "volume", "issue", "dateIssued"))
+    meta["congress"] = r.get("congress")
+    meta["session"] = r.get("session")
+    meta["volume"] = r.get("volume")
+    meta["issue"] = r.get("issue")
+    meta["dateIssued"] = r.get("dateIssued")
 
     # Congressional Record citation (e.g. "170 Cong. Rec. H5").
     for node in granule.iter():
@@ -102,3 +124,4 @@ def parse_mods(xml_bytes: bytes) -> Dict[str, Any]:
         {m["bioGuideId"] for m in members if m.get("bioGuideId")}
     )
     return meta
+
