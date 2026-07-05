@@ -58,6 +58,13 @@ def parse_args(argv: Optional[list[str]] = None) -> argparse.Namespace:
         help=f"granuleClass values to keep. Default: all ({', '.join(ALL_CLASSES)}).",
     )
     p.add_argument("--out-dir", type=Path, default=DEFAULT_OUT, help="Output directory.")
+    p.add_argument(
+        "--manifest",
+        type=Path,
+        default=None,
+        help="Manifest path (default: <out-dir>/manifest.jsonl). Use distinct manifests "
+        "for parallel workers over disjoint date ranges sharing one --out-dir.",
+    )
     p.add_argument("--api-key", default=None, help="GovInfo API key (else GOVINFO_API_KEY env).")
     p.add_argument(
         "--min-interval",
@@ -110,7 +117,8 @@ def main(argv: Optional[list[str]] = None) -> int:
 
     out_dir: Path = args.out_dir
     out_dir.mkdir(parents=True, exist_ok=True)
-    manifest_path = out_dir / "manifest.jsonl"
+    manifest_path = args.manifest or (out_dir / "manifest.jsonl")
+    manifest_path.parent.mkdir(parents=True, exist_ok=True)
 
     client = GovInfoClient(api_key=args.api_key, min_interval=args.min_interval)
     using_demo = client.api_key == "DEMO_KEY"
