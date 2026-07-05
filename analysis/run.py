@@ -38,12 +38,13 @@ def _p(args) -> None:
 def cmd_ingest_hein(args) -> int:
     from analysis.ingest.hein import ingest_hein
 
-    counts = ingest_hein(
-        RAW / "hein-bound.zip" if (RAW / "hein-bound.zip").exists() else None,
-        RAW / "hein-daily.zip" if (RAW / "hein-daily.zip").exists() else None,
-        INTERIM,
-        congresses=args.congresses,
-    )
+    # Prefer the ditto-extracted bound directory (zip64 the stdlib can't read) if present.
+    bound_dir = RAW / "hein-bound"
+    bound_zip = RAW / "hein-bound.zip"
+    bound = bound_dir if bound_dir.is_dir() else (bound_zip if bound_zip.exists() else None)
+    daily = RAW / "hein-daily.zip" if (RAW / "hein-daily.zip").exists() else None
+
+    counts = ingest_hein(bound, daily, INTERIM, congresses=args.congresses)
     LOG.info("ingested %d congresses; %d total turns", len(counts), sum(counts.values()))
     return 0
 

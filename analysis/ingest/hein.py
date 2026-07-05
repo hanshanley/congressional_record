@@ -46,9 +46,45 @@ def _fmt_date(raw: str) -> str:
     return raw
 
 
-def _read_delimited(z: zipfile.ZipFile, member: str) -> Iterator[list[str]]:
+class _HeinSource:
+    """Read hein members from either a ``.zip`` or an extracted directory.
+
+    The bound corpus is a zip64 archive that Python's ``zipfile`` cannot read once
+    entries pass the 4 GB mark (macOS ``ditto`` extracts it fine); we therefore
+    support pointing at the extracted ``hein-bound/`` directory instead. Member
+    names use the in-zip form ``<root>/<file>`` (e.g. ``hein-bound/043_...txt``).
+    """
+
+    def __init__(self, path: Path) -> None:
+        self.path = Path(path)
+        self.is_zip = self.path.is_file() and zipfile.is_zipfile(self.path)
+        self._zip = zipfile.ZipFile(self.path) if self.is_zip else None
+
+    def open(self, member: str):
+        if self._zip is not None:
+            return self._zip.open(member)
+        # directory: self.path is e.g. data/raw/hein-bound; member is "hein-bound/<file>"
+        return open(self.path.parent / member, "rb")
+
+    def names(self) -> list[str]:
+        if self._zip is not None:
+            return self._zip.namelist()
+        return [f"{self.path.name}/{p.name}" for p in self.path.iterdir() if p.is_file()]
+
+    def close(self) -> None:
+        if self._zip is not None:
+            self._zip.close()
+
+    def __enter__(self) -> "_HeinSource":
+        return self
+
+    def __exit__(self, *exc) -> None:
+        self.close()
+
+
+def _read_delimited(src: "_HeinSource", member: str) -> Iterator[list[str]]:
     """Yield field lists for a pipe-delimited hein file (skipping the header)."""
-    with z.open(member) as fh:
+    with src.open(member) as fh:
         first = True
         for raw in fh:
             if first:  # header
@@ -67,7 +103,7 @@ def _member(edition: str, congress: str, kind: str) -> str:
     return f"{root}/{kind}_{congress}.txt"
 
 
-def _load_speakermap_idx(z: zipfile.ZipFile, edition: str, congress: str) -> Dict[str, Dict[str, str]]:
+def _load_speakermap_idx(z: "_HeinSource", edition: str, congress: str) -> Dict[str, Dict[str, str]]:
     idx: Dict[str, Dict[str, str]] = {}
     member = _member(edition, congress, "speakermap")
     # speakerid|speech_id|lastname|firstname|chamber|state|gender|party|district|nonvoting
@@ -86,7 +122,7 @@ def _load_speakermap_idx(z: zipfile.ZipFile, edition: str, congress: str) -> Dic
     return idx
 
 
-def _load_descr_idx(z: zipfile.ZipFile, edition: str, congress: str) -> Dict[str, Dict[str, str]]:
+def _load_descr_idx(z: "_HeinSource", edition: str, congress: str) -> Dict[str, Dict[str, str]]:
     idx: Dict[str, Dict[str, str]] = {}
     member = _member(edition, congress, "descr")
     # speech_id|chamber|date|number_within_file|speaker|first_name|last_name|state|gender|line_start|line_end|file|char_count|word_count
@@ -109,11 +145,11 @@ def _is_procedural(speaker: str, party: str) -> bool:
     return False
 
 
-def iter_congress_turns(zip_path: Path, edition: str, congress: str) -> Iterator[Dict[str, Any]]:
-    """Yield unified turn dicts for one congress from a hein zip."""
+def iter_congress_turns(src_path: Path, edition: str, congress: str) -> Iterator[Dict[str, Any]]:
+    """Yield unified turn dicts for one congress from a hein zip or extracted dir."""
     source = "hein_bound" if edition == "bound" else "hein_daily"
     cong_int = int(congress)
-    with zipfile.ZipFile(zip_path) as z:
+    with _HeinSource(src_path) as z:
         speakers = _load_speakermap_idx(z, edition, congress)
         descr = _load_descr_idx(z, edition, congress)
         member = _member(edition, congress, "speeches")
@@ -154,37 +190,40 @@ def iter_congress_turns(zip_path: Path, edition: str, congress: str) -> Iterator
             }
 
 
-def available_congresses(zip_path: Path, edition: str) -> list[str]:
+def available_congresses(src_path: Path, edition: str) -> list[str]:
     root = "hein-bound" if edition == "bound" else "hein-daily"
     pat = re.compile(rf"^{root}/speeches_(\d{{3}})\.txt$")
     out = []
     try:
-        with zipfile.ZipFile(zip_path) as z:
-            for n in z.namelist():
+        with _HeinSource(src_path) as z:
+            for n in z.names():
                 m = pat.match(n)
                 if m:
                     out.append(m.group(1))
     except (zipfile.BadZipFile, OSError) as exc:
         # e.g. a partial/corrupt download still in progress -> treat as unavailable.
-        LOG.warning("cannot read %s (%s); skipping this edition", zip_path, exc)
+        LOG.warning("cannot read %s (%s); skipping this edition", src_path, exc)
         return []
     return sorted(out)
 
 
-def plan_editions(bound_zip: Optional[Path], daily_zip: Optional[Path]) -> Dict[str, tuple[str, Path]]:
-    """Return {congress: (edition, zip_path)} choosing daily>=097, bound otherwise."""
+def plan_editions(bound_src: Optional[Path], daily_src: Optional[Path]) -> Dict[str, tuple[str, Path]]:
+    """Return {congress: (edition, path)} choosing daily>=097, bound otherwise.
+
+    ``bound_src``/``daily_src`` may each be a ``.zip`` or an extracted directory.
+    """
     plan: Dict[str, tuple[str, Path]] = {}
-    if bound_zip and bound_zip.exists():
-        for c in available_congresses(bound_zip, "bound"):
+    if bound_src and bound_src.exists():
+        for c in available_congresses(bound_src, "bound"):
             if int(c) <= 96:
-                plan[c] = ("bound", bound_zip)
-    if daily_zip and daily_zip.exists():
-        for c in available_congresses(daily_zip, "daily"):
-            plan[c] = ("daily", daily_zip)  # daily wins for 097+
+                plan[c] = ("bound", bound_src)
+    if daily_src and daily_src.exists():
+        for c in available_congresses(daily_src, "daily"):
+            plan[c] = ("daily", daily_src)  # daily wins for 097+
     # Fill any 097+ gaps (not in daily) from bound if present.
-    if bound_zip and bound_zip.exists():
-        for c in available_congresses(bound_zip, "bound"):
-            plan.setdefault(c, ("bound", bound_zip))
+    if bound_src and bound_src.exists():
+        for c in available_congresses(bound_src, "bound"):
+            plan.setdefault(c, ("bound", bound_src))
     return dict(sorted(plan.items()))
 
 
