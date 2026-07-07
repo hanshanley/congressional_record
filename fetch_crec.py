@@ -37,8 +37,10 @@ LOG = logging.getLogger("crec")
 
 DEFAULT_OUT = Path(__file__).parent / "data"
 ALL_CLASSES = ["HOUSE", "SENATE", "EXTENSIONS", "DAILYDIGEST", "FRONTMATTER"]
-# Abort cleanly if this many granules in a row fail with rate limiting.
-RATE_LIMIT_GIVE_UP = 5
+# Abort cleanly if this many granules in a row fail with rate limiting. Set high so
+# transient hourly-quota exhaustion is ridden out via per-request backoff rather than
+# aborting the run (which would waste quota re-enumerating on restart).
+RATE_LIMIT_GIVE_UP = 200
 
 
 def parse_args(argv: Optional[list[str]] = None) -> argparse.Namespace:

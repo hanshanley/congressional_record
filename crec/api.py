@@ -92,8 +92,8 @@ class GovInfoClient:
 
     @retry(
         retry=retry_if_exception_type((RetryableError, requests.RequestException)),
-        wait=wait_exponential(multiplier=2, min=2, max=30),
-        stop=stop_after_attempt(5),
+        wait=wait_exponential(multiplier=2, min=2, max=90),
+        stop=stop_after_attempt(12),
         before_sleep=before_sleep_log(LOG, logging.WARNING),
         reraise=True,
     )
