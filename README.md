@@ -107,7 +107,10 @@ time-series charts. It unifies two corpora into one speaker-turn table:
   ingester reads the zips directly). On macOS these are zip64 >4 GB — use `ditto`/Python
   `zipfile`, not `unzip`, if you do extract them.
 * **GovInfo CREC** (2017→present) — the `fetch_crec.py` output above; granules are segmented
-  into speaker turns and party is attributed from MODS.
+  into speaker turns and party is attributed from MODS. For a **much faster** bulk load that
+  bypasses the API's rate limit, use `ingest-govinfo-bulk` (below), which downloads whole-day
+  package zips directly from `www.govinfo.gov/content/pkg` (no API key, not rate-limited),
+  parses each day's MODS per granule, and deletes each zip after ingest.
 
 ### What it measures
 
@@ -126,7 +129,7 @@ split by party and directed D↔R asymmetry can be plotted.
 uv pip install -r requirements-analysis.txt        # pandas, pyarrow, matplotlib, vader, ...
 
 python -m analysis.run ingest-hein                 # hein zips -> data/interim/turns/*.parquet
-python -m analysis.run ingest-govinfo              # downloaded CREC granules -> turns
+python -m analysis.run ingest-govinfo-bulk         # 2017-present via day-zips (fast, no rate limit)
 python -m analysis.run aggregate                   # score all turns -> data/processed/metrics/
 python -m analysis.run viz                         # charts -> data/reports/figures/
 

@@ -7,6 +7,8 @@ data/interim/
 data/processed/
 data/reports/
 data/manifest.jsonl
+data/manifest_*.jsonl
+data/bulk/
 cache/
 logs/
 *.log
@@ -25,3 +27,4 @@ __pycache__/
 venv/
 .DS_Store
 run_full_when_ready.sh
+scripts/

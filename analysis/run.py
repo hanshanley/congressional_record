@@ -57,6 +57,20 @@ def cmd_ingest_govinfo(args) -> int:
     return 0
 
 
+def cmd_ingest_govinfo_bulk(args) -> int:
+    """Fast GovInfo ingest via whole-day package zips (no API rate limit)."""
+    from crec.api import GovInfoClient
+    from crec.enumerate import iter_packages
+    from analysis.ingest.govinfo_bulk import run_bulk
+
+    client = GovInfoClient(min_interval=0.0)
+    pkgs = [p["packageId"] for p in iter_packages(client, args.start, args.end)]
+    LOG.info("enumerated %d CREC packages %s..%s", len(pkgs), args.start, args.end)
+    n = run_bulk(pkgs, DATA / "bulk", INTERIM, workers=args.workers)
+    LOG.info("bulk-ingested %d GovInfo turns", n)
+    return 0
+
+
 def cmd_aggregate(args) -> int:
     from analysis.aggregate import score_and_aggregate
 
@@ -93,6 +107,12 @@ def main(argv=None) -> int:
 
     pg = sub.add_parser("ingest-govinfo")
     pg.set_defaults(func=cmd_ingest_govinfo)
+
+    pgb = sub.add_parser("ingest-govinfo-bulk", help="Fast ingest via day-zips (no API rate limit).")
+    pgb.add_argument("--start", default="2017-01-01")
+    pgb.add_argument("--end", default="2026-12-31")
+    pgb.add_argument("--workers", type=int, default=12)
+    pgb.set_defaults(func=cmd_ingest_govinfo_bulk)
 
     pa = sub.add_parser("aggregate")
     pa.add_argument("--sentiment", action="store_true", help="Also compute VADER sentiment (slower).")
