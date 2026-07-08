@@ -1,30 +1,50 @@
-# Secrets
+# ---- Secrets ----
 .env
 
-# Downloaded + generated data (large)
+# ---- Downloaded & generated data (large; regenerable) ----
 data/raw/
 data/interim/
 data/processed/
 data/reports/
+data/bulk/
 data/manifest.jsonl
 data/manifest_*.jsonl
-data/bulk/
 cache/
-logs/
-*.log
 
-# Any stray large archives / parquet anywhere
+# Stray large archives / parquet anywhere
 *.zip
 *.parquet
 
-# Bug-hunter report artifact
-bug-hunter-report.md
+# ---- Logs ----
+logs/
+*.log
 
-# Python
+# ---- Reports, scratch & run metadata (not source) ----
+bug-hunter-report.md
+*-report.md
+scripts/
+run_full_when_ready.sh
+*.tmp
+*.bak
+*.orig
+scratch/
+notes.md
+TODO.local.md
+
+# ---- Python ----
 __pycache__/
-*.pyc
+*.py[cod]
+*.egg-info/
 .venv/
 venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# ---- Editor / OS ----
 .DS_Store
-run_full_when_ready.sh
-scripts/
+.vscode/
+.idea/
+*.swp
