@@ -73,7 +73,8 @@ class _Lexicon:
         self.phrase_re = _phrase_regex(phrases)
 
     def count(self, tokens: Counter, text: str) -> int:
-        n = sum(tokens[w] for w in self.singles if w in tokens)
+        # Intersect with the (usually small) token set instead of scanning all singles.
+        n = sum(tokens[w] for w in self.singles.intersection(tokens))
         if self.phrase_re is not None and text:
             n += len(self.phrase_re.findall(text))
         return n
@@ -117,25 +118,26 @@ class Scorers:
                 merged.append([s, e])
         return " ".join(text[s:e] for s, e in merged)
 
-    def _outgroup_spans(self, text_lower: str, party: str) -> List[Tuple[int, int]]:
-        spans: List[Tuple[int, int]] = []
-        if self.outgroup_idiom.phrase_re is not None:
-            spans += [m.span() for m in self.outgroup_idiom.phrase_re.finditer(text_lower)]
-        outtok = _OUTPARTY_TOKENS.get(party)
-        if outtok:
-            for m in _TOKEN_RE.finditer(text_lower):
-                if m.group() in outtok:
-                    spans.append(m.span())
-        return spans
+    def _idiom_spans(self, text_lower: str) -> List[Tuple[int, int]]:
+        if self.outgroup_idiom.phrase_re is None:
+            return []
+        return [m.span() for m in self.outgroup_idiom.phrase_re.finditer(text_lower)]
 
     def score_turn(self, text: str, party: str) -> Dict[str, float]:
         text = text or ""
         low = text.lower()
-        tokens = Counter(_TOKEN_RE.findall(low))
-        n_words = sum(tokens.values())
+        # Single tokenization pass: build the token Counter AND the out-party name
+        # spans from the same match list (avoids a second full-text regex scan).
+        matches = list(_TOKEN_RE.finditer(low))
+        tokens: Counter = Counter(m.group() for m in matches)
+        n_words = len(matches)
+
+        outtok = _OUTPARTY_TOKENS.get(party)
+        spans: List[Tuple[int, int]] = self._idiom_spans(low)
+        if outtok:
+            spans += [m.span() for m in matches if m.group() in outtok]
 
         prof = {tier: lex.count(tokens, low) for tier, lex in self.profanity.items()}
-        spans = self._outgroup_spans(low, party)
         win = self._window_text(low, spans)
         win_tokens = Counter(_TOKEN_RE.findall(win)) if win else Counter()
 
@@ -148,7 +150,8 @@ class Scorers:
             "profanity_slurs": prof.get("slurs", 0),
             "profanity_hits": sum(prof.values()),
             "outgroup_refs": len(spans),
-            "democrat_party_pej": len(_DEMOCRAT_PARTY_PEJ.findall(low)),
+            # Only run the pejorative regex when the token "democrat" is present.
+            "democrat_party_pej": len(_DEMOCRAT_PARTY_PEJ.findall(low)) if "democrat" in tokens else 0,
             "directed_comity_hits": self.comity.count(win_tokens, win),
             "directed_hostility_hits": self.hostility.count(win_tokens, win),
         }

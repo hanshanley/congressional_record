@@ -12,33 +12,35 @@ from __future__ import annotations
 import concurrent.futures as cf
 import io
 import logging
-import os
+import re
 import subprocess
 import threading
 import zipfile
 from pathlib import Path
 from typing import Any, Dict, Iterator, List, Optional
+
+try:  # defusedxml guards against entity-expansion DoS on remote MODS.
+    from defusedxml.ElementTree import fromstring as _xml_fromstring
+except Exception:  # pragma: no cover
+    from xml.etree.ElementTree import fromstring as _xml_fromstring
 from xml.etree import ElementTree as ET
 
 import pyarrow as pa
-import pyarrow.parquet as pq
 
-from analysis.ingest.hein import _ARROW_SCHEMA
-from analysis.ingest.schema import normalize_chamber
-from analysis.ingest.govinfo import (
-    _PROCEDURAL_SPEAKER,
-    _congress_from_date,
-    _segment,
-    _speaker_surname,
-    _strip_header,
-    _surname,
+from analysis.ingest.schema import (
+    ARROW_SCHEMA,
+    congress_from_year,
+    normalize_chamber,
 )
-from analysis.normalize.parties import normalize_party
+from analysis.ingest.govinfo import build_turns, normalize_members, _strip_header
 from crec.download import html_to_text
 
 LOG = logging.getLogger("analysis.ingest.govinfo_bulk")
 
 CONTENT_URL = "https://www.govinfo.gov/content/pkg/{pkg}.zip"
+# GovInfo CREC package ids are exactly CREC-YYYY-MM-DD; validate before building
+# URLs / filesystem paths from them (defense-in-depth).
+_PKG_RE = re.compile(r"^CREC-\d{4}-\d{2}-\d{2}$")
 
 
 def _localname(tag: str) -> str:
@@ -46,7 +48,8 @@ def _localname(tag: str) -> str:
 
 
 def _members_of(scope: ET.Element) -> List[Dict[str, str]]:
-    out: List[Dict[str, str]] = []
+    """Normalized member list for one constituent's congMember elements."""
+    raw: List[Dict[str, str]] = []
     for node in scope.iter():
         if _localname(node.tag) != "congMember":
             continue
@@ -56,14 +59,14 @@ def _members_of(scope: ET.Element) -> List[Dict[str, str]]:
             if _localname(nm.tag) == "name" and nm.text and nm.text.strip():
                 names[nm.attrib.get("type", "")] = nm.text.strip()
         m["name"] = names.get("authority-fnf") or names.get("parsed") or ""
-        out.append(m)
-    return out
+        raw.append(m)
+    return normalize_members(raw)
 
 
 def parse_package_mods(mods_bytes: bytes) -> Dict[str, Dict[str, Any]]:
     """Map granuleId -> {granuleClass, chamber, members[]} from a package mods.xml."""
     try:
-        root = ET.fromstring(mods_bytes)
+        root = _xml_fromstring(mods_bytes)
     except ET.ParseError as exc:
         LOG.warning("package mods parse error: %s", exc)
         return {}
@@ -100,7 +103,10 @@ def _turns_from_zip(zip_bytes: bytes, pkg: str) -> Iterator[Dict[str, Any]]:
         return
     gmap = parse_package_mods(z.read(mods_name))
     date = pkg.replace("CREC-", "")  # YYYY-MM-DD
-    congress = _congress_from_date(date)
+    try:
+        congress = congress_from_year(int(date[:4]))
+    except (TypeError, ValueError):
+        return
     htm_names = {n.rsplit("/", 1)[-1][:-4]: n for n in names if n.endswith(".htm")}
 
     for gid, info in gmap.items():
@@ -114,44 +120,16 @@ def _turns_from_zip(zip_bytes: bytes, pkg: str) -> Iterator[Dict[str, Any]]:
         text = _strip_header(html_to_text(html))
         if not text:
             continue
-        members = info.get("members", [])
-        by_surname = {}
-        for m in members:
-            sn = _surname(m.get("name", ""))
-            if sn:
-                by_surname[sn] = m
-        sole = members[0] if len(members) == 1 else None
         chamber = normalize_chamber(info.get("granuleClass") or info.get("chamber"))
-
-        for i, (marker, body) in enumerate(_segment(text)):
-            if not body:
-                continue
-            procedural = bool(marker) and bool(_PROCEDURAL_SPEAKER.match(marker))
-            m = {}
-            if marker and not procedural:
-                m = by_surname.get(_speaker_surname(marker), {})
-            if not m and sole is not None and not procedural:
-                m = sole
-            party = normalize_party(m.get("party")) if m else "other"
-            yield {
-                "turn_id": f"crec:{gid}#{i}",
-                "source": "govinfo",
-                "date": date,
-                "congress": congress,
-                "chamber": chamber,
-                "speaker_name": marker or m.get("name", ""),
-                "speaker_id": "",
-                "bioguide": m.get("bioGuideId", ""),
-                "party": party,
-                "state": m.get("state", ""),
-                "word_count": len(body.split()),
-                "is_procedural": procedural,
-                "text": body,
-            }
+        # Same segmentation + attribution as the manifest-based path.
+        yield from build_turns(text, info.get("members", []), gid, date, congress, chamber)
 
 
 def _download(pkg: str, dest: Path) -> Optional[Path]:
     """Download a package zip via curl (uses system CA certs, unlike urllib)."""
+    if not _PKG_RE.match(pkg):
+        LOG.warning("refusing malformed package id: %r", pkg)
+        return None
     url = CONTENT_URL.format(pkg=pkg)
     try:
         subprocess.run(
@@ -180,17 +158,20 @@ def run_bulk(
     bulk_dir.mkdir(parents=True, exist_ok=True)
     turns_dir = out_dir / "turns"
     turns_dir.mkdir(parents=True, exist_ok=True)
+    pkg_list = [p for p in pkg_list if _PKG_RE.match(p)]
 
     # Parquet writers per congress (serialized via lock).
-    writers: Dict[int, pq.ParquetWriter] = {}
+    writers: Dict[int, "pq.ParquetWriter"] = {}
     lock = threading.Lock()
     total = 0
 
-    def get_writer(congress: int) -> pq.ParquetWriter:
+    import pyarrow.parquet as pq  # local import: only needed for the writer handle
+
+    def get_writer(congress: int) -> "pq.ParquetWriter":
         w = writers.get(congress)
         if w is None:
             p = turns_dir / f"govinfo_bulk_{congress:03d}.parquet"
-            w = pq.ParquetWriter(p, _ARROW_SCHEMA, compression="zstd")
+            w = pq.ParquetWriter(p, ARROW_SCHEMA, compression="zstd")
             writers[congress] = w
         return w
 
@@ -204,13 +185,13 @@ def run_bulk(
             rows_by_c: Dict[int, List[Dict[str, Any]]] = {}
             for t in _turns_from_zip(data, pkg):
                 rows_by_c.setdefault(t["congress"], []).append(t)
-            n = 0
+            # Build Arrow tables OUTSIDE the lock; hold it only for write_table.
+            tables = {c: pa.Table.from_pylist(rows, schema=ARROW_SCHEMA)
+                      for c, rows in rows_by_c.items() if rows}
+            n = sum(len(rows) for rows in rows_by_c.values())
             with lock:
-                for c, rows in rows_by_c.items():
-                    if not rows:
-                        continue
-                    get_writer(c).write_table(pa.Table.from_pylist(rows, schema=_ARROW_SCHEMA))
-                    n += len(rows)
+                for c, table in tables.items():
+                    get_writer(c).write_table(table)
             return n
         finally:
             try:

@@ -17,23 +17,29 @@ from __future__ import annotations
 import json
 import logging
 import re
-import sys
 from pathlib import Path
-from typing import Any, Dict, Iterator, List, Optional, Tuple
+from typing import Any, Dict, Iterator, List, Tuple
 
-# Reuse the hein parquet writer + schema and the crec MODS parser.
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
-from analysis.ingest.hein import _ARROW_SCHEMA, _write_parquet  # noqa: E402
-from analysis.ingest.schema import normalize_chamber  # noqa: E402
-from analysis.normalize.parties import normalize_party  # noqa: E402
-from crec.metadata import parse_mods  # noqa: E402
+from analysis.ingest.schema import (
+    congress_from_year,
+    normalize_chamber,
+    write_turns_parquet,
+)
+from analysis.normalize.parties import normalize_party
+from crec.metadata import parse_mods
 
 LOG = logging.getLogger("analysis.ingest.govinfo")
+
+# A surname token (allows internal apostrophes/hyphens, e.g. O'BRIEN, RUIZ-... and
+# mixed case like McCONNELL); 1-3 space-separated tokens cover multi-word surnames
+# like "VAN HOLLEN" or "WASSERMAN SCHULTZ". No '.' so a token can't absorb the
+# sentence-ending period and spill into the next word.
+_SURNAME = r"[A-Z][A-Za-z'\u2019-]+(?:\s+[A-Z][A-Za-z'\u2019-]+){0,2}"
 
 # Start-of-turn speaker markers at the beginning of a line.
 _SPEAKER_RE = re.compile(
     r"(?m)^\s{0,4}("
-    r"(?:Mr|Mrs|Ms|Miss)\.\s+[A-Z][A-Za-z.'\u2019-]+(?:\s+of\s+[A-Z][a-zA-Z]+)?"
+    rf"(?:Mr|Mrs|Ms|Miss)\.\s+{_SURNAME}(?:\s+of\s+[A-Z][a-zA-Z]+)?"
     r"|The\s+(?:SPEAKER(?:\s+pro\s+tempore)?|PRESIDING\s+OFFICER|(?:VICE\s+)?PRESIDENT"
     r"|ACTING\s+PRESIDENT(?:\s+pro\s+tempore)?|CHIEF\s+JUSTICE|CLERK|Acting\s+CHAIR|CHAIR(?:MAN|WOMAN)?)"
     r")\.\s",
@@ -49,16 +55,12 @@ _HEADER_LINE = re.compile(
 
 
 def _congress_from_date(date_str: str) -> int:
-    """Derive the Congress number from an ISO date (reliable for CREC, unlike MODS).
-
-    Congress N runs [1789+2(N-1), +~2yrs]. Good to the year; the Jan-1/2 edge of a
-    new congress is negligible for aggregation.
-    """
+    """Congress number from an ISO date, or 0 if the year can't be parsed."""
     try:
         year = int(date_str[:4])
     except (TypeError, ValueError):
         return 0
-    return (year - 1789) // 2 + 1
+    return congress_from_year(year)
 
 
 def _strip_header(text: str) -> str:
@@ -80,25 +82,108 @@ def _surname(name: str) -> str:
 
 
 def _speaker_surname(marker: str) -> str:
-    """Surname (UPPER) from a matched speaker marker like 'Mr. SMITH of Texas'."""
-    m = re.match(r"(?:Mr|Mrs|Ms|Miss)\.\s+([A-Z][A-Za-z.'\u2019-]+)", marker.strip())
+    """Surname (UPPER) from a matched speaker marker.
+
+    Captures multi-word surnames ("Mr. VAN HOLLEN of Maryland" -> "VAN HOLLEN")
+    by taking everything after the honorific up to an ``of <State>`` clause.
+    """
+    m = re.match(rf"(?:Mr|Mrs|Ms|Miss)\.\s+({_SURNAME})", marker.strip())
     return m.group(1).upper() if m else ""
 
 
-def _members_index(mods_bytes: bytes) -> Dict[str, Dict[str, str]]:
-    """surname(UPPER) -> {party, bioguide, name, state} from MODS congMembers."""
-    meta = parse_mods(mods_bytes)
+def _index_members(members: List[Dict[str, str]]) -> Dict[str, Dict[str, str]]:
+    """Index normalized members by surname AND by last surname token for lookup.
+
+    Members are dicts with keys ``party``/``bioguide``/``name``/``state``. Indexing
+    under both the full surname ("VAN HOLLEN") and its last token ("HOLLEN") lets a
+    marker match members whose stored name is first-name-first ("Chris Van Hollen").
+    """
     idx: Dict[str, Dict[str, str]] = {}
-    for m in meta.get("members", []):
+    for m in members:
         sn = _surname(m.get("name", ""))
-        if sn:
-            idx[sn] = {
+        if not sn:
+            continue
+        idx.setdefault(sn, m)
+        last = sn.split()[-1]
+        idx.setdefault(last, m)
+    return idx
+
+
+def _match_member(marker: str, index: Dict[str, Dict[str, str]]) -> Dict[str, str]:
+    """Resolve a speaker marker to a member via full then last-token surname."""
+    sn = _speaker_surname(marker)
+    if not sn:
+        return {}
+    return index.get(sn) or index.get(sn.split()[-1], {})
+
+
+def build_turns(
+    text: str,
+    members: List[Dict[str, str]],
+    gid: str,
+    date: str,
+    congress: int,
+    chamber: str,
+) -> Iterator[Dict[str, Any]]:
+    """Segment a granule's (header-stripped) text into unified turn dicts.
+
+    Shared by both GovInfo ingest paths (manifest-based and bulk day-zip) so
+    segmentation and party attribution stay identical. ``members`` is a list of
+    normalized dicts with keys ``party``/``bioguide``/``name``/``state``.
+    """
+    index = _index_members(members)
+    sole = members[0] if len(members) == 1 else None
+    for i, (marker, body) in enumerate(_segment(text)):
+        if not body:
+            continue
+        procedural = bool(marker) and bool(_PROCEDURAL_SPEAKER.match(marker))
+        info: Dict[str, str] = {}
+        if marker and not procedural:
+            info = _match_member(marker, index)
+        # Attribute to the sole member only for a real (non-empty) marker; never
+        # attribute the pre-first-marker preamble (boilerplate) to a member.
+        if not info and sole is not None and marker and not procedural:
+            info = sole
+        party = normalize_party(info.get("party")) if info else "other"
+        yield {
+            "turn_id": f"crec:{gid}#{i}",
+            "source": "govinfo",
+            "date": date,
+            "congress": congress,
+            "chamber": chamber,
+            "speaker_name": marker or info.get("name", ""),
+            "speaker_id": "",
+            "bioguide": info.get("bioguide", ""),
+            "party": party,
+            "state": info.get("state", ""),
+            "word_count": len(body.split()),
+            "is_procedural": procedural,
+            "text": body,
+        }
+
+
+def normalize_members(raw_members: List[Dict[str, str]]) -> List[Dict[str, str]]:
+    """Normalize raw MODS congMember dicts to the shared member schema.
+
+    Maps the raw MODS attribute keys (``bioGuideId``) to our lowercase keys so both
+    ingest paths feed :func:`build_turns` identical member dicts.
+    """
+    out: List[Dict[str, str]] = []
+    for m in raw_members:
+        out.append(
+            {
                 "party": m.get("party", ""),
                 "bioguide": m.get("bioGuideId", ""),
                 "name": m.get("name", ""),
                 "state": m.get("state", ""),
             }
-    return idx
+        )
+    return out
+
+
+def _members_from_mods(mods_bytes: bytes) -> List[Dict[str, str]]:
+    """Normalized member list from a granule (or package-constituent) MODS blob."""
+    return normalize_members(parse_mods(mods_bytes).get("members", []))
 
 
 def _segment(text: str) -> List[Tuple[str, str]]:
@@ -126,41 +211,15 @@ def iter_granule_turns(row: Dict[str, Any], data_dir: Path) -> Iterator[Dict[str
     mods_path = data_dir / row["mods_path"]
     if not txt_path.exists():
         return
-    text = txt_path.read_text(encoding="utf-8", errors="replace")
-    text = _strip_header(text)
-    members = _members_index(mods_path.read_bytes()) if mods_path.exists() else {}
-    sole = next(iter(members.values())) if len(members) == 1 else None
+    text = _strip_header(txt_path.read_text(encoding="utf-8", errors="replace"))
+    members = _members_from_mods(mods_path.read_bytes()) if mods_path.exists() else []
 
     date = (row.get("dateIssued") or "").strip()
     congress = _congress_from_date(date)
+    if congress <= 0:  # unparseable date -> skip rather than form a spurious congress-0 group
+        return
     chamber = normalize_chamber(row.get("granuleClass") or row.get("chamber"))
-    gid = row["granuleId"]
-
-    for i, (marker, body) in enumerate(_segment(text)):
-        if not body:
-            continue
-        procedural = bool(marker) and bool(_PROCEDURAL_SPEAKER.match(marker))
-        info: Dict[str, str] = {}
-        if marker and not procedural:
-            info = members.get(_speaker_surname(marker), {})
-        if not info and sole is not None and not procedural:
-            info = sole  # single-member granule: attribute to that member
-        party = normalize_party(info.get("party")) if info else "other"
-        yield {
-            "turn_id": f"crec:{gid}#{i}",
-            "source": "govinfo",
-            "date": date,
-            "congress": congress,
-            "chamber": chamber,
-            "speaker_name": marker or info.get("name", ""),
-            "speaker_id": "",
-            "bioguide": info.get("bioguide", ""),
-            "party": party,
-            "state": info.get("state", ""),
-            "word_count": len(body.split()),
-            "is_procedural": procedural,
-            "text": body,
-        }
+    yield from build_turns(text, members, row["granuleId"], date, congress, chamber)
 
 
 def _iter_manifest(manifest_path: Path) -> Iterator[Dict[str, Any]]:
@@ -185,17 +244,19 @@ def ingest_govinfo(manifest_path: Path, data_dir: Path, out_dir: Path) -> int:
     by_congress: Dict[int, List[Dict[str, Any]]] = {}
     for row in _iter_manifest(manifest_path):
         c = _congress_from_date((row.get("dateIssued") or "").strip())
+        if c <= 0:  # unparseable date -> skip
+            continue
         by_congress.setdefault(c, []).append(row)
 
     turns_dir = out_dir / "turns"
     total = 0
     for congress, rows in sorted(by_congress.items()):
-        def gen() -> Iterator[Dict[str, Any]]:
+        def gen(rows=rows) -> Iterator[Dict[str, Any]]:
             for r in rows:
                 yield from iter_granule_turns(r, data_dir)
 
         out_path = turns_dir / f"govinfo_{congress:03d}.parquet"
-        n = _write_parquet(out_path, gen())
+        n = write_turns_parquet(out_path, gen())
         total += n
         LOG.info("GovInfo congress %03d: %d turns -> %s", congress, n, out_path.name)
     return total

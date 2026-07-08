@@ -141,6 +141,10 @@ Outputs: `data/processed/metrics/civility_metrics.{parquet,csv}` and PNG charts 
 `data/reports/figures/` (an `overview.png` small-multiples plus one chart per metric). All
 `data/` outputs are git-ignored.
 
+Charts use a shared **Substack-style** plotting toolkit (`analysis/plotting/`, matched to the
+`uk_decline` portfolio look) — see [`docs/PLOTTING.md`](docs/PLOTTING.md) for the palette,
+helpers, and how to reuse it.
+
 ## Source & attribution
 
 Congressional Record data courtesy of the U.S. Government Publishing Office via GovInfo

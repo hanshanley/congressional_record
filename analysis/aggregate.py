@@ -11,11 +11,12 @@ from __future__ import annotations
 import logging
 from collections import defaultdict
 from pathlib import Path
-from typing import Dict, Iterable, List, Optional, Tuple
+from typing import Dict, List, Tuple
 
 import pandas as pd
 import pyarrow.parquet as pq
 
+from analysis.ingest.schema import year_from_congress
 from analysis.score.scorers import Scorers
 
 LOG = logging.getLogger("analysis.aggregate")
@@ -30,6 +31,29 @@ _SUM_KEYS = [
 ]
 
 _READ_COLS = ["congress", "chamber", "party", "is_procedural", "text"]
+
+
+def _select_turn_files(turns_dir: Path) -> List[Path]:
+    """Choose one turn file per source-congress, preferring bulk GovInfo output.
+
+    Both ``govinfo_<c>.parquet`` (manifest path) and ``govinfo_bulk_<c>.parquet``
+    (day-zip path) can exist for the same congress with identical turn_ids; scoring
+    both would double-count every 2017+ turn. Prefer the bulk file and drop the
+    matching manifest-based one.
+    """
+    files = sorted(turns_dir.glob("*.parquet"))
+    bulk_congresses = {
+        f.stem[len("govinfo_bulk_"):] for f in files if f.name.startswith("govinfo_bulk_")
+    }
+    selected: List[Path] = []
+    for f in files:
+        if f.name.startswith("govinfo_") and not f.name.startswith("govinfo_bulk_"):
+            congress = f.stem[len("govinfo_"):]
+            if congress in bulk_congresses:
+                LOG.info("skipping %s (superseded by govinfo_bulk_%s)", f.name, congress)
+                continue
+        selected.append(f)
+    return selected
 
 
 def _iter_batches(path: Path, batch_size: int = 10_000):
@@ -55,7 +79,7 @@ def score_and_aggregate(
         lambda: {k: 0.0 for k in _SUM_KEYS}
     )
 
-    files = sorted(turns_dir.glob("*.parquet"))
+    files = _select_turn_files(turns_dir)
     if not files:
         raise FileNotFoundError(f"no turn parquet files in {turns_dir}")
 
@@ -106,7 +130,7 @@ def _finalize(acc: Dict[Tuple[int, str, str], Dict[str, float]]) -> pd.DataFrame
         rows.append(
             {
                 "congress": congress,
-                "year": 1789 + 2 * (congress - 1),  # Congress N convenes in this year
+                "year": year_from_congress(congress),  # Congress N convenes in this year
                 "chamber": chamber,
                 "party": party,
                 "turns": int(a["turns"]),

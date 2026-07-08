@@ -20,10 +20,10 @@ import zipfile
 from pathlib import Path
 from typing import Any, Dict, Iterator, Optional
 
-import pyarrow as pa
-import pyarrow.parquet as pq
-
-from analysis.ingest.schema import TURN_COLUMNS, normalize_chamber
+from analysis.ingest.schema import (
+    normalize_chamber,
+    write_turns_parquet,
+)
 from analysis.normalize.parties import normalize_party
 
 LOG = logging.getLogger("analysis.ingest.hein")
@@ -139,10 +139,9 @@ def _load_descr_idx(z: "_HeinSource", edition: str, congress: str) -> Dict[str, 
     return idx
 
 
-def _is_procedural(speaker: str, party: str) -> bool:
-    if _PROCEDURAL_RE.match(speaker or ""):
-        return True
-    return False
+def _is_procedural(speaker: str) -> bool:
+    """True if the speaker label denotes a procedural/chair role, not a member."""
+    return bool(_PROCEDURAL_RE.match(speaker or ""))
 
 
 def iter_congress_turns(src_path: Path, edition: str, congress: str) -> Iterator[Dict[str, Any]]:
@@ -185,7 +184,7 @@ def iter_congress_turns(src_path: Path, edition: str, congress: str) -> Iterator
                 "party": party,
                 "state": (sm.get("state") or d.get("state") or "").strip(),
                 "word_count": word_count,
-                "is_procedural": _is_procedural(speaker_name, party),
+                "is_procedural": _is_procedural(speaker_name),
                 "text": text,
             }
 
@@ -227,55 +226,6 @@ def plan_editions(bound_src: Optional[Path], daily_src: Optional[Path]) -> Dict[
     return dict(sorted(plan.items()))
 
 
-def _write_parquet(path: Path, rows: Iterator[Dict[str, Any]], batch_size: int = 50_000) -> int:
-    """Stream ``rows`` to a single parquet file in row-group batches. Returns count."""
-    path.parent.mkdir(parents=True, exist_ok=True)
-    writer: Optional[pq.ParquetWriter] = None
-    batch: list[Dict[str, Any]] = []
-    total = 0
-
-    def flush() -> None:
-        nonlocal writer, batch
-        if not batch:
-            return
-        table = pa.Table.from_pylist(batch, schema=_ARROW_SCHEMA)
-        if writer is None:
-            writer = pq.ParquetWriter(path, _ARROW_SCHEMA, compression="zstd")
-        writer.write_table(table)
-        batch = []
-
-    for r in rows:
-        batch.append(r)
-        total += 1
-        if len(batch) >= batch_size:
-            flush()
-    flush()
-    if writer is not None:
-        writer.close()
-    else:  # no rows -> write an empty table so downstream globs still work
-        pq.write_table(pa.Table.from_pylist([], schema=_ARROW_SCHEMA), path, compression="zstd")
-    return total
-
-
-_ARROW_SCHEMA = pa.schema(
-    [
-        ("turn_id", pa.string()),
-        ("source", pa.string()),
-        ("date", pa.string()),
-        ("congress", pa.int32()),
-        ("chamber", pa.string()),
-        ("speaker_name", pa.string()),
-        ("speaker_id", pa.string()),
-        ("bioguide", pa.string()),
-        ("party", pa.string()),
-        ("state", pa.string()),
-        ("word_count", pa.int64()),
-        ("is_procedural", pa.bool_()),
-        ("text", pa.string()),
-    ]
-)
-
-
 def ingest_hein(
     bound_zip: Optional[Path],
     daily_zip: Optional[Path],
@@ -291,7 +241,7 @@ def ingest_hein(
     counts: Dict[str, int] = {}
     for congress, (edition, zip_path) in plan.items():
         out_path = turns_dir / f"hein_{congress}.parquet"
-        n = _write_parquet(out_path, iter_congress_turns(zip_path, edition, congress))
+        n = write_turns_parquet(out_path, iter_congress_turns(zip_path, edition, congress))
         counts[congress] = n
         LOG.info("hein congress %s (%s): %d turns -> %s", congress, edition, n, out_path.name)
     return counts

@@ -15,7 +15,61 @@ from analysis.ingest.govinfo import (  # noqa: E402
     _speaker_surname,
     _strip_header,
     _surname,
+    build_turns,
+    normalize_members,
 )
+from analysis.ingest.schema import congress_from_year, year_from_congress  # noqa: E402
+
+
+def test_congress_year_roundtrip() -> None:
+    assert congress_from_year(1873) == 43
+    assert congress_from_year(2017) == 115
+    assert congress_from_year(2025) == 119
+    assert year_from_congress(43) == 1873
+    assert year_from_congress(119) == 2025
+    # round-trip: a congress's convening year maps back to itself
+    for c in (43, 90, 115, 119):
+        assert congress_from_year(year_from_congress(c)) == c
+
+
+def test_multiword_surname_segmentation() -> None:
+    # Multi-word surnames must each start their own turn (not merge into the prior one).
+    text = _strip_header(
+        "  Mr. VAN HOLLEN. Madam President, I rise.\n"
+        "  Ms. WASSERMAN SCHULTZ. Mr. Speaker, I object.\n"
+        "  Mr. VAN HOLLEN of Maryland. I yield back.\n"
+    )
+    markers = [sp for sp, _ in _segment(text) if sp]
+    assert "Mr. VAN HOLLEN" in markers
+    assert "Ms. WASSERMAN SCHULTZ" in markers
+    assert _speaker_surname("Mr. VAN HOLLEN of Maryland") == "VAN HOLLEN"
+    # A single-token surname followed by "Mr. Speaker" must NOT absorb the next word.
+    m2 = [sp for sp, _ in _segment("Mr. CROWLEY. Mr. Speaker, I offer a bill.") if sp]
+    assert m2 == ["Mr. CROWLEY"]
+
+
+def test_build_turns_party_attribution_and_multiword_match() -> None:
+    members = normalize_members([
+        {"party": "D", "bioGuideId": "V000128", "state": "MD", "name": "Chris Van Hollen"},
+        {"party": "R", "bioGuideId": "M000355", "state": "KY", "name": "Mitch McConnell"},
+    ])
+    text = ("Mr. VAN HOLLEN. Madam President, I support this.\n"
+            "Mr. McCONNELL. I do not.\n")
+    turns = list(build_turns(text, members, "CREC-2025-01-01-pt1-PgS1", "2025-01-01", 119, "senate"))
+    by_party = {t["speaker_name"]: t["party"] for t in turns}
+    # "Chris Van Hollen" -> surname index under "VAN HOLLEN" and "HOLLEN"; marker matches.
+    assert by_party.get("Mr. VAN HOLLEN") == "D"
+    assert by_party.get("Mr. McCONNELL") == "R"
+
+
+def test_build_turns_preamble_not_attributed_to_sole() -> None:
+    members = normalize_members([{"party": "R", "bioGuideId": "X", "state": "TX", "name": "Jane Smith"}])
+    # Leading boilerplate before the first marker must not be attributed to the sole member.
+    text = "SOME HEADING BOILERPLATE\nMr. SMITH. Mr. Speaker, I rise."
+    turns = list(build_turns(text, members, "CREC-2025-01-01-pt1-PgH1", "2025-01-01", 119, "house"))
+    preamble = [t for t in turns if not t["speaker_name"]]
+    assert all(t["party"] == "other" for t in preamble)
+
 
 
 def test_normalize_party() -> None:
