@@ -34,10 +34,10 @@ def style_axes(ax, title: str, xlabel: str, ylabel: str, subtitle: str | None = 
 
 
 def line(ax, xs, ys, color: str, label: str | None = None, linewidth: float = 2.2,
-         markersize: float = 4) -> None:
-    """Draw one Substack-style series: solid line + o-markers with a cream edge."""
+         markersize: float = 4, linestyle: str = "-") -> None:
+    """Draw one Substack-style series: line + o-markers with a cream edge."""
     ax.plot(xs, ys, color=color, linewidth=linewidth, marker="o", markersize=markersize,
-            markeredgecolor=theme.BG, markeredgewidth=0.8, label=label)
+            markeredgecolor=theme.BG, markeredgewidth=0.8, label=label, linestyle=linestyle)
 
 
 def marker_line(ax, x: float, color: str | None = None, style: str = ":") -> None:

@@ -30,8 +30,7 @@ _HIT_COLS = [
 ]
 
 
-def _by_congress_party(df: pd.DataFrame) -> pd.DataFrame:
-    g = df.groupby(["congress", "year", "party"], as_index=False)[_HIT_COLS].sum()
+def _add_rates(g: pd.DataFrame) -> pd.DataFrame:
     w = g["words"].replace(0, 1)
     g["comity_per_1k"] = 1000 * g["comity_hits"] / w
     g["hostility_per_1k"] = 1000 * g["hostility_hits"] / w
@@ -44,6 +43,16 @@ def _by_congress_party(df: pd.DataFrame) -> pd.DataFrame:
     return g
 
 
+def _by_congress_party(df: pd.DataFrame) -> pd.DataFrame:
+    return _add_rates(df.groupby(["congress", "year", "party"], as_index=False)[_HIT_COLS].sum())
+
+
+def _by_year_chamber_party(df: pd.DataFrame) -> pd.DataFrame:
+    return _add_rates(
+        df.groupby(["congress", "year", "chamber", "party"], as_index=False)[_HIT_COLS].sum()
+    )
+
+
 def _plot_by_party(ax, g: pd.DataFrame, col: str, parties=("D", "R")) -> None:
     for party in parties:
         sub = g[g.party == party].sort_values("year")
@@ -51,6 +60,25 @@ def _plot_by_party(ax, g: pd.DataFrame, col: str, parties=("D", "R")) -> None:
             continue
         charts.line(ax, sub["year"], sub[col], color=theme.PARTY_COLORS[party],
                     label=theme.PARTY_LABELS[party])
+    charts.marker_line(ax, SOURCE_BOUNDARY_YEAR)
+
+
+# Chamber -> line style (party keeps its colour); lets one axis show party x chamber.
+_CHAMBER_STYLE = {"house": "-", "senate": "--"}
+_CHAMBER_LABEL = {"house": "House", "senate": "Senate"}
+
+
+def _plot_by_chamber_party(ax, g: pd.DataFrame, col: str, parties=("D", "R"),
+                           chambers=("house", "senate")) -> None:
+    """Four series: party -> colour, chamber -> solid (House) / dashed (Senate)."""
+    for party in parties:
+        for chamber in chambers:
+            sub = g[(g.party == party) & (g.chamber == chamber)].sort_values("year")
+            if sub.empty:
+                continue
+            charts.line(ax, sub["year"], sub[col], color=theme.PARTY_COLORS[party],
+                        label=f"{theme.PARTY_LABELS[party]} — {_CHAMBER_LABEL[chamber]}",
+                        linestyle=_CHAMBER_STYLE[chamber], linewidth=2.0, markersize=3)
     charts.marker_line(ax, SOURCE_BOUNDARY_YEAR)
 
 
@@ -110,24 +138,58 @@ def _asymmetry(g: pd.DataFrame, figs_dir: Path) -> Path:
     return charts.finish(fig, ax, figs_dir / "directed_asymmetry.png", source=SOURCE_NOTE)
 
 
+def _overview_by_chamber(gc: pd.DataFrame, figs_dir: Path) -> Path:
+    """Six-panel overview with party x chamber (colour=party, solid=House/dashed=Senate)."""
+    theme.apply()
+    import matplotlib.pyplot as plt
+
+    fig, axes = plt.subplots(2, 3, figsize=(16, 9))
+    for ax, (col, title, ylab) in zip(axes.flat, _PANELS):
+        _plot_by_chamber_party(ax, gc, col)
+        charts.style_axes(ax, title, "Year", ylab)
+    axes.flat[0].legend(loc="best", frameon=False, labelcolor=theme.TEXT, fontsize=8)
+    fig.suptitle(
+        "Civility by party and chamber \u2014 U.S. Congressional Record, 1873\u20132026\n"
+        "colour = party (blue D / red R), solid = House, dashed = Senate",
+        fontweight="bold",
+    )
+    theme.source_note(fig, SOURCE_NOTE)
+    fig.tight_layout(rect=(0, 0.03, 1, 0.95))
+    out = figs_dir / "overview_by_chamber.png"
+    fig.savefig(out, dpi=200, bbox_inches="tight")
+    plt.close(fig)
+    return out
+
+
 def render(metrics_path: Path, out_dir: Path) -> List[Path]:
     df = pd.read_parquet(metrics_path)
     g = _by_congress_party(df)
+    gc = _by_year_chamber_party(df)
     figs_dir = out_dir / "reports" / "figures"
     figs_dir.mkdir(parents=True, exist_ok=True)
-    written: List[Path] = [_overview(g, figs_dir)]
+    written: List[Path] = [_overview(g, figs_dir), _overview_by_chamber(gc, figs_dir)]
 
     for col, title, ylab in _PANELS:
+        # overall (by party)
         fig, ax = charts.new_figure(figsize=(10, 5.5))
         _plot_by_party(ax, g, col)
         charts.style_axes(ax, title, "Year", ylab)
         written.append(charts.finish(fig, ax, figs_dir / f"{col}.png", source=SOURCE_NOTE))
+
+    # Per-metric party x chamber breakdowns for the three headline measures.
+    for col, title, ylab in _PANELS[:3]:
+        fig, ax = charts.new_figure(figsize=(10, 5.5))
+        _plot_by_chamber_party(ax, gc, col)
+        charts.style_axes(ax, f"{title} \u2014 by party & chamber", "Year", ylab,
+                          subtitle="solid = House, dashed = Senate")
+        written.append(charts.finish(fig, ax, figs_dir / f"{col}_by_chamber.png", source=SOURCE_NOTE))
 
     written.append(_asymmetry(g, figs_dir))
 
     tbl_dir = out_dir / "reports" / "tables"
     tbl_dir.mkdir(parents=True, exist_ok=True)
     g.to_csv(tbl_dir / "metrics_by_congress_party.csv", index=False)
+    gc.to_csv(tbl_dir / "metrics_by_congress_chamber_party.csv", index=False)
 
     LOG.info("wrote %d figures -> %s", len(written), figs_dir)
     return written

@@ -47,6 +47,27 @@ def test_theme_palette_and_apply() -> None:
         or plt.rcParams["axes.spines.top"] is False
 
 
+def test_chamber_party_aggregation_word_weighted() -> None:
+    import pandas as pd
+    from analysis.viz import _by_year_chamber_party
+    # two House-D rows in the same congress must combine word-weighted, not mean-of-rates.
+    df = pd.DataFrame([
+        {"congress": 119, "year": 2025, "chamber": "house", "party": "D",
+         "hostility_hits": 10, "words": 1000, "comity_hits": 0, "profanity_hits": 0,
+         "profanity_slurs_hits": 0, "outgroup_refs": 0, "democrat_party_pej": 0,
+         "directed_comity_hits": 0, "directed_hostility_hits": 0},
+        {"congress": 119, "year": 2025, "chamber": "house", "party": "D",
+         "hostility_hits": 0, "words": 9000, "comity_hits": 0, "profanity_hits": 0,
+         "profanity_slurs_hits": 0, "outgroup_refs": 0, "democrat_party_pej": 0,
+         "directed_comity_hits": 0, "directed_hostility_hits": 0},
+    ])
+    g = _by_year_chamber_party(df)
+    row = g[(g.chamber == "house") & (g.party == "D")].iloc[0]
+    # 10 hits / 10000 words * 1000 = 1.0  (NOT the mean of 10.0 and 0.0 = 5.0)
+    assert abs(row["hostility_per_1k"] - 1.0) < 1e-9
+
+
+
 if __name__ == "__main__":
     failures = 0
     for name, fn in sorted(globals().items()):

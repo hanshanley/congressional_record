@@ -114,14 +114,46 @@ time-series charts. It unifies two corpora into one speaker-turn table:
 
 ### What it measures
 
-* **Comity/deference** phrases ("my distinguished colleague", "the gentleman from", "I yield to")
+* **Comity/deference** phrases ("my distinguished colleague", "the gentleman from", "reach
+  across the aisle", "I yield to")
 * **Hostility/attack** language and **profanity** (a comprehensive, tiered lexicon: mild/strong/slurs)
 * **Cross-party reference tone** — out-group references resolved to the speaker's party, plus
   **directed** hostility/comity in the text window around each reference
-* The **"Democrat party"** pejorative marker; optional **VADER sentiment**
+* The **"Democrat party"** pejorative marker; optional **VADER sentiment** (see *Toxicity* below)
 
-All rates are per 1,000 words, grouped by `(congress, chamber, party)`, so both overall trends
-split by party and directed D↔R asymmetry can be plotted.
+All lexical rates are per 1,000 words, grouped by `(congress, chamber, party)`, so overall
+trends split by party, by chamber, and directed D↔R asymmetry can all be plotted.
+
+**Fuzzy keyword matching.** Lexicon terms match their morphological variants by default
+(`Scorers(fuzzy=True)`): single words expand to plurals/verb-forms via suffix rules plus an
+irregular-plural table ("colleague"→"colleagues", "coward"→"cowards", "gentleman"→"gentlemen"),
+and multi-word phrases inflect **every** content word inline in the regex, so "reach across the
+aisle" also matches "reaches/reached/reaching across the aisle". Short tokens (< 4 chars) are
+matched literally so obfuscation stubs are never expanded into ordinary words, and profanity
+surface-forms are de-duplicated across tiers so nothing is double-counted. Pass `fuzzy=False`
+for strict exact matching.
+
+**By party and by chamber.** `viz` renders both the party split (D vs R vs other) and a
+**chamber × party** split (House vs Senate, each by party): `overview_by_chamber.png`, a
+`*_by_chamber.png` per metric, and an extra CSV `metrics_by_congress_chamber_party.csv`.
+
+**Toxicity methodology.** The headline signals are transparent, auditable **lexical rates**
+(hostility/profanity per 1k words) — not a black-box classifier. Optional VADER sentiment
+(`--sentiment`) is scored **per sentence and averaged** (VADER's `compound` saturates on long
+passages, so scoring a whole speech is biased), exposing `mean_sentiment` and `mean_neg_share`,
+which are **sentence-count weighted** in the aggregate to match the word-weighting of the other
+metrics. The interactive notebook cross-checks that these independent negativity signals agree
+(and can optionally validate a sample against the Detoxify neural model).
+
+### Explore interactively
+
+```bash
+.venv/bin/python -m pip install jupyter   # or: uv pip install jupyter
+jupyter lab notebooks/congressional_civility.ipynb
+```
+
+The notebook loads the metrics table, plots the party and chamber×party trends, and runs the
+toxicity cross-validation against real data.
 
 ### Run it
 
@@ -130,16 +162,17 @@ uv pip install -r requirements-analysis.txt        # pandas, pyarrow, matplotlib
 
 python -m analysis.run ingest-hein                 # hein zips -> data/interim/turns/*.parquet
 python -m analysis.run ingest-govinfo-bulk         # 2017-present via day-zips (fast, no rate limit)
-python -m analysis.run aggregate                   # score all turns -> data/processed/metrics/
+python -m analysis.run aggregate                   # score all turns (fuzzy) -> data/processed/metrics/
 python -m analysis.run viz                         # charts -> data/reports/figures/
 
 # or the whole hein pipeline in one go (add --sentiment for VADER):
 python -m analysis.run all
 ```
 
-Outputs: `data/processed/metrics/civility_metrics.{parquet,csv}` and PNG charts under
-`data/reports/figures/` (an `overview.png` small-multiples plus one chart per metric). All
-`data/` outputs are git-ignored.
+Outputs: `data/processed/metrics/civility_metrics.{parquet,csv}`,
+`metrics_by_congress_chamber_party.csv`, and PNG charts under `data/reports/figures/`
+(an `overview.png` small-multiples, `overview_by_chamber.png`, and one `*.png` +
+`*_by_chamber.png` per metric). All `data/` outputs are git-ignored.
 
 Charts use a shared **Substack-style** plotting toolkit (`analysis/plotting/`, matched to the
 `uk_decline` portfolio look) — see [`docs/PLOTTING.md`](docs/PLOTTING.md) for the palette,

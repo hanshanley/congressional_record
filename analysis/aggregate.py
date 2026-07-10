@@ -27,7 +27,7 @@ _SUM_KEYS = [
     "profanity_mild", "profanity_strong", "profanity_slurs", "profanity_hits",
     "outgroup_refs", "democrat_party_pej",
     "directed_comity_hits", "directed_hostility_hits",
-    "sentiment_sum", "sentiment_n",
+    "sentiment_sum", "neg_share_sum", "sentiment_n",
 ]
 
 _READ_COLS = ["congress", "chamber", "party", "is_procedural", "text"]
@@ -108,8 +108,13 @@ def score_and_aggregate(
                 ):
                     a[k] += s[k]
                 if "sentiment" in s:
-                    a["sentiment_sum"] += s["sentiment"]
-                    a["sentiment_n"] += 1
+                    # Length-weight by sentence count so long speeches count proportionally
+                    # (matches the word-weighting of every other metric), rather than
+                    # giving a one-sentence turn the same weight as a floor speech.
+                    w = s.get("n_sentences", 1) or 1
+                    a["sentiment_sum"] += s["sentiment"] * w
+                    a["neg_share_sum"] += s.get("neg_share", 0.0) * w
+                    a["sentiment_n"] += w
                 n += 1
         LOG.info("scored %s (%d substantive turns)", fp.name, n)
 
@@ -159,6 +164,9 @@ def _finalize(acc: Dict[Tuple[int, str, str], Dict[str, float]]) -> pd.DataFrame
                 "directed_hostility_per_1k": per1k(a["directed_hostility_hits"]),
                 "mean_sentiment": (
                     a["sentiment_sum"] / a["sentiment_n"] if a["sentiment_n"] else None
+                ),
+                "mean_neg_share": (
+                    a["neg_share_sum"] / a["sentiment_n"] if a["sentiment_n"] else None
                 ),
             }
         )

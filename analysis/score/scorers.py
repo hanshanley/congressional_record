@@ -33,6 +33,8 @@ _OUTPARTY_TOKENS = {
 _DEMOCRAT_PARTY_PEJ = re.compile(r"\bdemocrat\s+party\b", re.IGNORECASE)
 # Tokenizer: word tokens keep internal hyphens/apostrophes (un-american, don't).
 _TOKEN_RE = re.compile(r"[a-z0-9]+(?:[-'\u2019][a-z0-9]+)*")
+# Lightweight sentence splitter for sentence-level VADER (avoids an nltk dependency).
+_SENTENCE_RE = re.compile(r"(?<=[.!?])\s+")
 
 
 def _load_lines(name: str) -> List[str]:
@@ -45,32 +47,121 @@ def _load_lines(name: str) -> List[str]:
     return out
 
 
-def _split_terms(terms: List[str]) -> Tuple[Set[str], List[Tuple[str, ...]]]:
-    """Partition terms into a single-word set and multi-word token-tuple list."""
+# Function/short words in phrases that should NOT be inflected.
+_FUNCTION = {
+    "the", "a", "an", "my", "our", "your", "his", "her", "their", "of", "from",
+    "to", "on", "in", "for", "and", "i", "both", "that", "this", "with", "at",
+    "by", "side", "sides", "aisle", "other", "no",
+}
+# Irregular plurals/forms common in parliamentary address that suffix rules miss.
+_IRREGULAR = {
+    "gentleman": {"gentlemen"},
+    "gentlewoman": {"gentlewomen"},
+    "gentlelady": {"gentleladies"},
+    "woman": {"women"},
+    "man": {"men"},
+    "lady": {"ladies"},
+}
+
+
+def _regular_variants(w: str) -> Set[str]:
+    """Common English inflections of ``w`` (plurals + verb forms) via suffix rules."""
+    v = {w}
+    if w.endswith(("s", "x", "z", "ch", "sh")):
+        v.add(w + "es")
+    else:
+        v.add(w + "s")
+    if w.endswith("y") and len(w) > 2 and w[-2] not in "aeiou":
+        v.add(w[:-1] + "ies")
+    if w.endswith("e"):
+        v.add(w + "d")            # like -> liked
+        v.add(w[:-1] + "ing")     # commit-e? handle simple: use -> using
+    else:
+        v.add(w + "ed")
+        v.add(w + "ing")
+    return v
+
+
+def morph_variants(word: str) -> Set[str]:
+    """All fuzzy-match variants of a single lexicon word (regular + irregular)."""
+    out = _regular_variants(word)
+    out |= _IRREGULAR.get(word, set())
+    return out
+
+
+def plural_variants(word: str) -> Set[str]:
+    """Plural/irregular variants only (for phrase-final nouns; keeps the regex small)."""
+    v = {word}
+    if word.endswith(("s", "x", "z", "ch", "sh")):
+        v.add(word + "es")
+    elif word.endswith("y") and len(word) > 2 and word[-2] not in "aeiou":
+        v.add(word[:-1] + "ies")
+    else:
+        v.add(word + "s")
+    v |= _IRREGULAR.get(word, set())
+    return v
+
+
+# Minimum length for a token to be treated as an inflectable "content" word.
+# Shorter tokens are matched literally so obfuscation stubs (e.g. "len") are never
+# expanded into ordinary English words (e.g. "lens").
+_MIN_INFLECT_LEN = 4
+
+
+def _word_regex(w: str) -> str:
+    """Regex fragment matching a content word and its inflections (inline, no expansion).
+
+    Emitting one branch per phrase with optional-suffix groups on *every* content word
+    keeps the phrase regex small and inflects the correct token regardless of position
+    (so "reach across the aisle" matches "reaches/reached across the aisle", where the
+    inflected word is the leading verb, not the trailing noun).
+    """
+    if w in _IRREGULAR:
+        forms = sorted({w} | _IRREGULAR[w], key=len, reverse=True)
+        return "(?:" + "|".join(re.escape(f) for f in forms) + ")"
+    if w.endswith("y") and len(w) > 2 and w[-2] not in "aeiou":
+        return re.escape(w[:-1]) + r"(?:y|ies|ied|ying)"
+    return re.escape(w) + r"(?:es|s|ed|ing|d)?"
+
+
+def _split_terms(terms: List[str], fuzzy: bool = True) -> Tuple[Set[str], List[Tuple[str, ...]]]:
+    """Partition terms into a single-word set and multi-word token-tuple list.
+
+    When ``fuzzy`` is set, single words (>= 4 chars) are expanded with morphological
+    variants so plurals/verb-forms ("colleague" -> "colleagues") match. Phrases are kept
+    as raw token tuples; their inflection is handled inline by :func:`_phrase_regex`.
+    """
     singles: Set[str] = set()
     phrases: List[Tuple[str, ...]] = []
     for t in terms:
         toks = _TOKEN_RE.findall(t.lower())
         if len(toks) == 1:
-            singles.add(toks[0])
+            expand = fuzzy and len(toks[0]) >= _MIN_INFLECT_LEN
+            singles |= morph_variants(toks[0]) if expand else {toks[0]}
         elif len(toks) > 1:
             phrases.append(tuple(toks))
     return singles, phrases
 
 
-def _phrase_regex(phrases: List[Tuple[str, ...]]) -> Optional[re.Pattern]:
+def _phrase_regex(phrases: List[Tuple[str, ...]], fuzzy: bool = True) -> Optional[re.Pattern]:
     if not phrases:
         return None
-    parts = [r"\b" + r"\s+".join(re.escape(w) for w in p) + r"\b" for p in phrases]
+
+    def frag(w: str) -> str:
+        if fuzzy and w not in _FUNCTION and len(w) >= _MIN_INFLECT_LEN:
+            return _word_regex(w)
+        return re.escape(w)
+
+    parts = [r"\b" + r"\s+".join(frag(w) for w in p) + r"\b" for p in set(phrases)]
     return re.compile("|".join(parts), re.IGNORECASE)
 
 
 class _Lexicon:
     """A single lexicon: fast single-word set + optional multi-word regex."""
 
-    def __init__(self, terms: List[str]) -> None:
-        self.singles, phrases = _split_terms(terms)
-        self.phrase_re = _phrase_regex(phrases)
+    def __init__(self, terms: List[str], fuzzy: bool = True) -> None:
+        self.singles, phrases = _split_terms(terms, fuzzy=fuzzy)
+        self.phrase_re = _phrase_regex(phrases, fuzzy=fuzzy)
 
     def count(self, tokens: Counter, text: str) -> int:
         # Intersect with the (usually small) token set instead of scanning all singles.
@@ -80,29 +171,58 @@ class _Lexicon:
         return n
 
 
-def _load_profanity() -> Dict[str, "_Lexicon"]:
+def _load_profanity(fuzzy: bool = True) -> Dict[str, "_Lexicon"]:
     tiers: Dict[str, List[str]] = {"mild": [], "strong": [], "slurs": []}
     for line in _load_lines("profanity.txt"):
         term, _, tier = line.partition("\t")
         tier = tier.strip() or "strong"
         if tier in tiers:
             tiers[tier].append(term.strip())
-    return {tier: _Lexicon(terms) for tier, terms in tiers.items()}
+    lex = {tier: _Lexicon(terms, fuzzy=fuzzy) for tier, terms in tiers.items()}
+    # De-duplicate surface forms across tiers so each token is counted once, in its most
+    # severe tier. Fuzzy expansion can make a mild term ("screw" -> "screwed") collide
+    # with an explicit strong entry; without this the token is counted in both tiers and
+    # ``profanity_hits`` (sum of tiers) double-counts it.
+    lex["strong"].singles -= lex["slurs"].singles
+    lex["mild"].singles -= lex["slurs"].singles | lex["strong"].singles
+    return lex
 
 
 class Scorers:
     """Holds compiled lexicons; reused across all turns."""
 
-    def __init__(self, use_sentiment: bool = False) -> None:
-        self.comity = _Lexicon(_load_lines("comity.txt"))
-        self.hostility = _Lexicon(_load_lines("hostility.txt"))
-        self.outgroup_idiom = _Lexicon(_load_lines("outgroup.txt"))
-        self.profanity = _load_profanity()
+    def __init__(self, use_sentiment: bool = False, fuzzy: bool = True) -> None:
+        self.comity = _Lexicon(_load_lines("comity.txt"), fuzzy=fuzzy)
+        self.hostility = _Lexicon(_load_lines("hostility.txt"), fuzzy=fuzzy)
+        self.outgroup_idiom = _Lexicon(_load_lines("outgroup.txt"), fuzzy=fuzzy)
+        self.profanity = _load_profanity(fuzzy=fuzzy)
         self._sid = None
         if use_sentiment:
             from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
             self._sid = SentimentIntensityAnalyzer()
+
+    def _sentiment(self, text: str) -> Tuple[float, float, int]:
+        """Return (mean sentence compound, mean sentence negative share, sentence count).
+
+        VADER is calibrated on sentence-length text and its ``compound`` score
+        saturates on long passages, so scoring a whole speech (or a 5,000-char
+        truncation of it) is biased. We instead split into sentences, score each,
+        and average — the granularity VADER is designed for. The sentence count is
+        returned so the aggregate can length-weight the per-turn mean (matching the
+        word-weighting used for every other metric).
+        """
+        assert self._sid is not None
+        sentences = [s for s in _SENTENCE_RE.split(text) if s.strip()]
+        if not sentences:
+            return 0.0, 0.0, 0
+        comp = neg = 0.0
+        for s in sentences:
+            sc = self._sid.polarity_scores(s)
+            comp += sc["compound"]
+            neg += sc["neg"]
+        n = len(sentences)
+        return comp / n, neg / n, n
 
     @staticmethod
     def _window_text(text: str, spans: List[Tuple[int, int]], radius: int = 200) -> str:
@@ -156,5 +276,8 @@ class Scorers:
             "directed_hostility_hits": self.hostility.count(win_tokens, win),
         }
         if self._sid is not None:
-            out["sentiment"] = self._sid.polarity_scores(text[:5000])["compound"]
+            compound, neg_share, n_sentences = self._sentiment(text)
+            out["sentiment"] = compound
+            out["neg_share"] = neg_share
+            out["n_sentences"] = n_sentences
         return out

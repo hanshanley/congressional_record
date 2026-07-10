@@ -71,6 +71,53 @@ def test_build_turns_preamble_not_attributed_to_sole() -> None:
     assert all(t["party"] == "other" for t in preamble)
 
 
+def test_fuzzy_keyword_matching() -> None:
+    from analysis.score.scorers import morph_variants, plural_variants
+    # morphological variants for single words
+    assert {"coward", "cowards"}.issubset(morph_variants("coward"))
+    assert "corrupting" in morph_variants("corrupt")
+    assert "gentlemen" in plural_variants("gentleman")   # irregular plural
+    assert "ladies" in plural_variants("lady")           # y -> ies
+    fuzzy, exact = Scorers(fuzzy=True), Scorers(fuzzy=False)
+    # plurals/verb-forms match under fuzzy, miss under exact
+    for txt, lex in [("my distinguished colleagues", "comity"),
+                     ("the gentlemen from Ohio", "comity"),
+                     ("cowards and liars corrupting things", "hostility")]:
+        assert fuzzy.score_turn(txt, "D")[f"{lex}_hits"] > exact.score_turn(txt, "D")[f"{lex}_hits"]
+    # fuzzy must not fabricate hits in clean neutral text
+    neutral = "the committee will now consider the appropriations schedule for review"
+    r = fuzzy.score_turn(neutral, "D")
+    assert r["hostility_hits"] == 0 and r["profanity_hits"] == 0
+
+    # Phrase inflection must inflect the *correct* content word, not just the last one:
+    # "reach across the aisle" -> "reaches/reached across the aisle" (leading verb).
+    for txt in ["She reaches across the aisle", "He worked across the aisle"]:
+        assert fuzzy.score_turn(txt, "D")["comity_hits"] >= 1
+        assert exact.score_turn(txt, "D")["comity_hits"] == 0
+
+    # Cross-tier de-dup: "screwed" is a mild term's fuzzy variant AND an explicit strong
+    # entry; it must be counted once (in strong), not double-counted across tiers.
+    sc = fuzzy.score_turn("he screwed up the whole vote", "D")
+    assert sc["profanity_hits"] == 1
+    assert sc["profanity_mild"] == 0 and sc["profanity_strong"] == 1
+
+    # Short obfuscation stubs (< 4 chars) are matched literally, never expanded into
+    # ordinary English words: "len" (a lexicon entry) must not expand to match "lens".
+    assert fuzzy.score_turn("we viewed the bill through that lens today", "D")["profanity_hits"] == 0
+
+    s = Scorers(use_sentiment=True)
+    hostile = s.score_turn("This is a corrupt, shameful lie. He is a coward and a fraud.", "D")
+    civil = s.score_turn("I thank the distinguished gentleman and commend my friend.", "D")
+    assert hostile["sentiment"] < 0 < civil["sentiment"]
+    assert 0.0 <= hostile["neg_share"] <= 1.0
+    assert hostile["neg_share"] > civil["neg_share"]
+    # Late-speech negativity is not lost to truncation: a long positive preamble with a
+    # trailing negative sentence still yields a non-zero negative share.
+    long_tail = ("Thank you, Madam Speaker. " * 400) + "This bill is a corrupt, shameful disgrace."
+    assert s.score_turn(long_tail, "D")["neg_share"] > 0
+
+
+
 
 def test_normalize_party() -> None:
     assert normalize_party("D") == "D"
