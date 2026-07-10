@@ -23,9 +23,15 @@ def new_figure(figsize: Tuple[float, float] = (11, 6)):
 
 
 def style_axes(ax, title: str, xlabel: str, ylabel: str, subtitle: str | None = None) -> None:
-    """Apply the standard title/label/grid styling to an axis."""
-    full_title = f"{title}\n{subtitle}" if subtitle else title
-    ax.set_title(full_title, fontweight="bold", pad=14)
+    """Apply the standard title/label/grid styling to an axis.
+
+    Renders a two-tier header: a bold title with a muted sub-title beneath it (the
+    ``uk_decline`` house convention), rather than a single newline-joined string.
+    """
+    ax.set_title(title, fontweight="bold", pad=28 if subtitle else 14)
+    if subtitle:
+        ax.text(0.5, 1.015, subtitle, transform=ax.transAxes, ha="center", va="bottom",
+                fontsize=11, color=theme.MUTED)
     ax.set_xlabel(xlabel, labelpad=2)
     ax.set_ylabel(ylabel, labelpad=2)
     ax.grid(axis="y", linestyle="-", linewidth=0.5)
@@ -34,10 +40,15 @@ def style_axes(ax, title: str, xlabel: str, ylabel: str, subtitle: str | None = 
 
 
 def line(ax, xs, ys, color: str, label: str | None = None, linewidth: float = 2.2,
-         markersize: float = 4, linestyle: str = "-") -> None:
-    """Draw one Substack-style series: line + o-markers with a cream edge."""
-    ax.plot(xs, ys, color=color, linewidth=linewidth, marker="o", markersize=markersize,
+         markersize: float = 4, linestyle: str = "-", marker: str | None = "o") -> None:
+    """Draw one Substack-style series. ``marker=None`` gives a clean, markerless line."""
+    ax.plot(xs, ys, color=color, linewidth=linewidth, marker=marker, markersize=markersize,
             markeredgecolor=theme.BG, markeredgewidth=0.8, label=label, linestyle=linestyle)
+
+
+def end_label(ax, x, y, text: str, color: str, **kwargs) -> None:
+    """Label a series at its end point (delegates to :func:`theme.end_label`)."""
+    theme.end_label(ax, x, y, text, color, **kwargs)
 
 
 def marker_line(ax, x: float, color: str | None = None, style: str = ":") -> None:
@@ -52,6 +63,8 @@ def finish(fig, ax, out_path: Path | str, source: str | None = None,
         ax.legend(loc="best", frameon=False, labelcolor=theme.TEXT)
     if source:
         theme.source_note(fig, source)
+    # Reserve the bottom 3% of the figure for the italic source note; full height on top
+    # (single-axis figures have no suptitle, unlike the grid overviews).
     fig.tight_layout(rect=(0, 0.03, 1, 1))
     out_path = Path(out_path)
     out_path.parent.mkdir(parents=True, exist_ok=True)

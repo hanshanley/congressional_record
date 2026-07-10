@@ -32,6 +32,22 @@ _SUM_KEYS = [
 
 _READ_COLS = ["congress", "chamber", "party", "is_procedural", "text"]
 
+# Single source of truth for per-1,000-word rate columns: rate name -> the raw hit
+# column it is derived from. Shared with :mod:`analysis.viz` so both modules emit
+# identically named rates from the same formula.
+RATE_TO_HITCOL: Dict[str, str] = {
+    "comity_per_1k": "comity_hits",
+    "hostility_per_1k": "hostility_hits",
+    "profanity_per_1k": "profanity_hits",
+    "profanity_mild_per_1k": "profanity_mild_hits",
+    "profanity_strong_per_1k": "profanity_strong_hits",
+    "profanity_slurs_per_1k": "profanity_slurs_hits",
+    "outgroup_ref_per_1k": "outgroup_refs",
+    "democrat_party_pej_per_1k": "democrat_party_pej",
+    "directed_comity_per_1k": "directed_comity_hits",
+    "directed_hostility_per_1k": "directed_hostility_hits",
+}
+
 
 def _select_turn_files(turns_dir: Path) -> List[Path]:
     """Choose one turn file per source-congress, preferring bulk GovInfo output.
@@ -108,13 +124,15 @@ def score_and_aggregate(
                 ):
                     a[k] += s[k]
                 if "sentiment" in s:
-                    # Length-weight by sentence count so long speeches count proportionally
-                    # (matches the word-weighting of every other metric), rather than
-                    # giving a one-sentence turn the same weight as a floor speech.
-                    w = s.get("n_sentences", 1) or 1
-                    a["sentiment_sum"] += s["sentiment"] * w
-                    a["neg_share_sum"] += s.get("neg_share", 0.0) * w
-                    a["sentiment_n"] += w
+                    # Sentence-count weight so long speeches count proportionally (matches
+                    # the word-weighting of every other metric). A turn with no detectable
+                    # sentences (empty/whitespace) carries weight 0 — it must not add a
+                    # phantom neutral sentence to the mean.
+                    w = s.get("n_sentences", 0)
+                    if w:
+                        a["sentiment_sum"] += s["sentiment"] * w
+                        a["neg_share_sum"] += s.get("neg_share", 0.0) * w
+                        a["sentiment_n"] += w
                 n += 1
         LOG.info("scored %s (%d substantive turns)", fp.name, n)
 
@@ -131,43 +149,34 @@ def _finalize(acc: Dict[Tuple[int, str, str], Dict[str, float]]) -> pd.DataFrame
     rows: List[dict] = []
     for (congress, chamber, party), a in sorted(acc.items()):
         words = a["n_words"] or 1.0
-        per1k = lambda x: 1000.0 * x / words  # noqa: E731
-        rows.append(
-            {
-                "congress": congress,
-                "year": year_from_congress(congress),  # Congress N convenes in this year
-                "chamber": chamber,
-                "party": party,
-                "turns": int(a["turns"]),
-                "words": int(a["n_words"]),
-                # raw sums (kept so viz can re-aggregate across chambers correctly)
-                "comity_hits": int(a["comity_hits"]),
-                "hostility_hits": int(a["hostility_hits"]),
-                "profanity_hits": int(a["profanity_hits"]),
-                "profanity_mild_hits": int(a["profanity_mild"]),
-                "profanity_strong_hits": int(a["profanity_strong"]),
-                "profanity_slurs_hits": int(a["profanity_slurs"]),
-                "outgroup_refs": int(a["outgroup_refs"]),
-                "democrat_party_pej": int(a["democrat_party_pej"]),
-                "directed_comity_hits": int(a["directed_comity_hits"]),
-                "directed_hostility_hits": int(a["directed_hostility_hits"]),
-                # convenience rates at this (congress, chamber, party) granularity
-                "comity_per_1k": per1k(a["comity_hits"]),
-                "hostility_per_1k": per1k(a["hostility_hits"]),
-                "profanity_per_1k": per1k(a["profanity_hits"]),
-                "profanity_mild_per_1k": per1k(a["profanity_mild"]),
-                "profanity_strong_per_1k": per1k(a["profanity_strong"]),
-                "profanity_slurs_per_1k": per1k(a["profanity_slurs"]),
-                "outgroup_ref_per_1k": per1k(a["outgroup_refs"]),
-                "democrat_party_pej_per_1k": per1k(a["democrat_party_pej"]),
-                "directed_comity_per_1k": per1k(a["directed_comity_hits"]),
-                "directed_hostility_per_1k": per1k(a["directed_hostility_hits"]),
-                "mean_sentiment": (
-                    a["sentiment_sum"] / a["sentiment_n"] if a["sentiment_n"] else None
-                ),
-                "mean_neg_share": (
-                    a["neg_share_sum"] / a["sentiment_n"] if a["sentiment_n"] else None
-                ),
-            }
+        row = {
+            "congress": congress,
+            "year": year_from_congress(congress),  # Congress N convenes in this year
+            "chamber": chamber,
+            "party": party,
+            "turns": int(a["turns"]),
+            "words": int(a["n_words"]),
+            # raw sums (kept so viz can re-aggregate across chambers correctly)
+            "comity_hits": int(a["comity_hits"]),
+            "hostility_hits": int(a["hostility_hits"]),
+            "profanity_hits": int(a["profanity_hits"]),
+            "profanity_mild_hits": int(a["profanity_mild"]),
+            "profanity_strong_hits": int(a["profanity_strong"]),
+            "profanity_slurs_hits": int(a["profanity_slurs"]),
+            "outgroup_refs": int(a["outgroup_refs"]),
+            "democrat_party_pej": int(a["democrat_party_pej"]),
+            "directed_comity_hits": int(a["directed_comity_hits"]),
+            "directed_hostility_hits": int(a["directed_hostility_hits"]),
+        }
+        # convenience rates at this (congress, chamber, party) granularity, derived from
+        # the raw hit columns via the shared RATE_TO_HITCOL map (same names/formula as viz)
+        for rate, col in RATE_TO_HITCOL.items():
+            row[rate] = 1000.0 * row[col] / words
+        row["mean_sentiment"] = (
+            a["sentiment_sum"] / a["sentiment_n"] if a["sentiment_n"] else None
         )
+        row["mean_neg_share"] = (
+            a["neg_share_sum"] / a["sentiment_n"] if a["sentiment_n"] else None
+        )
+        rows.append(row)
     return pd.DataFrame(rows)

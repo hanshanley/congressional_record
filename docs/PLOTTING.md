@@ -3,16 +3,16 @@
 A small, reusable plotting toolkit (`analysis/plotting/`) that gives every figure in
 this project the same **Substack-style** look used across the `personal_projects`
 portfolio (e.g. `uk_decline`): cream background, serif type, a muted print-friendly
-palette, o-markers with a background-coloured edge, a y-only grid, borderless legend,
-bold two-line titles, and an italic source note.
+palette, **tickless** axes with a thin y-only grid, bold titles with a muted sub-title,
+direct **end-of-line series labels** (in place of a legend), and an italic source note.
 
 ## What's in the folder
 
 ```
 analysis/plotting/
 ├── __init__.py     # exposes `theme` and `charts`
-├── theme.py        # palette constants + rcParams; apply(), source_note()
-└── charts.py       # composable helpers: new_figure, style_axes, line, marker_line, finish
+├── theme.py        # palette + rcParams; apply(), source_note(), end_label(), white_stroke()
+└── charts.py       # composable helpers: new_figure, style_axes, line, end_label, marker_line, finish
 ```
 
 ## The palette (identical to `uk_decline/tuition/theme.py`)
@@ -37,13 +37,17 @@ and `theme.PARTY_LABELS`.
 from analysis.plotting import theme, charts
 
 fig, ax = charts.new_figure(figsize=(10, 5.5))     # applies the theme for you
-charts.line(ax, years, values, color=theme.PARTY_COLORS["D"], label="Democrats")
-charts.line(ax, years, other,  color=theme.PARTY_COLORS["R"], label="Republicans")
+# clean, markerless lines with direct end-of-line labels (the house style):
+charts.line(ax, years, dem, color=theme.PARTY_COLORS["D"], marker=None, linewidth=2.6)
+charts.line(ax, years, rep, color=theme.PARTY_COLORS["R"], marker=None, linewidth=2.6)
+charts.end_label(ax, years[-1], dem[-1], "Democrats", theme.PARTY_COLORS["D"])
+charts.end_label(ax, years[-1], rep[-1], "Republicans", theme.PARTY_COLORS["R"])
+ax.margins(x=0.13)                                  # room for the end labels
 charts.marker_line(ax, 2017)                        # dotted source-boundary marker
 charts.style_axes(ax, "My metric", "Year", "per 1,000 words",
-                  subtitle="an optional second title line")
+                  subtitle="a muted second-tier sub-title")
 charts.finish(fig, ax, "data/reports/figures/my_metric.png",
-              source="Sources: ...")               # legend + note + save @ dpi=200
+              source="Sources: ...", legend=False)  # note + save @ dpi=200
 ```
 
 ### Helper reference (`analysis.plotting.charts`)
@@ -51,16 +55,19 @@ charts.finish(fig, ax, "data/reports/figures/my_metric.png",
 | function | purpose |
 |----------|---------|
 | `new_figure(figsize=(11,6))` | apply theme + return `(fig, ax)` |
-| `line(ax, xs, ys, color, label=None, linewidth=2.2, markersize=4)` | one styled series (line + cream-edged o-markers) |
+| `line(ax, xs, ys, color, label=None, linewidth=2.2, markersize=4, linestyle="-", marker="o")` | one styled series; pass `marker=None` for a clean, markerless line |
+| `end_label(ax, x, y, text, color, *, fontsize=10.5, pad="  ")` | direct end-of-line label with a white halo (replaces a legend) |
 | `marker_line(ax, x, color=None, style=":")` | vertical reference marker (e.g. a source-boundary year) |
-| `style_axes(ax, title, xlabel, ylabel, subtitle=None)` | bold (optionally two-line) title, labels, y-grid, `axisbelow` |
-| `finish(fig, ax, out_path, source=None, legend=True, dpi=200)` | borderless legend + italic source note + `tight_layout` + save; returns the path |
+| `style_axes(ax, title, xlabel, ylabel, subtitle=None)` | bold title + muted second-tier sub-title, labels, y-grid, `axisbelow` |
+| `finish(fig, ax, out_path, source=None, legend=True, dpi=200)` | optional legend + italic source note + `tight_layout` + save; returns the path |
 
 ### Theme reference (`analysis.plotting.theme`)
 
 - `apply()` — push `RC_PARAMS` into `matplotlib.rcParams` (call once before plotting;
-  `charts.new_figure` does this for you).
+  `charts.new_figure` does this for you). Axes are tickless, spines thin (`0.8`), top/right
+  hidden, titles bold, and `text.parse_math` is off (so `$` renders literally).
 - `source_note(fig, text, x=0.01, y=0.01, ha="left")` — the standard italic, muted note.
+- `end_label(...)` / `white_stroke()` — end-of-line labels and the white text halo they use.
 - Palette constants and `PARTY_COLORS` / `PARTY_LABELS` as above.
 
 ## How the project uses it

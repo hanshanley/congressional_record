@@ -90,7 +90,11 @@ def morph_variants(word: str) -> Set[str]:
 
 
 def plural_variants(word: str) -> Set[str]:
-    """Plural/irregular variants only (for phrase-final nouns; keeps the regex small)."""
+    """Plural/irregular variants of a single word (retained for tests).
+
+    Not used by the production phrase path any more — phrases inflect every content word
+    inline via :func:`_word_regex`. Kept as a small standalone helper the test-suite pins.
+    """
     v = {word}
     if word.endswith(("s", "x", "z", "ch", "sh")):
         v.add(word + "es")
@@ -109,19 +113,17 @@ _MIN_INFLECT_LEN = 4
 
 
 def _word_regex(w: str) -> str:
-    """Regex fragment matching a content word and its inflections (inline, no expansion).
+    """Regex fragment matching a content word and all its inflections.
 
-    Emitting one branch per phrase with optional-suffix groups on *every* content word
-    keeps the phrase regex small and inflects the correct token regardless of position
-    (so "reach across the aisle" matches "reaches/reached across the aisle", where the
-    inflected word is the leading verb, not the trailing noun).
+    Derived from :func:`morph_variants` (an alternation of its escaped forms, longest
+    first) so the English suffix rules live in exactly ONE place — the set-builders and
+    this regex-builder can never drift apart. Emitting one such group per content word
+    lets a phrase inflect the correct token regardless of position (so "reach across the
+    aisle" matches "reaches/reached across the aisle", where the inflected word is the
+    leading verb, not the trailing noun).
     """
-    if w in _IRREGULAR:
-        forms = sorted({w} | _IRREGULAR[w], key=len, reverse=True)
-        return "(?:" + "|".join(re.escape(f) for f in forms) + ")"
-    if w.endswith("y") and len(w) > 2 and w[-2] not in "aeiou":
-        return re.escape(w[:-1]) + r"(?:y|ies|ied|ying)"
-    return re.escape(w) + r"(?:es|s|ed|ing|d)?"
+    forms = sorted(morph_variants(w), key=len, reverse=True)
+    return "(?:" + "|".join(re.escape(f) for f in forms) + ")"
 
 
 def _split_terms(terms: List[str], fuzzy: bool = True) -> Tuple[Set[str], List[Tuple[str, ...]]]:
@@ -226,7 +228,12 @@ class Scorers:
 
     @staticmethod
     def _window_text(text: str, spans: List[Tuple[int, int]], radius: int = 200) -> str:
-        """Concatenate ±``radius``-char windows around each span (merged intervals)."""
+        """Concatenate ±``radius``-char windows around each span (merged intervals).
+
+        Fragments are joined with a non-word, non-whitespace sentinel (ASCII RS) so that a
+        phrase can never match *across* a window boundary — text that is not contiguous in
+        the source: the phrase regex's ``\\s+`` / ``\\b`` cannot span the sentinel.
+        """
         if not spans:
             return ""
         ivs = sorted((max(0, s - radius), min(len(text), e + radius)) for s, e in spans)
@@ -236,7 +243,7 @@ class Scorers:
                 merged[-1][1] = max(merged[-1][1], e)
             else:
                 merged.append([s, e])
-        return " ".join(text[s:e] for s, e in merged)
+        return " \x1e ".join(text[s:e] for s, e in merged)
 
     def _idiom_spans(self, text_lower: str) -> List[Tuple[int, int]]:
         if self.outgroup_idiom.phrase_re is None:
@@ -246,16 +253,20 @@ class Scorers:
     def score_turn(self, text: str, party: str) -> Dict[str, float]:
         text = text or ""
         low = text.lower()
-        # Single tokenization pass: build the token Counter AND the out-party name
-        # spans from the same match list (avoids a second full-text regex scan).
-        matches = list(_TOKEN_RE.finditer(low))
-        tokens: Counter = Counter(m.group() for m in matches)
-        n_words = len(matches)
-
+        # Single tokenization pass: build the token Counter, the word count, AND the
+        # out-party name spans from one walk over the matches (no redundant re-scan).
         outtok = _OUTPARTY_TOKENS.get(party)
-        spans: List[Tuple[int, int]] = self._idiom_spans(low)
-        if outtok:
-            spans += [m.span() for m in matches if m.group() in outtok]
+        tokens: Counter = Counter()
+        outparty_spans: List[Tuple[int, int]] = []
+        n_words = 0
+        for m in _TOKEN_RE.finditer(low):
+            g = m.group()
+            tokens[g] += 1
+            n_words += 1
+            if outtok and g in outtok:
+                outparty_spans.append(m.span())
+
+        spans: List[Tuple[int, int]] = self._idiom_spans(low) + outparty_spans
 
         prof = {tier: lex.count(tokens, low) for tier, lex in self.profanity.items()}
         win = self._window_text(low, spans)
