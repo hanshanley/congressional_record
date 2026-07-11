@@ -14,7 +14,7 @@ import pyarrow.parquet as pq
 
 # Column order is authoritative for the parquet output.
 TURN_COLUMNS: List[str] = [
-    "turn_id",        # stable unique id  (e.g. "hein-daily:970000005" / "crec:<granuleId>#<n>")
+    "turn_id",        # stable unique id  (e.g. "hein_daily:970000005" / "crec:<granuleId>#<n>")
     "source",         # hein_bound | hein_daily | govinfo
     "date",           # ISO date string YYYY-MM-DD (may be "" if unknown)
     "congress",       # int

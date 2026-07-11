@@ -4,7 +4,8 @@ Downloads each day's package zip from ``www.govinfo.gov/content/pkg/<pkg>.zip``
 (not the rate-limited api.govinfo.gov), parses the package-level ``mods.xml`` for
 every granule's class/chamber/party, extracts each granule's HTML transcript,
 segments it into speaker turns, and writes unified turn parquet — then deletes the
-zip to bound disk use. Downloads run in a thread pool; ingest is serialized.
+zip to bound disk use. Downloads and ingest both run in the thread pool; only the
+per-congress parquet writes are serialized (under a lock).
 """
 
 from __future__ import annotations
@@ -29,11 +30,16 @@ import pyarrow as pa
 
 from analysis.ingest.schema import (
     ARROW_SCHEMA,
-    congress_from_year,
     normalize_chamber,
 )
-from analysis.ingest.govinfo import build_turns, normalize_members, _strip_header
+from analysis.ingest.govinfo import (
+    build_turns,
+    normalize_members,
+    _congress_from_date,
+    _strip_header,
+)
 from crec.download import html_to_text
+from crec.metadata import parse_members
 
 LOG = logging.getLogger("analysis.ingest.govinfo_bulk")
 
@@ -48,19 +54,13 @@ def _localname(tag: str) -> str:
 
 
 def _members_of(scope: ET.Element) -> List[Dict[str, str]]:
-    """Normalized member list for one constituent's congMember elements."""
-    raw: List[Dict[str, str]] = []
-    for node in scope.iter():
-        if _localname(node.tag) != "congMember":
-            continue
-        m = dict(node.attrib)
-        names: Dict[str, str] = {}
-        for nm in node.iter():
-            if _localname(nm.tag) == "name" and nm.text and nm.text.strip():
-                names[nm.attrib.get("type", "")] = nm.text.strip()
-        m["name"] = names.get("authority-fnf") or names.get("parsed") or ""
-        raw.append(m)
-    return normalize_members(raw)
+    """Normalized member list for one constituent's congMember elements.
+
+    Delegates congMember extraction (including the display-name preference
+    authority-fnf -> authority-lnf -> parsed) to the shared ``crec.metadata.parse_members``
+    so the bulk and manifest ingest paths attribute identical names/parties.
+    """
+    return normalize_members(parse_members(scope))
 
 
 def parse_package_mods(mods_bytes: bytes) -> Dict[str, Dict[str, Any]]:
@@ -103,9 +103,8 @@ def _turns_from_zip(zip_bytes: bytes, pkg: str) -> Iterator[Dict[str, Any]]:
         return
     gmap = parse_package_mods(z.read(mods_name))
     date = pkg.replace("CREC-", "")  # YYYY-MM-DD
-    try:
-        congress = congress_from_year(int(date[:4]))
-    except (TypeError, ValueError):
+    congress = _congress_from_date(date)  # shared helper; 0 if the year can't be parsed
+    if not congress:
         return
     htm_names = {n.rsplit("/", 1)[-1][:-4]: n for n in names if n.endswith(".htm")}
 

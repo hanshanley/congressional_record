@@ -39,7 +39,7 @@ _SURNAME = r"[A-Z][A-Za-z'\u2019-]+(?:\s+[A-Z][A-Za-z'\u2019-]+){0,2}"
 # Start-of-turn speaker markers at the beginning of a line.
 _SPEAKER_RE = re.compile(
     r"(?m)^\s{0,4}("
-    rf"(?:Mr|Mrs|Ms|Miss)\.\s+{_SURNAME}(?:\s+of\s+[A-Z][a-zA-Z]+)?"
+    rf"(?:Mr|Mrs|Ms|Miss)\.\s+{_SURNAME}(?:\s+of\s+[A-Z][a-zA-Z]+(?:\s+[A-Z][a-zA-Z]+){0,2})?"
     r"|The\s+(?:SPEAKER(?:\s+pro\s+tempore)?|PRESIDING\s+OFFICER|(?:VICE\s+)?PRESIDENT"
     r"|ACTING\s+PRESIDENT(?:\s+pro\s+tempore)?|CHIEF\s+JUSTICE|CLERK|Acting\s+CHAIR|CHAIR(?:MAN|WOMAN)?)"
     r")\.\s",

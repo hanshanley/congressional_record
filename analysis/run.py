@@ -2,11 +2,12 @@
 """Orchestrate the congressional-comity analysis pipeline.
 
 Subcommands:
-    ingest-hein     Parse the Stanford hein zips into unified turn parquet.
-    ingest-govinfo  Segment downloaded GovInfo CREC granules into turn parquet.
-    aggregate       Score all turns and write the civility metrics table.
-    viz             Render charts from the metrics table.
-    all             ingest-hein -> aggregate -> viz.
+    ingest-hein         Parse the Stanford hein zips into unified turn parquet.
+    ingest-govinfo      Segment downloaded GovInfo CREC granules into turn parquet.
+    ingest-govinfo-bulk Fast GovInfo ingest via whole-day package zips (no API rate limit).
+    aggregate           Score all turns and write the civility metrics table.
+    viz                 Render charts from the metrics table.
+    all                 ingest-hein -> aggregate -> viz.
 
 Examples
 --------
@@ -31,7 +32,7 @@ INTERIM = DATA / "interim"
 PROCESSED = DATA / "processed"
 
 
-def _p(args) -> None:
+def _setup_logging() -> None:
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 
 
@@ -129,7 +130,7 @@ def main(argv=None) -> int:
     pall.set_defaults(func=cmd_all)
 
     args = ap.parse_args(argv)
-    _p(args)
+    _setup_logging()
     return args.func(args)
 
 

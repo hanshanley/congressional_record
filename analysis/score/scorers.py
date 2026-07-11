@@ -157,21 +157,52 @@ def _phrase_regex(phrases: List[Tuple[str, ...]], fuzzy: bool = True) -> Optiona
         return re.escape(w)
 
     parts = [r"\b" + r"\s+".join(frag(w) for w in p) + r"\b" for p in set(phrases)]
-    return re.compile("|".join(parts), re.IGNORECASE)
+    # No re.IGNORECASE: patterns are built from lowercased tokens and only ever matched
+    # against lowercased text (`low`/`win`), so the flag is pure overhead (~2.7x/scan).
+    return re.compile("|".join(parts))
 
 
 class _Lexicon:
     """A single lexicon: fast single-word set + optional multi-word regex."""
 
     def __init__(self, terms: List[str], fuzzy: bool = True) -> None:
-        self.singles, phrases = _split_terms(terms, fuzzy=fuzzy)
-        self.phrase_re = _phrase_regex(phrases, fuzzy=fuzzy)
+        self.singles, self._phrases = _split_terms(terms, fuzzy=fuzzy)
+        self._fuzzy = fuzzy
+        self.phrase_re = _phrase_regex(self._phrases, fuzzy=fuzzy)
+        self._build_overlap()
+
+    def _build_overlap(self) -> None:
+        """(Re)build per-weight overlap regexes from the CURRENT single-word set.
+
+        A phrase whose content word is also a single-word term would be counted twice
+        (once as the phrase, once by the single-word pass). For each such phrase we count
+        how many of its content words overlap ``singles`` and subtract that many per phrase
+        match in :meth:`count` — mirroring the cross-tier profanity de-dup invariant
+        ("count each surface form once") WITHOUT dropping standalone single-word hits.
+        Rebuildable because the profanity loader mutates ``singles`` after construction.
+        """
+        by_weight: Dict[int, List[Tuple[str, ...]]] = defaultdict(list)
+        for p in self._phrases:
+            overlap = sum(
+                1 for w in p
+                if w not in _FUNCTION and len(w) >= _MIN_INFLECT_LEN
+                and ((morph_variants(w) if self._fuzzy else {w}) & self.singles)
+            )
+            if overlap:
+                by_weight[overlap].append(p)
+        self._overlap_res = [
+            (wt, _phrase_regex(ps, fuzzy=self._fuzzy)) for wt, ps in by_weight.items()
+        ]
 
     def count(self, tokens: Counter, text: str) -> int:
         # Intersect with the (usually small) token set instead of scanning all singles.
         n = sum(tokens[w] for w in self.singles.intersection(tokens))
         if self.phrase_re is not None and text:
             n += len(self.phrase_re.findall(text))
+            # Subtract single-word occurrences already consumed by an overlapping phrase.
+            for weight, rx in self._overlap_res:
+                if rx is not None:
+                    n -= weight * len(rx.findall(text))
         return n
 
 
@@ -189,6 +220,10 @@ def _load_profanity(fuzzy: bool = True) -> Dict[str, "_Lexicon"]:
     # ``profanity_hits`` (sum of tiers) double-counts it.
     lex["strong"].singles -= lex["slurs"].singles
     lex["mild"].singles -= lex["slurs"].singles | lex["strong"].singles
+    # Overlap regexes were built against the pre-subtraction single-word sets; rebuild the
+    # mutated tiers so phrase/single de-dup stays consistent with the final ``singles``.
+    lex["strong"]._build_overlap()
+    lex["mild"]._build_overlap()
     return lex
 
 
