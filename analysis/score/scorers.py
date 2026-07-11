@@ -19,7 +19,7 @@ phrases fall back to regex. This keeps the full-corpus scan tractable.
 from __future__ import annotations
 
 import re
-from collections import Counter
+from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Dict, List, Optional, Set, Tuple
 
@@ -30,7 +30,9 @@ _OUTPARTY_TOKENS = {
     "D": {"republican", "republicans", "gop"},
     "R": {"democrat", "democrats", "democratic"},
 }
-_DEMOCRAT_PARTY_PEJ = re.compile(r"\bdemocrat\s+party\b", re.IGNORECASE)
+# Matched only against already-lowercased text, so no re.IGNORECASE (which would be
+# ~2.7x slower per scan across the 18.5M-turn corpus for identical results).
+_DEMOCRAT_PARTY_PEJ = re.compile(r"\bdemocrat\s+party\b")
 # Tokenizer: word tokens keep internal hyphens/apostrophes (un-american, don't).
 _TOKEN_RE = re.compile(r"[a-z0-9]+(?:[-'\u2019][a-z0-9]+)*")
 # Lightweight sentence splitter for sentence-level VADER (avoids an nltk dependency).
