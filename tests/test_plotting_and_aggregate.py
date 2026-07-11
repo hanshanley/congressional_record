@@ -10,7 +10,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 import pyarrow as pa  # noqa: E402
 import pyarrow.parquet as pq  # noqa: E402
 
-from analysis.aggregate import _select_turn_files  # noqa: E402
+from analysis.aggregate import _select_turn_files, score_and_aggregate  # noqa: E402
 from analysis.ingest.schema import ARROW_SCHEMA  # noqa: E402
 from analysis.plotting import theme  # noqa: E402
 
@@ -19,7 +19,7 @@ def _empty_parquet(path: Path) -> None:
     pq.write_table(pa.Table.from_pylist([], schema=ARROW_SCHEMA), path)
 
 
-def test_select_turn_files_prefers_bulk(tmp_path=None) -> None:
+def test_select_turn_files_keeps_bulk_and_manifest_for_union(tmp_path=None) -> None:
     d = Path(__file__).resolve().parent / "_tmp_turns"
     d.mkdir(exist_ok=True)
     try:
@@ -27,14 +27,52 @@ def test_select_turn_files_prefers_bulk(tmp_path=None) -> None:
                      "govinfo_bulk_115.parquet", "govinfo_118.parquet"):
             _empty_parquet(d / name)
         picked = {p.name for p in _select_turn_files(d)}
-        # bulk 115 wins; api govinfo_115 dropped; govinfo_118 (no bulk twin) kept.
+        # Both 115 paths remain so a partial bulk file cannot suppress manifest coverage.
         assert "govinfo_bulk_115.parquet" in picked
-        assert "govinfo_115.parquet" not in picked
+        assert "govinfo_115.parquet" in picked
         assert "govinfo_118.parquet" in picked
         assert "hein_100.parquet" in picked
     finally:
         import shutil
         shutil.rmtree(d, ignore_errors=True)
+
+
+def test_aggregate_unions_and_deduplicates_govinfo_turns() -> None:
+    import shutil
+
+    root = Path(__file__).resolve().parent / "_tmp_union"
+    turns = root / "turns"
+    out = root / "processed"
+    turns.mkdir(parents=True, exist_ok=True)
+
+    def row(turn_id: str, text: str):
+        return {
+            "turn_id": turn_id, "source": "govinfo", "congress": 115, "year": 2017,
+            "date": "2017-01-03", "chamber": "house", "session": None,
+            "speaker_id": None, "speaker_name": "Mr. TEST", "party": "D", "state": "CA",
+            "text": text, "is_procedural": False,
+        }
+
+    try:
+        pq.write_table(
+            pa.Table.from_pylist([row("same", "damn"), row("bulk-only", "hello")],
+                                 schema=ARROW_SCHEMA),
+            turns / "govinfo_bulk_115.parquet",
+        )
+        pq.write_table(
+            pa.Table.from_pylist([row("same", "damn"), row("manifest-only", "world")],
+                                 schema=ARROW_SCHEMA),
+            turns / "govinfo_115.parquet",
+        )
+        metrics = score_and_aggregate(turns, out)
+        got = metrics.iloc[0]
+        assert got["turns"] == 3
+        assert got["words"] == 3
+        assert got["profanity_hits"] == 1
+        coverage = out / "coverage" / "turn_coverage.csv"
+        assert coverage.exists()
+    finally:
+        shutil.rmtree(root, ignore_errors=True)
 
 
 def test_theme_palette_and_apply() -> None:

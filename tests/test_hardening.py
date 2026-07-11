@@ -16,6 +16,11 @@ from crec.download import (  # noqa: E402
 )
 from crec.enumerate import next_month  # noqa: E402
 import datetime as dt  # noqa: E402
+import zipfile  # noqa: E402
+
+import pyarrow.parquet as pq  # noqa: E402
+
+from analysis.ingest.govinfo_bulk import _package_congress, run_bulk  # noqa: E402
 
 
 def test_redact_masks_api_key() -> None:
@@ -88,6 +93,48 @@ def test_backfill_row_has_full_schema(tmp_path: Path = None) -> None:
 def test_next_month_rolls_over_year() -> None:
     assert next_month(dt.date(2024, 1, 15)) == dt.date(2024, 2, 1)
     assert next_month(dt.date(2024, 12, 31)) == dt.date(2025, 1, 1)
+
+
+def test_bulk_package_congress_uses_explicit_mods_metadata() -> None:
+    assert _package_congress(b"<mods><extension><congress>118</congress></extension></mods>") == 118
+
+
+def test_bulk_ingest_incremental_runs_are_additive_and_deduplicated() -> None:
+    import shutil
+
+    root = Path(__file__).resolve().parent / "_tmp_bulk_incremental"
+    bulk = root / "bulk"
+    out = root / "interim"
+    bulk.mkdir(parents=True, exist_ok=True)
+
+    def make_zip(pkg: str, gid: str, sentence: str) -> None:
+        mods = f"""<mods xmlns="http://www.loc.gov/mods/v3">
+        <extension><congress>118</congress></extension>
+        <relatedItem type="constituent" ID="id-{gid}"><extension>
+        <granuleClass>HOUSE</granuleClass>
+        <congMember bioGuideId="S000001" party="D" state="CA">
+        <name type="authority-fnf">Jane Smith</name></congMember>
+        </extension></relatedItem></mods>"""
+        html = f"<html><body><pre>Mr. SMITH of California. {sentence}</pre></body></html>"
+        with zipfile.ZipFile(bulk / f"{pkg}.zip", "w") as z:
+            z.writestr(f"{pkg}/mods.xml", mods)
+            z.writestr(f"{pkg}/{gid}.htm", html)
+
+    pkg1, gid1 = "CREC-2024-01-09", "CREC-2024-01-09-pt1-PgH1"
+    pkg2, gid2 = "CREC-2024-01-10", "CREC-2024-01-10-pt1-PgH2"
+    try:
+        make_zip(pkg1, gid1, "First real-source fixture turn.")
+        assert run_bulk([pkg1], bulk, out, workers=1) == 1
+        make_zip(pkg2, gid2, "Second real-source fixture turn.")
+        assert run_bulk([pkg2], bulk, out, workers=1) == 1
+        parquet = out / "turns" / "govinfo_bulk_118.parquet"
+        assert pq.ParquetFile(parquet).metadata.num_rows == 2
+
+        make_zip(pkg2, gid2, "Second real-source fixture turn.")
+        assert run_bulk([pkg2], bulk, out, workers=1) == 0
+        assert pq.ParquetFile(parquet).metadata.num_rows == 2
+    finally:
+        shutil.rmtree(root, ignore_errors=True)
 
 
 if __name__ == "__main__":

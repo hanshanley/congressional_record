@@ -24,13 +24,17 @@ LOG = logging.getLogger("analysis.aggregate")
 # Sum accumulators kept per group.
 _SUM_KEYS = [
     "turns", "n_words", "comity_hits", "hostility_hits",
+    "misconduct_hits", "ideological_label_hits",
     "profanity_mild", "profanity_strong", "profanity_slurs", "profanity_hits",
     "outgroup_refs", "democrat_party_pej",
-    "directed_comity_hits", "directed_hostility_hits",
+    "directed_comity_hits", "directed_hostility_hits", "directed_misconduct_hits",
     "sentiment_sum", "neg_share_sum", "sentiment_n",
 ]
 
-_READ_COLS = ["congress", "chamber", "party", "is_procedural", "text"]
+_READ_COLS = [
+    "turn_id", "source", "congress", "chamber", "party", "word_count",
+    "is_procedural", "text",
+]
 
 # Single source of truth for per-1,000-word rate columns: rate name -> the raw hit
 # column it is derived from. Shared with :mod:`analysis.viz` so both modules emit
@@ -38,6 +42,8 @@ _READ_COLS = ["congress", "chamber", "party", "is_procedural", "text"]
 RATE_TO_HITCOL: Dict[str, str] = {
     "comity_per_1k": "comity_hits",
     "hostility_per_1k": "hostility_hits",
+    "misconduct_per_1k": "misconduct_hits",
+    "ideological_label_per_1k": "ideological_label_hits",
     "profanity_per_1k": "profanity_hits",
     "profanity_mild_per_1k": "profanity_mild_hits",
     "profanity_strong_per_1k": "profanity_strong_hits",
@@ -46,30 +52,27 @@ RATE_TO_HITCOL: Dict[str, str] = {
     "democrat_party_pej_per_1k": "democrat_party_pej",
     "directed_comity_per_1k": "directed_comity_hits",
     "directed_hostility_per_1k": "directed_hostility_hits",
+    "directed_misconduct_per_1k": "directed_misconduct_hits",
 }
 
 
 def _select_turn_files(turns_dir: Path) -> List[Path]:
-    """Choose one turn file per source-congress, preferring bulk GovInfo output.
+    """Return all turn files, with bulk GovInfo files before manifest-based files.
 
-    Both ``govinfo_<c>.parquet`` (manifest path) and ``govinfo_bulk_<c>.parquet``
-    (day-zip path) can exist for the same congress with identical turn_ids; scoring
-    both would double-count every 2017+ turn. Prefer the bulk file and drop the
-    matching manifest-based one.
+    A partial bulk file must never suppress fuller manifest coverage. GovInfo rows are
+    unioned during scoring and deduplicated by ``turn_id``; bulk-first ordering means
+    the bulk representation wins when both paths contain the same turn.
     """
     files = sorted(turns_dir.glob("*.parquet"))
-    bulk_congresses = {
-        f.stem[len("govinfo_bulk_"):] for f in files if f.name.startswith("govinfo_bulk_")
-    }
-    selected: List[Path] = []
-    for f in files:
-        if f.name.startswith("govinfo_") and not f.name.startswith("govinfo_bulk_"):
-            congress = f.stem[len("govinfo_"):]
-            if congress in bulk_congresses:
-                LOG.info("skipping %s (superseded by govinfo_bulk_%s)", f.name, congress)
-                continue
-        selected.append(f)
-    return selected
+    return sorted(
+        files,
+        key=lambda f: (
+            0 if f.name.startswith("hein_") else
+            1 if f.name.startswith("govinfo_bulk_") else
+            2,
+            f.name,
+        ),
+    )
 
 
 def _iter_batches(path: Path, batch_size: int = 10_000):
@@ -94,20 +97,54 @@ def score_and_aggregate(
     acc: Dict[Tuple[int, str, str], Dict[str, float]] = defaultdict(
         lambda: {k: 0.0 for k in _SUM_KEYS}
     )
+    coverage: Dict[Tuple[str, int, str], Dict[str, int]] = defaultdict(
+        lambda: defaultdict(int)
+    )
 
     files = _select_turn_files(turns_dir)
     if not files:
         raise FileNotFoundError(f"no turn parquet files in {turns_dir}")
 
+    # Only GovInfo paths can represent the same source turns twice (bulk package vs
+    # manifest ingest). Keeping this set GovInfo-only avoids retaining 18M Hein IDs.
+    seen_govinfo_ids: set[str] = set()
+
     for fp in files:
         n = 0
+        is_govinfo = fp.name.startswith("govinfo")
         for d in _iter_batches(fp):
+            turn_ids = d["turn_id"]
+            sources = d["source"]
             texts = d["text"]
             parties = d["party"]
+            word_counts = d["word_count"]
             congresses = d["congress"]
             chambers = d["chamber"]
             procs = d["is_procedural"]
             for i in range(len(texts)):
+                if is_govinfo:
+                    turn_id = turn_ids[i]
+                    if turn_id in seen_govinfo_ids:
+                        continue
+                    seen_govinfo_ids.add(turn_id)
+                coverage_key = (
+                    sources[i] or "unknown",
+                    int(congresses[i]),
+                    chambers[i] or "other",
+                )
+                cov = coverage[coverage_key]
+                row_words = int(word_counts[i] or 0)
+                cov["total_turns"] += 1
+                cov["total_words"] += row_words
+                if procs[i]:
+                    cov["procedural_turns"] += 1
+                    cov["procedural_words"] += row_words
+                else:
+                    cov["nonprocedural_turns"] += 1
+                    cov["nonprocedural_words"] += row_words
+                    if parties[i] in {"D", "R", "I"}:
+                        cov["analysis_party_turns"] += 1
+                        cov["analysis_party_words"] += row_words
                 if not include_procedural and procs[i]:
                     continue
                 party = parties[i] or "other"
@@ -117,10 +154,12 @@ def score_and_aggregate(
                 a["turns"] += 1
                 a["n_words"] += s["n_words"]
                 for k in (
-                    "comity_hits", "hostility_hits", "profanity_mild",
+                    "comity_hits", "hostility_hits", "misconduct_hits",
+                    "ideological_label_hits", "profanity_mild",
                     "profanity_strong", "profanity_slurs", "profanity_hits",
                     "outgroup_refs", "democrat_party_pej",
                     "directed_comity_hits", "directed_hostility_hits",
+                    "directed_misconduct_hits",
                 ):
                     a[k] += s[k]
                 if "sentiment" in s:
@@ -141,8 +180,45 @@ def score_and_aggregate(
     out_metrics.mkdir(parents=True, exist_ok=True)
     df.to_parquet(out_metrics / "civility_metrics.parquet", index=False)
     df.to_csv(out_metrics / "civility_metrics.csv", index=False)
+    _write_coverage(coverage, out_dir)
     LOG.info("wrote metrics: %d rows -> %s", len(df), out_metrics)
     return df
+
+
+def _write_coverage(
+    coverage: Dict[Tuple[str, int, str], Dict[str, int]], out_dir: Path
+) -> None:
+    """Write source/chamber coverage and usable party-attribution shares."""
+    rows: List[dict] = []
+    for (source, congress, chamber), cov in sorted(coverage.items()):
+        nonproc_turns = cov["nonprocedural_turns"]
+        nonproc_words = cov["nonprocedural_words"]
+        counts = {
+            key: int(cov[key])
+            for key in (
+                "total_turns", "total_words", "procedural_turns", "procedural_words",
+                "nonprocedural_turns", "nonprocedural_words", "analysis_party_turns",
+                "analysis_party_words",
+            )
+        }
+        rows.append({
+            "source": source,
+            "congress": congress,
+            "year": year_from_congress(congress),
+            "chamber": chamber,
+            **counts,
+            "analysis_party_turn_share": (
+                cov["analysis_party_turns"] / nonproc_turns if nonproc_turns else 0.0
+            ),
+            "analysis_party_word_share": (
+                cov["analysis_party_words"] / nonproc_words if nonproc_words else 0.0
+            ),
+        })
+    coverage_dir = out_dir / "coverage"
+    coverage_dir.mkdir(parents=True, exist_ok=True)
+    frame = pd.DataFrame(rows)
+    frame.to_parquet(coverage_dir / "turn_coverage.parquet", index=False)
+    frame.to_csv(coverage_dir / "turn_coverage.csv", index=False)
 
 
 def _finalize(acc: Dict[Tuple[int, str, str], Dict[str, float]]) -> pd.DataFrame:
@@ -159,6 +235,8 @@ def _finalize(acc: Dict[Tuple[int, str, str], Dict[str, float]]) -> pd.DataFrame
             # raw sums (kept so viz can re-aggregate across chambers correctly)
             "comity_hits": int(a["comity_hits"]),
             "hostility_hits": int(a["hostility_hits"]),
+            "misconduct_hits": int(a["misconduct_hits"]),
+            "ideological_label_hits": int(a["ideological_label_hits"]),
             "profanity_hits": int(a["profanity_hits"]),
             "profanity_mild_hits": int(a["profanity_mild"]),
             "profanity_strong_hits": int(a["profanity_strong"]),
@@ -167,6 +245,7 @@ def _finalize(acc: Dict[Tuple[int, str, str], Dict[str, float]]) -> pd.DataFrame
             "democrat_party_pej": int(a["democrat_party_pej"]),
             "directed_comity_hits": int(a["directed_comity_hits"]),
             "directed_hostility_hits": int(a["directed_hostility_hits"]),
+            "directed_misconduct_hits": int(a["directed_misconduct_hits"]),
         }
         # convenience rates at this (congress, chamber, party) granularity, derived from
         # the raw hit columns via the shared RATE_TO_HITCOL map (same names/formula as viz)

@@ -20,7 +20,8 @@ LOG = logging.getLogger("analysis.viz")
 
 SOURCE_NOTE = (
     "Sources: Gentzkow-Shapiro-Taddy hein corpus (1873-2017) + GovInfo CREC (2017-present). "
-    "Rates per 1,000 words; dotted line marks the hein\u2192GovInfo source boundary (2017)."
+    "House and Senate floor turns only; Extensions/other sections excluded. Rates per 1,000 "
+    "words; dotted line marks the hein\u2192GovInfo source boundary (2017)."
 )
 SOURCE_BOUNDARY_YEAR = 2017
 
@@ -29,11 +30,12 @@ SOURCE_BOUNDARY_YEAR = 2017
 _RECT_TOP_1LINE = 0.97
 _RECT_TOP_2LINE = 0.95
 
-_HIT_COLS = [
-    "comity_hits", "hostility_hits", "profanity_hits", "profanity_slurs_hits",
-    "outgroup_refs", "democrat_party_pej", "directed_comity_hits",
-    "directed_hostility_hits", "words",
-]
+_HIT_COLS = list(dict.fromkeys([*RATE_TO_HITCOL.values(), "words"]))
+
+
+def _available_hit_cols(df: pd.DataFrame) -> List[str]:
+    """Raw count columns available in a metrics frame (supports older fixtures)."""
+    return [col for col in _HIT_COLS if col in df.columns]
 
 
 def _add_rates(g: pd.DataFrame) -> pd.DataFrame:
@@ -47,12 +49,16 @@ def _add_rates(g: pd.DataFrame) -> pd.DataFrame:
 
 
 def _by_congress_party(df: pd.DataFrame) -> pd.DataFrame:
-    return _add_rates(df.groupby(["congress", "year", "party"], as_index=False)[_HIT_COLS].sum())
+    return _add_rates(
+        df.groupby(["congress", "year", "party"], as_index=False)[_available_hit_cols(df)].sum()
+    )
 
 
 def _by_year_chamber_party(df: pd.DataFrame) -> pd.DataFrame:
     return _add_rates(
-        df.groupby(["congress", "year", "chamber", "party"], as_index=False)[_HIT_COLS].sum()
+        df.groupby(
+            ["congress", "year", "chamber", "party"], as_index=False
+        )[_available_hit_cols(df)].sum()
     )
 
 
@@ -107,10 +113,24 @@ def _plot_by_chamber_party(ax, g: pd.DataFrame, col: str, parties=("D", "R"),
 # (column, title, y-label) for each per-party panel/figure.
 _PANELS = [
     ("comity_per_1k", "Comity / deference phrases", "hits per 1,000 words"),
-    ("hostility_per_1k", "Hostility / attack language", "hits per 1,000 words"),
-    ("directed_hostility_per_1k", "Hostility directed at the other party", "hits per 1,000 words"),
+    ("hostility_per_1k", "Personal disrespect / attack language", "hits per 1,000 words"),
+    ("misconduct_per_1k", "Misconduct allegation language", "hits per 1,000 words"),
+    ("profanity_per_1k", "High-precision profanity", "hits per 1,000 words"),
+    (
+        "directed_hostility_per_1k",
+        "Personal disrespect near out-party references",
+        "hits per 1,000 words",
+    ),
+    ("ideological_label_per_1k", "Ideological labels", "hits per 1,000 words"),
+]
+
+_SUPPLEMENTAL_PANELS = [
     ("outgroup_ref_per_1k", "References to the other party", "refs per 1,000 words"),
-    ("profanity_per_1k", "Profanity", "hits per 1,000 words"),
+    (
+        "directed_misconduct_per_1k",
+        "Misconduct allegations near out-party references",
+        "hits per 1,000 words",
+    ),
     ("democrat_party_pej_per_1k", '"Democrat party" pejorative', "hits per 1,000 words"),
 ]
 
@@ -142,31 +162,31 @@ def _grid_overview(g: pd.DataFrame, figs_dir: Path, plot_fn, suptitle: str,
 def _overview(g: pd.DataFrame, figs_dir: Path) -> Path:
     return _grid_overview(
         g, figs_dir, _plot_by_party,
-        "The decline of comity between the parties \u2014 U.S. Congressional Record, 1873\u20132026",
+        "Congressional comity and conflict language \u2014 U.S. Congressional Record, 1873\u20132026",
         "overview.png", legend_fontsize=9, rect_top=_RECT_TOP_1LINE,
     )
 
 
 def _asymmetry(g: pd.DataFrame, figs_dir: Path) -> Path:
-    """Genuine D vs R asymmetry: (Democrats' - Republicans') directed hostility per 1k."""
+    """D-R difference in disrespect appearing near an out-party reference."""
     piv = g.pivot_table(index="year", columns="party", values="directed_hostility_per_1k")
     fig, ax = charts.new_figure(figsize=(10, 5.5))
     if {"D", "R"}.issubset(piv.columns):
         piv = piv.dropna(subset=["D", "R"]).sort_index()
         diff = piv["D"] - piv["R"]
         ax.fill_between(diff.index, 0, diff.clip(lower=0), color=theme.BLUE, alpha=0.5,
-                        label="Democrats more hostile")
+                        label="Higher Democratic rate")
         ax.fill_between(diff.index, 0, diff.clip(upper=0), color=theme.ACCENT, alpha=0.5,
-                        label="Republicans more hostile")
+                        label="Higher Republican rate")
         charts.line(ax, diff.index, diff.values, color=theme.TEXT, label="D \u2212 R", linewidth=1.6)
     charts.marker_line(ax, SOURCE_BOUNDARY_YEAR)
     ax.axhline(0, color=theme.MUTED, linewidth=0.8)
     charts.style_axes(
         ax,
-        "Directed-hostility asymmetry between the parties",
+        "Asymmetry in disrespect near out-party references",
         "Year",
-        "D \u2212 R directed hostility (per 1,000 words)",
-        subtitle="Above zero: Democrats attack the other side more; below: Republicans do",
+        "D \u2212 R nearby-disrespect rate (per 1,000 words)",
+        subtitle="Proximity is evidence of context, not proof that a phrase targets a party",
     )
     return charts.finish(fig, ax, figs_dir / "directed_asymmetry.png", source=SOURCE_NOTE)
 
@@ -183,13 +203,14 @@ def _overview_by_chamber(gc: pd.DataFrame, figs_dir: Path) -> Path:
 
 def render(metrics_path: Path, out_dir: Path) -> List[Path]:
     df = pd.read_parquet(metrics_path)
+    df = df[df["chamber"].isin(["house", "senate"])].copy()
     g = _by_congress_party(df)
     gc = _by_year_chamber_party(df)
     figs_dir = out_dir / "reports" / "figures"
     figs_dir.mkdir(parents=True, exist_ok=True)
     written: List[Path] = [_overview(g, figs_dir), _overview_by_chamber(gc, figs_dir)]
 
-    for col, title, ylab in _PANELS:
+    for col, title, ylab in [*_PANELS, *_SUPPLEMENTAL_PANELS]:
         # overall (by party): clean markerless lines with direct end-of-line party labels
         fig, ax = charts.new_figure(figsize=(10, 5.5))
         _plot_by_party(ax, g, col, label_ends=True, marker=None, linewidth=2.6)

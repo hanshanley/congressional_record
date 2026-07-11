@@ -16,11 +16,8 @@ Usage::
 
 from __future__ import annotations
 
-import matplotlib
-
-matplotlib.use("Agg")  # headless: no display required
-import matplotlib.patheffects as pe  # noqa: E402
-import matplotlib.pyplot as plt  # noqa: E402
+import matplotlib.patheffects as pe
+import matplotlib.pyplot as plt
 
 # ── Shared Substack palette (identical to uk_decline/tuition/theme.py) ──────────
 BG = "#F7F5F0"

@@ -11,7 +11,9 @@ from analysis.normalize.parties import normalize_party, opposing_party  # noqa: 
 from analysis.score.scorers import Scorers  # noqa: E402
 from analysis.ingest.govinfo import (  # noqa: E402
     _congress_from_date,
+    _congress_from_row,
     _segment,
+    _speaker_state,
     _speaker_surname,
     _strip_header,
     _surname,
@@ -82,6 +84,35 @@ def test_build_turns_preamble_not_attributed_to_sole() -> None:
     assert all(t["party"] == "other" for t in preamble)
 
 
+def test_build_turns_rejects_ambiguous_surname_and_uses_state() -> None:
+    members = normalize_members([
+        {"party": "D", "bioGuideId": "S1", "state": "CA", "name": "Alex Smith"},
+        {"party": "R", "bioGuideId": "S2", "state": "TX", "name": "Jordan Smith"},
+    ])
+    text = (
+        "Mr. SMITH of Texas. I rise.\n"
+        "Mr. SMITH. I yield back.\n"
+        "Mr. JONES. I object.\n"
+    )
+    turns = list(build_turns(
+        text, members, "CREC-2025-01-01-pt1-PgH1", "2025-01-01", 119, "house"
+    ))
+    assert turns[0]["party"] == "R" and turns[0]["bioguide"] == "S2"
+    assert turns[1]["party"] == "other" and not turns[1]["bioguide"]
+    # An unmatched marker is not assigned to the sole/nearest metadata member.
+    assert turns[2]["party"] == "other" and not turns[2]["bioguide"]
+
+
+def test_president_pro_tempore_marker_is_procedural() -> None:
+    turns = list(build_turns(
+        "The PRESIDENT pro tempore. The Senate will come to order.",
+        [], "CREC-2025-01-01-pt1-PgS1", "2025-01-01", 119, "senate",
+    ))
+    assert len(turns) == 1
+    assert turns[0]["speaker_name"] == "The PRESIDENT pro tempore"
+    assert turns[0]["is_procedural"] is True
+
+
 def test_fuzzy_keyword_matching() -> None:
     from analysis.score.scorers import morph_variants, plural_variants
     # morphological variants for single words
@@ -106,9 +137,8 @@ def test_fuzzy_keyword_matching() -> None:
         assert fuzzy.score_turn(txt, "D")["comity_hits"] >= 1
         assert exact.score_turn(txt, "D")["comity_hits"] == 0
 
-    # Cross-tier de-dup: "screwed" is a mild term's fuzzy variant AND an explicit strong
-    # entry; it must be counted once (in strong), not double-counted across tiers.
-    sc = fuzzy.score_turn("he screwed up the whole vote", "D")
+    # Curated profanity surface forms are exact and assigned to one severity tier.
+    sc = fuzzy.score_turn("he fucked up the whole vote", "D")
     assert sc["profanity_hits"] == 1
     assert sc["profanity_mild"] == 0 and sc["profanity_strong"] == 1
 
@@ -116,11 +146,11 @@ def test_fuzzy_keyword_matching() -> None:
     # ordinary English words: "len" (a lexicon entry) must not expand to match "lens".
     assert fuzzy.score_turn("we viewed the bill through that lens today", "D")["profanity_hits"] == 0
 
-    # Phrase / single-word de-dup: a phrase whose content word is ALSO a single term is
-    # counted once (not phrase + single), but standalone occurrences still count.
-    assert fuzzy.score_turn("the radical left is coming", "D")["hostility_hits"] == 1
-    assert fuzzy.score_turn("a radical proposal today", "D")["hostility_hits"] == 1
-    assert fuzzy.score_turn("the radical left and the radical right", "D")["hostility_hits"] == 2
+    # Explicit and fuzzy phrase variants that cover the same span are counted once.
+    assert fuzzy.score_turn("reaching across the aisle", "D")["comity_hits"] == 1
+    assert fuzzy.score_turn(
+        "reaching across the aisle and then reached across the aisle", "D"
+    )["comity_hits"] == 2
 
     # Gendered comity must be matched symmetrically across gentleman/gentlewoman/gentlelady
     # (gender is not a morphological inflection), and fuzzy must catch their plurals too.
@@ -170,8 +200,9 @@ def test_scorer_comity_and_hostility() -> None:
     assert r["comity_hits"] >= 2  # "i thank the gentleman" + "my distinguished colleague"
     assert r["hostility_hits"] == 0
 
-    r2 = s.score_turn("This is a disgraceful, corrupt, un-American lie.", "R")
-    assert r2["hostility_hits"] >= 3  # disgraceful, corrupt, un-american, lie
+    r2 = s.score_turn("That dishonest, cowardly liar is unfit for office.", "R")
+    assert r2["hostility_hits"] >= 4
+    assert r2["misconduct_hits"] == 0
 
 
 def test_scorer_profanity_tiers() -> None:
@@ -181,17 +212,41 @@ def test_scorer_profanity_tiers() -> None:
     assert r["profanity_hits"] >= 2
 
 
+def test_scorer_separates_neutral_topics_and_discourse_categories() -> None:
+    s = Scorers()
+    for text in (
+        "organ transplant legislation", "sex trafficking bill", "murder victims",
+        "gay rights legislation", "In God We Trust", "erected a memorial", "strips funding",
+    ):
+        assert s.score_turn(text, "D")["profanity_hits"] == 0
+
+    scored = s.score_turn(
+        "That dishonest coward committed bribery, according to this allegation, "
+        "and promoted a socialist policy. What the hell.",
+        "D",
+    )
+    assert scored["hostility_hits"] >= 2
+    assert scored["misconduct_hits"] >= 1
+    assert scored["ideological_label_hits"] >= 1
+    assert scored["profanity_hits"] >= 1
+
+
 def test_scorer_outgroup_directed_and_pejorative() -> None:
     s = Scorers()
     # A Democrat attacking Republicans near an out-group reference.
-    txt = "My Republican colleagues are reckless and dangerous on this bill."
+    txt = "My Republican colleagues are dishonest cowards on this bill."
     r = s.score_turn(txt, "D")
     assert r["outgroup_refs"] >= 1               # "republican" is out-group for a D
-    assert r["directed_hostility_hits"] >= 2     # reckless + dangerous near the ref
+    assert r["directed_hostility_hits"] >= 2     # dishonest + cowards near the ref
 
     # Same words but speaker is Republican -> "republican" is NOT out-group.
     r2 = s.score_turn(txt, "R")
     assert r2["outgroup_refs"] == 0
+
+    # Generic democratic-government language is not a party reference, while a
+    # party-specific Democratic noun phrase is.
+    assert s.score_turn("We defend democratic institutions and values.", "R")["outgroup_refs"] == 0
+    assert s.score_turn("My Democratic colleagues support the bill.", "R")["outgroup_refs"] == 1
 
     # "Democrat party" pejorative marker.
     r3 = s.score_turn("The Democrat party wants to raise your taxes.", "R")
@@ -206,6 +261,9 @@ def test_govinfo_helpers() -> None:
     assert _surname("Jane Q. Smith") == "SMITH"
     assert _speaker_surname("Mr. McCONNELL") == "MCCONNELL"
     assert _speaker_surname("Ms. PELOSI of California") == "PELOSI"
+    assert _speaker_state("Ms. PELOSI of California") == "CA"
+    assert _speaker_state("Mr. NADLER of New York") == "NY"
+    assert _congress_from_row({"congress": "118", "dateIssued": "2025-01-01"}) == 118
 
 
 def test_govinfo_segment_and_header() -> None:

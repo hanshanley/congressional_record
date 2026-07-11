@@ -5,9 +5,9 @@ Loads the lexicons once and scores a turn's text for:
 * comity/deference phrase hits (positive)
 * hostility/attack hits (negative)
 * profanity hits by tier (mild/strong/slurs)
-* out-group reference count (aisle idioms + opposing-party name, resolved to the
-  speaker's party) and **directed** comity/hostility within a window around each
-  out-group reference ("civility toward the other party")
+* out-group reference count (aisle idioms + high-precision opposing-party references,
+  resolved to the speaker's party) and comity/hostility within a window around each
+  reference (proximity context, not proof of direction)
 * the "Democrat party" pejorative marker
 * optional VADER sentiment compound
 
@@ -19,7 +19,7 @@ phrases fall back to regex. This keeps the full-corpus scan tractable.
 from __future__ import annotations
 
 import re
-from collections import Counter, defaultdict
+from collections import Counter
 from pathlib import Path
 from typing import Dict, List, Optional, Set, Tuple
 
@@ -27,8 +27,16 @@ LEXDIR = Path(__file__).parent / "lexicons"
 
 # Opposing-party name references, keyed by the SPEAKER's normalized party.
 _OUTPARTY_TOKENS = {
-    "D": {"republican", "republicans", "gop"},
-    "R": {"democrat", "democrats", "democratic"},
+    "D": {"republicans", "gop"},
+    "R": {"democrat", "democrats"},
+}
+_OUTPARTY_PHRASES = {
+    "D": re.compile(
+        r"\brepublican\s+(?:party|colleagues?|members?|caucus|leadership|side|conference)\b"
+    ),
+    "R": re.compile(
+        r"\bdemocratic\s+(?:party|colleagues?|members?|caucus|leadership|side)\b"
+    ),
 }
 # Matched only against already-lowercased text, so no re.IGNORECASE (which would be
 # ~2.7x slower per scan across the 18.5M-turn corpus for identical results).
@@ -166,64 +174,39 @@ class _Lexicon:
     """A single lexicon: fast single-word set + optional multi-word regex."""
 
     def __init__(self, terms: List[str], fuzzy: bool = True) -> None:
-        self.singles, self._phrases = _split_terms(terms, fuzzy=fuzzy)
-        self._fuzzy = fuzzy
-        self.phrase_re = _phrase_regex(self._phrases, fuzzy=fuzzy)
-        self._build_overlap()
-
-    def _build_overlap(self) -> None:
-        """(Re)build per-weight overlap regexes from the CURRENT single-word set.
-
-        A phrase whose content word is also a single-word term would be counted twice
-        (once as the phrase, once by the single-word pass). For each such phrase we count
-        how many of its content words overlap ``singles`` and subtract that many per phrase
-        match in :meth:`count` — mirroring the cross-tier profanity de-dup invariant
-        ("count each surface form once") WITHOUT dropping standalone single-word hits.
-        Rebuildable because the profanity loader mutates ``singles`` after construction.
-        """
-        by_weight: Dict[int, List[Tuple[str, ...]]] = defaultdict(list)
-        for p in self._phrases:
-            overlap = sum(
-                1 for w in p
-                if w not in _FUNCTION and len(w) >= _MIN_INFLECT_LEN
-                and ((morph_variants(w) if self._fuzzy else {w}) & self.singles)
-            )
-            if overlap:
-                by_weight[overlap].append(p)
-        self._overlap_res = [
-            (wt, _phrase_regex(ps, fuzzy=self._fuzzy)) for wt, ps in by_weight.items()
-        ]
+        self.singles, phrases = _split_terms(terms, fuzzy=fuzzy)
+        self.phrase_re = _phrase_regex(phrases, fuzzy=fuzzy)
 
     def count(self, tokens: Counter, text: str) -> int:
         # Intersect with the (usually small) token set instead of scanning all singles.
         n = sum(tokens[w] for w in self.singles.intersection(tokens))
         if self.phrase_re is not None and text:
-            n += len(self.phrase_re.findall(text))
-            # Subtract single-word occurrences already consumed by an overlapping phrase.
-            for weight, rx in self._overlap_res:
-                if rx is not None:
-                    n -= weight * len(rx.findall(text))
+            matches = list(self.phrase_re.finditer(text))
+            n += len(matches)
+            # A phrase may contain a term that is also a single-word entry. Subtract only
+            # the ACTUAL single-token matches inside the phrase span, rather than inferred
+            # variant overlap (which could zero one phrase and double another).
+            for match in matches:
+                n -= sum(1 for w in _TOKEN_RE.findall(match.group()) if w in self.singles)
         return n
 
 
 def _load_profanity(fuzzy: bool = True) -> Dict[str, "_Lexicon"]:
-    tiers: Dict[str, List[str]] = {"mild": [], "strong": [], "slurs": []}
+    # Profanity uses an explicitly enumerated high-precision list: do not generate
+    # morphology (the former broad list turned ordinary words such as "strips" and
+    # "erected" into profanity). Identity slurs are kept in a separate exact list.
+    tiers: Dict[str, List[str]] = {"mild": [], "strong": []}
     for line in _load_lines("profanity.txt"):
         term, _, tier = line.partition("\t")
         tier = tier.strip() or "strong"
         if tier in tiers:
             tiers[tier].append(term.strip())
-    lex = {tier: _Lexicon(terms, fuzzy=fuzzy) for tier, terms in tiers.items()}
+    lex = {tier: _Lexicon(terms, fuzzy=False) for tier, terms in tiers.items()}
+    lex["slurs"] = _Lexicon(_load_lines("slurs.txt"), fuzzy=False)
     # De-duplicate surface forms across tiers so each token is counted once, in its most
-    # severe tier. Fuzzy expansion can make a mild term ("screw" -> "screwed") collide
-    # with an explicit strong entry; without this the token is counted in both tiers and
-    # ``profanity_hits`` (sum of tiers) double-counts it.
+    # severe tier. This protects against accidental duplicate surface forms in curated files.
     lex["strong"].singles -= lex["slurs"].singles
     lex["mild"].singles -= lex["slurs"].singles | lex["strong"].singles
-    # Overlap regexes were built against the pre-subtraction single-word sets; rebuild the
-    # mutated tiers so phrase/single de-dup stays consistent with the final ``singles``.
-    lex["strong"]._build_overlap()
-    lex["mild"]._build_overlap()
     return lex
 
 
@@ -233,6 +216,8 @@ class Scorers:
     def __init__(self, use_sentiment: bool = False, fuzzy: bool = True) -> None:
         self.comity = _Lexicon(_load_lines("comity.txt"), fuzzy=fuzzy)
         self.hostility = _Lexicon(_load_lines("hostility.txt"), fuzzy=fuzzy)
+        self.misconduct = _Lexicon(_load_lines("misconduct.txt"), fuzzy=fuzzy)
+        self.ideological_labels = _Lexicon(_load_lines("ideological_labels.txt"), fuzzy=fuzzy)
         self.outgroup_idiom = _Lexicon(_load_lines("outgroup.txt"), fuzzy=fuzzy)
         self.profanity = _load_profanity(fuzzy=fuzzy)
         self._sid = None
@@ -287,6 +272,20 @@ class Scorers:
             return []
         return [m.span() for m in self.outgroup_idiom.phrase_re.finditer(text_lower)]
 
+    @staticmethod
+    def _distinct_spans(spans: List[Tuple[int, int]]) -> List[Tuple[int, int]]:
+        """Collapse overlapping detectors so one reference is counted once."""
+        if not spans:
+            return []
+        merged = [list(span) for span in sorted(spans)]
+        out = [merged[0]]
+        for start, end in merged[1:]:
+            if start < out[-1][1]:
+                out[-1][1] = max(out[-1][1], end)
+            else:
+                out.append([start, end])
+        return [(start, end) for start, end in out]
+
     def score_turn(self, text: str, party: str) -> Dict[str, float]:
         text = text or ""
         low = text.lower()
@@ -303,7 +302,9 @@ class Scorers:
             if outtok and g in outtok:
                 outparty_spans.append(m.span())
 
-        spans: List[Tuple[int, int]] = self._idiom_spans(low) + outparty_spans
+        phrase_re = _OUTPARTY_PHRASES.get(party)
+        phrase_spans = [m.span() for m in phrase_re.finditer(low)] if phrase_re else []
+        spans = self._distinct_spans(self._idiom_spans(low) + outparty_spans + phrase_spans)
 
         prof = {tier: lex.count(tokens, low) for tier, lex in self.profanity.items()}
         win = self._window_text(low, spans)
@@ -313,6 +314,8 @@ class Scorers:
             "n_words": n_words,
             "comity_hits": self.comity.count(tokens, low),
             "hostility_hits": self.hostility.count(tokens, low),
+            "misconduct_hits": self.misconduct.count(tokens, low),
+            "ideological_label_hits": self.ideological_labels.count(tokens, low),
             "profanity_mild": prof.get("mild", 0),
             "profanity_strong": prof.get("strong", 0),
             "profanity_slurs": prof.get("slurs", 0),
@@ -322,6 +325,7 @@ class Scorers:
             "democrat_party_pej": len(_DEMOCRAT_PARTY_PEJ.findall(low)) if "democrat" in tokens else 0,
             "directed_comity_hits": self.comity.count(win_tokens, win),
             "directed_hostility_hits": self.hostility.count(win_tokens, win),
+            "directed_misconduct_hits": self.misconduct.count(win_tokens, win),
         }
         if self._sid is not None:
             compound, neg_share, n_sentences = self._sentiment(text)

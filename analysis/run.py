@@ -85,6 +85,9 @@ def cmd_aggregate(args) -> int:
 
 
 def cmd_viz(args) -> int:
+    import matplotlib
+
+    matplotlib.use("Agg")
     from analysis.viz import render
 
     render(PROCESSED / "metrics" / "civility_metrics.parquet", DATA)

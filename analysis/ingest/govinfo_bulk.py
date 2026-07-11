@@ -13,8 +13,10 @@ from __future__ import annotations
 import concurrent.futures as cf
 import io
 import logging
+import os
 import re
 import subprocess
+import tempfile
 import threading
 import zipfile
 from pathlib import Path
@@ -35,7 +37,7 @@ from analysis.ingest.schema import (
 from analysis.ingest.govinfo import (
     build_turns,
     normalize_members,
-    _congress_from_date,
+    _congress_from_row,
     _strip_header,
 )
 from crec.download import html_to_text
@@ -95,15 +97,35 @@ def parse_package_mods(mods_bytes: bytes) -> Dict[str, Dict[str, Any]]:
     return out
 
 
+def _package_congress(mods_bytes: bytes) -> int:
+    """Congress number from package MODS, or zero when absent/invalid."""
+    try:
+        root = _xml_fromstring(mods_bytes)
+    except ET.ParseError:
+        return 0
+    for node in root.iter():
+        if _localname(node.tag) == "congress" and node.text:
+            try:
+                congress = int(node.text.strip())
+            except ValueError:
+                continue
+            if congress > 0:
+                return congress
+    return 0
+
+
 def _turns_from_zip(zip_bytes: bytes, pkg: str) -> Iterator[Dict[str, Any]]:
     z = zipfile.ZipFile(io.BytesIO(zip_bytes))
     names = z.namelist()
     mods_name = next((n for n in names if n.endswith("mods.xml")), None)
     if not mods_name:
         return
-    gmap = parse_package_mods(z.read(mods_name))
+    mods_bytes = z.read(mods_name)
+    gmap = parse_package_mods(mods_bytes)
     date = pkg.replace("CREC-", "")  # YYYY-MM-DD
-    congress = _congress_from_date(date)  # shared helper; 0 if the year can't be parsed
+    congress = _congress_from_row(
+        {"congress": _package_congress(mods_bytes), "dateIssued": date}
+    )
     if not congress:
         return
     htm_names = {n.rsplit("/", 1)[-1][:-4]: n for n in names if n.endswith(".htm")}
@@ -153,14 +175,23 @@ def run_bulk(
     out_dir: Path,
     workers: int = 12,
 ) -> int:
-    """Download+ingest+delete each package; write turns per congress. Returns turn count."""
+    """Download packages and atomically merge their turns into per-Congress Parquet.
+
+    Existing output is copied into a temporary replacement and retained by ``turn_id``.
+    This makes partial/incremental invocations additive instead of truncating prior data.
+    The replacements are published only if the run completes without an exception.
+    """
     bulk_dir.mkdir(parents=True, exist_ok=True)
     turns_dir = out_dir / "turns"
     turns_dir.mkdir(parents=True, exist_ok=True)
     pkg_list = [p for p in pkg_list if _PKG_RE.match(p)]
 
-    # Parquet writers per congress (serialized via lock).
+    # Temporary Parquet writers per congress (serialized via lock). Existing data is
+    # copied into each replacement before newly downloaded turns are appended.
     writers: Dict[int, "pq.ParquetWriter"] = {}
+    temp_paths: Dict[int, Path] = {}
+    final_paths: Dict[int, Path] = {}
+    seen_ids: Dict[int, set[str]] = {}
     lock = threading.Lock()
     total = 0
 
@@ -169,9 +200,25 @@ def run_bulk(
     def get_writer(congress: int) -> "pq.ParquetWriter":
         w = writers.get(congress)
         if w is None:
-            p = turns_dir / f"govinfo_bulk_{congress:03d}.parquet"
-            w = pq.ParquetWriter(p, ARROW_SCHEMA, compression="zstd")
+            final = turns_dir / f"govinfo_bulk_{congress:03d}.parquet"
+            fd, tmp_name = tempfile.mkstemp(
+                prefix=f".govinfo_bulk_{congress:03d}.", suffix=".parquet.tmp",
+                dir=turns_dir,
+            )
+            os.close(fd)
+            tmp = Path(tmp_name)
+            w = pq.ParquetWriter(tmp, ARROW_SCHEMA, compression="zstd")
+            existing_ids: set[str] = set()
+            if final.exists():
+                existing = pq.ParquetFile(final)
+                for batch in existing.iter_batches(batch_size=50_000):
+                    w.write_batch(batch)
+                    turn_id_col = batch.schema.get_field_index("turn_id")
+                    existing_ids.update(batch.column(turn_id_col).to_pylist())
             writers[congress] = w
+            temp_paths[congress] = tmp
+            final_paths[congress] = final
+            seen_ids[congress] = existing_ids
         return w
 
     def process(pkg: str) -> int:
@@ -184,31 +231,54 @@ def run_bulk(
             rows_by_c: Dict[int, List[Dict[str, Any]]] = {}
             for t in _turns_from_zip(data, pkg):
                 rows_by_c.setdefault(t["congress"], []).append(t)
-            # Build Arrow tables OUTSIDE the lock; hold it only for write_table.
-            tables = {c: pa.Table.from_pylist(rows, schema=ARROW_SCHEMA)
-                      for c, rows in rows_by_c.items() if rows}
-            n = sum(len(rows) for rows in rows_by_c.values())
+            fresh_by_c: Dict[int, List[Dict[str, Any]]] = {}
+            with lock:
+                for c, rows in rows_by_c.items():
+                    get_writer(c)
+                    fresh = []
+                    for row in rows:
+                        turn_id = row["turn_id"]
+                        if turn_id in seen_ids[c]:
+                            continue
+                        seen_ids[c].add(turn_id)
+                        fresh.append(row)
+                    if fresh:
+                        fresh_by_c[c] = fresh
+            # Build Arrow tables outside the lock; hold it only for write_table.
+            tables = {
+                c: pa.Table.from_pylist(rows, schema=ARROW_SCHEMA)
+                for c, rows in fresh_by_c.items()
+            }
             with lock:
                 for c, table in tables.items():
                     get_writer(c).write_table(table)
-            return n
+            return sum(len(rows) for rows in fresh_by_c.values())
         finally:
             try:
                 zp.unlink()  # delete zip to bound disk
             except OSError:
                 pass
 
-    with cf.ThreadPoolExecutor(max_workers=workers) as ex:
-        futs = {ex.submit(process, p): p for p in pkg_list}
-        done = 0
-        for fut in cf.as_completed(futs):
-            total += fut.result()
-            done += 1
-            if done % 50 == 0:
-                LOG.info("processed %d/%d packages, %d turns", done, len(pkg_list), total)
-
-    with lock:
-        for w in writers.values():
-            w.close()
+    succeeded = False
+    try:
+        with cf.ThreadPoolExecutor(max_workers=workers) as ex:
+            futs = {ex.submit(process, p): p for p in pkg_list}
+            done = 0
+            for fut in cf.as_completed(futs):
+                total += fut.result()
+                done += 1
+                if done % 50 == 0:
+                    LOG.info("processed %d/%d packages, %d new turns", done, len(pkg_list), total)
+        succeeded = True
+    finally:
+        with lock:
+            for w in writers.values():
+                w.close()
+        if succeeded:
+            for congress, tmp in temp_paths.items():
+                os.replace(tmp, final_paths[congress])
+        else:
+            for tmp in temp_paths.values():
+                tmp.unlink(missing_ok=True)
     LOG.info("bulk ingest complete: %d packages, %d turns", len(pkg_list), total)
     return total

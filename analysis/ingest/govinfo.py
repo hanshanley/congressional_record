@@ -40,7 +40,7 @@ _SURNAME = r"[A-Z][A-Za-z'\u2019-]+(?:\s+[A-Z][A-Za-z'\u2019-]+){0,2}"
 _SPEAKER_RE = re.compile(
     r"(?m)^\s{0,4}("
     rf"(?:Mr|Mrs|Ms|Miss)\.\s+{_SURNAME}(?:\s+of\s+[A-Z][a-zA-Z]+(?:\s+[A-Z][a-zA-Z]+){{0,2}})?"
-    r"|The\s+(?:SPEAKER(?:\s+pro\s+tempore)?|PRESIDING\s+OFFICER|(?:VICE\s+)?PRESIDENT"
+    r"|The\s+(?:SPEAKER(?:\s+pro\s+tempore)?|PRESIDING\s+OFFICER|(?:VICE\s+)?PRESIDENT(?:\s+pro\s+tempore)?"
     r"|ACTING\s+PRESIDENT(?:\s+pro\s+tempore)?|CHIEF\s+JUSTICE|CLERK|Acting\s+CHAIR|CHAIR(?:MAN|WOMAN)?)"
     r")\.\s",
 )
@@ -61,6 +61,17 @@ def _congress_from_date(date_str: str) -> int:
     except (TypeError, ValueError):
         return 0
     return congress_from_year(year)
+
+
+def _congress_from_row(row: Dict[str, Any]) -> int:
+    """Prefer explicit GovInfo Congress metadata; infer from date only as fallback."""
+    try:
+        congress = int(row.get("congress") or 0)
+    except (TypeError, ValueError):
+        congress = 0
+    if congress > 0:
+        return congress
+    return _congress_from_date((row.get("dateIssued") or "").strip())
 
 
 def _strip_header(text: str) -> str:
@@ -91,30 +102,69 @@ def _speaker_surname(marker: str) -> str:
     return m.group(1).upper() if m else ""
 
 
-def _index_members(members: List[Dict[str, str]]) -> Dict[str, Dict[str, str]]:
-    """Index normalized members by surname AND by last surname token for lookup.
+_STATE_CODES = {
+    "ALABAMA": "AL", "ALASKA": "AK", "ARIZONA": "AZ", "ARKANSAS": "AR",
+    "CALIFORNIA": "CA", "COLORADO": "CO", "CONNECTICUT": "CT", "DELAWARE": "DE",
+    "FLORIDA": "FL", "GEORGIA": "GA", "HAWAII": "HI", "IDAHO": "ID",
+    "ILLINOIS": "IL", "INDIANA": "IN", "IOWA": "IA", "KANSAS": "KS",
+    "KENTUCKY": "KY", "LOUISIANA": "LA", "MAINE": "ME", "MARYLAND": "MD",
+    "MASSACHUSETTS": "MA", "MICHIGAN": "MI", "MINNESOTA": "MN",
+    "MISSISSIPPI": "MS", "MISSOURI": "MO", "MONTANA": "MT", "NEBRASKA": "NE",
+    "NEVADA": "NV", "NEW HAMPSHIRE": "NH", "NEW JERSEY": "NJ",
+    "NEW MEXICO": "NM", "NEW YORK": "NY", "NORTH CAROLINA": "NC",
+    "NORTH DAKOTA": "ND", "OHIO": "OH", "OKLAHOMA": "OK", "OREGON": "OR",
+    "PENNSYLVANIA": "PA", "RHODE ISLAND": "RI", "SOUTH CAROLINA": "SC",
+    "SOUTH DAKOTA": "SD", "TENNESSEE": "TN", "TEXAS": "TX", "UTAH": "UT",
+    "VERMONT": "VT", "VIRGINIA": "VA", "WASHINGTON": "WA",
+    "WEST VIRGINIA": "WV", "WISCONSIN": "WI", "WYOMING": "WY",
+    "DISTRICT OF COLUMBIA": "DC", "PUERTO RICO": "PR", "GUAM": "GU",
+    "AMERICAN SAMOA": "AS", "VIRGIN ISLANDS": "VI",
+    "NORTHERN MARIANA ISLANDS": "MP",
+}
+
+
+def _speaker_state(marker: str) -> str:
+    """Two-letter state/territory code from an ``of <State>`` marker clause."""
+    m = re.search(r"\s+of\s+(.+)$", marker.strip(), re.IGNORECASE)
+    if not m:
+        return ""
+    raw = " ".join(m.group(1).split()).upper()
+    return _STATE_CODES.get(raw, raw if len(raw) == 2 else "")
+
+
+def _index_members(members: List[Dict[str, str]]) -> Dict[str, List[Dict[str, str]]]:
+    """Index members by surname and last surname token without discarding ambiguity.
 
     Members are dicts with keys ``party``/``bioguide``/``name``/``state``. Indexing
     under both the full surname ("VAN HOLLEN") and its last token ("HOLLEN") lets a
     marker match members whose stored name is first-name-first ("Chris Van Hollen").
     """
-    idx: Dict[str, Dict[str, str]] = {}
+    idx: Dict[str, List[Dict[str, str]]] = {}
     for m in members:
         sn = _surname(m.get("name", ""))
         if not sn:
             continue
-        idx.setdefault(sn, m)
+        idx.setdefault(sn, []).append(m)
         last = sn.split()[-1]
-        idx.setdefault(last, m)
+        if last != sn:
+            idx.setdefault(last, []).append(m)
     return idx
 
 
-def _match_member(marker: str, index: Dict[str, Dict[str, str]]) -> Dict[str, str]:
-    """Resolve a speaker marker to a member via full then last-token surname."""
+def _match_member(marker: str, index: Dict[str, List[Dict[str, str]]]) -> Dict[str, str]:
+    """Resolve a marker by surname plus state; reject ambiguous surname-only matches."""
     sn = _speaker_surname(marker)
     if not sn:
         return {}
-    return index.get(sn) or index.get(sn.split()[-1], {})
+    candidates = index.get(sn) or index.get(sn.split()[-1], [])
+    state = _speaker_state(marker)
+    if state:
+        candidates = [m for m in candidates if (m.get("state") or "").upper() == state]
+    # De-duplicate a member indexed under both full and last-token surname.
+    unique = {
+        (m.get("bioguide") or m.get("name") or str(id(m))): m for m in candidates
+    }
+    return next(iter(unique.values())) if len(unique) == 1 else {}
 
 
 def build_turns(
@@ -132,7 +182,6 @@ def build_turns(
     normalized dicts with keys ``party``/``bioguide``/``name``/``state``.
     """
     index = _index_members(members)
-    sole = members[0] if len(members) == 1 else None
     for i, (marker, body) in enumerate(_segment(text)):
         if not body:
             continue
@@ -140,10 +189,6 @@ def build_turns(
         info: Dict[str, str] = {}
         if marker and not procedural:
             info = _match_member(marker, index)
-        # Attribute to the sole member only for a real (non-empty) marker; never
-        # attribute the pre-first-marker preamble (boilerplate) to a member.
-        if not info and sole is not None and marker and not procedural:
-            info = sole
         party = normalize_party(info.get("party")) if info else "other"
         yield {
             "turn_id": f"crec:{gid}#{i}",
@@ -215,7 +260,7 @@ def iter_granule_turns(row: Dict[str, Any], data_dir: Path) -> Iterator[Dict[str
     members = _members_from_mods(mods_path.read_bytes()) if mods_path.exists() else []
 
     date = (row.get("dateIssued") or "").strip()
-    congress = _congress_from_date(date)
+    congress = _congress_from_row(row)
     if congress <= 0:  # unparseable date -> skip rather than form a spurious congress-0 group
         return
     chamber = normalize_chamber(row.get("granuleClass") or row.get("chamber"))
@@ -240,10 +285,10 @@ def ingest_govinfo(manifest_path: Path, data_dir: Path, out_dir: Path) -> int:
         LOG.warning("no manifest at %s; skipping GovInfo ingest", manifest_path)
         return 0
 
-    # Group manifest rows by congress (derived from date) so each parquet is one congress.
+    # Group by explicit GovInfo Congress metadata, with date inference only as fallback.
     by_congress: Dict[int, List[Dict[str, Any]]] = {}
     for row in _iter_manifest(manifest_path):
-        c = _congress_from_date((row.get("dateIssued") or "").strip())
+        c = _congress_from_row(row)
         if c <= 0:  # unparseable date -> skip
             continue
         by_congress.setdefault(c, []).append(row)

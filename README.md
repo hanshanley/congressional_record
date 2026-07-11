@@ -95,10 +95,10 @@ hanging.
   Representatives") can differ from its class (e.g. a House proceeding may appear in the
   `SENATE`-numbered page sequence). Filter on `granuleClass` for the chamber.
 
-## Analysis: measuring the decline of comity between the parties
+## Analysis: measuring changes in congressional comity and conflict
 
 Beyond downloading, this repo includes a reusable **analysis pipeline** (`analysis/`) that
-scores every speaker turn for markers of cross-party civility vs. hostility and produces
+scores every speaker turn for disclosed lexical markers of civility and conflict and produces
 time-series charts. It unifies two corpora into one speaker-turn table:
 
 * **Stanford *hein* corpus** (1873–2017, congresses 043–114) — already speaker-segmented with
@@ -116,34 +116,43 @@ time-series charts. It unifies two corpora into one speaker-turn table:
 
 * **Comity/deference** phrases ("my distinguished colleague", "the gentleman from", "reach
   across the aisle", "I yield to")
-* **Hostility/attack** language and **profanity** (a comprehensive, tiered lexicon: mild/strong/slurs)
-* **Cross-party reference tone** — out-group references resolved to the speaker's party, plus
-  **directed** hostility/comity in the text window around each reference
+* **Personal disrespect/attack** language, **misconduct allegation language**, and
+  **high-precision profanity** as separate categories. Misconduct words are allegations in text,
+  not evidence that misconduct occurred.
+* **Identity slurs** and **ideological labels** as separate diagnostics; ideological labels do
+  not automatically count as personal disrespect.
+* **Cross-party reference context** — out-group references resolved to the speaker's party, plus
+  comity, disrespect, or misconduct terms **near** each reference. Proximity does not prove target.
 * The **"Democrat party"** pejorative marker; optional **VADER sentiment** (see *Toxicity* below)
 
 All lexical rates are per 1,000 words, grouped by `(congress, chamber, party)`, so overall
-trends split by party, by chamber, and directed D↔R asymmetry can all be plotted.
+trends split by party and chamber, plus D-R differences in nearby language, can all be plotted.
+Aggregation also writes `data/processed/coverage/turn_coverage.{csv,parquet}` with total,
+procedural, and D/R/I-attributed turn/word coverage by source, Congress, and chamber.
 
 **Fuzzy keyword matching.** Lexicon terms match their morphological variants by default
 (`Scorers(fuzzy=True)`): single words expand to plurals/verb-forms via suffix rules plus an
 irregular-plural table ("colleague"→"colleagues", "coward"→"cowards", "gentleman"→"gentlemen"),
 and multi-word phrases inflect **every** content word inline in the regex, so "reach across the
 aisle" also matches "reaches/reached/reaching across the aisle". Short tokens (< 4 chars) are
-matched literally so obfuscation stubs are never expanded into ordinary words, and profanity
-surface-forms are de-duplicated across tiers so nothing is double-counted. Pass `fuzzy=False`
-for strict exact matching.
+matched literally so obfuscation stubs are never expanded into ordinary words. Profanity and
+identity-slur codebooks use curated exact variants rather than unsafe morphology, and matched
+spans are de-duplicated so phrases and component words are not double-counted. Pass
+`fuzzy=False` for strict exact matching on the other codebooks.
 
-**By party and by chamber.** `viz` renders both the party split (D vs R vs other) and a
+**By party and by chamber.** Headline charts exclude Extensions/other sections and render
+House/Senate floor language by party, plus a
 **chamber × party** split (House vs Senate, each by party): `overview_by_chamber.png`, a
 `*_by_chamber.png` per metric, and an extra CSV `metrics_by_congress_chamber_party.csv`.
 
-**Toxicity methodology.** The headline signals are transparent, auditable **lexical rates**
-(hostility/profanity per 1k words) — not a black-box classifier. Optional VADER sentiment
+**Toxicity methodology.** "Toxicity" is shorthand for several transparent, auditable
+**lexical rates** (personal disrespect/profanity per 1k words), not a ground-truth label or a
+black-box classifier. Optional VADER sentiment
 (`--sentiment`) is scored **per sentence and averaged** (VADER's `compound` saturates on long
 passages, so scoring a whole speech is biased), exposing `mean_sentiment` and `mean_neg_share`,
 which are **sentence-count weighted** in the aggregate to match the word-weighting of the other
-metrics. The interactive notebook cross-checks that these independent negativity signals agree
-(and can optionally validate a sample against the Detoxify neural model).
+metrics. The interactive notebook checks whether these signals converge and can optionally compare
+a sample with Detoxify; neither diagnostic substitutes for independent human ground truth.
 
 ### Explore interactively
 
@@ -152,8 +161,9 @@ metrics. The interactive notebook cross-checks that these independent negativity
 jupyter lab notebooks/congressional_civility.ipynb
 ```
 
-The notebook loads the metrics table, plots the party and chamber×party trends, and runs the
-toxicity cross-validation against real data.
+The notebook loads the metrics table, plots House/Senate party trends, and runs diagnostics on
+real source turns. Planned model-assisted rubric grading preserves `turn_id`, uses two blinded
+passes plus adjudication, and is disclosed as model-assisted rather than human validation.
 
 ### Run it
 
