@@ -46,6 +46,17 @@ def test_multiword_surname_segmentation() -> None:
     # A single-token surname followed by "Mr. Speaker" must NOT absorb the next word.
     m2 = [sp for sp, _ in _segment("Mr. CROWLEY. Mr. Speaker, I offer a bill.") if sp]
     assert m2 == ["Mr. CROWLEY"]
+    # Multi-word STATE names (New York, North Carolina, Rhode Island, …) must be detected —
+    # otherwise a large, common subset of 2017+ members would be dropped/misattributed.
+    multi = _segment(
+        "Mr. NADLER of New York. Mr. Speaker, I rise.\n"
+        "Ms. ADAMS of North Carolina. I object.\n"
+        "Mr. CICILLINE of Rhode Island. I yield.\n"
+    )
+    got = [sp for sp, _ in multi if sp]
+    assert "Mr. NADLER of New York" in got
+    assert "Ms. ADAMS of North Carolina" in got
+    assert "Mr. CICILLINE of Rhode Island" in got
 
 
 def test_build_turns_party_attribution_and_multiword_match() -> None:
@@ -104,6 +115,12 @@ def test_fuzzy_keyword_matching() -> None:
     # Short obfuscation stubs (< 4 chars) are matched literally, never expanded into
     # ordinary English words: "len" (a lexicon entry) must not expand to match "lens".
     assert fuzzy.score_turn("we viewed the bill through that lens today", "D")["profanity_hits"] == 0
+
+    # Phrase / single-word de-dup: a phrase whose content word is ALSO a single term is
+    # counted once (not phrase + single), but standalone occurrences still count.
+    assert fuzzy.score_turn("the radical left is coming", "D")["hostility_hits"] == 1
+    assert fuzzy.score_turn("a radical proposal today", "D")["hostility_hits"] == 1
+    assert fuzzy.score_turn("the radical left and the radical right", "D")["hostility_hits"] == 2
 
     s = Scorers(use_sentiment=True)
     hostile = s.score_turn("This is a corrupt, shameful lie. He is a coward and a fraud.", "D")
