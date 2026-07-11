@@ -1,5 +1,9 @@
 # Comity / deference / courtesy markers (positive civility). One term or phrase per line.
-# Matched case-insensitively with word boundaries; multi-word entries match as phrases.
+# Matching is done on lowercased text with word boundaries; multi-word entries match as
+# phrases. Fuzzy scoring auto-covers inflections/plurals of each content word (e.g.
+# "gentleman"->"gentlemen", "gentlewoman"->"gentlewomen"), so DO NOT add plural variants
+# by hand. DO add gender-paired forms (gentleman / gentlewoman / gentlelady) explicitly,
+# since gender is not a morphological inflection and must be matched symmetrically.
 my distinguished colleague
 my honorable colleague
 my esteemed colleague
@@ -21,6 +25,7 @@ the honorable
 my worthy opponent
 i thank the gentleman
 i thank the gentlewoman
+i thank the gentlelady
 i thank the senator
 i thank my colleague
 i thank my friend
@@ -34,6 +39,8 @@ with all due respect
 i have the highest respect
 i appreciate my colleague
 i appreciate the gentleman
+i appreciate the gentlewoman
+i appreciate the gentlelady
 reach across the aisle
 work across the aisle
 reaching across the aisle

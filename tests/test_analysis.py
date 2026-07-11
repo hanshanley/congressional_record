@@ -122,6 +122,19 @@ def test_fuzzy_keyword_matching() -> None:
     assert fuzzy.score_turn("a radical proposal today", "D")["hostility_hits"] == 1
     assert fuzzy.score_turn("the radical left and the radical right", "D")["hostility_hits"] == 2
 
+    # Gendered comity must be matched symmetrically across gentleman/gentlewoman/gentlelady
+    # (gender is not a morphological inflection), and fuzzy must catch their plurals too.
+    for male, fem, lady in [
+        ("I thank the gentleman.", "I thank the gentlewoman.", "I thank the gentlelady."),
+        ("I appreciate the gentleman.", "I appreciate the gentlewoman.", "I appreciate the gentlelady."),
+    ]:
+        assert fuzzy.score_turn(male, "D")["comity_hits"] >= 1
+        assert fuzzy.score_turn(fem, "D")["comity_hits"] >= 1
+        assert fuzzy.score_turn(lady, "D")["comity_hits"] >= 1
+    # fuzzy (not exact) recovers the plural gendered address forms
+    assert fuzzy.score_turn("the gentlewomen from California", "D")["comity_hits"] >= 1
+    assert exact.score_turn("the gentlewomen from California", "D")["comity_hits"] == 0
+
     s = Scorers(use_sentiment=True)
     hostile = s.score_turn("This is a corrupt, shameful lie. He is a coward and a fraud.", "D")
     civil = s.score_turn("I thank the distinguished gentleman and commend my friend.", "D")
