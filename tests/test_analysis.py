@@ -21,6 +21,7 @@ from analysis.ingest.govinfo import (  # noqa: E402
     normalize_members,
 )
 from analysis.ingest.schema import congress_from_year, year_from_congress  # noqa: E402
+from analysis.score.registry import METRICS, SCORE_KEYS  # noqa: E402
 
 
 def test_congress_year_roundtrip() -> None:
@@ -32,6 +33,16 @@ def test_congress_year_roundtrip() -> None:
     # round-trip: a congress's convening year maps back to itself
     for c in (43, 90, 115, 119):
         assert congress_from_year(year_from_congress(c)) == c
+
+
+def test_metric_registry_matches_scorer_outputs() -> None:
+    rates = [metric.rate for metric in METRICS]
+    assert len(rates) == len(set(rates))
+    scored = Scorers().score_turn(
+        "I thank my Republican colleague, but that dishonest claim alleges bribery. Damn.",
+        "D",
+    )
+    assert set(SCORE_KEYS).issubset(scored)
 
 
 def test_multiword_surname_segmentation() -> None:
@@ -252,6 +263,12 @@ def test_scorer_outgroup_directed_and_pejorative() -> None:
     assert r["outgroup_refs"] >= 1               # "republican" is out-group for a D
     assert r["directed_hostility_hits"] >= 2     # dishonest + cowards near the ref
     assert r["outgroup_hostility_contexts"] == 1
+    separated = s.score_turn(
+        "My Republican colleagues support this bill. That unrelated witness is a liar.",
+        "D",
+    )
+    assert separated["outgroup_refs"] == 1
+    assert separated["outgroup_hostility_contexts"] == 0
 
     # Same words but speaker is Republican -> "republican" is NOT out-group.
     r2 = s.score_turn(txt, "R")

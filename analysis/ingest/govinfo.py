@@ -16,9 +16,11 @@ from __future__ import annotations
 
 import json
 import logging
+import os
+import tempfile
 import re
 from pathlib import Path
-from typing import Any, Dict, Iterator, List, Tuple
+from typing import Any, Dict, Iterator, List, Optional, Tuple
 
 from analysis.ingest.schema import (
     congress_from_year,
@@ -267,7 +269,9 @@ def iter_granule_turns(row: Dict[str, Any], data_dir: Path) -> Iterator[Dict[str
     yield from build_turns(text, members, row["granuleId"], date, congress, chamber)
 
 
-def _iter_manifest(manifest_path: Path) -> Iterator[Dict[str, Any]]:
+def _iter_manifest(
+    manifest_path: Path, stats: Optional[Dict[str, int]] = None
+) -> Iterator[Dict[str, Any]]:
     with manifest_path.open(encoding="utf-8") as fh:
         for line in fh:
             line = line.strip()
@@ -276,10 +280,17 @@ def _iter_manifest(manifest_path: Path) -> Iterator[Dict[str, Any]]:
             try:
                 yield json.loads(line)
             except json.JSONDecodeError:
+                if stats is not None:
+                    stats["malformed_json"] = stats.get("malformed_json", 0) + 1
                 continue
 
 
-def ingest_govinfo(manifest_path: Path, data_dir: Path, out_dir: Path) -> int:
+def ingest_govinfo(
+    manifest_path: Path,
+    data_dir: Path,
+    out_dir: Path,
+    max_rejected_rows: int = 0,
+) -> int:
     """Ingest GovInfo turns, partitioned by congress, into out_dir/turns/govinfo_<congress>.parquet."""
     if not manifest_path.exists():
         LOG.warning("no manifest at %s; skipping GovInfo ingest", manifest_path)
@@ -287,11 +298,26 @@ def ingest_govinfo(manifest_path: Path, data_dir: Path, out_dir: Path) -> int:
 
     # Group by explicit GovInfo Congress metadata, with date inference only as fallback.
     by_congress: Dict[int, List[Dict[str, Any]]] = {}
-    for row in _iter_manifest(manifest_path):
+    stats: Dict[str, int] = {"manifest_rows": 0, "malformed_json": 0, "invalid_rows": 0}
+    for row in _iter_manifest(manifest_path, stats):
+        stats["manifest_rows"] += 1
+        if not row.get("granuleId") or not row.get("txt_path"):
+            stats["invalid_rows"] += 1
+            continue
         c = _congress_from_row(row)
         if c <= 0:  # unparseable date -> skip
+            stats["invalid_rows"] += 1
+            continue
+        if not (data_dir / row["txt_path"]).exists():
+            stats["invalid_rows"] += 1
             continue
         by_congress.setdefault(c, []).append(row)
+
+    rejected = stats["malformed_json"] + stats["invalid_rows"]
+    if rejected > max_rejected_rows:
+        raise ValueError(
+            f"GovInfo manifest rejected {rejected} rows (limit {max_rejected_rows})"
+        )
 
     turns_dir = out_dir / "turns"
     total = 0
@@ -300,8 +326,26 @@ def ingest_govinfo(manifest_path: Path, data_dir: Path, out_dir: Path) -> int:
             for r in rows:
                 yield from iter_granule_turns(r, data_dir)
 
+        turns_dir.mkdir(parents=True, exist_ok=True)
         out_path = turns_dir / f"govinfo_{congress:03d}.parquet"
-        n = write_turns_parquet(out_path, gen())
+        fd, tmp_name = tempfile.mkstemp(
+            prefix=f".govinfo_{congress:03d}.", suffix=".parquet.tmp", dir=turns_dir
+        )
+        os.close(fd)
+        tmp_path = Path(tmp_name)
+        try:
+            n = write_turns_parquet(tmp_path, gen())
+            if n <= 0 and rows:
+                raise ValueError(f"GovInfo congress {congress} produced no turns")
+            os.replace(tmp_path, out_path)
+        finally:
+            tmp_path.unlink(missing_ok=True)
         total += n
         LOG.info("GovInfo congress %03d: %d turns -> %s", congress, n, out_path.name)
+    coverage_dir = out_dir / "coverage"
+    coverage_dir.mkdir(parents=True, exist_ok=True)
+    stats["turns_written"] = total
+    (coverage_dir / "govinfo_manifest_ingest.json").write_text(
+        json.dumps(stats, indent=2) + "\n", encoding="utf-8"
+    )
     return total

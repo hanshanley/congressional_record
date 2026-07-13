@@ -21,6 +21,10 @@ import zipfile  # noqa: E402
 import pyarrow.parquet as pq  # noqa: E402
 
 from analysis.ingest.govinfo_bulk import _package_congress, run_bulk  # noqa: E402
+from analysis.ingest.govinfo import ingest_govinfo  # noqa: E402
+from analysis.validate import build_validation_sample, validation_report  # noqa: E402
+from analysis.ingest.schema import ARROW_SCHEMA  # noqa: E402
+import pyarrow as pa  # noqa: E402
 
 
 def test_redact_masks_api_key() -> None:
@@ -129,12 +133,80 @@ def test_bulk_ingest_incremental_runs_are_additive_and_deduplicated() -> None:
         assert run_bulk([pkg2], bulk, out, workers=1) == 1
         parquet = out / "turns" / "govinfo_bulk_118.parquet"
         assert pq.ParquetFile(parquet).metadata.num_rows == 2
+        assert (out / "coverage" / "govinfo_bulk_latest.json").exists()
 
         make_zip(pkg2, gid2, "Second real-source fixture turn.")
         assert run_bulk([pkg2], bulk, out, workers=1) == 0
         assert pq.ParquetFile(parquet).metadata.num_rows == 2
     finally:
         shutil.rmtree(root, ignore_errors=True)
+
+
+def test_validation_sample_is_blinded_and_real_text_preserved() -> None:
+    import shutil
+
+    root = Path(__file__).resolve().parent / "_tmp_validation"
+    turns = root / "turns"
+    turns.mkdir(parents=True, exist_ok=True)
+    passage = "Mr. Speaker, I thank my Republican colleague for working across the aisle."
+    row = {
+        "turn_id": "crec:fixture#0", "source": "govinfo", "date": "2024-01-09",
+        "congress": 118, "chamber": "house", "speaker_name": "Ms. SMITH",
+        "speaker_id": "", "bioguide": "S000001", "party": "D", "state": "CA",
+        "word_count": len(passage.split()), "is_procedural": False, "text": passage,
+    }
+    long_text = "My Republican colleagues spoke first. " + ("neutral material " * 100) + "That liar."
+    long_row = {
+        **row,
+        "turn_id": "crec:fixture#1",
+        "text": long_text,
+        "word_count": len(long_text.split()),
+    }
+    try:
+        pq.write_table(
+            pa.Table.from_pylist([row, long_row], schema=ARROW_SCHEMA),
+            turns / "govinfo_bulk_118.parquet",
+        )
+        blinded, hidden = build_validation_sample(turns, root / "validation", 1, 1)
+        assert not blinded.empty and not hidden.empty
+        assert "sampling_stratum" not in blinded.columns
+        assert blinded.iloc[0]["passage"] == passage
+        assert hidden["sampling_stratum"].str.contains("cooperation|random").any()
+        attack_ids = hidden[
+            hidden["sampling_stratum"].str.endswith("personal_attack")
+        ]["sample_id"]
+        assert blinded[blinded["sample_id"].isin(attack_ids)]["passage"].str.contains("liar").all()
+    finally:
+        shutil.rmtree(root, ignore_errors=True)
+
+
+def test_manifest_ingest_rejects_malformed_rows() -> None:
+    import shutil
+
+    root = Path(__file__).resolve().parent / "_tmp_bad_manifest"
+    root.mkdir(exist_ok=True)
+    manifest = root / "manifest.jsonl"
+    manifest.write_text("{not json}\\n", encoding="utf-8")
+    try:
+        try:
+            ingest_govinfo(manifest, root, root / "out")
+        except ValueError as exc:
+            assert "rejected 1 rows" in str(exc)
+        else:
+            raise AssertionError("malformed manifest should fail strict ingest")
+    finally:
+        shutil.rmtree(root, ignore_errors=True)
+
+
+def test_validation_agreement_uses_comparable_rows_only() -> None:
+    import pandas as pd
+
+    a = pd.DataFrame({"sample_id": ["1", "2"], "profanity": ["yes", None]})
+    b = pd.DataFrame({"sample_id": ["1", "2"], "profanity": ["yes", "no"]})
+    report = validation_report(a, b)
+    row = report[report.field.eq("profanity")].iloc[0]
+    assert row["n"] == 1
+    assert row["raw_agreement"] == 1.0
 
 
 if __name__ == "__main__":

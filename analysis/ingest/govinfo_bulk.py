@@ -11,7 +11,10 @@ per-congress parquet writes are serialized (under a lock).
 from __future__ import annotations
 
 import concurrent.futures as cf
+import datetime as dt
+import hashlib
 import io
+import json
 import logging
 import os
 import re
@@ -155,7 +158,7 @@ def _download(pkg: str, dest: Path) -> Optional[Path]:
     try:
         subprocess.run(
             ["curl", "-sL", "--retry", "5", "--retry-delay", "2", "-o", str(dest), url],
-            check=True, timeout=180,
+            check=True, timeout=600,
         )
         if not dest.exists() or dest.stat().st_size == 0 or not zipfile.is_zipfile(dest):
             if dest.exists():
@@ -194,6 +197,7 @@ def run_bulk(
     seen_ids: Dict[int, set[str]] = {}
     lock = threading.Lock()
     total = 0
+    package_results: List[Dict[str, Any]] = []
 
     import pyarrow.parquet as pq  # local import: only needed for the writer handle
 
@@ -221,11 +225,11 @@ def run_bulk(
             seen_ids[congress] = existing_ids
         return w
 
-    def process(pkg: str) -> int:
+    def process(pkg: str) -> Dict[str, Any]:
         zp = bulk_dir / f"{pkg}.zip"
         if not (zp.exists() and zp.stat().st_size > 0 and zipfile.is_zipfile(zp)):
             if _download(pkg, zp) is None:
-                return 0
+                return {"package_id": pkg, "status": "download_failed", "turns": 0}
         try:
             data = zp.read_bytes()
             rows_by_c: Dict[int, List[Dict[str, Any]]] = {}
@@ -252,7 +256,13 @@ def run_bulk(
             with lock:
                 for c, table in tables.items():
                     get_writer(c).write_table(table)
-            return sum(len(rows) for rows in fresh_by_c.values())
+            parsed = sum(len(rows) for rows in rows_by_c.values())
+            return {
+                "package_id": pkg,
+                "status": "ok" if parsed else "empty_or_unparsed",
+                "turns": sum(len(rows) for rows in fresh_by_c.values()),
+                "parsed_turns": parsed,
+            }
         finally:
             try:
                 zp.unlink()  # delete zip to bound disk
@@ -265,10 +275,19 @@ def run_bulk(
             futs = {ex.submit(process, p): p for p in pkg_list}
             done = 0
             for fut in cf.as_completed(futs):
-                total += fut.result()
+                result = fut.result()
+                package_results.append(result)
+                total += int(result["turns"])
                 done += 1
                 if done % 50 == 0:
                     LOG.info("processed %d/%d packages, %d new turns", done, len(pkg_list), total)
+        failures = [
+            result for result in package_results if result["status"] != "ok"
+        ]
+        if failures:
+            raise RuntimeError(
+                f"{len(failures)} GovInfo packages failed or produced no parsed turns"
+            )
         succeeded = True
     finally:
         with lock:
@@ -280,5 +299,40 @@ def run_bulk(
         else:
             for tmp in temp_paths.values():
                 tmp.unlink(missing_ok=True)
+        coverage_dir = out_dir / "coverage"
+        coverage_dir.mkdir(parents=True, exist_ok=True)
+        stamp = dt.datetime.now(dt.timezone.utc).strftime("%Y%m%dT%H%M%S.%fZ")
+        outputs = []
+        if succeeded:
+            for congress, path in sorted(final_paths.items()):
+                digest = hashlib.sha256()
+                with path.open("rb") as handle:
+                    for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+                        digest.update(chunk)
+                outputs.append({
+                    "congress": congress,
+                    "path": str(path),
+                    "bytes": path.stat().st_size,
+                    "sha256": digest.hexdigest(),
+                })
+        manifest = {
+            "timestamp_utc": stamp,
+            "content_url_template": CONTENT_URL,
+            "requested_packages": len(pkg_list),
+            "successful_packages": sum(
+                result["status"] == "ok" for result in package_results
+            ),
+            "failed_or_empty_packages": [
+                result for result in package_results if result["status"] != "ok"
+            ],
+            "new_turns": total,
+            "published": succeeded,
+            "outputs": outputs,
+        }
+        manifest_path = coverage_dir / f"govinfo_bulk_run_{stamp}.json"
+        manifest_path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+        (coverage_dir / "govinfo_bulk_latest.json").write_text(
+            json.dumps(manifest, indent=2) + "\n", encoding="utf-8"
+        )
     LOG.info("bulk ingest complete: %d packages, %d turns", len(pkg_list), total)
     return total

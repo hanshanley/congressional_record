@@ -6,6 +6,8 @@ Subcommands:
     ingest-govinfo      Segment downloaded GovInfo CREC granules into turn parquet.
     ingest-govinfo-bulk Fast GovInfo ingest via whole-day package zips (no API rate limit).
     aggregate           Score all turns and write the civility metrics table.
+    calibrate           Compare Hein and GovInfo in the 1994-2016 overlap.
+    sample-validation   Build a blinded, real-text validation sample.
     viz                 Render charts from the metrics table.
     all                 ingest-hein -> aggregate -> viz.
 
@@ -94,6 +96,31 @@ def cmd_viz(args) -> int:
     return 0
 
 
+def cmd_calibrate(args) -> int:
+    import matplotlib
+
+    matplotlib.use("Agg")
+    from analysis.calibrate import run_calibration
+
+    run_calibration(
+        PROCESSED / "metrics" / "civility_metrics_by_source.parquet",
+        PROCESSED / "calibration",
+    )
+    return 0
+
+
+def cmd_sample_validation(args) -> int:
+    from analysis.validate import build_validation_sample
+
+    build_validation_sample(
+        INTERIM / "turns",
+        PROCESSED / "validation",
+        signal_quota=args.signal_quota,
+        random_quota=args.random_quota,
+    )
+    return 0
+
+
 def cmd_all(args) -> int:
     cmd_ingest_hein(args)
     cmd_aggregate(args)
@@ -125,6 +152,16 @@ def main(argv=None) -> int:
 
     pv = sub.add_parser("viz")
     pv.set_defaults(func=cmd_viz)
+
+    pc = sub.add_parser("calibrate", help="Compare Hein and GovInfo overlap metrics.")
+    pc.set_defaults(func=cmd_calibrate)
+
+    pval = sub.add_parser(
+        "sample-validation", help="Build blinded real-text validation passages."
+    )
+    pval.add_argument("--signal-quota", type=int, default=3)
+    pval.add_argument("--random-quota", type=int, default=4)
+    pval.set_defaults(func=cmd_sample_validation)
 
     pall = sub.add_parser("all")
     pall.add_argument("--congresses", nargs="+", default=None)

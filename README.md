@@ -174,7 +174,11 @@ uv pip install -r requirements-analysis.txt        # pandas, pyarrow, matplotlib
 
 python -m analysis.run ingest-hein                 # hein zips -> data/interim/turns/*.parquet
 python -m analysis.run ingest-govinfo-bulk         # 2017-present via day-zips (fast, no rate limit)
+# Source-overlap corpus used for calibration:
+python -m analysis.run ingest-govinfo-bulk --start 1994-01-01 --end 2016-12-31
 python -m analysis.run aggregate                   # score all turns (fuzzy) -> data/processed/metrics/
+python -m analysis.run calibrate                   # Hein/GovInfo paired overlap diagnostics
+python -m analysis.run sample-validation           # blinded real-text validation sample
 python -m analysis.run viz                         # charts -> data/reports/figures/
 
 # or the whole hein pipeline in one go (add --sentiment for VADER):

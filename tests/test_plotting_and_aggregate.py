@@ -10,9 +10,15 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 import pyarrow as pa  # noqa: E402
 import pyarrow.parquet as pq  # noqa: E402
 
-from analysis.aggregate import _select_turn_files, score_and_aggregate  # noqa: E402
+from analysis.aggregate import (  # noqa: E402
+    _select_primary_source,
+    _select_turn_files,
+    score_and_aggregate,
+)
 from analysis.ingest.schema import ARROW_SCHEMA  # noqa: E402
 from analysis.plotting import theme  # noqa: E402
+from analysis.calibrate import calibration_summary, paired_overlap  # noqa: E402
+from analysis.score.registry import METRICS  # noqa: E402
 
 
 def _empty_parquet(path: Path) -> None:
@@ -103,6 +109,42 @@ def test_chamber_party_aggregation_word_weighted() -> None:
     row = g[(g.chamber == "house") & (g.party == "D")].iloc[0]
     # 10 hits / 10000 words * 1000 = 1.0  (NOT the mean of 10.0 and 0.0 = 5.0)
     assert abs(row["hostility_per_1k"] - 1.0) < 1e-9
+
+
+def test_overlap_calibration_pairs_sources() -> None:
+    import pandas as pd
+
+    rows = []
+    for source, multiplier in (("hein_daily", 1.0), ("govinfo", 2.0)):
+        for congress in (103, 104):
+            row = {
+                "source": source, "congress": congress, "year": 1993 + 2 * (congress - 103),
+                "chamber": "house", "party": "D", "words": 1000, "outgroup_refs": 10,
+            }
+            for metric in METRICS:
+                row[metric.raw_count] = 2 * multiplier
+            row["outgroup_refs"] = 10
+            rows.append(row)
+    pairs = paired_overlap(pd.DataFrame(rows))
+    assert not pairs.empty
+    summary = calibration_summary(pairs)
+    assert set(summary["metric"]) == set(pairs["metric"])
+
+
+def test_primary_metrics_do_not_combine_overlap_sources() -> None:
+    import pandas as pd
+
+    frame = pd.DataFrame([
+        {"source": "hein_daily", "congress": 114, "chamber": "house", "party": "D",
+         "hostility_hits": 1},
+        {"source": "govinfo", "congress": 114, "chamber": "house", "party": "D",
+         "hostility_hits": 99},
+        {"source": "govinfo", "congress": 115, "chamber": "house", "party": "D",
+         "hostility_hits": 2},
+    ])
+    selected = _select_primary_source(frame)
+    assert selected[selected.congress.eq(114)].iloc[0]["hostility_hits"] == 1
+    assert selected[selected.congress.eq(115)].iloc[0]["hostility_hits"] == 2
 
 
 

@@ -1,0 +1,75 @@
+# Congressional discourse methodology
+
+## Provenance
+
+Every metric is computed by Python from a real speaker turn in either the Stanford Hein
+Congressional Record corpus or a GovInfo CREC package. `turn_id`, source, Congress, chamber,
+speaker metadata, and exact source text are preserved during ingestion. Generated examples and
+synthetic observations are never inserted into metric tables.
+
+The primary long-run series uses Hein through Congress 114 and GovInfo from Congress 115.
+`data/processed/coverage/source_metadata.json` records source ranges and drives plot provenance.
+The separate `civility_metrics_by_source.parquet` retains both sources in overlap years.
+
+## Components
+
+The central registry is `analysis/score/registry.py`. It defines each raw count, denominator,
+scale, construct family, polarity, codebook version, and plot eligibility.
+
+- **Formulaic courtesy**: conventional parliamentary address and deference.
+- **Gratitude/praise**: explicit thanks, praise, appreciation, commendation, or respect.
+- **Bipartisan cooperation**: explicit cross-aisle work, common ground, or bipartisan spirit.
+- **Personal attack**: high-precision attacks on honesty, integrity, competence, character, or
+  fitness.
+- **Misconduct allegation**: language alleging corruption, fraud, bribery, obstruction, abuse of
+  power, or similar conduct. It is not evidence that misconduct occurred.
+- **Ideological label**: tracked separately and not automatically treated as disrespect.
+- **Profanity and identity slurs**: curated exact forms. Neutral topical vocabulary is excluded;
+  slur occurrence requires quotation and endorsement review.
+
+Most rates use words as the denominator. Cross-party context rates use deduplicated out-party
+reference events and report affected contexts per 100 references.
+
+## Cross-party targeting
+
+Target detection is independent of tone matching. The detector uses party nouns, high-precision
+party phrases, and cross-aisle idioms resolved against the speaker's party. Generic
+`democratic` language is not a Democratic Party reference. Overlapping target spans are merged.
+
+Conditional context rates use the sentence/clause containing each reference, bounded to 300
+characters on either side for OCR run-ons. Separate nearby-intensity diagnostics retain a
+200-character window and are labelled **near an out-party reference**. Proximity does not prove
+that a particular phrase targets the party; validation estimates the precision of that
+interpretation.
+
+## Source overlap
+
+After GovInfo 1994-2016 is ingested:
+
+```bash
+python -m analysis.run aggregate
+python -m analysis.run calibrate
+```
+
+Calibration pairs Congress × chamber × party cells across Hein and GovInfo. It reports
+correlations, differences, and ratio dispersion. A multiplicative source adjustment is recommended
+only when at least 20 paired cells have Spearman correlation of at least 0.70 and the interquartile
+range of log source ratios is no wider than `log(1.5)`. Otherwise, sources remain visibly separate.
+
+## Model-assisted validation
+
+```bash
+python -m analysis.run sample-validation
+```
+
+The sampler writes at least 600 deterministic, stratified, real-text passages when full source
+coverage is present. Production scores and sampling strata are stored separately from blinded
+passages. Two independent model passes use `docs/VALIDATION_RUBRIC.md`; a separate adjudication
+pass resolves disagreements. This is disclosed model-assisted face-validity and consistency
+checking, not independent human ground truth.
+
+## Remaining interpretation limits
+
+OCR error, quotation, sarcasm, historical language drift, incomplete party attribution, and source
+differences can affect rates. Charts are descriptive and do not identify a causal effect of
+polarization or any other political process.

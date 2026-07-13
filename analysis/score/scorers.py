@@ -271,6 +271,25 @@ class Scorers:
                 merged.append([s, e])
         return " \x1e ".join(text[s:e] for s, e in merged)
 
+    @staticmethod
+    def _reference_context(
+        text: str, span: Tuple[int, int], max_radius: int = 300
+    ) -> str:
+        """Sentence/clause containing one target reference, bounded for OCR run-ons."""
+        start, end = span
+        left_bound = max(0, start - max_radius)
+        right_bound = min(len(text), end + max_radius)
+        left_fragment = text[left_bound:start]
+        right_fragment = text[end:right_bound]
+        left_breaks = [left_fragment.rfind(char) for char in ".!?;\n"]
+        left = left_bound + max(left_breaks) + 1 if max(left_breaks) >= 0 else left_bound
+        right_positions = [
+            pos for char in ".!?;\n"
+            if (pos := right_fragment.find(char)) >= 0
+        ]
+        right = end + min(right_positions) + 1 if right_positions else right_bound
+        return text[left:right]
+
     def _idiom_spans(self, text_lower: str) -> List[Tuple[int, int]]:
         if self.outgroup_idiom.phrase_re is None:
             return []
@@ -315,7 +334,7 @@ class Scorers:
         win_tokens = Counter(_TOKEN_RE.findall(win)) if win else Counter()
         reference_contexts = []
         for span in spans:
-            context = self._window_text(low, [span])
+            context = self._reference_context(low, span)
             context_tokens = Counter(_TOKEN_RE.findall(context))
             reference_contexts.append((context, context_tokens))
 

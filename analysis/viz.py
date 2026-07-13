@@ -11,6 +11,7 @@ import logging
 import os
 import shutil
 import tempfile
+import json
 from pathlib import Path
 from typing import List
 
@@ -18,6 +19,7 @@ import pandas as pd
 
 from analysis.aggregate import CONTEXT_RATE_TO_COUNT, RATE_TO_HITCOL
 from analysis.plotting import charts, theme
+from analysis.score.registry import CHAMBER_METRICS, HEADLINE_METRICS
 
 LOG = logging.getLogger("analysis.viz")
 
@@ -106,6 +108,26 @@ _CHAMBER_STYLE = {"house": "-", "senate": "--"}
 _CHAMBER_LABEL = {"house": "House", "senate": "Senate"}
 
 
+def _load_provenance(metrics_path: Path) -> tuple[int, str]:
+    """Build plot provenance from aggregate metadata, with a legacy fallback."""
+    metadata_path = metrics_path.parent.parent / "coverage" / "source_metadata.json"
+    if not metadata_path.exists():
+        return SOURCE_BOUNDARY_YEAR, SOURCE_NOTE
+    metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
+    boundary = int(metadata.get("primary_boundary_year") or SOURCE_BOUNDARY_YEAR)
+    sources = {item["source"]: item for item in metadata.get("sources", [])}
+    hein = sources.get("hein_daily") or sources.get("hein_bound") or {}
+    govinfo = sources.get("govinfo") or {}
+    note = (
+        f"Sources: Stanford Hein ({hein.get('min_year', 1873)}-{hein.get('max_year', 2017)}) "
+        f"+ GovInfo CREC ({govinfo.get('min_year', boundary)}-{govinfo.get('max_year', 'present')}). "
+        "House/Senate only; Extensions excluded. Units shown on y-axis. "
+        f"Dotted line: {boundary} primary-source boundary. GovInfo party coverage varies; "
+        "see coverage/turn_coverage.csv."
+    )
+    return boundary, note
+
+
 def _plot_by_chamber_party(ax, g: pd.DataFrame, col: str, parties=("D", "R"),
                            chambers=("house", "senate")) -> None:
     """Four series: party -> colour, chamber -> solid (House) / dashed (Senate)."""
@@ -121,14 +143,7 @@ def _plot_by_chamber_party(ax, g: pd.DataFrame, col: str, parties=("D", "R"),
 
 
 # (column, title, y-label) for each per-party panel/figure.
-_PANELS = [
-    ("formal_courtesy_per_1k", "Formulaic courtesy / deference", "hits per 1,000 words"),
-    ("gratitude_praise_per_1k", "Gratitude / praise", "hits per 1,000 words"),
-    ("cooperation_per_1k", "Bipartisan cooperation language", "hits per 1,000 words"),
-    ("hostility_per_1k", "Personal disrespect / attack language", "hits per 1,000 words"),
-    ("misconduct_per_1k", "Misconduct allegation language", "hits per 1,000 words"),
-    ("profanity_per_1k", "High-precision profanity", "hits per 1,000 words"),
-]
+_PANELS = [(metric.rate, metric.title, metric.units) for metric in HEADLINE_METRICS]
 
 _SUPPLEMENTAL_PANELS = [
     ("comity_per_1k", "All coded comity / deference phrases", "hits per 1,000 words"),
@@ -162,13 +177,7 @@ _SUPPLEMENTAL_PANELS = [
     ("democrat_party_pej_per_1k", '"Democrat party" pejorative', "hits per 1,000 words"),
 ]
 
-_CHAMBER_PANELS = [
-    _PANELS[0],  # formulaic courtesy
-    _PANELS[2],  # cooperation
-    _PANELS[3],  # personal disrespect
-    _PANELS[4],  # misconduct
-    _PANELS[5],  # profanity
-]
+_CHAMBER_PANELS = [(metric.rate, metric.title, metric.units) for metric in CHAMBER_METRICS]
 
 
 def _grid_overview(g: pd.DataFrame, figs_dir: Path, plot_fn, suptitle: str,
@@ -203,13 +212,17 @@ def _overview(g: pd.DataFrame, figs_dir: Path) -> Path:
     )
 
 
-def _asymmetry(g: pd.DataFrame, figs_dir: Path) -> Path:
-    """D-R difference in disrespect appearing near an out-party reference."""
-    piv = g.pivot_table(index="year", columns="party", values="directed_hostility_per_1k")
+def _asymmetry(gc: pd.DataFrame, figs_dir: Path) -> Path:
+    """Fixed-weight House/Senate D-R difference in nearby disrespect."""
+    piv = gc.pivot_table(
+        index=["year", "chamber"], columns="party",
+        values="directed_hostility_per_1k",
+    )
     fig, ax = charts.new_figure(figsize=(10, 5.5))
     if {"D", "R"}.issubset(piv.columns):
-        piv = piv.dropna(subset=["D", "R"]).sort_index()
-        diff = piv["D"] - piv["R"]
+        chamber_diff = (piv["D"] - piv["R"]).unstack("chamber")
+        chamber_diff = chamber_diff.dropna(subset=["house", "senate"])
+        diff = chamber_diff[["house", "senate"]].mean(axis=1)
         ax.fill_between(diff.index, 0, diff.clip(lower=0), color=theme.BLUE, alpha=0.5,
                         label="Higher Democratic rate")
         ax.fill_between(diff.index, 0, diff.clip(upper=0), color=theme.ACCENT, alpha=0.5,
@@ -222,7 +235,7 @@ def _asymmetry(g: pd.DataFrame, figs_dir: Path) -> Path:
         "Asymmetry in disrespect near out-party references",
         "Year",
         "D \u2212 R nearby-disrespect rate (per 1,000 words)",
-        subtitle="Proximity is evidence of context, not proof that a phrase targets a party",
+        subtitle="Equal House/Senate weights; proximity does not prove direction",
     )
     return charts.finish(fig, ax, figs_dir / "directed_asymmetry.png", source=SOURCE_NOTE)
 
@@ -238,6 +251,8 @@ def _overview_by_chamber(gc: pd.DataFrame, figs_dir: Path) -> Path:
 
 
 def render(metrics_path: Path, out_dir: Path) -> List[Path]:
+    global SOURCE_BOUNDARY_YEAR, SOURCE_NOTE
+    SOURCE_BOUNDARY_YEAR, SOURCE_NOTE = _load_provenance(metrics_path)
     df = pd.read_parquet(metrics_path)
     df = df[df["chamber"].isin(["house", "senate"])].copy()
     g = _by_congress_party(df)
@@ -268,7 +283,7 @@ def render(metrics_path: Path, out_dir: Path) -> List[Path]:
                 fig, ax, temp_figs / f"{col}_by_chamber.png", source=SOURCE_NOTE
             ))
 
-        written.append(_asymmetry(g, temp_figs))
+        written.append(_asymmetry(gc, temp_figs))
 
         tbl_dir = out_dir / "reports" / "tables"
         tbl_dir.mkdir(parents=True, exist_ok=True)

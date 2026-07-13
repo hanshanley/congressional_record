@@ -9,6 +9,7 @@ rates per 1,000 words plus directed (toward-out-party) measures.
 from __future__ import annotations
 
 import logging
+import json
 from collections import defaultdict
 from pathlib import Path
 from typing import Dict, List, Tuple
@@ -18,20 +19,13 @@ import pyarrow.parquet as pq
 
 from analysis.ingest.schema import year_from_congress
 from analysis.score.scorers import Scorers
+from analysis.score.registry import METRICS, SCORE_KEYS
 
 LOG = logging.getLogger("analysis.aggregate")
 
 # Sum accumulators kept per group.
 _SUM_KEYS = [
-    "turns", "n_words", "comity_hits", "formal_courtesy_hits",
-    "gratitude_praise_hits", "cooperation_hits", "hostility_hits",
-    "misconduct_hits", "ideological_label_hits",
-    "profanity_mild", "profanity_strong", "profanity_slurs", "profanity_hits",
-    "outgroup_refs", "democrat_party_pej",
-    "directed_comity_hits", "directed_hostility_hits", "directed_misconduct_hits",
-    "outgroup_comity_contexts", "outgroup_hostility_contexts",
-    "outgroup_misconduct_contexts",
-    "sentiment_sum", "neg_share_sum", "sentiment_n",
+    "turns", "n_words", *SCORE_KEYS, "sentiment_sum", "neg_share_sum", "sentiment_n",
 ]
 
 _READ_COLS = [
@@ -43,28 +37,12 @@ _READ_COLS = [
 # column it is derived from. Shared with :mod:`analysis.viz` so both modules emit
 # identically named rates from the same formula.
 RATE_TO_HITCOL: Dict[str, str] = {
-    "comity_per_1k": "comity_hits",
-    "formal_courtesy_per_1k": "formal_courtesy_hits",
-    "gratitude_praise_per_1k": "gratitude_praise_hits",
-    "cooperation_per_1k": "cooperation_hits",
-    "hostility_per_1k": "hostility_hits",
-    "misconduct_per_1k": "misconduct_hits",
-    "ideological_label_per_1k": "ideological_label_hits",
-    "profanity_per_1k": "profanity_hits",
-    "profanity_mild_per_1k": "profanity_mild_hits",
-    "profanity_strong_per_1k": "profanity_strong_hits",
-    "profanity_slurs_per_1k": "profanity_slurs_hits",
-    "outgroup_ref_per_1k": "outgroup_refs",
-    "democrat_party_pej_per_1k": "democrat_party_pej",
-    "directed_comity_per_1k": "directed_comity_hits",
-    "directed_hostility_per_1k": "directed_hostility_hits",
-    "directed_misconduct_per_1k": "directed_misconduct_hits",
+    metric.rate: metric.raw_count for metric in METRICS if metric.denominator == "words"
 }
-
 CONTEXT_RATE_TO_COUNT: Dict[str, str] = {
-    "outgroup_comity_contexts_per_100_refs": "outgroup_comity_contexts",
-    "outgroup_hostility_contexts_per_100_refs": "outgroup_hostility_contexts",
-    "outgroup_misconduct_contexts_per_100_refs": "outgroup_misconduct_contexts",
+    metric.rate: metric.raw_count
+    for metric in METRICS
+    if metric.denominator == "outgroup_refs"
 }
 
 
@@ -106,7 +84,7 @@ def score_and_aggregate(
     ``out_dir/metrics/civility_metrics.{parquet,csv}``).
     """
     scorers = Scorers(use_sentiment=use_sentiment)
-    acc: Dict[Tuple[int, str, str], Dict[str, float]] = defaultdict(
+    acc: Dict[Tuple[str, int, str, str], Dict[str, float]] = defaultdict(
         lambda: {k: 0.0 for k in _SUM_KEYS}
     )
     coverage: Dict[Tuple[str, int, str], Dict[str, int]] = defaultdict(
@@ -161,21 +139,16 @@ def score_and_aggregate(
                     continue
                 party = parties[i] or "other"
                 s = scorers.score_turn(texts[i] or "", party)
-                key = (int(congresses[i]), chambers[i] or "other", party)
+                key = (
+                    sources[i] or "unknown",
+                    int(congresses[i]),
+                    chambers[i] or "other",
+                    party,
+                )
                 a = acc[key]
                 a["turns"] += 1
                 a["n_words"] += s["n_words"]
-                for k in (
-                    "comity_hits", "formal_courtesy_hits", "gratitude_praise_hits",
-                    "cooperation_hits", "hostility_hits", "misconduct_hits",
-                    "ideological_label_hits", "profanity_mild",
-                    "profanity_strong", "profanity_slurs", "profanity_hits",
-                    "outgroup_refs", "democrat_party_pej",
-                    "directed_comity_hits", "directed_hostility_hits",
-                    "directed_misconduct_hits",
-                    "outgroup_comity_contexts", "outgroup_hostility_contexts",
-                    "outgroup_misconduct_contexts",
-                ):
+                for k in SCORE_KEYS:
                     a[k] += s[k]
                 if "sentiment" in s:
                     # Sentence-count weight so long speeches count proportionally (matches
@@ -190,12 +163,16 @@ def score_and_aggregate(
                 n += 1
         LOG.info("scored %s (%d substantive turns)", fp.name, n)
 
-    df = _finalize(acc)
+    source_df = _finalize(acc)
+    df = _select_primary_source(source_df)
     out_metrics = out_dir / "metrics"
     out_metrics.mkdir(parents=True, exist_ok=True)
+    source_df.to_parquet(out_metrics / "civility_metrics_by_source.parquet", index=False)
+    source_df.to_csv(out_metrics / "civility_metrics_by_source.csv", index=False)
     df.to_parquet(out_metrics / "civility_metrics.parquet", index=False)
     df.to_csv(out_metrics / "civility_metrics.csv", index=False)
     _write_coverage(coverage, out_dir)
+    _write_source_metadata(source_df, out_dir)
     LOG.info("wrote metrics: %d rows -> %s", len(df), out_metrics)
     return df
 
@@ -236,45 +213,81 @@ def _write_coverage(
     frame.to_csv(coverage_dir / "turn_coverage.csv", index=False)
 
 
-def _finalize(acc: Dict[Tuple[int, str, str], Dict[str, float]]) -> pd.DataFrame:
+def _write_source_metadata(source_df: pd.DataFrame, out_dir: Path) -> None:
+    """Persist source ranges and the primary source transition used by plots."""
+    sources = []
+    for source, group in source_df.groupby("source"):
+        sources.append({
+            "source": source,
+            "min_congress": int(group["congress"].min()),
+            "max_congress": int(group["congress"].max()),
+            "min_year": int(group["year"].min()),
+            "max_year": int(group["year"].max()),
+            "rows": int(len(group)),
+        })
+    gov_primary = source_df[
+        source_df["source"].eq("govinfo") & source_df["congress"].ge(115)
+    ]
+    boundary_year = (
+        int(gov_primary["year"].min()) if not gov_primary.empty else None
+    )
+    payload = {
+        "sources": sorted(sources, key=lambda item: item["source"]),
+        "primary_boundary_year": boundary_year,
+        "primary_rule": "Hein through Congress 114; GovInfo from Congress 115",
+    }
+    coverage_dir = out_dir / "coverage"
+    coverage_dir.mkdir(parents=True, exist_ok=True)
+    (coverage_dir / "source_metadata.json").write_text(
+        json.dumps(payload, indent=2) + "\n", encoding="utf-8"
+    )
+
+
+def _select_primary_source(source_df: pd.DataFrame) -> pd.DataFrame:
+    """Select the documented long-run source regime without combining overlap rows."""
+    if source_df.empty:
+        return source_df.drop(columns=["source"], errors="ignore")
+    selected = source_df[
+        ((source_df["congress"] <= 114) & source_df["source"].str.startswith("hein_"))
+        | ((source_df["congress"] >= 115) & source_df["source"].eq("govinfo"))
+    ].copy()
+    # The Hein ingester writes only one edition per Congress, but keep a deterministic
+    # preference if legacy files ever contain both.
+    selected["_source_rank"] = selected["source"].map(
+        {"hein_daily": 0, "hein_bound": 1, "govinfo": 0}
+    ).fillna(9)
+    selected = (
+        selected.sort_values("_source_rank")
+        .drop_duplicates(["congress", "chamber", "party"], keep="first")
+        .drop(columns=["source", "_source_rank"])
+        .sort_values(["congress", "chamber", "party"])
+        .reset_index(drop=True)
+    )
+    return selected
+
+
+def _finalize(acc: Dict[Tuple[str, int, str, str], Dict[str, float]]) -> pd.DataFrame:
     rows: List[dict] = []
-    for (congress, chamber, party), a in sorted(acc.items()):
+    for (source, congress, chamber, party), a in sorted(acc.items()):
         words = a["n_words"] or 1.0
         row = {
+            "source": source,
             "congress": congress,
             "year": year_from_congress(congress),  # Congress N convenes in this year
             "chamber": chamber,
             "party": party,
             "turns": int(a["turns"]),
             "words": int(a["n_words"]),
-            # raw sums (kept so viz can re-aggregate across chambers correctly)
-            "comity_hits": int(a["comity_hits"]),
-            "formal_courtesy_hits": int(a["formal_courtesy_hits"]),
-            "gratitude_praise_hits": int(a["gratitude_praise_hits"]),
-            "cooperation_hits": int(a["cooperation_hits"]),
-            "hostility_hits": int(a["hostility_hits"]),
-            "misconduct_hits": int(a["misconduct_hits"]),
-            "ideological_label_hits": int(a["ideological_label_hits"]),
-            "profanity_hits": int(a["profanity_hits"]),
-            "profanity_mild_hits": int(a["profanity_mild"]),
-            "profanity_strong_hits": int(a["profanity_strong"]),
-            "profanity_slurs_hits": int(a["profanity_slurs"]),
-            "outgroup_refs": int(a["outgroup_refs"]),
-            "democrat_party_pej": int(a["democrat_party_pej"]),
-            "directed_comity_hits": int(a["directed_comity_hits"]),
-            "directed_hostility_hits": int(a["directed_hostility_hits"]),
-            "directed_misconduct_hits": int(a["directed_misconduct_hits"]),
-            "outgroup_comity_contexts": int(a["outgroup_comity_contexts"]),
-            "outgroup_hostility_contexts": int(a["outgroup_hostility_contexts"]),
-            "outgroup_misconduct_contexts": int(a["outgroup_misconduct_contexts"]),
         }
+        for metric in METRICS:
+            row[metric.raw_count] = int(a[metric.score_key])
         # convenience rates at this (congress, chamber, party) granularity, derived from
         # the raw hit columns via the shared RATE_TO_HITCOL map (same names/formula as viz)
-        for rate, col in RATE_TO_HITCOL.items():
-            row[rate] = 1000.0 * row[col] / words
-        refs = row["outgroup_refs"]
-        for rate, col in CONTEXT_RATE_TO_COUNT.items():
-            row[rate] = 100.0 * row[col] / refs if refs else 0.0
+        for metric in METRICS:
+            denominator = words if metric.denominator == "words" else row["outgroup_refs"]
+            row[metric.rate] = (
+                metric.scale * row[metric.raw_count] / denominator if denominator else 0.0
+            )
         row["mean_sentiment"] = (
             a["sentiment_sum"] / a["sentiment_n"] if a["sentiment_n"] else None
         )
