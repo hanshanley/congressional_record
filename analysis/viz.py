@@ -8,20 +8,23 @@ key trends using :mod:`analysis.plotting`. Figures go to ``<out_dir>/reports/fig
 from __future__ import annotations
 
 import logging
+import os
+import shutil
+import tempfile
 from pathlib import Path
 from typing import List
 
 import pandas as pd
 
-from analysis.aggregate import RATE_TO_HITCOL
+from analysis.aggregate import CONTEXT_RATE_TO_COUNT, RATE_TO_HITCOL
 from analysis.plotting import charts, theme
 
 LOG = logging.getLogger("analysis.viz")
 
 SOURCE_NOTE = (
-    "Sources: Gentzkow-Shapiro-Taddy hein corpus (1873-2017) + GovInfo CREC (2017-present). "
-    "House and Senate floor turns only; Extensions/other sections excluded. Rates per 1,000 "
-    "words; dotted line marks the hein\u2192GovInfo source boundary (2017)."
+    "Sources: Stanford hein (1873-2017) + GovInfo CREC (2017-present). House/Senate only; "
+    "Extensions excluded. Units shown on y-axis. Dotted line: 2017 source boundary. GovInfo party "
+    "coverage varies; see coverage/turn_coverage.csv."
 )
 SOURCE_BOUNDARY_YEAR = 2017
 
@@ -30,7 +33,9 @@ SOURCE_BOUNDARY_YEAR = 2017
 _RECT_TOP_1LINE = 0.97
 _RECT_TOP_2LINE = 0.95
 
-_HIT_COLS = list(dict.fromkeys([*RATE_TO_HITCOL.values(), "words"]))
+_HIT_COLS = list(dict.fromkeys([
+    *RATE_TO_HITCOL.values(), *CONTEXT_RATE_TO_COUNT.values(), "words"
+]))
 
 
 def _available_hit_cols(df: pd.DataFrame) -> List[str]:
@@ -45,6 +50,11 @@ def _add_rates(g: pd.DataFrame) -> pd.DataFrame:
     for rate, col in RATE_TO_HITCOL.items():
         if col in g.columns:
             g[rate] = 1000 * g[col] / w
+    refs = g["outgroup_refs"].where(g["outgroup_refs"] != 0) if "outgroup_refs" in g.columns else None
+    if refs is not None:
+        for rate, col in CONTEXT_RATE_TO_COUNT.items():
+            if col in g.columns:
+                g[rate] = (100 * g[col] / refs).fillna(0.0)
     return g
 
 
@@ -112,26 +122,52 @@ def _plot_by_chamber_party(ax, g: pd.DataFrame, col: str, parties=("D", "R"),
 
 # (column, title, y-label) for each per-party panel/figure.
 _PANELS = [
-    ("comity_per_1k", "Comity / deference phrases", "hits per 1,000 words"),
+    ("formal_courtesy_per_1k", "Formulaic courtesy / deference", "hits per 1,000 words"),
+    ("gratitude_praise_per_1k", "Gratitude / praise", "hits per 1,000 words"),
+    ("cooperation_per_1k", "Bipartisan cooperation language", "hits per 1,000 words"),
     ("hostility_per_1k", "Personal disrespect / attack language", "hits per 1,000 words"),
     ("misconduct_per_1k", "Misconduct allegation language", "hits per 1,000 words"),
     ("profanity_per_1k", "High-precision profanity", "hits per 1,000 words"),
+]
+
+_SUPPLEMENTAL_PANELS = [
+    ("comity_per_1k", "All coded comity / deference phrases", "hits per 1,000 words"),
+    ("ideological_label_per_1k", "Ideological labels", "hits per 1,000 words"),
+    ("outgroup_ref_per_1k", "References to the other party", "refs per 1,000 words"),
+    (
+        "outgroup_hostility_contexts_per_100_refs",
+        "Out-party references with nearby personal disrespect",
+        "contexts per 100 references",
+    ),
+    (
+        "outgroup_misconduct_contexts_per_100_refs",
+        "Out-party references with nearby misconduct allegations",
+        "contexts per 100 references",
+    ),
+    (
+        "outgroup_comity_contexts_per_100_refs",
+        "Out-party references with nearby comity language",
+        "contexts per 100 references",
+    ),
     (
         "directed_hostility_per_1k",
         "Personal disrespect near out-party references",
         "hits per 1,000 words",
     ),
-    ("ideological_label_per_1k", "Ideological labels", "hits per 1,000 words"),
-]
-
-_SUPPLEMENTAL_PANELS = [
-    ("outgroup_ref_per_1k", "References to the other party", "refs per 1,000 words"),
     (
         "directed_misconduct_per_1k",
         "Misconduct allegations near out-party references",
         "hits per 1,000 words",
     ),
     ("democrat_party_pej_per_1k", '"Democrat party" pejorative', "hits per 1,000 words"),
+]
+
+_CHAMBER_PANELS = [
+    _PANELS[0],  # formulaic courtesy
+    _PANELS[2],  # cooperation
+    _PANELS[3],  # personal disrespect
+    _PANELS[4],  # misconduct
+    _PANELS[5],  # profanity
 ]
 
 
@@ -208,31 +244,46 @@ def render(metrics_path: Path, out_dir: Path) -> List[Path]:
     gc = _by_year_chamber_party(df)
     figs_dir = out_dir / "reports" / "figures"
     figs_dir.mkdir(parents=True, exist_ok=True)
-    written: List[Path] = [_overview(g, figs_dir), _overview_by_chamber(gc, figs_dir)]
+    temp_figs = Path(tempfile.mkdtemp(prefix=".figures-", dir=figs_dir.parent))
+    try:
+        written: List[Path] = [_overview(g, temp_figs), _overview_by_chamber(gc, temp_figs)]
 
-    for col, title, ylab in [*_PANELS, *_SUPPLEMENTAL_PANELS]:
-        # overall (by party): clean markerless lines with direct end-of-line party labels
-        fig, ax = charts.new_figure(figsize=(10, 5.5))
-        _plot_by_party(ax, g, col, label_ends=True, marker=None, linewidth=2.6)
-        charts.style_axes(ax, title, "Year", ylab,
-                          subtitle="U.S. House & Senate combined, Democrats vs Republicans")
-        written.append(charts.finish(fig, ax, figs_dir / f"{col}.png",
-                                      source=SOURCE_NOTE, legend=False))
+        for col, title, ylab in [*_PANELS, *_SUPPLEMENTAL_PANELS]:
+            # overall (by party): clean markerless lines with direct end-of-line party labels
+            fig, ax = charts.new_figure(figsize=(10, 5.5))
+            _plot_by_party(ax, g, col, label_ends=True, marker=None, linewidth=2.6)
+            charts.style_axes(ax, title, "Year", ylab,
+                              subtitle="U.S. House & Senate combined, Democrats vs Republicans")
+            written.append(charts.finish(
+                fig, ax, temp_figs / f"{col}.png", source=SOURCE_NOTE, legend=False
+            ))
 
-    # Per-metric party x chamber breakdowns for the three headline measures.
-    for col, title, ylab in _PANELS[:3]:
-        fig, ax = charts.new_figure(figsize=(10, 5.5))
-        _plot_by_chamber_party(ax, gc, col)
-        charts.style_axes(ax, f"{title} \u2014 by party & chamber", "Year", ylab,
-                          subtitle="solid = House, dashed = Senate")
-        written.append(charts.finish(fig, ax, figs_dir / f"{col}_by_chamber.png", source=SOURCE_NOTE))
+        # Named party x chamber breakdowns for positive and negative headline measures.
+        for col, title, ylab in _CHAMBER_PANELS:
+            fig, ax = charts.new_figure(figsize=(10, 5.5))
+            _plot_by_chamber_party(ax, gc, col)
+            charts.style_axes(ax, f"{title} \u2014 by party & chamber", "Year", ylab,
+                              subtitle="solid = House, dashed = Senate")
+            written.append(charts.finish(
+                fig, ax, temp_figs / f"{col}_by_chamber.png", source=SOURCE_NOTE
+            ))
 
-    written.append(_asymmetry(g, figs_dir))
+        written.append(_asymmetry(g, temp_figs))
 
-    tbl_dir = out_dir / "reports" / "tables"
-    tbl_dir.mkdir(parents=True, exist_ok=True)
-    g.to_csv(tbl_dir / "metrics_by_congress_party.csv", index=False)
-    gc.to_csv(tbl_dir / "metrics_by_congress_chamber_party.csv", index=False)
+        tbl_dir = out_dir / "reports" / "tables"
+        tbl_dir.mkdir(parents=True, exist_ok=True)
+        g.to_csv(tbl_dir / "metrics_by_congress_party.csv", index=False)
+        gc.to_csv(tbl_dir / "metrics_by_congress_chamber_party.csv", index=False)
 
-    LOG.info("wrote %d figures -> %s", len(written), figs_dir)
-    return written
+        new_names = {path.name for path in written}
+        for path in written:
+            os.replace(path, figs_dir / path.name)
+        for old_figure in figs_dir.glob("*.png"):
+            if old_figure.name not in new_names:
+                old_figure.unlink()
+    finally:
+        shutil.rmtree(temp_figs, ignore_errors=True)
+
+    final_paths = [figs_dir / path.name for path in written]
+    LOG.info("wrote %d figures -> %s", len(final_paths), figs_dir)
+    return final_paths

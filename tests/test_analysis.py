@@ -198,11 +198,24 @@ def test_scorer_comity_and_hostility() -> None:
     s = Scorers()
     r = s.score_turn("I thank the gentleman from Ohio, my distinguished colleague.", "D")
     assert r["comity_hits"] >= 2  # "i thank the gentleman" + "my distinguished colleague"
+    assert r["formal_courtesy_hits"] >= 1
+    assert r["gratitude_praise_hits"] >= 1
+    assert r["cooperation_hits"] == 0
     assert r["hostility_hits"] == 0
 
     r2 = s.score_turn("That dishonest, cowardly liar is unfit for office.", "R")
     assert r2["hostility_hits"] >= 4
     assert r2["misconduct_hits"] == 0
+
+
+def test_scorer_separates_comity_components() -> None:
+    s = Scorers()
+    formal = s.score_turn("The distinguished gentlewoman from Ohio has the floor.", "D")
+    gratitude = s.score_turn("I commend my colleague for this work.", "D")
+    cooperation = s.score_turn("We reached across the aisle in a bipartisan spirit.", "D")
+    assert formal["formal_courtesy_hits"] >= 1
+    assert gratitude["gratitude_praise_hits"] >= 1
+    assert cooperation["cooperation_hits"] >= 2
 
 
 def test_scorer_profanity_tiers() -> None:
@@ -238,6 +251,7 @@ def test_scorer_outgroup_directed_and_pejorative() -> None:
     r = s.score_turn(txt, "D")
     assert r["outgroup_refs"] >= 1               # "republican" is out-group for a D
     assert r["directed_hostility_hits"] >= 2     # dishonest + cowards near the ref
+    assert r["outgroup_hostility_contexts"] == 1
 
     # Same words but speaker is Republican -> "republican" is NOT out-group.
     r2 = s.score_turn(txt, "R")

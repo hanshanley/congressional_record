@@ -23,11 +23,14 @@ LOG = logging.getLogger("analysis.aggregate")
 
 # Sum accumulators kept per group.
 _SUM_KEYS = [
-    "turns", "n_words", "comity_hits", "hostility_hits",
+    "turns", "n_words", "comity_hits", "formal_courtesy_hits",
+    "gratitude_praise_hits", "cooperation_hits", "hostility_hits",
     "misconduct_hits", "ideological_label_hits",
     "profanity_mild", "profanity_strong", "profanity_slurs", "profanity_hits",
     "outgroup_refs", "democrat_party_pej",
     "directed_comity_hits", "directed_hostility_hits", "directed_misconduct_hits",
+    "outgroup_comity_contexts", "outgroup_hostility_contexts",
+    "outgroup_misconduct_contexts",
     "sentiment_sum", "neg_share_sum", "sentiment_n",
 ]
 
@@ -41,6 +44,9 @@ _READ_COLS = [
 # identically named rates from the same formula.
 RATE_TO_HITCOL: Dict[str, str] = {
     "comity_per_1k": "comity_hits",
+    "formal_courtesy_per_1k": "formal_courtesy_hits",
+    "gratitude_praise_per_1k": "gratitude_praise_hits",
+    "cooperation_per_1k": "cooperation_hits",
     "hostility_per_1k": "hostility_hits",
     "misconduct_per_1k": "misconduct_hits",
     "ideological_label_per_1k": "ideological_label_hits",
@@ -53,6 +59,12 @@ RATE_TO_HITCOL: Dict[str, str] = {
     "directed_comity_per_1k": "directed_comity_hits",
     "directed_hostility_per_1k": "directed_hostility_hits",
     "directed_misconduct_per_1k": "directed_misconduct_hits",
+}
+
+CONTEXT_RATE_TO_COUNT: Dict[str, str] = {
+    "outgroup_comity_contexts_per_100_refs": "outgroup_comity_contexts",
+    "outgroup_hostility_contexts_per_100_refs": "outgroup_hostility_contexts",
+    "outgroup_misconduct_contexts_per_100_refs": "outgroup_misconduct_contexts",
 }
 
 
@@ -154,12 +166,15 @@ def score_and_aggregate(
                 a["turns"] += 1
                 a["n_words"] += s["n_words"]
                 for k in (
-                    "comity_hits", "hostility_hits", "misconduct_hits",
+                    "comity_hits", "formal_courtesy_hits", "gratitude_praise_hits",
+                    "cooperation_hits", "hostility_hits", "misconduct_hits",
                     "ideological_label_hits", "profanity_mild",
                     "profanity_strong", "profanity_slurs", "profanity_hits",
                     "outgroup_refs", "democrat_party_pej",
                     "directed_comity_hits", "directed_hostility_hits",
                     "directed_misconduct_hits",
+                    "outgroup_comity_contexts", "outgroup_hostility_contexts",
+                    "outgroup_misconduct_contexts",
                 ):
                     a[k] += s[k]
                 if "sentiment" in s:
@@ -234,6 +249,9 @@ def _finalize(acc: Dict[Tuple[int, str, str], Dict[str, float]]) -> pd.DataFrame
             "words": int(a["n_words"]),
             # raw sums (kept so viz can re-aggregate across chambers correctly)
             "comity_hits": int(a["comity_hits"]),
+            "formal_courtesy_hits": int(a["formal_courtesy_hits"]),
+            "gratitude_praise_hits": int(a["gratitude_praise_hits"]),
+            "cooperation_hits": int(a["cooperation_hits"]),
             "hostility_hits": int(a["hostility_hits"]),
             "misconduct_hits": int(a["misconduct_hits"]),
             "ideological_label_hits": int(a["ideological_label_hits"]),
@@ -246,11 +264,17 @@ def _finalize(acc: Dict[Tuple[int, str, str], Dict[str, float]]) -> pd.DataFrame
             "directed_comity_hits": int(a["directed_comity_hits"]),
             "directed_hostility_hits": int(a["directed_hostility_hits"]),
             "directed_misconduct_hits": int(a["directed_misconduct_hits"]),
+            "outgroup_comity_contexts": int(a["outgroup_comity_contexts"]),
+            "outgroup_hostility_contexts": int(a["outgroup_hostility_contexts"]),
+            "outgroup_misconduct_contexts": int(a["outgroup_misconduct_contexts"]),
         }
         # convenience rates at this (congress, chamber, party) granularity, derived from
         # the raw hit columns via the shared RATE_TO_HITCOL map (same names/formula as viz)
         for rate, col in RATE_TO_HITCOL.items():
             row[rate] = 1000.0 * row[col] / words
+        refs = row["outgroup_refs"]
+        for rate, col in CONTEXT_RATE_TO_COUNT.items():
+            row[rate] = 100.0 * row[col] / refs if refs else 0.0
         row["mean_sentiment"] = (
             a["sentiment_sum"] / a["sentiment_n"] if a["sentiment_n"] else None
         )

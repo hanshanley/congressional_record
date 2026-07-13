@@ -114,8 +114,8 @@ time-series charts. It unifies two corpora into one speaker-turn table:
 
 ### What it measures
 
-* **Comity/deference** phrases ("my distinguished colleague", "the gentleman from", "reach
-  across the aisle", "I yield to")
+* **Formulaic courtesy/deference**, **gratitude/praise**, and **bipartisan cooperation** as
+  separate positive-language components rather than one undifferentiated comity score
 * **Personal disrespect/attack** language, **misconduct allegation language**, and
   **high-precision profanity** as separate categories. Misconduct words are allegations in text,
   not evidence that misconduct occurred.
@@ -123,6 +123,8 @@ time-series charts. It unifies two corpora into one speaker-turn table:
   not automatically count as personal disrespect.
 * **Cross-party reference context** — out-group references resolved to the speaker's party, plus
   comity, disrespect, or misconduct terms **near** each reference. Proximity does not prove target.
+  Context-normalized outputs report affected contexts per 100 out-party references as well as
+  nearby hit rates per 1,000 total words.
 * The **"Democrat party"** pejorative marker; optional **VADER sentiment** (see *Toxicity* below)
 
 All lexical rates are per 1,000 words, grouped by `(congress, chamber, party)`, so overall

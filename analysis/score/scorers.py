@@ -3,6 +3,7 @@
 Loads the lexicons once and scores a turn's text for:
 
 * comity/deference phrase hits (positive)
+* formulaic courtesy, gratitude/praise, and bipartisan cooperation as separate components
 * hostility/attack hits (negative)
 * profanity hits by tier (mild/strong/slurs)
 * out-group reference count (aisle idioms + high-precision opposing-party references,
@@ -215,6 +216,9 @@ class Scorers:
 
     def __init__(self, use_sentiment: bool = False, fuzzy: bool = True) -> None:
         self.comity = _Lexicon(_load_lines("comity.txt"), fuzzy=fuzzy)
+        self.formal_courtesy = _Lexicon(_load_lines("formal_courtesy.txt"), fuzzy=fuzzy)
+        self.gratitude_praise = _Lexicon(_load_lines("gratitude_praise.txt"), fuzzy=fuzzy)
+        self.cooperation = _Lexicon(_load_lines("cooperation.txt"), fuzzy=fuzzy)
         self.hostility = _Lexicon(_load_lines("hostility.txt"), fuzzy=fuzzy)
         self.misconduct = _Lexicon(_load_lines("misconduct.txt"), fuzzy=fuzzy)
         self.ideological_labels = _Lexicon(_load_lines("ideological_labels.txt"), fuzzy=fuzzy)
@@ -309,10 +313,18 @@ class Scorers:
         prof = {tier: lex.count(tokens, low) for tier, lex in self.profanity.items()}
         win = self._window_text(low, spans)
         win_tokens = Counter(_TOKEN_RE.findall(win)) if win else Counter()
+        reference_contexts = []
+        for span in spans:
+            context = self._window_text(low, [span])
+            context_tokens = Counter(_TOKEN_RE.findall(context))
+            reference_contexts.append((context, context_tokens))
 
         out: Dict[str, float] = {
             "n_words": n_words,
             "comity_hits": self.comity.count(tokens, low),
+            "formal_courtesy_hits": self.formal_courtesy.count(tokens, low),
+            "gratitude_praise_hits": self.gratitude_praise.count(tokens, low),
+            "cooperation_hits": self.cooperation.count(tokens, low),
             "hostility_hits": self.hostility.count(tokens, low),
             "misconduct_hits": self.misconduct.count(tokens, low),
             "ideological_label_hits": self.ideological_labels.count(tokens, low),
@@ -326,6 +338,18 @@ class Scorers:
             "directed_comity_hits": self.comity.count(win_tokens, win),
             "directed_hostility_hits": self.hostility.count(win_tokens, win),
             "directed_misconduct_hits": self.misconduct.count(win_tokens, win),
+            "outgroup_comity_contexts": sum(
+                self.comity.count(context_tokens, context) > 0
+                for context, context_tokens in reference_contexts
+            ),
+            "outgroup_hostility_contexts": sum(
+                self.hostility.count(context_tokens, context) > 0
+                for context, context_tokens in reference_contexts
+            ),
+            "outgroup_misconduct_contexts": sum(
+                self.misconduct.count(context_tokens, context) > 0
+                for context, context_tokens in reference_contexts
+            ),
         }
         if self._sid is not None:
             compound, neg_share, n_sentences = self._sentiment(text)
