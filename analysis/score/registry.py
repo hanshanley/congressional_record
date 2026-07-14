@@ -23,7 +23,7 @@ class MetricSpec:
     headline: bool = False
     chamber_plot: bool = False
     target_required: bool = False
-    codebook_version: str = "2026-07-v2"
+    codebook_version: str = "2026-07-v3"
 
 
 METRICS = (

@@ -142,7 +142,6 @@ def _base_row(row: Dict[str, object], stratum: str, center: int) -> dict:
         "party": str(row["party"]),
         "is_procedural": bool(row["is_procedural"]),
         "_sampling_stratum": stratum,
-        "_full_text": text,
         "passage_start": start,
         "passage_end": end,
         "passage": passage,
@@ -224,9 +223,10 @@ def build_validation_sample(
     production_rows = []
     for index, row in enumerate(sampled_rows, start=1):
         row["sample_id"] = f"VAL-{index:04d}"
-        full_text = row.pop("_full_text")
         sampling_stratum = row.pop("_sampling_stratum")
-        features = scorer.score_turn(full_text, row["party"])
+        # Annotators see the bounded passage, so validation predictions must be scored
+        # on that exact same text rather than on unseen parts of the full turn.
+        features = scorer.score_turn(row["passage"], row["party"])
         production_rows.append({
             "sample_id": row["sample_id"],
             "turn_id": row["turn_id"],

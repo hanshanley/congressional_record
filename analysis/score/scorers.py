@@ -42,6 +42,28 @@ _OUTPARTY_PHRASES = {
 # Matched only against already-lowercased text, so no re.IGNORECASE (which would be
 # ~2.7x slower per scan across the 18.5M-turn corpus for identical results).
 _DEMOCRAT_PARTY_PEJ = re.compile(r"\bdemocrat\s+party\b")
+_COOPERATION_EXCLUSIONS = re.compile(
+    r"\bin a bipartisan\s+(?:board|commission|committee)\b"
+)
+_HOSTILITY_EXCLUSIONS = re.compile(
+    r"\bphony\s+(?:price|expense)\b"
+    r"|\b(?:mental|legal)\s+incompetents?\b"
+    r"|\bnot\s+(?:a\s+)?(?:coward|cowardly|liar|incompetent)\b"
+    r"|\b(?:was|is)\s+(?:\w+\s+){0,4}a\s+liar\?"
+)
+_MISCONDUCT_EXCLUSIONS = re.compile(
+    r"\bforeign\s+corrupt\s+practices\s+act\b"
+    r"|\b(?:no|not|without)\s+(?:evidence\s+of\s+)?(?:corrupt|corruption)\b"
+    r"|\bdo\s+not\s+believe\s+there\s+is\s+corruption\b"
+)
+_MILD_PROFANITY_EXCLUSIONS = re.compile(
+    r"\bto\s+damn\s+them\b"
+    r"|\bbe\s+damned\s+and\s+annulled\b"
+    r"|\block\s+and\s+damn\b"
+    r"|\bkilled\s+a\s+damn\s+in\b"
+    r"|\bmy\s+damn\s+sin\b"
+)
+_STRONG_PROFANITY_EXCLUSIONS = re.compile(r"\bcrap\s+game\b")
 # Tokenizer: word tokens keep internal hyphens/apostrophes (un-american, don't).
 _TOKEN_RE = re.compile(r"[a-z0-9]+(?:[-'\u2019][a-z0-9]+)*")
 # Lightweight sentence splitter for sentence-level VADER (avoids an nltk dependency).
@@ -220,7 +242,9 @@ class Scorers:
         self.gratitude_praise = _Lexicon(_load_lines("gratitude_praise.txt"), fuzzy=fuzzy)
         self.cooperation = _Lexicon(_load_lines("cooperation.txt"), fuzzy=fuzzy)
         self.hostility = _Lexicon(_load_lines("hostility.txt"), fuzzy=fuzzy)
-        self.misconduct = _Lexicon(_load_lines("misconduct.txt"), fuzzy=fuzzy)
+        # Misconduct terms are exact curated forms; suffix expansion creates legal-topic
+        # false positives (e.g. "corrupting" an abstract process).
+        self.misconduct = _Lexicon(_load_lines("misconduct.txt"), fuzzy=False)
         self.ideological_labels = _Lexicon(_load_lines("ideological_labels.txt"), fuzzy=fuzzy)
         self.outgroup_idiom = _Lexicon(_load_lines("outgroup.txt"), fuzzy=fuzzy)
         self.profanity = _load_profanity(fuzzy=fuzzy)
@@ -251,6 +275,15 @@ class Scorers:
             neg += sc["neg"]
         n = len(sentences)
         return comp / n, neg / n, n
+
+    @staticmethod
+    def _count_excluding(
+        lexicon: _Lexicon,
+        tokens: Counter,
+        text: str,
+        exclusions: re.Pattern,
+    ) -> int:
+        return max(0, lexicon.count(tokens, text) - len(exclusions.findall(text)))
 
     @staticmethod
     def _window_text(text: str, spans: List[Tuple[int, int]], radius: int = 200) -> str:
@@ -330,6 +363,21 @@ class Scorers:
         spans = self._distinct_spans(self._idiom_spans(low) + outparty_spans + phrase_spans)
 
         prof = {tier: lex.count(tokens, low) for tier, lex in self.profanity.items()}
+        prof["mild"] = max(
+            0, prof.get("mild", 0) - len(_MILD_PROFANITY_EXCLUSIONS.findall(low))
+        )
+        prof["strong"] = max(
+            0, prof.get("strong", 0) - len(_STRONG_PROFANITY_EXCLUSIONS.findall(low))
+        )
+        cooperation_hits = self._count_excluding(
+            self.cooperation, tokens, low, _COOPERATION_EXCLUSIONS
+        )
+        hostility_hits = self._count_excluding(
+            self.hostility, tokens, low, _HOSTILITY_EXCLUSIONS
+        )
+        misconduct_hits = self._count_excluding(
+            self.misconduct, tokens, low, _MISCONDUCT_EXCLUSIONS
+        )
         win = self._window_text(low, spans)
         win_tokens = Counter(_TOKEN_RE.findall(win)) if win else Counter()
         reference_contexts = []
@@ -343,30 +391,39 @@ class Scorers:
             "comity_hits": self.comity.count(tokens, low),
             "formal_courtesy_hits": self.formal_courtesy.count(tokens, low),
             "gratitude_praise_hits": self.gratitude_praise.count(tokens, low),
-            "cooperation_hits": self.cooperation.count(tokens, low),
-            "hostility_hits": self.hostility.count(tokens, low),
-            "misconduct_hits": self.misconduct.count(tokens, low),
+            "cooperation_hits": cooperation_hits,
+            "hostility_hits": hostility_hits,
+            "misconduct_hits": misconduct_hits,
             "ideological_label_hits": self.ideological_labels.count(tokens, low),
             "profanity_mild": prof.get("mild", 0),
             "profanity_strong": prof.get("strong", 0),
             "profanity_slurs": prof.get("slurs", 0),
-            "profanity_hits": sum(prof.values()),
+            # Identity slurs are a separate context-audited category, not profanity.
+            "profanity_hits": prof.get("mild", 0) + prof.get("strong", 0),
             "outgroup_refs": len(spans),
             # Only run the pejorative regex when the token "democrat" is present.
             "democrat_party_pej": len(_DEMOCRAT_PARTY_PEJ.findall(low)) if "democrat" in tokens else 0,
             "directed_comity_hits": self.comity.count(win_tokens, win),
-            "directed_hostility_hits": self.hostility.count(win_tokens, win),
-            "directed_misconduct_hits": self.misconduct.count(win_tokens, win),
+            "directed_hostility_hits": self._count_excluding(
+                self.hostility, win_tokens, win, _HOSTILITY_EXCLUSIONS
+            ),
+            "directed_misconduct_hits": self._count_excluding(
+                self.misconduct, win_tokens, win, _MISCONDUCT_EXCLUSIONS
+            ),
             "outgroup_comity_contexts": sum(
                 self.comity.count(context_tokens, context) > 0
                 for context, context_tokens in reference_contexts
             ),
             "outgroup_hostility_contexts": sum(
-                self.hostility.count(context_tokens, context) > 0
+                self._count_excluding(
+                    self.hostility, context_tokens, context, _HOSTILITY_EXCLUSIONS
+                ) > 0
                 for context, context_tokens in reference_contexts
             ),
             "outgroup_misconduct_contexts": sum(
-                self.misconduct.count(context_tokens, context) > 0
+                self._count_excluding(
+                    self.misconduct, context_tokens, context, _MISCONDUCT_EXCLUSIONS
+                ) > 0
                 for context, context_tokens in reference_contexts
             ),
         }

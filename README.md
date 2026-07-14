@@ -132,15 +132,16 @@ trends split by party and chamber, plus D-R differences in nearby language, can 
 Aggregation also writes `data/processed/coverage/turn_coverage.{csv,parquet}` with total,
 procedural, and D/R/I-attributed turn/word coverage by source, Congress, and chamber.
 
-**Fuzzy keyword matching.** Lexicon terms match their morphological variants by default
+**Fuzzy keyword matching.** Most lexicon terms match their morphological variants by default
 (`Scorers(fuzzy=True)`): single words expand to plurals/verb-forms via suffix rules plus an
 irregular-plural table ("colleague"→"colleagues", "coward"→"cowards", "gentleman"→"gentlemen"),
 and multi-word phrases inflect **every** content word inline in the regex, so "reach across the
 aisle" also matches "reaches/reached/reaching across the aisle". Short tokens (< 4 chars) are
 matched literally so obfuscation stubs are never expanded into ordinary words. Profanity and
-identity-slur codebooks use curated exact variants rather than unsafe morphology, and matched
-spans are de-duplicated so phrases and component words are not double-counted. Pass
-`fuzzy=False` for strict exact matching on the other codebooks.
+identity-slur codebooks use curated exact variants rather than unsafe morphology. Misconduct also
+uses exact curated forms because broad suffix expansion produced legal-topic false positives.
+Matched spans are de-duplicated so phrases and component words are not double-counted. Pass
+`fuzzy=False` for strict exact matching on the remaining codebooks.
 
 **By party and by chamber.** Headline charts exclude Extensions/other sections and render
 House/Senate floor language by party, plus a
@@ -164,8 +165,8 @@ jupyter lab notebooks/congressional_civility.ipynb
 ```
 
 The notebook loads the metrics table, plots House/Senate party trends, and runs diagnostics on
-real source turns. Planned model-assisted rubric grading preserves `turn_id`, uses two blinded
-passes plus adjudication, and is disclosed as model-assisted rather than human validation.
+real source turns. Completed model-assisted rubric grading preserves `turn_id`, uses two blinded
+passes plus separate adjudication, and is disclosed as model-assisted rather than human validation.
 
 ### Run it
 

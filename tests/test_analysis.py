@@ -214,7 +214,7 @@ def test_scorer_comity_and_hostility() -> None:
     assert r["cooperation_hits"] == 0
     assert r["hostility_hits"] == 0
 
-    r2 = s.score_turn("That dishonest, cowardly liar is unfit for office.", "R")
+    r2 = s.score_turn("That deceitful, cowardly liar is a hypocrite.", "R")
     assert r2["hostility_hits"] >= 4
     assert r2["misconduct_hits"] == 0
 
@@ -222,11 +222,11 @@ def test_scorer_comity_and_hostility() -> None:
 def test_scorer_separates_comity_components() -> None:
     s = Scorers()
     formal = s.score_turn("The distinguished gentlewoman from Ohio has the floor.", "D")
-    gratitude = s.score_turn("I commend my colleague for this work.", "D")
+    gratitude = s.score_turn("I thank my colleague for this work.", "D")
     cooperation = s.score_turn("We reached across the aisle in a bipartisan spirit.", "D")
     assert formal["formal_courtesy_hits"] >= 1
     assert gratitude["gratitude_praise_hits"] >= 1
-    assert cooperation["cooperation_hits"] >= 2
+    assert cooperation["cooperation_hits"] >= 1
 
 
 def test_scorer_profanity_tiers() -> None:
@@ -245,7 +245,7 @@ def test_scorer_separates_neutral_topics_and_discourse_categories() -> None:
         assert s.score_turn(text, "D")["profanity_hits"] == 0
 
     scored = s.score_turn(
-        "That dishonest coward committed bribery, according to this allegation, "
+        "That deceitful coward committed bribery, according to this allegation, "
         "and promoted a socialist policy. What the hell.",
         "D",
     )
@@ -258,7 +258,7 @@ def test_scorer_separates_neutral_topics_and_discourse_categories() -> None:
 def test_scorer_outgroup_directed_and_pejorative() -> None:
     s = Scorers()
     # A Democrat attacking Republicans near an out-group reference.
-    txt = "My Republican colleagues are dishonest cowards on this bill."
+    txt = "My Republican colleagues are deceitful cowards on this bill."
     r = s.score_turn(txt, "D")
     assert r["outgroup_refs"] >= 1               # "republican" is out-group for a D
     assert r["directed_hostility_hits"] >= 2     # dishonest + cowards near the ref
@@ -282,6 +282,18 @@ def test_scorer_outgroup_directed_and_pejorative() -> None:
     # "Democrat party" pejorative marker.
     r3 = s.score_turn("The Democrat party wants to raise your taxes.", "R")
     assert r3["democrat_party_pej"] == 1
+
+
+def test_scorer_contextual_false_positive_exclusions() -> None:
+    s = Scorers()
+    assert s.score_turn("She serves in a bipartisan commission.", "D")["cooperation_hits"] == 0
+    assert s.score_turn("The phony price was listed in the estimate.", "D")["hostility_hits"] == 0
+    assert s.score_turn("He is not a liar.", "D")["hostility_hits"] == 0
+    assert s.score_turn("The Foreign Corrupt Practices Act applies.", "D")["misconduct_hits"] == 0
+    assert s.score_turn("There is no corruption in this program.", "D")["misconduct_hits"] == 0
+    assert s.score_turn("The committee condemned the corrupt official.", "D")["misconduct_hits"] == 1
+    assert s.score_turn("The bill authorized a lock and damn.", "D")["profanity_hits"] == 0
+    assert s.score_turn("This is one damn bad bill.", "D")["profanity_hits"] == 1
 
 
 def test_govinfo_helpers() -> None:

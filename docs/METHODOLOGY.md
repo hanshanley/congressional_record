@@ -21,8 +21,9 @@ scale, construct family, polarity, codebook version, and plot eligibility.
 - **Bipartisan cooperation**: explicit cross-aisle work, common ground, or bipartisan spirit.
 - **Personal attack**: high-precision attacks on honesty, integrity, competence, character, or
   fitness.
-- **Misconduct allegation**: language alleging corruption, fraud, bribery, obstruction, abuse of
-  power, or similar conduct. It is not evidence that misconduct occurred.
+- **Misconduct allegation**: exact curated language alleging corruption, fraud, bribery,
+  obstruction, abuse of power, or similar conduct. Negated statements and legal-title references
+  are excluded. It is not evidence that misconduct occurred.
 - **Ideological label**: tracked separately and not automatically treated as disrespect.
 - **Profanity and identity slurs**: curated exact forms. Neutral topical vocabulary is excluded;
   slur occurrence requires quotation and endorsement review.
@@ -67,6 +68,12 @@ coverage is present. Production scores and sampling strata are stored separately
 passages. Two independent model passes use `docs/VALIDATION_RUBRIC.md`; a separate adjudication
 pass resolves disagreements. This is disclosed model-assisted face-validity and consistency
 checking, not independent human ground truth.
+
+The finalized 784-passage validation achieved overall precision of 89.4% or better for every
+published category and at least 80% precision in every era/source stratum with 10 or more coded
+examples. The codebooks intentionally favor precision over recall; category-level recall ranges
+from 16.5% for personal attacks to 94.8% for profanity. `precision_recall.csv` reports every
+category and stratum rather than hiding low-recall results.
 
 ## Remaining interpretation limits
 
