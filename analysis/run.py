@@ -92,7 +92,7 @@ def cmd_viz(args) -> int:
     matplotlib.use("Agg")
     from analysis.viz import render
 
-    render(PROCESSED / "metrics" / "civility_metrics.parquet", DATA)
+    render(PROCESSED / "metrics" / "civility_metrics.parquet", ROOT / "outputs")
     return 0
 
 

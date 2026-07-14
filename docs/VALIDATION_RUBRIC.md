@@ -26,4 +26,5 @@ Annotators receive `validation_sample_blinded.csv` without production metric val
 Each pass must also record `confidence` (`low`, `medium`, `high`) and a concise `rationale`
 grounded only in the supplied passage. Two passes are completed independently. A separate
 adjudication pass sees both judgments and resolves disagreements without seeing production scores.
-All files preserve `turn_id`, source, Congress, and a SHA-256 hash of the exact passage.
+The blinded sample and finalized adjudication artifacts preserve `turn_id`, source, Congress,
+and a SHA-256 hash of the exact passage; annotation labels remain joinable by `sample_id`.

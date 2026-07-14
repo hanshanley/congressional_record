@@ -14,8 +14,8 @@ from typing import Dict, List, Tuple
 import pandas as pd
 import pyarrow.parquet as pq
 
+from analysis.inputs import select_turn_files
 from analysis.score.scorers import Scorers
-from analysis.aggregate import _select_turn_files
 
 LOG = logging.getLogger("analysis.validate")
 
@@ -83,9 +83,14 @@ def _lexicon_regex(lexicons: List[object]) -> re.Pattern:
 
 
 def _signal_trigger_regexes(scorer: Scorers) -> Dict[str, re.Pattern]:
+    idiom_pattern = (
+        scorer.outgroup_idiom.phrase_re.pattern
+        if scorer.outgroup_idiom.phrase_re is not None else r"(?!x)x"
+    )
     outparty = re.compile(
         r"\brepublicans?\b|\bgop\b|\bdemocrats?\b|"
-        r"\bdemocratic\s+(?:party|colleagues?|members?|caucus|leadership|side)\b",
+        r"\bdemocratic\s+(?:party|colleagues?|members?|caucus|leadership|side|conference)\b|"
+        + idiom_pattern,
     )
     return {
         "formal_courtesy": _lexicon_regex([scorer.formal_courtesy]),
@@ -106,11 +111,28 @@ def _priority(turn_id: str, stratum: str) -> int:
     return int.from_bytes(digest, "big")
 
 
+def _reservoir_accepts(
+    reservoirs: Dict[str, List[Tuple[int, str, dict]]],
+    stratum: str,
+    turn_id: str,
+    quota: int,
+) -> tuple[bool, int]:
+    priority = _priority(turn_id, stratum)
+    candidate = (-priority, turn_id)
+    heap = reservoirs[stratum]
+    accepted = len(heap) < quota or candidate > heap[0][:2]
+    return accepted, priority
+
+
 def _reservoir_add(
-    reservoirs: Dict[str, List[Tuple[int, str, dict]]], stratum: str, row: dict, quota: int
+    reservoirs: Dict[str, List[Tuple[int, str, dict]]],
+    stratum: str,
+    row: dict,
+    quota: int,
+    priority: int,
 ) -> None:
     # Negative priority makes heap[0] the currently worst (largest original hash).
-    item = (-_priority(row["turn_id"], stratum), row["turn_id"], row)
+    item = (-priority, row["turn_id"], row)
     heap = reservoirs[stratum]
     if len(heap) < quota:
         heapq.heappush(heap, item)
@@ -162,7 +184,7 @@ def build_validation_sample(
     reservoirs: Dict[str, List[Tuple[int, str, dict]]] = defaultdict(list)
     seen_govinfo_ids: set[str] = set()
 
-    for path in _select_turn_files(turns_dir):
+    for path in select_turn_files(turns_dir):
         is_govinfo = path.name.startswith("govinfo")
         parquet = pq.ParquetFile(path)
         for batch in parquet.iter_batches(batch_size=20_000, columns=_READ_COLS):
@@ -184,35 +206,56 @@ def build_validation_sample(
                 )
                 random_stratum = f"{base}|random"
                 text = str(row.get("text") or "")
-                random_center = _priority(str(turn_id), random_stratum) % max(1, len(text))
-                _reservoir_add(
-                    reservoirs, random_stratum,
-                    _base_row(row, random_stratum, random_center),
-                    random_quota,
+                accepted, random_priority = _reservoir_accepts(
+                    reservoirs, random_stratum, str(turn_id), random_quota
                 )
+                if accepted:
+                    random_center = random_priority % max(1, len(text))
+                    _reservoir_add(
+                        reservoirs,
+                        random_stratum,
+                        _base_row(row, random_stratum, random_center),
+                        random_quota,
+                        random_priority,
+                    )
                 if row["is_procedural"]:
                     procedural_stratum = f"{base}|procedural"
-                    procedural_center = (
-                        _priority(str(turn_id), procedural_stratum) % max(1, len(text))
+                    accepted, procedural_priority = _reservoir_accepts(
+                        reservoirs, procedural_stratum, str(turn_id), random_quota
                     )
-                    _reservoir_add(
-                        reservoirs, procedural_stratum,
-                        _base_row(row, procedural_stratum, procedural_center), random_quota,
-                    )
+                    if accepted:
+                        procedural_center = procedural_priority % max(1, len(text))
+                        _reservoir_add(
+                            reservoirs,
+                            procedural_stratum,
+                            _base_row(row, procedural_stratum, procedural_center),
+                            random_quota,
+                            procedural_priority,
+                        )
 
                 match = trigger.search(text.lower())
                 if not match:
                     continue
-                features = scorer.score_turn(text, str(party))
-                for signal, score_key in _SIGNALS.items():
-                    if features[score_key] <= 0:
-                        continue
-                    signal_match = signal_triggers[signal].search(text.lower())
-                    if not signal_match:
+                accepted_spans = scorer.signal_spans(text, str(party))
+                for signal in _SIGNALS:
+                    spans = accepted_spans[signal]
+                    if not spans:
                         continue
                     stratum = f"{base}|{signal}"
-                    sampled = _base_row(row, stratum, signal_match.start())
-                    _reservoir_add(reservoirs, stratum, sampled, signal_quota)
+                    accepted, signal_priority = _reservoir_accepts(
+                        reservoirs, stratum, str(turn_id), signal_quota
+                    )
+                    if not accepted:
+                        continue
+                    center = spans[signal_priority % len(spans)][0]
+                    sampled = _base_row(row, stratum, center)
+                    if scorer.score_turn(sampled["passage"], str(party))[_SIGNALS[signal]] <= 0:
+                        raise AssertionError(
+                            f"accepted {signal} span missing from passage for {turn_id}"
+                        )
+                    _reservoir_add(
+                        reservoirs, stratum, sampled, signal_quota, signal_priority
+                    )
 
     sampled_rows = [
         item[2]
@@ -222,14 +265,20 @@ def build_validation_sample(
     # A turn can legitimately appear in two signal strata; sample_id keeps annotations distinct.
     production_rows = []
     for index, row in enumerate(sampled_rows, start=1):
-        row["sample_id"] = f"VAL-{index:04d}"
         sampling_stratum = row.pop("_sampling_stratum")
+        identity = (
+            f"{row['turn_id']}|{sampling_stratum}|{row['passage_sha256']}"
+        ).encode()
+        row["sample_id"] = "VAL-" + hashlib.blake2b(
+            identity, digest_size=10
+        ).hexdigest().upper()
         # Annotators see the bounded passage, so validation predictions must be scored
         # on that exact same text rather than on unseen parts of the full turn.
         features = scorer.score_turn(row["passage"], row["party"])
         production_rows.append({
             "sample_id": row["sample_id"],
             "turn_id": row["turn_id"],
+            "passage_sha256": row["passage_sha256"],
             "sampling_stratum": sampling_stratum,
             **features,
         })
@@ -264,6 +313,58 @@ ANNOTATION_FIELDS = (
     "misconduct_allegation", "ideological_label", "profanity", "identity_slur",
     "quoted_or_read_in", "ambiguous",
 )
+_YES_NO_UNCERTAIN = {"yes", "no", "uncertain"}
+_ANNOTATION_VALUES = {
+    **{
+        field: _YES_NO_UNCERTAIN
+        for field in ANNOTATION_FIELDS
+        if field not in {"target_party", "ambiguous"}
+    },
+    "target_party": {"d", "r", "i", "other", "none", "uncertain"},
+    "ambiguous": {"yes", "no"},
+}
+_CONFIDENCE_VALUES = {"low", "medium", "high"}
+
+
+def _sample_id_set(frame: pd.DataFrame, name: str) -> set[str]:
+    if "sample_id" not in frame:
+        raise ValueError(f"{name} is missing sample_id")
+    if frame["sample_id"].isna().any() or frame["sample_id"].astype(str).str.strip().eq("").any():
+        raise ValueError(f"{name} contains blank sample_id values")
+    if frame["sample_id"].duplicated().any():
+        raise ValueError(f"{name} contains duplicate sample_id values")
+    return set(frame["sample_id"].astype(str))
+
+
+def _require_matching_identity(**frames: pd.DataFrame) -> None:
+    """Fail if matching sample IDs refer to different real source passages."""
+    _require_same_sample_ids(**frames)
+    identity_columns = ("turn_id", "passage_sha256")
+    for name, frame in frames.items():
+        missing = [column for column in identity_columns if column not in frame]
+        if missing:
+            raise ValueError(f"{name} is missing validation identity columns: {missing}")
+    reference_name, reference = next(iter(frames.items()))
+    expected = reference.set_index("sample_id")[list(identity_columns)].astype(str).sort_index()
+    for name, frame in frames.items():
+        actual = frame.set_index("sample_id")[list(identity_columns)].astype(str).sort_index()
+        if not actual.equals(expected):
+            raise ValueError(
+                f"validation identity mismatch: {name} vs {reference_name}"
+            )
+
+
+def _require_same_sample_ids(**frames: pd.DataFrame) -> None:
+    sets = {name: _sample_id_set(frame, name) for name, frame in frames.items()}
+    expected_name, expected = next(iter(sets.items()))
+    for name, values in sets.items():
+        if values != expected:
+            missing = sorted(expected - values)[:5]
+            extra = sorted(values - expected)[:5]
+            raise ValueError(
+                f"sample_id mismatch: {name} vs {expected_name}; "
+                f"missing={missing}, extra={extra}"
+            )
 
 
 def write_annotation_batches(
@@ -291,16 +392,45 @@ def read_annotation_pass(pass_dir: Path) -> pd.DataFrame:
     if not files:
         raise FileNotFoundError(f"no annotation batches in {pass_dir}")
     frame = pd.concat((pd.read_csv(path) for path in files), ignore_index=True)
-    if frame["sample_id"].duplicated().any():
-        raise ValueError(f"duplicate sample_id in {pass_dir}")
-    missing = [field for field in ANNOTATION_FIELDS if field not in frame]
+    _sample_id_set(frame, str(pass_dir))
+    identity_missing = [
+        column for column in ("turn_id", "passage_sha256") if column not in frame
+    ]
+    if identity_missing:
+        raise ValueError(
+            f"missing validation identity columns in {pass_dir}: {identity_missing}"
+        )
+    required = [*ANNOTATION_FIELDS, "confidence", "rationale"]
+    missing = [field for field in required if field not in frame]
     if missing:
         raise ValueError(f"missing annotation fields in {pass_dir}: {missing}")
+    for field, allowed in _ANNOTATION_VALUES.items():
+        normalized = frame[field].fillna("").astype(str).str.strip().str.lower()
+        invalid = sorted(set(normalized) - allowed)
+        if invalid:
+            raise ValueError(f"invalid {field} values in {pass_dir}: {invalid}")
+        frame[field] = normalized
+    confidence = frame["confidence"].fillna("").astype(str).str.strip().str.lower()
+    invalid_confidence = sorted(set(confidence) - _CONFIDENCE_VALUES)
+    if invalid_confidence:
+        raise ValueError(
+            f"invalid confidence values in {pass_dir}: {invalid_confidence}"
+        )
+    frame["confidence"] = confidence
+    if frame["rationale"].fillna("").astype(str).str.strip().eq("").any():
+        raise ValueError(f"blank rationale values in {pass_dir}")
     return frame
 
 
 def validation_report(pass_a: pd.DataFrame, pass_b: pd.DataFrame) -> pd.DataFrame:
     """Compute transparent raw agreement for two independent annotation passes."""
+    _require_same_sample_ids(pass_a=pass_a, pass_b=pass_b)
+    if all(
+        column in frame
+        for frame in (pass_a, pass_b)
+        for column in ("turn_id", "passage_sha256")
+    ):
+        _require_matching_identity(pass_a=pass_a, pass_b=pass_b)
     merged = pass_a.merge(pass_b, on="sample_id", suffixes=("_a", "_b"), validate="one_to_one")
     rows = []
     for field in ANNOTATION_FIELDS:
@@ -338,6 +468,7 @@ _PRODUCTION_MAP = {
 
 def adjudication_input(pass_a: pd.DataFrame, pass_b: pd.DataFrame) -> pd.DataFrame:
     """Return only samples with at least one substantive disagreement."""
+    _require_same_sample_ids(pass_a=pass_a, pass_b=pass_b)
     merged = pass_a.merge(pass_b, on="sample_id", suffixes=("_a", "_b"), validate="one_to_one")
     disagreement = pd.Series(False, index=merged.index)
     for field in ANNOTATION_FIELDS:
@@ -351,6 +482,11 @@ def precision_recall_report(
     sample_metadata: pd.DataFrame,
 ) -> pd.DataFrame:
     """Compare adjudicated model labels with production detectors by era/source."""
+    _require_same_sample_ids(
+        final_annotations=final_annotations,
+        production_features=production_features,
+        sample_metadata=sample_metadata,
+    )
     merged = (
         final_annotations.merge(production_features, on="sample_id", validate="one_to_one")
         .merge(
@@ -388,8 +524,25 @@ def finalize_annotations(
     out_dir: Path,
 ) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     """Combine agreements with adjudicated disagreements and write validation reports."""
+    _require_matching_identity(
+        pass_a=pass_a,
+        pass_b=pass_b,
+        sample_metadata=sample_metadata,
+    )
+    _require_matching_identity(
+        production_features=production_features,
+        sample_metadata=sample_metadata,
+    )
     agreement = validation_report(pass_a, pass_b)
     merged = pass_a.merge(pass_b, on="sample_id", suffixes=("_a", "_b"), validate="one_to_one")
+    expected_adjudication = set(adjudication_input(pass_a, pass_b)["sample_id"].astype(str))
+    actual_adjudication = _sample_id_set(adjudicated, "adjudicated")
+    if actual_adjudication != expected_adjudication:
+        missing = sorted(expected_adjudication - actual_adjudication)[:5]
+        extra = sorted(actual_adjudication - expected_adjudication)[:5]
+        raise ValueError(
+            f"adjudication sample_id mismatch; missing={missing}, extra={extra}"
+        )
     adjudicated = adjudicated.set_index("sample_id")
     final_rows = []
     for row in merged.itertuples(index=False):
@@ -413,9 +566,19 @@ def finalize_annotations(
             final["confidence"] = getattr(row, "confidence_a", "")
             final["rationale"] = getattr(row, "rationale_a", "")
         final_rows.append(final)
-    final_annotations = pd.DataFrame(final_rows)
+    final_labels = pd.DataFrame(final_rows)
     accuracy = precision_recall_report(
-        final_annotations, production_features, sample_metadata
+        final_labels, production_features, sample_metadata
+    )
+    provenance_columns = [
+        "sample_id", "turn_id", "source", "source_family", "date", "congress",
+        "year", "era", "chamber", "speaker_name", "party", "passage_sha256",
+    ]
+    missing_provenance = [column for column in provenance_columns if column not in sample_metadata]
+    if missing_provenance:
+        raise ValueError(f"sample metadata missing provenance columns: {missing_provenance}")
+    final_annotations = sample_metadata[provenance_columns].merge(
+        final_labels, on="sample_id", validate="one_to_one"
     )
     out_dir.mkdir(parents=True, exist_ok=True)
     agreement.to_csv(out_dir / "agreement.csv", index=False)

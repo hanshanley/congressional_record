@@ -22,7 +22,12 @@ import pyarrow.parquet as pq  # noqa: E402
 
 from analysis.ingest.govinfo_bulk import _package_congress, run_bulk  # noqa: E402
 from analysis.ingest.govinfo import ingest_govinfo  # noqa: E402
-from analysis.validate import build_validation_sample, validation_report  # noqa: E402
+from analysis.validate import (  # noqa: E402
+    ANNOTATION_FIELDS,
+    build_validation_sample,
+    read_annotation_pass,
+    validation_report,
+)
 from analysis.ingest.schema import ARROW_SCHEMA  # noqa: E402
 import pyarrow as pa  # noqa: E402
 
@@ -207,6 +212,61 @@ def test_validation_agreement_uses_comparable_rows_only() -> None:
     row = report[report.field.eq("profanity")].iloc[0]
     assert row["n"] == 1
     assert row["raw_agreement"] == 1.0
+
+
+def test_validation_rejects_missing_sample_ids() -> None:
+    import pandas as pd
+
+    a = pd.DataFrame({"sample_id": ["1", "2"], "profanity": ["yes", "no"]})
+    b = pd.DataFrame({"sample_id": ["1"], "profanity": ["yes"]})
+    try:
+        validation_report(a, b)
+    except ValueError as exc:
+        assert "sample_id mismatch" in str(exc)
+    else:
+        raise AssertionError("incomplete validation pass should fail")
+
+
+def test_validation_rejects_reused_ids_for_different_passages() -> None:
+    import pandas as pd
+
+    common = {"sample_id": ["VAL-X"], "turn_id": ["turn-1"], "profanity": ["no"]}
+    a = pd.DataFrame({**common, "passage_sha256": ["a" * 64]})
+    b = pd.DataFrame({**common, "passage_sha256": ["b" * 64]})
+    try:
+        validation_report(a, b)
+    except ValueError as exc:
+        assert "validation identity mismatch" in str(exc)
+    else:
+        raise AssertionError("reused sample IDs must not join different passages")
+
+
+def test_annotation_pass_rejects_invalid_values() -> None:
+    import pandas as pd
+    import shutil
+
+    root = Path(__file__).resolve().parent / "_tmp_annotations"
+    root.mkdir(exist_ok=True)
+    row = {
+        "sample_id": "VAL-0001",
+        "turn_id": "crec:test#1",
+        "passage_sha256": "0" * 64,
+        **{field: "no" for field in ANNOTATION_FIELDS},
+    }
+    row["target_party"] = "none"
+    row["confidence"] = "high"
+    row["rationale"] = "No coded signal appears."
+    row["profanity"] = "maybe"
+    pd.DataFrame([row]).to_csv(root / "batch_001.csv", index=False)
+    try:
+        try:
+            read_annotation_pass(root)
+        except ValueError as exc:
+            assert "invalid profanity values" in str(exc)
+        else:
+            raise AssertionError("invalid annotation vocabulary should fail")
+    finally:
+        shutil.rmtree(root, ignore_errors=True)
 
 
 if __name__ == "__main__":

@@ -1,7 +1,7 @@
 # High-precision congressional profanity/obscenity codebook. Format: term<TAB>tier.
 #
 # This intentionally excludes neutral sexual, medical, religious, criminal, and identity
-# vocabulary. Rule-based morphology supplies ordinary variants for unambiguous roots.
+# vocabulary. Matching is exact, so every accepted surface form is enumerated here.
 # Identity slurs live in slurs.txt and are reported separately because quoted/read-in
 # historical material requires contextual audit.
 damn	mild

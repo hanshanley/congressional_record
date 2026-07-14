@@ -12,10 +12,10 @@ import pyarrow.parquet as pq  # noqa: E402
 
 from analysis.aggregate import (  # noqa: E402
     _select_primary_source,
-    _select_turn_files,
     score_and_aggregate,
 )
 from analysis.ingest.schema import ARROW_SCHEMA  # noqa: E402
+from analysis.inputs import select_turn_files  # noqa: E402
 from analysis.plotting import theme  # noqa: E402
 from analysis.calibrate import calibration_summary, paired_overlap  # noqa: E402
 from analysis.score.registry import METRICS  # noqa: E402
@@ -32,7 +32,7 @@ def test_select_turn_files_keeps_bulk_and_manifest_for_union(tmp_path=None) -> N
         for name in ("hein_100.parquet", "govinfo_115.parquet",
                      "govinfo_bulk_115.parquet", "govinfo_118.parquet"):
             _empty_parquet(d / name)
-        picked = {p.name for p in _select_turn_files(d)}
+        picked = {p.name for p in select_turn_files(d)}
         # Both 115 paths remain so a partial bulk file cannot suppress manifest coverage.
         assert "govinfo_bulk_115.parquet" in picked
         assert "govinfo_115.parquet" in picked

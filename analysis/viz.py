@@ -2,7 +2,7 @@
 
 Re-aggregates the ``(congress, chamber, party)`` metrics up to ``(congress, party)``
 by summing raw hit counts and words (so rates stay word-weighted), then draws the
-key trends using :mod:`analysis.plotting`. Figures go to ``<out_dir>/reports/figures``.
+key trends using :mod:`analysis.plotting`. Figures go to ``<out_dir>/figures``.
 """
 
 from __future__ import annotations
@@ -257,7 +257,7 @@ def render(metrics_path: Path, out_dir: Path) -> List[Path]:
     df = df[df["chamber"].isin(["house", "senate"])].copy()
     g = _by_congress_party(df)
     gc = _by_year_chamber_party(df)
-    figs_dir = out_dir / "reports" / "figures"
+    figs_dir = out_dir / "figures"
     figs_dir.mkdir(parents=True, exist_ok=True)
     temp_figs = Path(tempfile.mkdtemp(prefix=".figures-", dir=figs_dir.parent))
     try:
@@ -285,7 +285,8 @@ def render(metrics_path: Path, out_dir: Path) -> List[Path]:
 
         written.append(_asymmetry(gc, temp_figs))
 
-        tbl_dir = out_dir / "reports" / "tables"
+        data_root = metrics_path.parents[2]
+        tbl_dir = data_root / "reports" / "tables"
         tbl_dir.mkdir(parents=True, exist_ok=True)
         g.to_csv(tbl_dir / "metrics_by_congress_party.csv", index=False)
         gc.to_csv(tbl_dir / "metrics_by_congress_chamber_party.csv", index=False)

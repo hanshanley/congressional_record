@@ -25,6 +25,24 @@ class MetricSpec:
     target_required: bool = False
     codebook_version: str = "2026-07-v3"
 
+    def __post_init__(self) -> None:
+        identifiers = (self.rate, self.raw_count, self.score_key, self.family)
+        if any(not value or not value.replace("_", "").isalnum() for value in identifiers):
+            raise ValueError(f"invalid metric identifier in {self!r}")
+        expected_suffix = "_per_1k" if self.denominator == "words" else "_per_100_refs"
+        if not self.rate.endswith(expected_suffix):
+            raise ValueError(
+                f"{self.rate} must end with {expected_suffix} for {self.denominator}"
+            )
+        expected_scale = 1000 if self.denominator == "words" else 100
+        if self.scale != expected_scale:
+            raise ValueError(f"{self.rate} must use scale {expected_scale}")
+        if self.units not in {"hits per 1,000 words", "references per 1,000 words",
+                              "contexts per 100 references"}:
+            raise ValueError(f"invalid units for {self.rate}: {self.units}")
+        if self.polarity not in {"positive", "negative", "neutral"}:
+            raise ValueError(f"invalid polarity for {self.rate}: {self.polarity}")
+
 
 METRICS = (
     MetricSpec(

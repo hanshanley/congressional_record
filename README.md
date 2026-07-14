@@ -112,6 +112,29 @@ time-series charts. It unifies two corpora into one speaker-turn table:
   package zips directly from `www.govinfo.gov/content/pkg` (no API key, not rate-limited),
   parses each day's MODS per granule, and deletes each zip after ingest.
 
+### Key figures
+
+These publication figures are generated from real Stanford/GovInfo Congressional Record text and
+are intentionally tracked under `outputs/figures/`.
+
+#### Validated comity and conflict measures
+
+![Overview of congressional comity and conflict measures](outputs/figures/overview.png)
+
+#### Civil language when referencing the other party
+
+![Out-party references with nearby comity language](outputs/figures/outgroup_comity_contexts_per_100_refs.png)
+
+#### Disrespect when referencing the other party
+
+![Out-party references with nearby personal disrespect](outputs/figures/outgroup_hostility_contexts_per_100_refs.png)
+
+#### Personal disrespect and profanity
+
+![Personal disrespect and attack language](outputs/figures/hostility_per_1k.png)
+
+![High-precision profanity](outputs/figures/profanity_per_1k.png)
+
 ### What it measures
 
 * **Formulaic courtesy/deference**, **gratitude/praise**, and **bipartisan cooperation** as
@@ -153,8 +176,8 @@ House/Senate floor language by party, plus a
 black-box classifier. Optional VADER sentiment
 (`--sentiment`) is scored **per sentence and averaged** (VADER's `compound` saturates on long
 passages, so scoring a whole speech is biased), exposing `mean_sentiment` and `mean_neg_share`,
-which are **sentence-count weighted** in the aggregate to match the word-weighting of the other
-metrics. The interactive notebook checks whether these signals converge and can optionally compare
+which are **sentence-count weighted** in the aggregate; lexical rates are separately word-weighted.
+The interactive notebook checks whether these signals converge and can optionally compare
 a sample with Detoxify; neither diagnostic substitutes for independent human ground truth.
 
 ### Explore interactively
@@ -167,6 +190,9 @@ jupyter lab notebooks/congressional_civility.ipynb
 The notebook loads the metrics table, plots House/Senate party trends, and runs diagnostics on
 real source turns. Completed model-assisted rubric grading preserves `turn_id`, uses two blinded
 passes plus separate adjudication, and is disclosed as model-assisted rather than human validation.
+The 784-passage precision/recall summary is documented in
+[`docs/METHODOLOGY.md`](docs/METHODOLOGY.md) and generated at
+`data/processed/validation/precision_recall.csv`.
 
 ### Run it
 
@@ -180,16 +206,16 @@ python -m analysis.run ingest-govinfo-bulk --start 1994-01-01 --end 2016-12-31
 python -m analysis.run aggregate                   # score all turns (fuzzy) -> data/processed/metrics/
 python -m analysis.run calibrate                   # Hein/GovInfo paired overlap diagnostics
 python -m analysis.run sample-validation           # blinded real-text validation sample
-python -m analysis.run viz                         # charts -> data/reports/figures/
+python -m analysis.run viz                         # charts -> outputs/figures/
 
 # or the whole hein pipeline in one go (add --sentiment for VADER):
 python -m analysis.run all
 ```
 
 Outputs: `data/processed/metrics/civility_metrics.{parquet,csv}`,
-`metrics_by_congress_chamber_party.csv`, and PNG charts under `data/reports/figures/`
+`metrics_by_congress_chamber_party.csv`, and tracked PNG charts under `outputs/figures/`
 (an `overview.png` small-multiples, `overview_by_chamber.png`, and one `*.png` +
-`*_by_chamber.png` per metric). All `data/` outputs are git-ignored.
+`*_by_chamber.png` per metric). Large/intermediate `data/` outputs remain git-ignored.
 
 Charts use a shared **Substack-style** plotting toolkit (`analysis/plotting/`, matched to the
 `uk_decline` portfolio look) — see [`docs/PLOTTING.md`](docs/PLOTTING.md) for the palette,

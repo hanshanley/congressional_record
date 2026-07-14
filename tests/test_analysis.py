@@ -212,6 +212,9 @@ def test_scorer_comity_and_hostility() -> None:
     assert r["formal_courtesy_hits"] >= 1
     assert r["gratitude_praise_hits"] >= 1
     assert r["cooperation_hits"] == 0
+    assert r["comity_hits"] == (
+        r["formal_courtesy_hits"] + r["gratitude_praise_hits"] + r["cooperation_hits"]
+    )
     assert r["hostility_hits"] == 0
 
     r2 = s.score_turn("That deceitful, cowardly liar is a hypocrite.", "R")
@@ -291,9 +294,18 @@ def test_scorer_contextual_false_positive_exclusions() -> None:
     assert s.score_turn("He is not a liar.", "D")["hostility_hits"] == 0
     assert s.score_turn("The Foreign Corrupt Practices Act applies.", "D")["misconduct_hits"] == 0
     assert s.score_turn("There is no corruption in this program.", "D")["misconduct_hits"] == 0
+    assert s.score_turn("There was no bribery or perjury.", "D")["misconduct_hits"] == 0
+    assert s.score_turn("The inquiry found no abuse of power.", "D")["misconduct_hits"] == 0
+    assert s.score_turn("There is no doubt bribery occurred.", "D")["misconduct_hits"] == 1
     assert s.score_turn("The committee condemned the corrupt official.", "D")["misconduct_hits"] == 1
     assert s.score_turn("The bill authorized a lock and damn.", "D")["profanity_hits"] == 0
+    assert s.score_turn("This is a Federal crap game.", "D")["profanity_hits"] == 0
     assert s.score_turn("This is one damn bad bill.", "D")["profanity_hits"] == 1
+    assert s.score_turn("The majority party scheduled the vote.", "D")["outgroup_refs"] == 0
+    assert s.score_turn("The Democratic conference met today.", "R")["outgroup_refs"] == 1
+    context = s.score_turn("Democrats committed no bribery.", "R")
+    assert context["directed_misconduct_hits"] == 0
+    assert context["outgroup_misconduct_contexts"] == 0
 
 
 def test_govinfo_helpers() -> None:

@@ -18,12 +18,12 @@ scale, construct family, polarity, codebook version, and plot eligibility.
 
 - **Formulaic courtesy**: conventional parliamentary address and deference.
 - **Gratitude/praise**: explicit thanks, praise, appreciation, commendation, or respect.
-- **Bipartisan cooperation**: explicit cross-aisle work, common ground, or bipartisan spirit.
+- **Bipartisan cooperation**: explicit cross-aisle work or bipartisan spirit.
 - **Personal attack**: high-precision attacks on honesty, integrity, competence, character, or
   fitness.
 - **Misconduct allegation**: exact curated language alleging corruption, fraud, bribery,
-  obstruction, abuse of power, or similar conduct. Negated statements and legal-title references
-  are excluded. It is not evidence that misconduct occurred.
+  obstruction, abuse of power, or similar conduct. Direct negation patterns and selected
+  legal-title references are excluded. It is not evidence that misconduct occurred.
 - **Ideological label**: tracked separately and not automatically treated as disrespect.
 - **Profanity and identity slurs**: curated exact forms. Neutral topical vocabulary is excluded;
   slur occurrence requires quotation and endorsement review.

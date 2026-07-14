@@ -18,6 +18,7 @@ import pandas as pd
 import pyarrow.parquet as pq
 
 from analysis.ingest.schema import year_from_congress
+from analysis.inputs import select_turn_files
 from analysis.score.scorers import Scorers
 from analysis.score.registry import METRICS, SCORE_KEYS
 
@@ -46,25 +47,6 @@ CONTEXT_RATE_TO_COUNT: Dict[str, str] = {
 }
 
 
-def _select_turn_files(turns_dir: Path) -> List[Path]:
-    """Return all turn files, with bulk GovInfo files before manifest-based files.
-
-    A partial bulk file must never suppress fuller manifest coverage. GovInfo rows are
-    unioned during scoring and deduplicated by ``turn_id``; bulk-first ordering means
-    the bulk representation wins when both paths contain the same turn.
-    """
-    files = sorted(turns_dir.glob("*.parquet"))
-    return sorted(
-        files,
-        key=lambda f: (
-            0 if f.name.startswith("hein_") else
-            1 if f.name.startswith("govinfo_bulk_") else
-            2,
-            f.name,
-        ),
-    )
-
-
 def _iter_batches(path: Path, batch_size: int = 10_000):
     pf = pq.ParquetFile(path)
     for batch in pf.iter_batches(batch_size=batch_size, columns=_READ_COLS):
@@ -91,7 +73,7 @@ def score_and_aggregate(
         lambda: defaultdict(int)
     )
 
-    files = _select_turn_files(turns_dir)
+    files = select_turn_files(turns_dir)
     if not files:
         raise FileNotFoundError(f"no turn parquet files in {turns_dir}")
 

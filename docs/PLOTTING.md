@@ -46,7 +46,7 @@ ax.margins(x=0.13)                                  # room for the end labels
 charts.marker_line(ax, boundary_year)               # boundary from source_metadata.json
 charts.style_axes(ax, "My metric", "Year", "per 1,000 words",
                   subtitle="a muted second-tier sub-title")
-charts.finish(fig, ax, "data/reports/figures/my_metric.png",
+charts.finish(fig, ax, "outputs/figures/my_metric.png",
               source="Sources: ...", legend=False)  # note + save @ dpi=200
 ```
 
@@ -76,7 +76,9 @@ charts.finish(fig, ax, "data/reports/figures/my_metric.png",
 `analysis/score/registry.py`; provenance and the source-boundary marker come from
 `data/processed/coverage/source_metadata.json`. The suite includes the six-panel overview,
 one full-size chart per metric, chamber splits, and D−R differences in personal-disrespect
-language near out-party references. Regenerate everything with:
+language near out-party references. Publication PNGs are intentionally tracked in
+`outputs/figures/`; intermediate metric tables remain under ignored `data/` paths. Regenerate
+everything with:
 
 ```bash
 python -m analysis.run viz
