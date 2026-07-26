@@ -32,6 +32,35 @@ exist only in the scanned *Bound* Congressional Record and are not covered here.
 collects **all sections** of the daily Record by default — `HOUSE`, `SENATE`, `EXTENSIONS`,
 `DAILYDIGEST`, and `FRONTMATTER` (narrow with `--classes`).
 
+### Two ingest paths — check coverage before you trust a date
+
+The repository fills its corpus through **two independent pipelines that keep separate
+bookkeeping**. Reading either one alone will give you the wrong answer about how current
+the data is:
+
+| Path | Driver | Bookkeeping | Role |
+| --- | --- | --- | --- |
+| GovInfo **API** | `fetch_crec.py` | `data/manifest.jsonl` (+ transient `data/manifest_w*.jsonl` worker shards) | Granule text + MODS on disk |
+| GovInfo **bulk** | `scripts/bulk_pipeline.py` | `data/interim/turns/*.parquet` | **The corpus the analysis code actually reads** |
+
+`data/manifest.jsonl` is *not* the source of truth for coverage — the bulk turn Parquets are.
+Always start with:
+
+```bash
+.venv/bin/python scripts/coverage_status.py
+```
+
+It prints the true date range of every ingest path, writes `data/coverage_status.json`, and
+warns when:
+
+* worker shards (`data/manifest_w*.jsonl`) hold granules missing from `data/manifest.jsonl`
+  → fix with `.venv/bin/python scripts/merge_manifests.py`;
+* `data/manifest.jsonl` contains duplicate `granuleId` rows → same fix;
+* the analysis corpus is more than `--gap-days` (default 30) behind today
+  → fix with `.venv/bin/python scripts/bulk_pipeline.py`.
+
+Run it after any ingest job, and before quoting a coverage date.
+
 ## Setup
 
 ```bash
@@ -56,8 +85,9 @@ A real key allows ~1,000 requests/hour. Use `--min-interval` to stay under that 
 # Validate on a single month
 .venv/bin/python fetch_crec.py --sample-month 2024-01
 
-# Full backfill of the digital collection (long-running; resumable)
-.venv/bin/python fetch_crec.py --start 1994-01-01 --end 2026-06-25 --min-interval 0.5
+# Full backfill of the digital collection (long-running; resumable).
+# Omit --end so it always runs through today rather than a stale hardcoded date.
+.venv/bin/python fetch_crec.py --start 1994-01-01 --min-interval 0.5
 
 # Just the House + Extensions for one year
 .venv/bin/python fetch_crec.py --start 2023-01-01 --end 2023-12-31 --classes HOUSE EXTENSIONS
