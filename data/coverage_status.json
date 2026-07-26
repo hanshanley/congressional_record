@@ -1,8 +1,8 @@
 {
-  "generated_utc": "2026-07-26T21:04:39+00:00",
+  "generated_utc": "2026-07-26T21:13:05+00:00",
   "today": "2026-07-26",
   "latest_date": "2026-07-23",
-  "analysis_corpus_latest_date": "2026-07-13",
+  "analysis_corpus_latest_date": "2026-07-23",
   "api_manifest": {
     "path": "data/manifest.jsonl",
     "exists": true,
@@ -23,6 +23,11 @@
       "2024": 14839,
       "2025": 16278,
       "2026": 535
+    },
+    "interior_gaps": {
+      "missing_days": 568,
+      "first_missing": "2017-01-31",
+      "last_missing": "2026-07-22"
     }
   },
   "worker_manifests": [
@@ -187,13 +192,13 @@
   "bulk_turns": {
     "path": "data/interim/turns",
     "exists": true,
-    "total_rows": 21263527,
+    "total_rows": 21267967,
     "by_source": {
       "govinfo_bulk": {
         "files": 17,
-        "rows": 3496908,
+        "rows": 3501348,
         "earliest_date": "1994-01-25",
-        "latest_date": "2026-07-13"
+        "latest_date": "2026-07-23"
       },
       "hein": {
         "files": 72,
@@ -334,10 +339,10 @@
       {
         "file": "govinfo_bulk_119.parquet",
         "source": "govinfo_bulk",
-        "rows": 118768,
+        "rows": 123208,
         "earliest_date": "2025-01-02",
-        "latest_date": "2026-07-13",
-        "bytes": 78514572
+        "latest_date": "2026-07-23",
+        "bytes": 82211145
       },
       {
         "file": "hein_043.parquet",
@@ -917,5 +922,14 @@
       }
     ]
   },
-  "warnings": []
+  "failed_packages": {
+    "path": "data/bulk/_errors.txt",
+    "exists": true,
+    "logged_packages": 10,
+    "resolved_since_logged": 10,
+    "still_missing": []
+  },
+  "warnings": [
+    "manifest.jsonl has 568 day(s) inside its own date range (2017-01-31 .. 2026-07-22) that the analysis corpus covers but the manifest does not; its newest date alone overstates coverage"
+  ]
 }

@@ -56,8 +56,15 @@ warns when:
 * worker shards (`data/manifest_w*.jsonl`) hold granules missing from `data/manifest.jsonl`
   → fix with `.venv/bin/python scripts/merge_manifests.py`;
 * `data/manifest.jsonl` contains duplicate `granuleId` rows → same fix;
+* `data/manifest.jsonl` has **interior holes** — days inside its own date range that the
+  analysis corpus covers but it does not. Comparing newest dates alone is not enough: the
+  manifest currently ends on the same day as the corpus while missing 568 days in between;
 * the analysis corpus is more than `--gap-days` (default 30) behind today
-  → fix with `.venv/bin/python scripts/bulk_pipeline.py`.
+  → fix with `.venv/bin/python scripts/bulk_pipeline.py`;
+* a package logged in `data/bulk/_errors.txt` is genuinely absent from the corpus.
+  That log is **append-only** — a package that failed once and was ingested on a later
+  run stays listed forever — so entries are resolved against the corpus and only real
+  gaps are reported.
 
 Run it after any ingest job, and before quoting a coverage date.
 

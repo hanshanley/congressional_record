@@ -27,7 +27,9 @@ def _load_module(tmp_root: Path):
     module.MAIN_MANIFEST = module.DATA / "manifest.jsonl"
     module.WORKER_GLOB = str(module.DATA / "manifest_w*.jsonl")
     module.TURNS_DIR = module.DATA / "interim" / "turns"
+    module.BULK_ERRORS = module.DATA / "bulk" / "_errors.txt"
     module.STATUS_PATH = module.DATA / "coverage_status.json"
+    module._DATE_CACHE.clear()
     return module
 
 
@@ -156,3 +158,121 @@ def test_no_write_flag_leaves_no_file(repo, capsys):
     assert repo.main(["--no-write", "--out", str(out)]) == 0
     assert not out.exists()
     capsys.readouterr()
+
+
+def _write_errors(module, packages: list[str]) -> None:
+    module.BULK_ERRORS.parent.mkdir(parents=True, exist_ok=True)
+    module.BULK_ERRORS.write_text(
+        "".join(f"BAD {p}\n" for p in packages), encoding="utf-8"
+    )
+
+
+def test_stale_error_log_entries_are_resolved_not_warned(repo):
+    # _errors.txt is append-only: a package ingested on a later run stays listed.
+    # Its date IS in the corpus, so it must not be reported as a gap.
+    _write_errors(repo, ["CREC-2026-07-13"])
+    report = repo.build_report(gap_days=100000)
+    failed = report["failed_packages"]
+    assert failed["logged_packages"] == 1
+    assert failed["resolved_since_logged"] == 1
+    assert failed["still_missing"] == []
+    assert not any("_errors.txt" in w for w in report["warnings"])
+
+
+def test_genuinely_missing_package_is_warned(repo):
+    # 2026-07-20 falls inside the corpus date range but has no turns -> a real gap.
+    _write_errors(repo, ["CREC-2026-07-20"])
+    report = repo.build_report(gap_days=100000)
+    failed = report["failed_packages"]
+    assert failed["still_missing"] == ["CREC-2026-07-20"]
+    assert failed["resolved_since_logged"] == 0
+    assert any("_errors.txt" in w for w in report["warnings"])
+
+
+def test_error_log_entries_outside_corpus_range_count_as_missing(repo):
+    _write_errors(repo, ["CREC-1994-01-05"])
+    report = repo.build_report(gap_days=100000)
+    assert report["failed_packages"]["still_missing"] == ["CREC-1994-01-05"]
+
+
+def test_error_log_ignores_non_package_tokens(repo):
+    repo.BULK_ERRORS.parent.mkdir(parents=True, exist_ok=True)
+    repo.BULK_ERRORS.write_text("BAD not-a-package\n\nBAD CREC-2026-13-99\n", encoding="utf-8")
+    report = repo.build_report(gap_days=100000)
+    assert report["failed_packages"]["logged_packages"] == 0
+    assert report["failed_packages"]["still_missing"] == []
+
+
+def test_missing_error_log_is_not_an_error(repo):
+    assert not repo.BULK_ERRORS.exists()
+    report = repo.build_report(gap_days=100000)
+    assert report["failed_packages"]["exists"] is False
+    assert repo.render(report)
+    json.dumps(report)
+
+
+def test_interior_gap_detected_even_when_latest_dates_match(repo):
+    # Manifest ends on the same day as the corpus but is missing a day in between:
+    # a max-date-only check would wrongly report full coverage.
+    _write_manifest(
+        repo.MAIN_MANIFEST,
+        [
+            {"granuleId": "g1", "dateIssued": "2025-01-02"},
+            {"granuleId": "g2", "dateIssued": "2026-07-13"},
+        ],
+    )
+    _write_turns(
+        repo.TURNS_DIR / "govinfo_bulk_119.parquet",
+        ["2025-01-02", "2026-01-30", "2026-07-13"],
+    )
+    report = repo.build_report(gap_days=100000)
+    assert report["api_manifest"]["latest_date"] == report["analysis_corpus_latest_date"]
+    gaps = report["api_manifest"]["interior_gaps"]
+    assert gaps["missing_days"] == 1
+    assert gaps["first_missing"] == "2026-01-30"
+    assert any("overstates coverage" in w for w in report["warnings"])
+    assert "MISSING inside that range" in repo.render(report)
+
+
+def test_no_interior_gap_when_manifest_covers_every_corpus_day(repo):
+    _write_manifest(
+        repo.MAIN_MANIFEST,
+        [
+            {"granuleId": "g1", "dateIssued": "2025-01-02"},
+            {"granuleId": "g2", "dateIssued": "2026-07-13"},
+        ],
+    )
+    _write_turns(repo.TURNS_DIR / "govinfo_bulk_119.parquet", ["2025-01-02", "2026-07-13"])
+    report = repo.build_report(gap_days=100000)
+    assert report["api_manifest"]["interior_gaps"]["missing_days"] == 0
+    assert not any("overstates coverage" in w for w in report["warnings"])
+
+
+def test_corpus_history_outside_manifest_range_is_not_a_gap(repo):
+    # The manifest starts in 2025; 1994 corpus data predates it and is not a hole.
+    _write_manifest(repo.MAIN_MANIFEST, [{"granuleId": "g1", "dateIssued": "2025-01-02"}])
+    _write_turns(repo.TURNS_DIR / "govinfo_bulk_119.parquet", ["1994-01-25", "2025-01-02"])
+    report = repo.build_report(gap_days=100000)
+    assert report["api_manifest"]["interior_gaps"]["missing_days"] == 0
+
+
+def test_repeated_reports_do_not_use_stale_cached_dates(repo):
+    # Manifest covers 2025-01-02 and 2026-07-13 but not 2026-01-30.
+    _write_manifest(
+        repo.MAIN_MANIFEST,
+        [
+            {"granuleId": "g1", "dateIssued": "2025-01-02"},
+            {"granuleId": "g2", "dateIssued": "2026-07-13"},
+        ],
+    )
+    first = repo.build_report(gap_days=100000)
+    assert first["api_manifest"]["interior_gaps"]["missing_days"] == 0
+    # Rewrite the corpus in-place, adding a day the manifest lacks; a process-global
+    # cache would keep serving the old date set and miss the new gap.
+    _write_turns(
+        repo.TURNS_DIR / "govinfo_bulk_119.parquet",
+        ["2025-01-02", "2026-01-30", "2026-07-13"],
+    )
+    second = repo.build_report(gap_days=100000)
+    assert second["api_manifest"]["interior_gaps"]["missing_days"] == 1
+    assert second["api_manifest"]["interior_gaps"]["first_missing"] == "2026-01-30"
