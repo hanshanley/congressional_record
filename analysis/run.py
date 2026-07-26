@@ -81,6 +81,7 @@ def cmd_aggregate(args) -> int:
         INTERIM / "turns", PROCESSED,
         use_sentiment=args.sentiment,
         include_procedural=args.include_procedural,
+        incremental=not args.full,
     )
     LOG.info("metrics rows: %d", len(df))
     return 0
@@ -148,6 +149,11 @@ def main(argv=None) -> int:
     pa = sub.add_parser("aggregate")
     pa.add_argument("--sentiment", action="store_true", help="Also compute VADER sentiment (slower).")
     pa.add_argument("--include-procedural", action="store_true", help="Keep procedural/chair turns.")
+    pa.add_argument(
+        "--full",
+        action="store_true",
+        help="Rescore every shard, ignoring the cache (default: reuse unchanged shards).",
+    )
     pa.set_defaults(func=cmd_aggregate)
 
     pv = sub.add_parser("viz")
@@ -167,6 +173,7 @@ def main(argv=None) -> int:
     pall.add_argument("--congresses", nargs="+", default=None)
     pall.add_argument("--sentiment", action="store_true")
     pall.add_argument("--include-procedural", action="store_true")
+    pall.add_argument("--full", action="store_true", help="Rescore every shard, ignoring the cache.")
     pall.set_defaults(func=cmd_all)
 
     args = ap.parse_args(argv)

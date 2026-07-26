@@ -18,6 +18,7 @@ import pandas as pd
 import pyarrow.parquet as pq
 
 from analysis.ingest.schema import year_from_congress
+from analysis.incremental import Shard, ShardCache, config_fingerprint, plan_shards
 from analysis.inputs import select_turn_files
 from analysis.score.scorers import Scorers
 from analysis.score.registry import METRICS, SCORE_KEYS
@@ -54,34 +55,23 @@ def _iter_batches(path: Path, batch_size: int = 10_000):
         yield d
 
 
-def score_and_aggregate(
-    turns_dir: Path,
-    out_dir: Path,
-    use_sentiment: bool = False,
-    include_procedural: bool = False,
-) -> pd.DataFrame:
-    """Score all turn parquet files under ``turns_dir`` and write metrics.
+def _score_shard(
+    shard: "Shard",
+    scorers: Scorers,
+    include_procedural: bool,
+) -> Tuple[Dict[Tuple, Dict[str, float]], Dict[Tuple, Dict[str, float]]]:
+    """Score one shard's files, returning its ``(acc, coverage)`` sums.
 
-    Returns the tidy metrics DataFrame (also written to
-    ``out_dir/metrics/civility_metrics.{parquet,csv}``).
+    Duplicate GovInfo turns are resolved within the shard. A shard holds every
+    GovInfo file for one Congress and turn ids cannot collide across Congresses,
+    so this is equivalent to deduplicating globally — but the id set is freed when
+    the shard finishes instead of being retained for the whole corpus.
     """
-    scorers = Scorers(use_sentiment=use_sentiment)
-    acc: Dict[Tuple[str, int, str, str], Dict[str, float]] = defaultdict(
-        lambda: {k: 0.0 for k in _SUM_KEYS}
-    )
-    coverage: Dict[Tuple[str, int, str], Dict[str, int]] = defaultdict(
-        lambda: defaultdict(int)
-    )
-
-    files = select_turn_files(turns_dir)
-    if not files:
-        raise FileNotFoundError(f"no turn parquet files in {turns_dir}")
-
-    # Only GovInfo paths can represent the same source turns twice (bulk package vs
-    # manifest ingest). Keeping this set GovInfo-only avoids retaining 18M Hein IDs.
+    acc: Dict[Tuple, Dict[str, float]] = defaultdict(lambda: {k: 0.0 for k in _SUM_KEYS})
+    coverage: Dict[Tuple, Dict[str, float]] = defaultdict(lambda: defaultdict(float))
     seen_govinfo_ids: set[str] = set()
 
-    for fp in files:
+    for fp in shard.files:
         n = 0
         is_govinfo = fp.name.startswith("govinfo")
         for d in _iter_batches(fp):
@@ -144,6 +134,90 @@ def score_and_aggregate(
                         a["sentiment_n"] += w
                 n += 1
         LOG.info("scored %s (%d substantive turns)", fp.name, n)
+    return dict(acc), {k: dict(v) for k, v in coverage.items()}
+
+
+def _merge_groups(
+    target: Dict[Tuple, Dict[str, float]], addition: Dict[Tuple, Dict[str, float]]
+) -> None:
+    for key, values in addition.items():
+        bucket = target[key]
+        for name, value in values.items():
+            bucket[name] += value
+
+
+def score_and_aggregate(
+    turns_dir: Path,
+    out_dir: Path,
+    use_sentiment: bool = False,
+    include_procedural: bool = False,
+    incremental: bool = True,
+    cache_path: Path | None = None,
+) -> pd.DataFrame:
+    """Score all turn parquet files under ``turns_dir`` and write metrics.
+
+    Scoring is performed per shard (see :mod:`analysis.incremental`). With
+    ``incremental`` enabled, shards whose files and scoring configuration are
+    unchanged are restored from cached sums instead of being rescored, so adding
+    a day of transcripts costs one Congress rather than the whole corpus.
+
+    Shard sums are merged in a fixed order regardless of how many came from the
+    cache, so the emitted metrics are identical to a full recomputation.
+
+    Returns the tidy metrics DataFrame (also written to
+    ``out_dir/metrics/civility_metrics.{parquet,csv}``).
+    """
+    acc: Dict[Tuple[str, int, str, str], Dict[str, float]] = defaultdict(
+        lambda: {k: 0.0 for k in _SUM_KEYS}
+    )
+    coverage: Dict[Tuple[str, int, str], Dict[str, float]] = defaultdict(
+        lambda: defaultdict(float)
+    )
+
+    files = select_turn_files(turns_dir)
+    if not files:
+        raise FileNotFoundError(f"no turn parquet files in {turns_dir}")
+
+    shards = plan_shards(files)
+    cache: ShardCache | None = None
+    if incremental:
+        cache_path = cache_path or (out_dir / "cache" / "aggregate_shards.json")
+        cache = ShardCache(
+            cache_path, config_fingerprint(use_sentiment, include_procedural)
+        )
+
+    scorers: Scorers | None = None
+    reused = 0
+    rescored = 0
+    for shard in shards:
+        cached = cache.get(shard) if cache else None
+        if cached is not None:
+            shard_acc, shard_cov = cached
+            reused += 1
+            LOG.info("shard %s unchanged; reusing cached sums", shard.key)
+        else:
+            if scorers is None:
+                # Deferred so an all-cached run never pays lexicon compilation.
+                scorers = Scorers(use_sentiment=use_sentiment)
+            shard_acc, shard_cov = _score_shard(shard, scorers, include_procedural)
+            rescored += 1
+            if cache:
+                cache.put(shard, shard_acc, shard_cov)
+                # Persist as we go: an interrupted run then resumes from the last
+                # completed shard instead of rescoring the corpus from scratch.
+                cache.save()
+        _merge_groups(acc, shard_acc)
+        _merge_groups(coverage, shard_cov)
+
+    if cache:
+        dropped = cache.prune({s.key for s in shards})
+        if dropped:
+            LOG.info("dropped %d cache entries for turn files that no longer exist", dropped)
+        cache.save()
+    LOG.info(
+        "shards: %d rescored, %d reused from cache (%s)",
+        rescored, reused, "incremental" if incremental else "full recompute",
+    )
 
     source_df = _finalize(acc)
     df = _select_primary_source(source_df)

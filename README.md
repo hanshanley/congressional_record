@@ -240,13 +240,40 @@ python -m analysis.run ingest-hein                 # hein zips -> data/interim/t
 python -m analysis.run ingest-govinfo-bulk         # 2017-present via day-zips (fast, no rate limit)
 # Source-overlap corpus used for calibration:
 python -m analysis.run ingest-govinfo-bulk --start 1994-01-01 --end 2016-12-31
-python -m analysis.run aggregate                   # score all turns (fuzzy) -> data/processed/metrics/
+python -m analysis.run aggregate                   # score turns (incremental) -> data/processed/metrics/
 python -m analysis.run calibrate                   # Hein/GovInfo paired overlap diagnostics
 python -m analysis.run sample-validation           # blinded real-text validation sample
 python -m analysis.run viz                         # charts -> outputs/figures/
 
 # or the whole hein pipeline in one go (add --sentiment for VADER):
 python -m analysis.run all
+```
+
+#### Incremental aggregation
+
+`aggregate` is incremental by default. Scoring is done per **shard** and each shard's sums are
+cached in `data/processed/cache/aggregate_shards.json`, so a run after ingesting a few new days
+rescores only the affected Congress instead of all ~21M turns.
+
+A shard is the smallest group of turn files that must be scored together:
+
+* **GovInfo files are grouped by Congress.** Both GovInfo ingesters mint the same
+  `crec:<granuleId>#<n>` turn ids, so `govinfo_119` and `govinfo_bulk_119` may hold the same turn
+  and must be deduplicated against each other. A granule maps to one package → one date → one
+  Congress, so ids never collide *across* Congresses and per-Congress dedup equals global dedup.
+* Every other file (e.g. `hein_114`) is its own shard.
+
+A cached shard is reused only when its files have identical size and mtime **and** the scoring
+fingerprint matches. That fingerprint covers the lexicons, `scorers.py`, `registry.py`,
+`aggregate.py`, and the `--sentiment` / `--include-procedural` flags — so editing a lexicon or the
+scoring logic invalidates the whole cache rather than blending old and new definitions.
+
+Because the metrics are sums over independent groups and shards are always merged in the same
+order, a cached run is **identical** to a full recompute (asserted in
+`tests/test_incremental_aggregate.py`, down to the emitted CSV bytes). To force a full rescore:
+
+```bash
+python -m analysis.run aggregate --full
 ```
 
 Outputs: `data/processed/metrics/civility_metrics.{parquet,csv}`,
