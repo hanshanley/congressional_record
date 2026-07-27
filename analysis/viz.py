@@ -252,11 +252,12 @@ def _asymmetry(gc: pd.DataFrame, figs_dir: Path) -> Path:
 
 
 def _overview_by_chamber(gc: pd.DataFrame, figs_dir: Path) -> Path:
-    """Six-panel overview with party x chamber (colour=party, solid=House/dashed=Senate)."""
+    """Six-panel overview with party x chamber (hue=party, depth/dash/marker=chamber)."""
     return _grid_overview(
         gc, figs_dir, _plot_by_chamber_party,
         "Civility by party and chamber \u2014 U.S. Congressional Record, 1873\u20132026\n"
-        "colour = party (blue D / red R), solid = House, dashed = Senate",
+        "hue = party (blue D / red R) \u2014 House: light, solid, round markers; "
+        "Senate: dark, dashed, triangular markers",
         "overview_by_chamber.png", legend_fontsize=8, rect_top=_RECT_TOP_2LINE,
     )
 
@@ -289,7 +290,8 @@ def render(metrics_path: Path, out_dir: Path) -> List[Path]:
             fig, ax = charts.new_figure(figsize=(10, 5.5))
             _plot_by_chamber_party(ax, gc, col)
             charts.style_axes(ax, f"{title} \u2014 by party & chamber", "Year", ylab,
-                              subtitle="solid = House, dashed = Senate")
+                              subtitle="House: light, solid, round \u2014 "
+                                       "Senate: dark, dashed, triangular")
             written.append(charts.finish(
                 fig, ax, temp_figs / f"{col}_by_chamber.png", source=SOURCE_NOTE
             ))

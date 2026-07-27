@@ -148,6 +148,42 @@ def test_primary_metrics_do_not_combine_overlap_sources() -> None:
 
 
 
+def test_chamber_styling_differs_on_multiple_visual_channels() -> None:
+    # Chamber used to differ only by dash pattern, which was unreadable when two
+    # same-party lines overlapped. Colour depth, dash and marker must all differ.
+    house = theme.CHAMBER_STYLE["house"]
+    senate = theme.CHAMBER_STYLE["senate"]
+    assert house["linestyle"] != senate["linestyle"]
+    assert house["marker"] != senate["marker"]
+    for party in ("D", "R"):
+        assert theme.chamber_color(party, "house") != theme.chamber_color(party, "senate")
+
+
+def test_chamber_colour_keeps_party_hue_and_darkens_the_senate() -> None:
+    for party in ("D", "R"):
+        base = theme.PARTY_COLORS[party]
+        assert theme.chamber_color(party, "house") == base
+        senate = theme.chamber_color(party, "senate")
+        # Same hue family, strictly darker: every channel drops toward black.
+        assert all(s <= b for s, b in zip(theme._hex_to_rgb(senate), theme._hex_to_rgb(base)))
+        assert sum(theme._hex_to_rgb(senate)) < sum(theme._hex_to_rgb(base))
+
+
+def test_parties_remain_distinguishable_within_a_chamber() -> None:
+    for chamber in ("house", "senate"):
+        assert theme.chamber_color("D", chamber) != theme.chamber_color("R", chamber)
+
+
+def test_shade_and_tint_are_bounded_and_ordered() -> None:
+    assert theme.shade("#3D6F8C", 0.0) == "#3D6F8C"
+    assert theme.tint("#3D6F8C", 0.0) == "#3D6F8C"
+    # Full tint approaches white, full shade approaches near-black; both stay valid hex.
+    assert theme.tint("#3D6F8C", 1.0) == "#FFFFFF"
+    for value in (theme.shade("#3D6F8C", 1.0), theme.tint("#C85A3D", 0.5)):
+        assert len(value) == 7 and value.startswith("#")
+        assert all(0.0 <= c <= 1.0 for c in theme._hex_to_rgb(value))
+
+
 if __name__ == "__main__":
     failures = 0
     for name, fn in sorted(globals().items()):
