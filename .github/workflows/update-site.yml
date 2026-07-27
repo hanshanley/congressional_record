@@ -1,0 +1,93 @@
+name: Update site
+
+# Keeps the published leaderboard current without manual intervention.
+#
+# The job never needs the ~6 GB turn corpus: `update_speakers.py` reads the last
+# date in the committed `data/site/speaker_daily/`, downloads only the
+# Congressional Record issues published since then, scores those days, and merges
+# the counts back in. The refreshed table and rendered site are committed, then
+# published to GitHub Pages.
+
+on:
+  schedule:
+    # 07:20 UTC daily. GovInfo publishes the previous day's Record overnight;
+    # the script also re-checks a short tail, so a late issue is still picked up.
+    - cron: "20 7 * * *"
+  workflow_dispatch:
+    inputs:
+      since:
+        description: "Override start date (YYYY-MM-DD)"
+        required: false
+      until:
+        description: "Override end date (YYYY-MM-DD)"
+        required: false
+
+concurrency:
+  group: update-site
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    outputs:
+      changed: ${{ steps.commit.outputs.changed }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt -r requirements-analysis.txt
+
+      - name: Run tests
+        # A scheduled job that silently publishes wrong numbers is worse than one
+        # that fails loudly, so the suite gates the update.
+        run: python -m pytest tests/ -q
+
+      - name: Fetch new issues and score them
+        env:
+          GOVINFO_API_KEY: ${{ secrets.GOVINFO_API_KEY }}
+        run: |
+          python scripts/update_speakers.py \
+            ${{ inputs.since && format('--since {0}', inputs.since) || '' }} \
+            ${{ inputs.until && format('--until {0}', inputs.until) || '' }}
+
+      - name: Rebuild the site
+        run: python scripts/build_site.py
+
+      - name: Commit refreshed data and site
+        id: commit
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/site site
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "No new Congressional Record data; nothing to publish."
+          else
+            git commit -m "Auto-update: refresh speaker table and site"
+            git push
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: update
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@v4

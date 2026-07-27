@@ -346,6 +346,83 @@ Charts use a shared **Substack-style** plotting toolkit (`analysis/plotting/`, m
 `uk_decline` portfolio look) — see [`docs/PLOTTING.md`](docs/PLOTTING.md) for the palette,
 helpers, and how to reuse it.
 
+## The website: a continuously updated profanity leaderboard
+
+`site/` is a self-contained static site ranking members of Congress by how often they swear on
+the floor, with a chamber-level trend over time. It is designed to run **unattended**.
+
+### Why it can run unattended
+
+The obvious approach — rebuild everything from the corpus on a schedule — cannot work in CI: the
+turn corpus is ~6 GB and is not in the repository. So the site is driven by a small **committed
+state file** instead:
+
+```
+data/site/speaker_daily/congress_NNN.parquet    one row per (bioguide, date, chamber)
+```
+
+That table is an append-only summary, which is all the leaderboard needs. A scheduled job reads
+the last date it contains, downloads only the issues published since then into a temp directory,
+scores those days, and merges the counts back in. Nothing else is required — no corpus, no cache,
+no manual step.
+
+```bash
+python scripts/update_speakers.py    # extend the table with newly published days
+python scripts/build_site.py         # render site/ from the table
+```
+
+`.github/workflows/update-site.yml` runs both daily at 07:20 UTC, commits the refreshed table and
+site, and publishes to GitHub Pages. To enable it:
+
+1. **Settings → Pages → Source: GitHub Actions.**
+2. Add a repository secret `GOVINFO_API_KEY` (free at <https://api.data.gov/signup/>).
+3. Seed the table once from the local corpus (CI only ever appends to it):
+
+   ```bash
+   python -c "from pathlib import Path; from analysis.speakers import build_daily; \
+     build_daily(Path('data/interim/turns'), Path('data/site/speaker_daily'), \
+       only_files=sorted(Path('data/interim/turns').glob('govinfo_bulk_*.parquet')))"
+   ```
+
+The workflow runs the test suite before it publishes: a scheduled job that silently ships wrong
+numbers is worse than one that fails loudly. It re-checks a few days before the last stored date,
+because GovInfo sometimes publishes an issue late — merging is keyed on
+`(bioguide, date, chamber)`, so recomputing a day repairs it rather than double counting.
+
+### Embedding it in a blog
+
+The build writes machine-readable output alongside the HTML, so a blog can pull the numbers
+directly rather than screen-scraping:
+
+```
+site/data/leaderboard.json     ranked members with rates, counts and word totals
+site/data/timeseries.json      chamber-level rate per year
+site/data/meta.json            build stamp, thresholds, coverage, caveat text
+site/figures/*.png             charts in the project's house style
+```
+
+### Attribution safeguards
+
+Naming individuals is a reputational claim, so the counts are deliberately conservative:
+
+* **Quotations are excluded.** The Record marks quoted passages with TeX-style ``` `` … '' ```.
+  A member reading someone else's words is not swearing — and this is not a rounding error:
+  **5.3%** of raw profanity hits in the 119th Congress fall inside quotations, easily enough to
+  reorder a leaderboard. Excluded hits are still counted and shown in their own column, so the
+  exclusion is auditable rather than invisible.
+* **A stable id is required.** Only turns carrying a Bioguide ID are counted; surnames alone
+  collide (`Mr. SMITH`) and drift between Congresses.
+* **Procedural speech is excluded.** The Chair and presiding officers dominate the Record by
+  volume but are not making personal remarks.
+* **Rate, not raw count**, so prolific speakers are not penalised — with a minimum word threshold
+  (default 25,000 attributed words), because one profanity in 300 words of floor time is noise,
+  not a ranking. Members below the threshold are omitted rather than shown with an unstable rate.
+* The profanity lexicon is a **narrow, hand-curated list**, not a broad word list, so ordinary
+  words are never miscounted (the repo's earlier broad list flagged "strips" and "erected").
+
+The Congressional Record is a lightly edited transcript, not a verbatim one, and members may
+revise their remarks — worth stating plainly wherever these numbers are published.
+
 ## Source & attribution
 
 Congressional Record data courtesy of the U.S. Government Publishing Office via GovInfo

@@ -14,6 +14,9 @@ cache/
 # Stray large archives / parquet anywhere
 *.zip
 *.parquet
+# ...except the compact committed site state, which CI needs in order to update
+# incrementally without a copy of the 6 GB turn corpus.
+!data/site/**/*.parquet
 
 # ---- Logs ----
 logs/
