@@ -67,7 +67,12 @@ def parse_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
     )
     p.add_argument("--daily", type=Path, default=DAILY_PATH, help="Speaker daily table.")
     p.add_argument("--out", type=Path, default=SITE_DIR, help="Site output directory.")
-    p.add_argument("--congress", type=int, default=None, help="Restrict to one Congress.")
+    p.add_argument(
+        "--congress",
+        default="latest",
+        help="Congress to rank: a number, 'latest' (default), or 'all'. The default "
+             "keeps the scheduled build showing the sitting Congress.",
+    )
     p.add_argument("--top", type=int, default=25, help="Leaderboard length.")
     p.add_argument(
         "--min-words",
@@ -214,18 +219,39 @@ to {html.escape(meta['last_date'])}.</footer>
 """
 
 
+def resolve_congress(value, daily: pd.DataFrame) -> Optional[int]:
+    """Resolve ``--congress`` to a Congress number, or None meaning all of them.
+
+    Defaulting to the newest Congress present (rather than to "all") keeps the
+    scheduled build showing the sitting Congress, which is what the page is about,
+    and stops CI publishing a different ranking than a local build produces.
+    """
+    text = str(value).strip().lower()
+    if text == "all":
+        return None
+    if text == "latest":
+        return int(daily["congress"].max())
+    try:
+        return int(text)
+    except ValueError:
+        raise SystemExit(
+            f"error: --congress must be a number, 'latest' or 'all' (got {value!r})"
+        )
+
+
 def main(argv: Optional[List[str]] = None) -> int:
     args = parse_args(argv)
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 
     daily = load_daily(args.daily)
     if daily is None or daily.empty:
-        LOG.error("no speaker table at %s; run scripts/update.py first", args.daily)
+        LOG.error("no speaker table at %s; run scripts/update_speakers.py first", args.daily)
         return 1
 
-    scoped = daily if args.congress is None else daily[daily["congress"] == args.congress]
+    congress = resolve_congress(args.congress, daily)
+    scoped = daily if congress is None else daily[daily["congress"] == congress]
     if scoped.empty:
-        LOG.error("no rows for congress %s", args.congress)
+        LOG.error("no rows for congress %s", congress)
         return 1
 
     board = leaderboard(scoped, min_words=args.min_words, top=args.top)
@@ -252,7 +278,7 @@ def main(argv: Optional[List[str]] = None) -> int:
 
     meta = {
         "generated_utc": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
-        "congress": args.congress,
+        "congress": congress,
         "min_words": args.min_words,
         "top": args.top,
         "members": int(scoped["bioguide"].nunique()),

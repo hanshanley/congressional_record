@@ -371,6 +371,10 @@ python scripts/update_speakers.py    # extend the table with newly published day
 python scripts/build_site.py         # render site/ from the table
 ```
 
+`build_site.py` ranks the **sitting Congress** by default (`--congress latest`); pass a number
+for a specific one or `--congress all` for an all-time board. The default is deliberate: it keeps
+the scheduled build showing the current Congress and producing the same output as a local run.
+
 `.github/workflows/update-site.yml` runs both daily at 07:20 UTC, commits the refreshed table and
 site, and publishes to GitHub Pages. To enable it:
 
@@ -432,13 +436,18 @@ The parsed hein corpus is from Gentzkow, Shapiro & Taddy, *Congressional Record 
 
 ## Tests
 
-Offline unit tests (no network) cover MODS parsing, the downloader hardening, and the
-analysis scorers/ingesters:
+Offline unit tests (no network) cover MODS parsing, the downloader hardening, the analysis
+scorers/ingesters, incremental aggregation, scorer reproducibility, the speaker leaderboard and
+the site build:
 
 ```bash
-.venv/bin/python -m pytest tests/ -q   # if pytest installed
-# or run each file directly:
-.venv/bin/python tests/test_parsing.py
-.venv/bin/python tests/test_hardening.py
-.venv/bin/python tests/test_analysis.py
+pip install -r requirements-dev.txt     # pytest
+python -m pytest tests/ -q
+# or run individual files directly:
+python tests/test_parsing.py
+python tests/test_hardening.py
+python tests/test_analysis.py
 ```
+
+The scheduled site workflow runs this same suite before it publishes, so a regression fails the
+job rather than quietly shipping wrong numbers.

@@ -1,0 +1,3 @@
+# Test-only dependencies. Kept separate from the runtime requirements so the
+# scheduled site update installs exactly what it needs to gate a publish.
+pytest>=8.0
