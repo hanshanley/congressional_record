@@ -39,6 +39,60 @@ PARTY_COLORS = {
 }
 PARTY_LABELS = {"D": "Democrats", "R": "Republicans", "I": "Independents", "other": "Other"}
 
+
+def _hex_to_rgb(color: str) -> tuple[float, float, float]:
+    color = color.lstrip("#")
+    return tuple(int(color[i:i + 2], 16) / 255 for i in (0, 2, 4))
+
+
+def _rgb_to_hex(rgb) -> str:
+    return "#" + "".join(f"{round(max(0.0, min(1.0, c)) * 255):02X}" for c in rgb)
+
+
+def shade(color: str, amount: float = 0.4) -> str:
+    """Darken ``color`` by mixing it ``amount`` of the way toward near-black.
+
+    Used to separate chambers within a party: the darker variant keeps the party
+    hue but gains contrast against the cream background, so two same-party lines
+    are distinguishable even in a small multi-panel grid.
+    """
+    return _rgb_to_hex(c * (1 - amount) + 0.10 * amount for c in _hex_to_rgb(color))
+
+
+def tint(color: str, amount: float = 0.4) -> str:
+    """Lighten ``color`` by mixing it ``amount`` of the way toward white."""
+    return _rgb_to_hex(c + (1.0 - c) * amount for c in _hex_to_rgb(color))
+
+
+# Chamber styling. Chamber is encoded on three channels at once -- colour depth,
+# dash pattern and marker shape -- because a dash pattern alone is not readable at
+# small panel sizes, where same-party House and Senate lines were indistinguishable.
+CHAMBER_STYLE = {
+    "house": {
+        "linestyle": "-",
+        "marker": "o",
+        "linewidth": 2.4,
+        "markersize": 4.0,
+        "depth": 0.0,          # party colour as-is
+    },
+    "senate": {
+        "linestyle": (0, (5, 2)),   # long, widely spaced dashes
+        "marker": "^",
+        "linewidth": 1.7,
+        "markersize": 4.4,
+        "depth": 0.45,         # noticeably darker than the House line
+    },
+}
+CHAMBER_LABELS = {"house": "House", "senate": "Senate"}
+
+
+def chamber_color(party: str, chamber: str) -> str:
+    """Party colour adjusted for chamber (House base, Senate darker)."""
+    base = PARTY_COLORS.get(party, MUTED)
+    depth = CHAMBER_STYLE.get(chamber, {}).get("depth", 0.0)
+    return shade(base, depth) if depth else base
+
+
 RC_PARAMS = {
     "figure.facecolor": BG,
     "axes.facecolor": BG,

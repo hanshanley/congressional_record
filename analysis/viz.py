@@ -103,9 +103,9 @@ def _plot_by_party(ax, g: pd.DataFrame, col: str, parties=("D", "R"), *,
         _place_end_labels(ax, ends)
 
 
-# Chamber -> line style (party keeps its colour); lets one axis show party x chamber.
-_CHAMBER_STYLE = {"house": "-", "senate": "--"}
-_CHAMBER_LABEL = {"house": "House", "senate": "Senate"}
+# Chamber styling lives in the shared theme so the legend, colours, dashes and
+# markers cannot drift apart. Chamber is encoded on three channels at once.
+_CHAMBER_LABEL = theme.CHAMBER_LABELS
 
 
 def _load_provenance(metrics_path: Path) -> tuple[int, str]:
@@ -130,15 +130,26 @@ def _load_provenance(metrics_path: Path) -> tuple[int, str]:
 
 def _plot_by_chamber_party(ax, g: pd.DataFrame, col: str, parties=("D", "R"),
                            chambers=("house", "senate")) -> None:
-    """Four series: party -> colour, chamber -> solid (House) / dashed (Senate)."""
-    for party in parties:
-        for chamber in chambers:
+    """Four series: party -> hue; chamber -> colour depth + dash pattern + marker.
+
+    Chamber previously differed only by dash pattern, which was unreadable once two
+    same-party lines overlapped. Senate is now drawn darker, with widely spaced
+    dashes and triangular markers, so the House/Senate split reads at a glance even
+    in the small grid panels.
+    """
+    for chamber in chambers:
+        for party in parties:
             sub = g[(g.party == party) & (g.chamber == chamber)].sort_values("year")
             if sub.empty:
                 continue
-            charts.line(ax, sub["year"], sub[col], color=theme.PARTY_COLORS[party],
-                        label=f"{theme.PARTY_LABELS[party]} — {_CHAMBER_LABEL[chamber]}",
-                        linestyle=_CHAMBER_STYLE[chamber], linewidth=2.0, markersize=3)
+            style = theme.CHAMBER_STYLE[chamber]
+            charts.line(
+                ax, sub["year"], sub[col],
+                color=theme.chamber_color(party, chamber),
+                label=f"{theme.PARTY_LABELS[party]} — {_CHAMBER_LABEL[chamber]}",
+                linestyle=style["linestyle"], marker=style["marker"],
+                linewidth=style["linewidth"], markersize=style["markersize"],
+            )
     charts.marker_line(ax, SOURCE_BOUNDARY_YEAR)
 
 
