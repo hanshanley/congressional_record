@@ -25,9 +25,12 @@ LOG = logging.getLogger("analysis.viz")
 
 SOURCE_NOTE = (
     "Sources: Stanford hein (1873-2017) + GovInfo CREC (2017-present). House/Senate only; "
-    "Extensions excluded. Units shown on y-axis. Dotted line: 2017 source boundary. GovInfo party "
+    "Extensions excluded. Units shown on y-axis. GovInfo party "
     "coverage varies; see coverage/turn_coverage.csv."
 )
+# The year the primary source switches from Hein to GovInfo. No longer drawn on the
+# charts, but still reported in the source note's date ranges and used by the
+# calibration diagnostic, which exists specifically to quantify the transition.
 SOURCE_BOUNDARY_YEAR = 2017
 
 # Top of the tight-layout rect, leaving headroom for the figure suptitle. A two-line
@@ -97,20 +100,9 @@ def _plot_by_party(ax, g: pd.DataFrame, col: str, parties=("D", "R"), *,
         charts.line(ax, sub["year"], sub[col], color=theme.PARTY_COLORS[party],
                     label=theme.PARTY_LABELS[party], **line_kw)
         ends.append((party, sub["year"].iloc[-1], float(sub[col].iloc[-1])))
-    # Only the full-size charts get the inline caption; in the small grid panels it
-    # would crowd the plot, and the source note already explains the marker there.
-    charts.marker_line(
-        ax, SOURCE_BOUNDARY_YEAR,
-        label=f"source changes ({SOURCE_BOUNDARY_YEAR})" if label_ends else None,
-    )
     if label_ends and ends:
         ax.margins(x=0.13)  # headroom for the end-of-line party labels
         _place_end_labels(ax, ends)
-
-
-# Chamber styling lives in the shared theme so the legend, colours, dashes and
-# markers cannot drift apart. Chamber is encoded on three channels at once.
-_CHAMBER_LABEL = theme.CHAMBER_LABELS
 
 
 def _load_provenance(metrics_path: Path) -> tuple[int, str]:
@@ -127,35 +119,9 @@ def _load_provenance(metrics_path: Path) -> tuple[int, str]:
         f"Sources: Stanford Hein ({hein.get('min_year', 1873)}-{hein.get('max_year', 2017)}) "
         f"+ GovInfo CREC ({govinfo.get('min_year', boundary)}-{govinfo.get('max_year', 'present')}). "
         "House/Senate only; Extensions excluded. Units shown on y-axis. "
-        f"Dotted line: {boundary} primary-source boundary. GovInfo party coverage varies; "
-        "see coverage/turn_coverage.csv."
+        "GovInfo party coverage varies; see coverage/turn_coverage.csv."
     )
     return boundary, note
-
-
-def _plot_by_chamber_party(ax, g: pd.DataFrame, col: str, parties=("D", "R"),
-                           chambers=("house", "senate")) -> None:
-    """Four series: party -> hue; chamber -> colour depth + dash pattern + marker.
-
-    Chamber previously differed only by dash pattern, which was unreadable once two
-    same-party lines overlapped. Senate is now drawn darker, with widely spaced
-    dashes and triangular markers, so the House/Senate split reads at a glance even
-    in the small grid panels.
-    """
-    for chamber in chambers:
-        for party in parties:
-            sub = g[(g.party == party) & (g.chamber == chamber)].sort_values("year")
-            if sub.empty:
-                continue
-            style = theme.CHAMBER_STYLE[chamber]
-            charts.line(
-                ax, sub["year"], sub[col],
-                color=theme.chamber_color(party, chamber),
-                label=f"{theme.PARTY_LABELS[party]} — {_CHAMBER_LABEL[chamber]}",
-                linestyle=style["linestyle"], marker=style["marker"],
-                linewidth=style["linewidth"], markersize=style["markersize"],
-            )
-    charts.marker_line(ax, SOURCE_BOUNDARY_YEAR)
 
 
 # (column, title, y-label) for each per-party panel/figure.
@@ -244,7 +210,6 @@ def _asymmetry(gc: pd.DataFrame, figs_dir: Path) -> Path:
         ax.fill_between(diff.index, 0, diff.clip(upper=0), color=theme.ACCENT, alpha=0.5,
                         label="Higher Republican rate")
         charts.line(ax, diff.index, diff.values, color=theme.TEXT, label="D \u2212 R", linewidth=1.6)
-    charts.marker_line(ax, SOURCE_BOUNDARY_YEAR)
     ax.axhline(0, color=theme.MUTED, linewidth=0.8)
     charts.style_axes(
         ax,
@@ -256,14 +221,19 @@ def _asymmetry(gc: pd.DataFrame, figs_dir: Path) -> Path:
     return charts.finish(fig, ax, figs_dir / "directed_asymmetry.png", source=SOURCE_NOTE)
 
 
-def _overview_by_chamber(gc: pd.DataFrame, figs_dir: Path) -> Path:
-    """Six-panel overview with party x chamber (hue=party, depth/dash/marker=chamber)."""
+def _overview_for_chamber(gc: pd.DataFrame, figs_dir: Path, chamber: str) -> Path:
+    """Six-panel overview of one chamber, Democrats vs Republicans.
+
+    Splitting the chambers into separate figures replaces the previous combined
+    version, which crammed four series into every panel and made the House and
+    Senate lines fight for the same space.
+    """
+    label = theme.CHAMBER_LABELS[chamber]
     return _grid_overview(
-        gc, figs_dir, _plot_by_chamber_party,
-        "Civility by party and chamber \u2014 U.S. Congressional Record, 1873\u20132026\n"
-        "hue = party (blue D / red R) \u2014 House: light, solid, round markers; "
-        "Senate: dark, dashed, triangular markers",
-        "overview_by_chamber.png", legend_fontsize=8, rect_top=_RECT_TOP_2LINE,
+        gc[gc["chamber"] == chamber], figs_dir, _plot_by_party,
+        f"Civility in the U.S. {label} \u2014 Congressional Record, 1873\u20132026\n"
+        "Democrats vs Republicans",
+        f"overview_{chamber}.png", legend_fontsize=9, rect_top=_RECT_TOP_2LINE,
     )
 
 
@@ -278,7 +248,11 @@ def render(metrics_path: Path, out_dir: Path) -> List[Path]:
     figs_dir.mkdir(parents=True, exist_ok=True)
     temp_figs = Path(tempfile.mkdtemp(prefix=".figures-", dir=figs_dir.parent))
     try:
-        written: List[Path] = [_overview(g, temp_figs), _overview_by_chamber(gc, temp_figs)]
+        written: List[Path] = [
+            _overview(g, temp_figs),
+            _overview_for_chamber(gc, temp_figs, "house"),
+            _overview_for_chamber(gc, temp_figs, "senate"),
+        ]
 
         for col, title, ylab in [*_PANELS, *_SUPPLEMENTAL_PANELS]:
             # overall (by party): clean markerless lines with direct end-of-line party labels
@@ -290,16 +264,22 @@ def render(metrics_path: Path, out_dir: Path) -> List[Path]:
                 fig, ax, temp_figs / f"{col}.png", source=SOURCE_NOTE, legend=False
             ))
 
-        # Named party x chamber breakdowns for positive and negative headline measures.
+        # Per-chamber breakdowns for the headline measures: one figure each, so the
+        # House and Senate series are never overplotted on the same axes.
         for col, title, ylab in _CHAMBER_PANELS:
-            fig, ax = charts.new_figure(figsize=(10, 5.5))
-            _plot_by_chamber_party(ax, gc, col)
-            charts.style_axes(ax, f"{title} \u2014 by party & chamber", "Year", ylab,
-                              subtitle="House: light, solid, round \u2014 "
-                                       "Senate: dark, dashed, triangular")
-            written.append(charts.finish(
-                fig, ax, temp_figs / f"{col}_by_chamber.png", source=SOURCE_NOTE
-            ))
+            for chamber in ("house", "senate"):
+                sub = gc[gc["chamber"] == chamber]
+                if sub.empty:
+                    continue
+                label = theme.CHAMBER_LABELS[chamber]
+                fig, ax = charts.new_figure(figsize=(10, 5.5))
+                _plot_by_party(ax, sub, col, label_ends=True, marker=None, linewidth=2.6)
+                charts.style_axes(ax, f"{title} \u2014 {label}", "Year", ylab,
+                                  subtitle=f"U.S. {label}, Democrats vs Republicans")
+                written.append(charts.finish(
+                    fig, ax, temp_figs / f"{col}_{chamber}.png",
+                    source=SOURCE_NOTE, legend=False,
+                ))
 
         written.append(_asymmetry(gc, temp_figs))
 

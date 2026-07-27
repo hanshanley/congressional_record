@@ -218,16 +218,17 @@ def test_short_source_note_stays_on_one_line() -> None:
     plt.close(fig)
 
 
-def test_marker_line_label_is_optional_and_drawn_when_given() -> None:
+def test_marker_line_draws_no_caption() -> None:
+    # The publication figures no longer draw the source boundary; the helper stays
+    # for the calibration diagnostic and must remain a plain, unlabelled rule.
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
 
     fig, ax = plt.subplots()
     charts.marker_line(ax, 2017)
-    assert not [t for t in ax.texts]
-    charts.marker_line(ax, 2017, label="source changes (2017)")
-    assert any("source changes" in t.get_text() for t in ax.texts)
+    assert not list(ax.texts)
+    assert len(ax.lines) == 1
     plt.close(fig)
 
 

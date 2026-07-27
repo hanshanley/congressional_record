@@ -150,7 +150,6 @@ def plot_by_chamber(metric, title, ylabel="hits per 1,000 words"):
             charts.line(ax, sub["year"], sub[metric], color=theme.PARTY_COLORS[p],
                         label=f"{theme.PARTY_LABELS[p]} — {CHAM_LABEL[ch]}",
                         linestyle=CHAM_STYLE[ch], linewidth=2.0, markersize=3)
-    charts.marker_line(ax, 2017)
     charts.style_axes(ax, f"{title} — by party & chamber", "Year", ylabel,
                       subtitle="solid = House, dashed = Senate")
     ax.legend(loc="best", frameon=False, labelcolor=theme.TEXT, fontsize=9)
@@ -175,7 +174,6 @@ def plot_metric(metric, title, ylabel="hits per 1,000 words", parties=("D","R"))
         sub = g[g.party == p].sort_values("year")
         charts.line(ax, sub["year"], sub[metric], color=theme.PARTY_COLORS[p],
                     label=theme.PARTY_LABELS[p])
-    charts.marker_line(ax, 2017)  # hein -> GovInfo source boundary
     charts.style_axes(ax, title, "Year", ylabel)
     ax.legend(loc="best", frameon=False, labelcolor=theme.TEXT)
     plt.show()

@@ -43,7 +43,6 @@ charts.line(ax, years, rep, color=theme.PARTY_COLORS["R"], marker=None, linewidt
 charts.end_label(ax, years[-1], dem[-1], "Democrats", theme.PARTY_COLORS["D"])
 charts.end_label(ax, years[-1], rep[-1], "Republicans", theme.PARTY_COLORS["R"])
 ax.margins(x=0.13)                                  # room for the end labels
-charts.marker_line(ax, boundary_year)               # boundary from source_metadata.json
 charts.style_axes(ax, "My metric", "Year", "per 1,000 words",
                   subtitle="a muted second-tier sub-title")
 charts.finish(fig, ax, "outputs/figures/my_metric.png",
@@ -57,7 +56,7 @@ charts.finish(fig, ax, "outputs/figures/my_metric.png",
 | `new_figure(figsize=(11,6))` | apply theme + return `(fig, ax)` |
 | `line(ax, xs, ys, color, label=None, linewidth=2.2, markersize=4, linestyle="-", marker="o")` | one styled series; pass `marker=None` for a clean, markerless line |
 | `end_label(ax, x, y, text, color, *, fontsize=10.5, pad="  ")` | direct end-of-line label with a white halo (replaces a legend) |
-| `marker_line(ax, x, color=None, style=":")` | vertical reference marker (e.g. a source-boundary year) |
+| `marker_line(ax, x, color=None, style=":")` | vertical reference marker; used only by the calibration diagnostic (the publication figures no longer draw the source boundary) |
 | `style_axes(ax, title, xlabel, ylabel, subtitle=None)` | bold title + muted second-tier sub-title, labels, y-grid, `axisbelow` |
 | `finish(fig, ax, out_path, source=None, legend=True, dpi=200)` | optional legend + italic source note + `tight_layout` + save; returns the path |
 
@@ -73,7 +72,7 @@ charts.finish(fig, ax, "outputs/figures/my_metric.png",
 ## How the project uses it
 
 `analysis/viz.py` builds all civility figures with these helpers. Headline panels come from
-`analysis/score/registry.py`; provenance and the source-boundary marker come from
+`analysis/score/registry.py`; provenance comes from
 `data/processed/coverage/source_metadata.json`. The suite includes the six-panel overview,
 one full-size chart per metric, chamber splits, and D−R differences in personal-disrespect
 language near out-party references. Publication PNGs are intentionally tracked in

@@ -153,8 +153,10 @@ time-series charts. It unifies two corpora into one speaker-turn table:
 
 These publication figures are generated from real Stanford/GovInfo Congressional Record text and
 are intentionally tracked under `outputs/figures/`. All rates are per 1,000 words unless noted,
-the dashed marker is the Hein → GovInfo source boundary, and every panel carries the coverage
-caveat described under [Two ingest paths](#two-ingest-paths--check-coverage-before-you-trust-a-date).
+and every panel carries the coverage caveat described under
+[Two ingest paths](#two-ingest-paths--check-coverage-before-you-trust-a-date). Note that the
+primary source switches from Stanford Hein to GovInfo CREC in 2017, so treat a step change
+across that year as possibly a source artifact rather than a real shift.
 Regenerate them all with `python scripts/update.py`.
 
 #### At a glance
@@ -163,10 +165,13 @@ Six validated measures on one canvas — the fastest way to see the long-run sha
 
 ![Overview of congressional comity and conflict measures](outputs/figures/overview.png)
 
-The same six panels split by chamber (colour = party, solid = House, dashed = Senate), which
-separates institutional differences from partisan ones.
+The same six panels for each chamber separately, which separates institutional differences from
+partisan ones. Giving each chamber its own figure — and its own y-scale — keeps two series per
+panel instead of four, and stops the House's much higher rates from flattening the Senate.
 
-![Overview of comity and conflict measures by chamber and party](outputs/figures/overview_by_chamber.png)
+![Six comity and conflict measures for the U.S. House, Democrats vs Republicans](outputs/figures/overview_house.png)
+
+![Six comity and conflict measures for the U.S. Senate, Democrats vs Republicans](outputs/figures/overview_senate.png)
 
 #### Courtesy and cooperation
 
@@ -245,8 +250,9 @@ Matched spans are de-duplicated so phrases and component words are not double-co
 
 **By party and by chamber.** Headline charts exclude Extensions/other sections and render
 House/Senate floor language by party, plus a
-**chamber × party** split (House vs Senate, each by party): `overview_by_chamber.png`, a
-`*_by_chamber.png` per metric, and an extra CSV `metrics_by_congress_chamber_party.csv`.
+**per-chamber** split (House and Senate as separate figures, each by party):
+`overview_house.png`, `overview_senate.png`, a `*_house.png` / `*_senate.png` pair per metric,
+and an extra CSV `metrics_by_congress_chamber_party.csv`.
 
 **Toxicity methodology.** "Toxicity" is shorthand for several transparent, auditable
 **lexical rates** (personal disrespect/profanity per 1k words), not a ground-truth label or a
@@ -339,8 +345,9 @@ python -m analysis.run aggregate --full
 
 Outputs: `data/processed/metrics/civility_metrics.{parquet,csv}`,
 `metrics_by_congress_chamber_party.csv`, and tracked PNG charts under `outputs/figures/`
-(an `overview.png` small-multiples, `overview_by_chamber.png`, and one `*.png` +
-`*_by_chamber.png` per metric). Large/intermediate `data/` outputs remain git-ignored.
+(an `overview.png` small-multiples, `overview_house.png` / `overview_senate.png`, and one
+`*.png` plus a `*_house.png` / `*_senate.png` pair per metric). Large/intermediate `data/`
+outputs remain git-ignored.
 
 Charts use a shared **Substack-style** plotting toolkit (`analysis/plotting/`, matched to the
 `uk_decline` portfolio look) — see [`docs/PLOTTING.md`](docs/PLOTTING.md) for the palette,

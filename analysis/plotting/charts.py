@@ -51,23 +51,14 @@ def end_label(ax, x, y, text: str, color: str, **kwargs) -> None:
     theme.end_label(ax, x, y, text, color, **kwargs)
 
 
-def marker_line(ax, x: float, color: str | None = None, style: str = ":",
-                label: str | None = None) -> None:
+def marker_line(ax, x: float, color: str | None = None, style: str = ":") -> None:
     """Vertical reference marker (e.g. a data-source boundary year).
 
-    ``label`` writes a small rotated caption beside the line so the marker explains
-    itself on the chart, rather than only in the source note underneath.
+    Not used by the publication figures, which no longer draw the Hein -> GovInfo
+    boundary; retained for the calibration diagnostic, whose subject *is* that
+    transition.
     """
     ax.axvline(x, color=color or theme.MUTED, linestyle=style, linewidth=0.9, alpha=0.7)
-    if label:
-        ax.annotate(
-            label,
-            xy=(x, 1.0), xycoords=("data", "axes fraction"),
-            xytext=(-4, -6), textcoords="offset points",
-            rotation=90, ha="right", va="top",
-            fontsize=7.5, color=theme.MUTED, style="italic",
-            path_effects=theme.white_stroke(),
-        )
 
 
 def finish(fig, ax, out_path: Path | str, source: str | None = None,
