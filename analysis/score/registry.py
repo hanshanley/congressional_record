@@ -72,7 +72,7 @@ METRICS = (
     ),
     MetricSpec(
         "profanity_per_1k", "profanity_hits", "profanity_hits",
-        "words", 1000, "profanity", "High-precision profanity",
+        "words", 1000, "profanity", "Profanity",
         "hits per 1,000 words", "negative", headline=True, chamber_plot=True,
     ),
     MetricSpec(

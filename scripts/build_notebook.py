@@ -36,7 +36,8 @@ Explore changes in comity and conflict language in the U.S. Congressional Record
 - *Personal disrespect / attack* — a high-precision insult and attack lexicon.
 - *Misconduct allegations* — corruption, fraud, perjury, obstruction, and similar allegation
   language; this is **not evidence that misconduct occurred**.
-- *High-precision profanity* — genuine curse/obscene forms, excluding neutral topical terms.
+- *Profanity* — a narrow, hand-curated list of genuine curse/obscene forms, excluding neutral
+  topical terms.
 - *Identity slurs* — a separate exact-match diagnostic requiring quotation/context review.
 - *Ideological labels* — tracked separately, not automatically treated as disrespect.
 - *Cross-party reference context* — out-party references plus comity, disrespect, or misconduct

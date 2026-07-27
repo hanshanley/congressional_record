@@ -194,7 +194,7 @@ construction.
 
 ![Misconduct allegation language](outputs/figures/misconduct_per_1k.png)
 
-![High-precision profanity](outputs/figures/profanity_per_1k.png)
+![Profanity](outputs/figures/profanity_per_1k.png)
 
 #### Directed at the other party
 
@@ -222,7 +222,8 @@ ideological labelling, out-party reference volume, and the “Democrat party” 
 * **Formulaic courtesy/deference**, **gratitude/praise**, and **bipartisan cooperation** as
   separate positive-language components rather than one undifferentiated comity score
 * **Personal disrespect/attack** language, **misconduct allegation language**, and
-  **high-precision profanity** as separate categories. Misconduct words are allegations in text,
+  **profanity** as separate categories. Profanity uses a narrow, hand-curated list rather than a
+  broad word list, so ordinary words are never counted. Misconduct words are allegations in text,
   not evidence that misconduct occurred.
 * **Identity slurs** and **ideological labels** as separate diagnostics; ideological labels do
   not automatically count as personal disrespect.
