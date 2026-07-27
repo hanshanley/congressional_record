@@ -162,8 +162,14 @@ def _word_regex(w: str) -> str:
     lets a phrase inflect the correct token regardless of position (so "reach across the
     aisle" matches "reaches/reached across the aisle", where the inflected word is the
     leading verb, not the trailing noun).
+
+    Forms are ordered longest-first with a lexicographic tiebreak. ``morph_variants``
+    returns a set, whose iteration order varies with per-process hash randomisation;
+    without the tiebreak, equal-length forms would be emitted in a different order on
+    every run. Because Python alternation is leftmost-first rather than longest-match,
+    that ordering is load-bearing and must be deterministic.
     """
-    forms = sorted(morph_variants(w), key=len, reverse=True)
+    forms = sorted(morph_variants(w), key=lambda f: (-len(f), f))
     return "(?:" + "|".join(re.escape(f) for f in forms) + ")"
 
 
@@ -195,7 +201,13 @@ def _phrase_regex(phrases: List[Tuple[str, ...]], fuzzy: bool = True) -> Optiona
             return _word_regex(w)
         return re.escape(w)
 
-    parts = [r"\b" + r"\s+".join(frag(w) for w in p) + r"\b" for p in set(phrases)]
+    # Deduplicate, then order longest phrase first with a lexicographic tiebreak.
+    # `set` iteration order varies with per-process hash randomisation, and Python
+    # alternation is leftmost-first rather than longest-match, so an unordered
+    # alternation makes the counts depend on the process. Longest-first also resolves
+    # genuine ambiguity in favour of the more specific phrase.
+    ordered = sorted(set(phrases), key=lambda p: (-len(" ".join(p)), p))
+    parts = [r"\b" + r"\s+".join(frag(w) for w in p) + r"\b" for p in ordered]
     # No re.IGNORECASE: patterns are built from lowercased tokens and only ever matched
     # against lowercased text (`low`/`win`), so the flag is pure overhead (~2.7x/scan).
     return re.compile("|".join(parts))

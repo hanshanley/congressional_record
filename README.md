@@ -152,25 +152,65 @@ time-series charts. It unifies two corpora into one speaker-turn table:
 ### Key figures
 
 These publication figures are generated from real Stanford/GovInfo Congressional Record text and
-are intentionally tracked under `outputs/figures/`.
+are intentionally tracked under `outputs/figures/`. All rates are per 1,000 words unless noted,
+the dashed marker is the Hein → GovInfo source boundary, and every panel carries the coverage
+caveat described under [Two ingest paths](#two-ingest-paths--check-coverage-before-you-trust-a-date).
+Regenerate them all with `python scripts/update.py`.
 
-#### Validated comity and conflict measures
+#### At a glance
+
+Six validated measures on one canvas — the fastest way to see the long-run shape of the data.
 
 ![Overview of congressional comity and conflict measures](outputs/figures/overview.png)
 
-#### Civil language when referencing the other party
+The same six panels split by chamber (colour = party, solid = House, dashed = Senate), which
+separates institutional differences from partisan ones.
 
-![Out-party references with nearby comity language](outputs/figures/outgroup_comity_contexts_per_100_refs.png)
+![Overview of comity and conflict measures by chamber and party](outputs/figures/overview_by_chamber.png)
 
-#### Disrespect when referencing the other party
+#### Courtesy and cooperation
 
-![Out-party references with nearby personal disrespect](outputs/figures/outgroup_hostility_contexts_per_100_refs.png)
+Formulaic deference (“my distinguished colleague”, “the gentleman from…”) is the most
+institutionalised form of comity, and the most sensitive to changes in floor ritual.
 
-#### Personal disrespect and profanity
+![Formulaic courtesy and deference](outputs/figures/formal_courtesy_per_1k.png)
+
+![Gratitude and praise](outputs/figures/gratitude_praise_per_1k.png)
+
+![Bipartisan cooperation language](outputs/figures/cooperation_per_1k.png)
+
+#### Conflict
+
+Personal disrespect, allegations of misconduct, and profanity — the three negative families.
+Profanity uses a high-precision curated list rather than a broad word list, so it is rare by
+construction.
 
 ![Personal disrespect and attack language](outputs/figures/hostility_per_1k.png)
 
+![Misconduct allegation language](outputs/figures/misconduct_per_1k.png)
+
 ![High-precision profanity](outputs/figures/profanity_per_1k.png)
+
+#### Directed at the other party
+
+The measures above count language anywhere in a speech. These normalise by *references to the
+other party*, so they answer a sharper question: when a member invokes the other side, how do
+they talk about them? Proximity does not prove the language is aimed at the reference.
+
+![Out-party references with nearby comity language](outputs/figures/outgroup_comity_contexts_per_100_refs.png)
+
+![Out-party references with nearby personal disrespect](outputs/figures/outgroup_hostility_contexts_per_100_refs.png)
+
+![Out-party references with nearby misconduct allegations](outputs/figures/outgroup_misconduct_contexts_per_100_refs.png)
+
+Party asymmetry in that directed disrespect, with equal House/Senate weights — above zero means
+the Democratic rate is higher, below zero the Republican rate.
+
+![Asymmetry in disrespect near out-party references](outputs/figures/directed_asymmetry.png)
+
+The remaining figures — per-chamber breakdowns of each family, plus supplemental measures such as
+ideological labelling, out-party reference volume, and the “Democrat party” pejorative — are in
+[`outputs/figures/`](outputs/figures/).
 
 ### What it measures
 
@@ -232,6 +272,27 @@ The 784-passage precision/recall summary is documented in
 `data/processed/validation/precision_recall.csv`.
 
 ### Run it
+
+#### Routine refresh: one command
+
+```bash
+.venv/bin/python scripts/update.py
+```
+
+`scripts/update.py` is the normal way to bring everything up to date. It:
+
+1. reads the newest turn in the analysis corpus and enumerates only the CREC issues published
+   since then (nothing is re-downloaded);
+2. bulk-ingests those days;
+3. re-runs `aggregate` incrementally, rescoring only the affected Congress;
+4. re-renders the figures;
+5. prints a fresh coverage report, so the run verifies itself.
+
+Every step is idempotent — if nothing new has been published the ingest is skipped and the
+aggregate is served entirely from cache. Useful flags: `--dry-run` (show the plan), `--since` /
+`--until` (override the window), `--skip-viz`, `--full` (force a complete rescore).
+
+#### Individual stages
 
 ```bash
 uv pip install -r requirements-analysis.txt        # pandas, pyarrow, matplotlib, vader, ...
