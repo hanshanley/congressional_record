@@ -51,9 +51,23 @@ def end_label(ax, x, y, text: str, color: str, **kwargs) -> None:
     theme.end_label(ax, x, y, text, color, **kwargs)
 
 
-def marker_line(ax, x: float, color: str | None = None, style: str = ":") -> None:
-    """Vertical reference marker (e.g. a data-source boundary year)."""
+def marker_line(ax, x: float, color: str | None = None, style: str = ":",
+                label: str | None = None) -> None:
+    """Vertical reference marker (e.g. a data-source boundary year).
+
+    ``label`` writes a small rotated caption beside the line so the marker explains
+    itself on the chart, rather than only in the source note underneath.
+    """
     ax.axvline(x, color=color or theme.MUTED, linestyle=style, linewidth=0.9, alpha=0.7)
+    if label:
+        ax.annotate(
+            label,
+            xy=(x, 1.0), xycoords=("data", "axes fraction"),
+            xytext=(-4, -6), textcoords="offset points",
+            rotation=90, ha="right", va="top",
+            fontsize=7.5, color=theme.MUTED, style="italic",
+            path_effects=theme.white_stroke(),
+        )
 
 
 def finish(fig, ax, out_path: Path | str, source: str | None = None,
@@ -61,11 +75,11 @@ def finish(fig, ax, out_path: Path | str, source: str | None = None,
     """Add legend + source note, tight-layout, and save. Returns the output path."""
     if legend and ax.get_legend_handles_labels()[0]:
         ax.legend(loc="best", frameon=False, labelcolor=theme.TEXT)
-    if source:
-        theme.source_note(fig, source)
-    # Reserve the bottom 3% of the figure for the italic source note; full height on top
-    # (single-axis figures have no suptitle, unlike the grid overviews).
-    fig.tight_layout(rect=(0, 0.03, 1, 1))
+    note_lines = theme.source_note(fig, source) if source else 0
+    # Reserve bottom margin for the italic source note, growing with its line count
+    # so a wrapped two-line note is not overlapped by the x-axis label.
+    bottom = 0.0 if not note_lines else min(0.18, 0.03 + 0.035 * (note_lines - 1))
+    fig.tight_layout(rect=(0, bottom, 1, 1))
     out_path = Path(out_path)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(out_path, dpi=dpi, bbox_inches="tight")

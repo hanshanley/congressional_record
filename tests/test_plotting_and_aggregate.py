@@ -16,7 +16,7 @@ from analysis.aggregate import (  # noqa: E402
 )
 from analysis.ingest.schema import ARROW_SCHEMA  # noqa: E402
 from analysis.inputs import select_turn_files  # noqa: E402
-from analysis.plotting import theme  # noqa: E402
+from analysis.plotting import charts, theme  # noqa: E402
 from analysis.calibrate import calibration_summary, paired_overlap  # noqa: E402
 from analysis.score.registry import METRICS  # noqa: E402
 
@@ -182,6 +182,53 @@ def test_shade_and_tint_are_bounded_and_ordered() -> None:
     for value in (theme.shade("#3D6F8C", 1.0), theme.tint("#C85A3D", 0.5)):
         assert len(value) == 7 and value.startswith("#")
         assert all(0.0 <= c <= 1.0 for c in theme._hex_to_rgb(value))
+
+
+def test_source_note_wraps_long_text_to_multiple_lines() -> None:
+    # Figures save with bbox_inches="tight", so an unwrapped note sets the saved
+    # width and leaves a band of empty space to the right of the axes.
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    long_note = (
+        "Sources: Stanford Hein (1873-2017) + GovInfo CREC (2017-present). "
+        "House/Senate only; Extensions excluded. Units shown on y-axis. "
+        "Dotted line: 2017 source boundary. GovInfo party coverage varies; "
+        "see coverage/turn_coverage.csv."
+    )
+    fig = plt.figure()
+    lines = theme.source_note(fig, long_note)
+    assert lines >= 2
+    drawn = [t.get_text() for t in fig.texts][0]
+    assert "\n" in drawn
+    # Wrapping must not drop or reorder any content.
+    assert " ".join(drawn.split()) == " ".join(long_note.split())
+    assert max(len(part) for part in drawn.split("\n")) <= 118
+    plt.close(fig)
+
+
+def test_short_source_note_stays_on_one_line() -> None:
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    fig = plt.figure()
+    assert theme.source_note(fig, "Source: GovInfo.") == 1
+    plt.close(fig)
+
+
+def test_marker_line_label_is_optional_and_drawn_when_given() -> None:
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    fig, ax = plt.subplots()
+    charts.marker_line(ax, 2017)
+    assert not [t for t in ax.texts]
+    charts.marker_line(ax, 2017, label="source changes (2017)")
+    assert any("source changes" in t.get_text() for t in ax.texts)
+    plt.close(fig)
 
 
 if __name__ == "__main__":

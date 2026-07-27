@@ -97,7 +97,12 @@ def _plot_by_party(ax, g: pd.DataFrame, col: str, parties=("D", "R"), *,
         charts.line(ax, sub["year"], sub[col], color=theme.PARTY_COLORS[party],
                     label=theme.PARTY_LABELS[party], **line_kw)
         ends.append((party, sub["year"].iloc[-1], float(sub[col].iloc[-1])))
-    charts.marker_line(ax, SOURCE_BOUNDARY_YEAR)
+    # Only the full-size charts get the inline caption; in the small grid panels it
+    # would crowd the plot, and the source note already explains the marker there.
+    charts.marker_line(
+        ax, SOURCE_BOUNDARY_YEAR,
+        label=f"source changes ({SOURCE_BOUNDARY_YEAR})" if label_ends else None,
+    )
     if label_ends and ends:
         ax.margins(x=0.13)  # headroom for the end-of-line party labels
         _place_end_labels(ax, ends)

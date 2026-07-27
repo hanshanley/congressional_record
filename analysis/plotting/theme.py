@@ -16,6 +16,8 @@ Usage::
 
 from __future__ import annotations
 
+import textwrap
+
 import matplotlib.patheffects as pe
 import matplotlib.pyplot as plt
 
@@ -135,9 +137,19 @@ def apply() -> None:
     plt.rcParams.update(RC_PARAMS)
 
 
-def source_note(fig, text: str, x: float = 0.01, y: float = 0.01, ha: str = "left") -> None:
-    """Add the standard italic, muted source note used across the portfolio figures."""
-    fig.text(x, y, text, ha=ha, fontsize=8, color=MUTED, style="italic")
+def source_note(fig, text: str, x: float = 0.01, y: float = 0.01, ha: str = "left",
+                width: int = 118) -> int:
+    """Add the standard italic, muted source note, wrapped to ``width`` characters.
+
+    Figures are saved with ``bbox_inches="tight"``, so a single long note sets the
+    saved width and leaves a band of empty space to the right of the axes. Wrapping
+    keeps the note inside the plot's own width instead. Returns the line count so
+    callers can reserve the right amount of bottom margin.
+    """
+    lines = textwrap.wrap(text, width=width) or [""]
+    fig.text(x, y, "\n".join(lines), ha=ha, va="bottom", fontsize=8, color=MUTED,
+             style="italic", linespacing=1.4)
+    return len(lines)
 
 
 def end_label(ax, x, y, text: str, color: str, *, fontsize: float = 10.5,
