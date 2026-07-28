@@ -34,7 +34,7 @@ from typing import Dict, Iterable, List, Optional, Tuple
 
 LOG = logging.getLogger("analysis.incremental")
 
-CACHE_VERSION = 1
+CACHE_VERSION = 2
 
 # "<prefix>_<congress>.parquet" -- congress is the trailing numeric component.
 _CONGRESS_RE = re.compile(r"^(?P<prefix>.+?)_(?P<congress>\d+)$")
@@ -86,12 +86,22 @@ def config_fingerprint(
     include_procedural: bool,
     extra_sources: Iterable[Path] = (),
 ) -> str:
-    """Hash everything that can change a score, so stale entries cannot survive.
+    """Hash everything that can change a cached sum -- and nothing else.
 
-    Covers the lexicon corpus and the scoring/aggregation source files. A change
-    to any of them means cached sums were produced by different rules and must be
-    discarded.
+    Only ``_score_shard``'s output is cached, so the fingerprint covers exactly the
+    inputs to that: the lexicons, the scorer source, the accumulator key sets, the
+    scoring flags, and the scoring function's own source.
+
+    It deliberately does **not** hash whole modules. ``registry.py`` carries display
+    titles and ``aggregate.py`` carries ``_finalize`` / ``_write_coverage``, which run
+    *after* the cache on already-merged sums. Hashing those files meant renaming a
+    chart label invalidated all 89 shards and forced a ~74 minute rescore that could
+    not change a single number.
     """
+    import inspect
+
+    from analysis import aggregate as aggregate_module
+    from analysis.score import registry as registry_module
     from analysis.score import scorers as scorers_module
 
     digest = hashlib.sha256()
@@ -104,17 +114,21 @@ def config_fingerprint(
         digest.update(path.name.encode("utf-8"))
         digest.update(hashlib.sha256(path.read_bytes()).digest())
 
-    module_dir = Path(scorers_module.__file__).resolve().parent
-    sources = [
-        module_dir / "scorers.py",
-        module_dir / "registry.py",
-        module_dir.parent / "aggregate.py",
-        *extra_sources,
-    ]
+    # Which score keys are accumulated, and under what names -- but not their titles.
+    digest.update(repr(tuple(registry_module.SCORE_KEYS)).encode("utf-8"))
+    digest.update(repr(tuple(aggregate_module._SUM_KEYS)).encode("utf-8"))
+
+    # The scoring code itself: the scorer module, and the shard-scoring function whose
+    # result is what actually gets cached.
+    sources = [Path(scorers_module.__file__).resolve(), *extra_sources]
     for path in sources:
         if path.exists():
             digest.update(path.name.encode("utf-8"))
             digest.update(hashlib.sha256(path.read_bytes()).digest())
+    try:
+        digest.update(inspect.getsource(aggregate_module._score_shard).encode("utf-8"))
+    except (OSError, TypeError):  # pragma: no cover - source always available in-tree
+        digest.update(b"score_shard-source-unavailable")
     return digest.hexdigest()
 
 

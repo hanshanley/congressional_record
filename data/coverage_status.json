@@ -1,8 +1,8 @@
 {
-  "generated_utc": "2026-07-27T00:01:23+00:00",
-  "today": "2026-07-26",
-  "latest_date": "2026-07-23",
-  "analysis_corpus_latest_date": "2026-07-23",
+  "generated_utc": "2026-07-28T22:36:49+00:00",
+  "today": "2026-07-28",
+  "latest_date": "2026-07-27",
+  "analysis_corpus_latest_date": "2026-07-27",
   "api_manifest": {
     "path": "data/manifest.jsonl",
     "exists": true,
@@ -192,13 +192,13 @@
   "bulk_turns": {
     "path": "data/interim/turns",
     "exists": true,
-    "total_rows": 21267967,
+    "total_rows": 21268192,
     "by_source": {
       "govinfo_bulk": {
         "files": 17,
-        "rows": 3501348,
+        "rows": 3501573,
         "earliest_date": "1994-01-25",
-        "latest_date": "2026-07-23"
+        "latest_date": "2026-07-27"
       },
       "hein": {
         "files": 72,
@@ -339,10 +339,10 @@
       {
         "file": "govinfo_bulk_119.parquet",
         "source": "govinfo_bulk",
-        "rows": 123208,
+        "rows": 123433,
         "earliest_date": "2025-01-02",
-        "latest_date": "2026-07-23",
-        "bytes": 82211145
+        "latest_date": "2026-07-27",
+        "bytes": 82266315
       },
       {
         "file": "hein_043.parquet",
@@ -930,6 +930,7 @@
     "still_missing": []
   },
   "warnings": [
+    "manifest.jsonl (2026-07-23) lags the analysis corpus (2026-07-27); the manifest is NOT the source of truth for coverage",
     "manifest.jsonl has 568 day(s) inside its own date range (2017-01-31 .. 2026-07-22) that the analysis corpus covers but the manifest does not; its newest date alone overstates coverage"
   ]
 }

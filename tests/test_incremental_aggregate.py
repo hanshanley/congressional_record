@@ -181,6 +181,62 @@ def test_scoring_flags_are_part_of_the_fingerprint():
     assert config_fingerprint(False, True) != base
 
 
+def test_display_only_changes_do_not_invalidate_the_cache(tmp_path):
+    # A metric's title is display-only. Hashing whole modules meant renaming a chart
+    # label invalidated all 89 shards and forced a ~74 minute rescore that could not
+    # change a single number.
+    import importlib
+
+    import analysis.aggregate as aggregate_module
+    import analysis.score.registry as registry_module
+
+    registry_path = Path(registry_module.__file__)
+    original = registry_path.read_text(encoding="utf-8")
+    base = config_fingerprint(False, False)
+    try:
+        registry_path.write_text(
+            original.replace('"words", 1000, "profanity", "Profanity",',
+                             '"words", 1000, "profanity", "Swearing",'),
+            encoding="utf-8",
+        )
+        importlib.reload(registry_module)
+        importlib.reload(aggregate_module)
+        assert config_fingerprint(False, False) == base
+    finally:
+        registry_path.write_text(original, encoding="utf-8")
+        importlib.reload(registry_module)
+        importlib.reload(aggregate_module)
+    assert config_fingerprint(False, False) == base
+
+
+def test_changing_an_accumulated_score_key_invalidates_the_cache(monkeypatch):
+    import analysis.aggregate as aggregate_module
+    import analysis.score.registry as registry_module
+
+    base = config_fingerprint(False, False)
+    monkeypatch.setattr(
+        registry_module, "SCORE_KEYS", tuple(registry_module.SCORE_KEYS) + ("new_key",)
+    )
+    assert config_fingerprint(False, False) != base
+    monkeypatch.undo()
+    monkeypatch.setattr(
+        aggregate_module, "_SUM_KEYS", list(aggregate_module._SUM_KEYS) + ["extra"]
+    )
+    assert config_fingerprint(False, False) != base
+
+
+def test_changing_the_shard_scoring_function_invalidates_the_cache(monkeypatch):
+    import analysis.aggregate as aggregate_module
+
+    base = config_fingerprint(False, False)
+
+    def _replacement(shard, scorers, include_procedural):  # different source text
+        return {}, {}
+
+    monkeypatch.setattr(aggregate_module, "_score_shard", _replacement)
+    assert config_fingerprint(False, False) != base
+
+
 def test_changed_fingerprint_discards_cached_entries(corpus):
     root, turns = corpus
     _metrics(turns, root / "out", incremental=True)
@@ -267,23 +323,26 @@ def test_interrupted_run_resumes_from_completed_shards(corpus, monkeypatch, capl
     root, turns = corpus
     import analysis.aggregate as aggregate_module
 
-    real_score = aggregate_module._score_shard
-    calls: list[str] = []
+    # Interrupt via _merge_groups, which runs just after each shard is cached and is
+    # deliberately not part of the config fingerprint -- patching _score_shard itself
+    # would change the fingerprint and invalidate the very cache under test.
+    real_merge = aggregate_module._merge_groups
+    calls: list[int] = []
 
-    def explode_on_third(shard, scorers, include_procedural):
-        calls.append(shard.key)
-        if len(calls) == 3:
+    def explode_on_third(target, addition):
+        calls.append(1)
+        if len(calls) == 5:  # acc+coverage per shard: fails partway through shard 3
             raise KeyboardInterrupt("simulated interrupt")
-        return real_score(shard, scorers, include_procedural)
+        return real_merge(target, addition)
 
-    monkeypatch.setattr(aggregate_module, "_score_shard", explode_on_third)
+    monkeypatch.setattr(aggregate_module, "_merge_groups", explode_on_third)
     with pytest.raises(KeyboardInterrupt):
         _metrics(turns, root / "out", incremental=True)
     monkeypatch.undo()
 
-    # The two shards finished before the interrupt must not be rescored.
+    # Shards completed before the interrupt must not be rescored.
     with caplog.at_level("INFO", logger="analysis.aggregate"):
         resumed = _metrics(turns, root / "out", incremental=True)
-    assert "2 reused from cache" in caplog.text
-    assert "1 rescored" in caplog.text
+    assert "reused from cache" in caplog.text
+    assert "0 rescored" in caplog.text
     pd.testing.assert_frame_equal(resumed, _metrics(turns, root / "fresh", incremental=False))
