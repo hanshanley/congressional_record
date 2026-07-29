@@ -7,6 +7,9 @@ name: Update site
 # Congressional Record issues published since then, scores those days, and merges
 # the counts back in. The refreshed table and rendered site are committed, then
 # published to GitHub Pages.
+#
+# It also needs no secrets. Issue discovery probes the public bulk content URLs
+# instead of the GovInfo API, so nothing has to be stored in repository settings.
 
 on:
   schedule:
@@ -53,8 +56,8 @@ jobs:
         run: python -m pytest tests/ -q
 
       - name: Fetch new issues and score them
-        env:
-          GOVINFO_API_KEY: ${{ secrets.GOVINFO_API_KEY }}
+        # No API key or repository secret is needed: issues are discovered by
+        # probing the public GovInfo bulk URLs, not the rate-limited API.
         run: |
           python scripts/update_speakers.py \
             ${{ inputs.since && format('--since {0}', inputs.since) || '' }} \

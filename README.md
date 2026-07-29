@@ -384,11 +384,17 @@ for a specific one or `--congress all` for an all-time board. The default is del
 the scheduled build showing the current Congress and producing the same output as a local run.
 
 `.github/workflows/update-site.yml` runs both daily at 07:20 UTC, commits the refreshed table and
-site, and publishes to GitHub Pages. To enable it:
+site, and publishes to GitHub Pages.
+
+**No API key or repository secret is required.** Issues are discovered by probing the public
+GovInfo bulk URLs (`content/pkg/CREC-YYYY-MM-DD.zip` — a published day answers `200`, a day with
+no session redirects) rather than the rate-limited GovInfo API. Verified to return exactly the
+same packages as the API. Nothing sensitive ever has to be stored in repository settings.
+
+To enable it:
 
 1. **Settings → Pages → Source: GitHub Actions.**
-2. Add a repository secret `GOVINFO_API_KEY` (free at <https://api.data.gov/signup/>).
-3. Seed the table once from the local corpus (CI only ever appends to it):
+2. Seed the table once from the local corpus (CI only ever appends to it):
 
    ```bash
    python -c "from pathlib import Path; from analysis.speakers import build_daily; \
