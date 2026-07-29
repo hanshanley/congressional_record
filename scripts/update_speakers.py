@@ -85,13 +85,14 @@ def resolve_window(args: argparse.Namespace, daily: Optional[pd.DataFrame]):
 
 
 def fetch_and_score(start: str, end: str, workers: int) -> pd.DataFrame:
-    """Download the issues in ``[start, end]`` to a temp dir and score them."""
-    from crec.api import GovInfoClient
-    from crec.enumerate import iter_packages
-    from analysis.ingest.govinfo_bulk import run_bulk
+    """Download the issues in ``[start, end]`` to a temp dir and score them.
 
-    client = GovInfoClient(min_interval=0.0)
-    packages = sorted({p["packageId"] for p in iter_packages(client, start, end)})
+    Package discovery probes the public bulk URLs rather than the GovInfo API, so
+    the scheduled update needs no API key and no repository secret at all.
+    """
+    from analysis.ingest.govinfo_bulk import probe_packages, run_bulk
+
+    packages = probe_packages(start, end, workers=workers)
     if not packages:
         LOG.info("no issues published in %s..%s", start, end)
         return pd.DataFrame()

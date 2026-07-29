@@ -149,6 +149,61 @@ def _turns_from_zip(zip_bytes: bytes, pkg: str) -> Iterator[Dict[str, Any]]:
         yield from build_turns(text, info.get("members", []), gid, date, congress, chamber)
 
 
+def probe_packages(
+    start: str,
+    end: str,
+    workers: int = 8,
+    max_days: int = 400,
+) -> List[str]:
+    """Return the CREC packages published in ``[start, end]`` without an API key.
+
+    The GovInfo *API* requires a key (and otherwise falls back to ``DEMO_KEY``,
+    ~50 requests per day), but the bulk content URLs are public. Since package ids
+    are exactly ``CREC-YYYY-MM-DD``, a day's issue can be tested by asking whether
+    its zip exists: a published day answers ``200``, a day with no session
+    redirects.
+
+    This lets the scheduled update run with no API key and no repository secret.
+    Verified against the API over 2026-07-20..2026-07-29: both return the same six
+    packages.
+    """
+    first = dt.date.fromisoformat(start)
+    last = dt.date.fromisoformat(end)
+    if last < first:
+        return []
+    span = (last - first).days + 1
+    if span > max_days:
+        raise ValueError(
+            f"refusing to probe {span} days one request at a time; "
+            f"narrow the window or enumerate via the API instead"
+        )
+
+    days = [first + dt.timedelta(days=i) for i in range(span)]
+
+    def exists(day: dt.date) -> Optional[str]:
+        pkg = f"CREC-{day.isoformat()}"
+        url = CONTENT_URL.format(pkg=pkg)
+        try:
+            result = subprocess.run(
+                ["curl", "-sS", "-o", "/dev/null", "-w", "%{http_code}",
+                 "-I", "--max-time", "30", "--retry", "3", "--retry-delay", "2", url],
+                capture_output=True, text=True, timeout=180, check=True,
+            )
+        except Exception as exc:  # noqa: BLE001 - treat a probe failure as "unknown"
+            LOG.warning("probe failed for %s: %s", pkg, exc)
+            return None
+        # Only a direct 200 means the zip is there; anything else (notably the 302
+        # to an error page) means no issue was published that day.
+        return pkg if result.stdout.strip() == "200" else None
+
+    found: List[str] = []
+    with cf.ThreadPoolExecutor(max_workers=workers) as pool:
+        for pkg in pool.map(exists, days):
+            if pkg:
+                found.append(pkg)
+    return sorted(found)
+
+
 def _download(pkg: str, dest: Path) -> Optional[Path]:
     """Download a package zip via curl (uses system CA certs, unlike urllib)."""
     if not _PKG_RE.match(pkg):

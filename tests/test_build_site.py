@@ -154,6 +154,36 @@ def test_workflow_references_scripts_that_exist():
         assert (ROOT / script).exists()
 
 
+def test_workflow_needs_no_api_key_secret():
+    # The scheduled job discovers issues by probing public bulk URLs, so it must not
+    # depend on a repository secret. The user cannot publish one for a public repo,
+    # and the DEMO_KEY fallback (~50 requests/day) would eventually break the job.
+    from analysis.ingest import govinfo_bulk
+
+    updater = (ROOT / "scripts" / "update_speakers.py").read_text()
+    assert "probe_packages" in updater
+    assert "iter_packages" not in updater, "discovery must not use the API-key path"
+    assert hasattr(govinfo_bulk, "probe_packages")
+
+    workflow = (ROOT / ".github" / "workflows" / "update-site.yml").read_text()
+    assert "GOVINFO_API_KEY" not in workflow
+
+
+def test_probe_rejects_an_absurdly_wide_window():
+    # Probing costs one request per day, so a multi-year window must fail loudly
+    # rather than silently issuing thousands of requests.
+    from analysis.ingest.govinfo_bulk import probe_packages
+
+    with pytest.raises(ValueError):
+        probe_packages("1994-01-01", "2026-01-01")
+
+
+def test_probe_handles_an_inverted_range():
+    from analysis.ingest.govinfo_bulk import probe_packages
+
+    assert probe_packages("2026-07-28", "2026-07-20") == []
+
+
 def test_committed_site_state_is_not_gitignored():
     # CI can only update incrementally if the state file is actually committed.
     ignore = (ROOT / ".gitignore").read_text()
