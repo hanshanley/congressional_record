@@ -91,6 +91,21 @@
   },
   {
     "rank":7,
+    "bioguide":"T000278",
+    "speaker_name":"Mr. TUBERVILLE",
+    "party":"R",
+    "state":"AL",
+    "chamber":"senate",
+    "turns":89,
+    "words":64566,
+    "profanity_hits":8,
+    "profanity_quoted_hits":0,
+    "first_date":"2025-01-15",
+    "last_date":"2026-07-29",
+    "profanity_per_100k":12.3904222036
+  },
+  {
+    "rank":8,
     "bioguide":"K000393",
     "speaker_name":"Mr. KENNEDY",
     "party":"R",
@@ -105,7 +120,7 @@
     "profanity_per_100k":12.3534135129
   },
   {
-    "rank":8,
+    "rank":9,
     "bioguide":"S001150",
     "speaker_name":"Mr. SCHIFF",
     "party":"D",
@@ -120,7 +135,7 @@
     "profanity_per_100k":12.2283558102
   },
   {
-    "rank":9,
+    "rank":10,
     "bioguide":"J000298",
     "speaker_name":"Ms. JAYAPAL",
     "party":"D",
@@ -135,67 +150,22 @@
     "profanity_per_100k":11.5986854823
   },
   {
-    "rank":10,
+    "rank":11,
     "bioguide":"R000608",
     "speaker_name":"Ms. ROSEN",
     "party":"D",
     "state":"NV",
     "chamber":"senate",
-    "turns":94,
-    "words":43154,
+    "turns":97,
+    "words":44052,
     "profanity_hits":5,
     "profanity_quoted_hits":0,
     "first_date":"2025-01-15",
-    "last_date":"2026-07-23",
-    "profanity_per_100k":11.5864114566
-  },
-  {
-    "rank":11,
-    "bioguide":"T000278",
-    "speaker_name":"Mr. TUBERVILLE",
-    "party":"R",
-    "state":"AL",
-    "chamber":"senate",
-    "turns":88,
-    "words":62428,
-    "profanity_hits":7,
-    "profanity_quoted_hits":0,
-    "first_date":"2025-01-15",
-    "last_date":"2026-07-14",
-    "profanity_per_100k":11.2129172807
+    "last_date":"2026-07-29",
+    "profanity_per_100k":11.3502224644
   },
   {
     "rank":12,
-    "bioguide":"S000148",
-    "speaker_name":"Mr. SCHUMER",
-    "party":"D",
-    "state":"NY",
-    "chamber":"senate",
-    "turns":957,
-    "words":374207,
-    "profanity_hits":33,
-    "profanity_quoted_hits":4,
-    "first_date":"2025-01-06",
-    "last_date":"2026-07-28",
-    "profanity_per_100k":8.818648502
-  },
-  {
-    "rank":13,
-    "bioguide":"V000128",
-    "speaker_name":"Mr. VAN HOLLEN",
-    "party":"D",
-    "state":"MD",
-    "chamber":"senate",
-    "turns":190,
-    "words":125809,
-    "profanity_hits":11,
-    "profanity_quoted_hits":0,
-    "first_date":"2025-01-16",
-    "last_date":"2026-07-27",
-    "profanity_per_100k":8.7434126334
-  },
-  {
-    "rank":14,
     "bioguide":"M001176",
     "speaker_name":"Mr. MERKLEY",
     "party":"D",
@@ -208,6 +178,36 @@
     "first_date":"2025-01-15",
     "last_date":"2026-07-22",
     "profanity_per_100k":8.6040748899
+  },
+  {
+    "rank":13,
+    "bioguide":"V000128",
+    "speaker_name":"Mr. VAN HOLLEN",
+    "party":"D",
+    "state":"MD",
+    "chamber":"senate",
+    "turns":193,
+    "words":127881,
+    "profanity_hits":11,
+    "profanity_quoted_hits":0,
+    "first_date":"2025-01-16",
+    "last_date":"2026-07-29",
+    "profanity_per_100k":8.6017469366
+  },
+  {
+    "rank":14,
+    "bioguide":"S000148",
+    "speaker_name":"Mr. SCHUMER",
+    "party":"D",
+    "state":"NY",
+    "chamber":"senate",
+    "turns":966,
+    "words":408682,
+    "profanity_hits":33,
+    "profanity_quoted_hits":4,
+    "first_date":"2025-01-06",
+    "last_date":"2026-07-30",
+    "profanity_per_100k":8.0747378157
   },
   {
     "rank":15,
@@ -286,21 +286,6 @@
   },
   {
     "rank":20,
-    "bioguide":"L000577",
-    "speaker_name":"Mr. LEE",
-    "party":"R",
-    "state":"UT",
-    "chamber":"senate",
-    "turns":116,
-    "words":141377,
-    "profanity_hits":9,
-    "profanity_quoted_hits":0,
-    "first_date":"2025-01-28",
-    "last_date":"2026-07-20",
-    "profanity_per_100k":6.3659576876
-  },
-  {
-    "rank":21,
     "bioguide":"W000802",
     "speaker_name":"Mr. WHITEHOUSE",
     "party":"D",
@@ -315,7 +300,7 @@
     "profanity_per_100k":6.292441205
   },
   {
-    "rank":22,
+    "rank":21,
     "bioguide":"R000614",
     "speaker_name":"Mr. ROY",
     "party":"R",
@@ -328,6 +313,21 @@
     "first_date":"2025-01-09",
     "last_date":"2026-07-22",
     "profanity_per_100k":6.1917861534
+  },
+  {
+    "rank":22,
+    "bioguide":"L000577",
+    "speaker_name":"Mr. LEE",
+    "party":"R",
+    "state":"UT",
+    "chamber":"senate",
+    "turns":123,
+    "words":145658,
+    "profanity_hits":9,
+    "profanity_quoted_hits":0,
+    "first_date":"2025-01-28",
+    "last_date":"2026-07-29",
+    "profanity_per_100k":6.1788573233
   },
   {
     "rank":23,
@@ -351,13 +351,13 @@
     "party":"R",
     "state":"NC",
     "chamber":"senate",
-    "turns":138,
-    "words":44394,
+    "turns":139,
+    "words":44555,
     "profanity_hits":2,
     "profanity_quoted_hits":0,
     "first_date":"2025-01-16",
-    "last_date":"2026-07-16",
-    "profanity_per_100k":4.5051133036
+    "last_date":"2026-07-30",
+    "profanity_per_100k":4.4888340254
   },
   {
     "rank":25,
