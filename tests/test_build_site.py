@@ -18,6 +18,7 @@ import pytest
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
+from analysis.bills import canonical_bill, save_bills  # noqa: E402
 from analysis.speakers import save_daily  # noqa: E402
 
 
@@ -47,33 +48,68 @@ def store(tmp_path: Path):
     ])
     path = tmp_path / "speaker_daily"
     save_daily(daily, path)
-    return path, daily
+    bills = pd.DataFrame([
+        canonical_bill(
+            source="test",
+            source_url="https://example.test/old",
+            source_updated_at="",
+            congress=118,
+            bill_type="HR",
+            bill_number=1,
+            title="Old bill",
+            origin_chamber="House",
+            introduced_date="2023-01-01",
+            sponsors=[{"bioguideId": "OLD", "fullName": "Mr. OLD", "party": "D", "state": "CA"}],
+            actions=[{"actionCode": "8000", "actionDate": "2023-02-01"}],
+            laws=[],
+        ),
+        canonical_bill(
+            source="test",
+            source_url="https://example.test/new",
+            source_updated_at="",
+            congress=119,
+            bill_type="HR",
+            bill_number=1,
+            title="New bill",
+            origin_chamber="House",
+            introduced_date="2025-01-01",
+            sponsors=[{"bioguideId": "NEW", "fullName": "Mr. NEW", "party": "R", "state": "TX"}],
+            actions=[
+                {"actionCode": "8000", "actionDate": "2025-02-01"},
+                {"actionCode": "36000", "actionDate": "2025-03-01"},
+            ],
+            laws=[{"type": "Public Law", "number": "119-1"}],
+        ),
+    ])
+    bill_path = tmp_path / "bills"
+    save_bills(bills, bill_path)
+    return path, daily, bill_path
 
 
 # ---------------------------------------------------------------- congress selection
 
 
 def test_default_congress_is_the_latest_present(store):
-    _, daily = store
+    _, daily, _ = store
     module = _load_build_site()
     assert module.resolve_congress("latest", daily) == 119
 
 
 def test_congress_all_spans_every_congress(store):
-    _, daily = store
+    _, daily, _ = store
     module = _load_build_site()
     assert module.resolve_congress("all", daily) is None
 
 
 def test_explicit_congress_is_honoured(store):
-    _, daily = store
+    _, daily, _ = store
     module = _load_build_site()
     assert module.resolve_congress("118", daily) == 118
     assert module.resolve_congress(119, daily) == 119
 
 
 def test_invalid_congress_fails_loudly(store):
-    _, daily = store
+    _, daily, _ = store
     module = _load_build_site()
     with pytest.raises(SystemExit):
         module.resolve_congress("last-year", daily)
@@ -82,10 +118,13 @@ def test_invalid_congress_fails_loudly(store):
 def test_ci_default_ranks_the_sitting_congress_only(store, tmp_path):
     # A default of "all" would make the scheduled build publish an all-time board,
     # silently differing from what a local build of the same data produces.
-    path, _ = store
+    path, _, bills = store
     module = _load_build_site()
     out = tmp_path / "site"
-    assert module.main(["--daily", str(path), "--out", str(out), "--min-words", "1000"]) == 0
+    assert module.main([
+        "--daily", str(path), "--bills", str(bills), "--out", str(out),
+        "--min-words", "1000",
+    ]) == 0
     meta = json.loads((out / "data" / "meta.json").read_text())
     assert meta["congress"] == 119
     board = json.loads((out / "data" / "leaderboard.json").read_text())
@@ -96,28 +135,112 @@ def test_ci_default_ranks_the_sitting_congress_only(store, tmp_path):
 
 
 def test_build_writes_html_json_and_figures(store, tmp_path):
-    path, _ = store
+    path, _, bills = store
     module = _load_build_site()
     out = tmp_path / "site"
-    assert module.main(["--daily", str(path), "--out", str(out), "--min-words", "1000"]) == 0
+    assert module.main([
+        "--daily", str(path), "--bills", str(bills), "--out", str(out),
+        "--min-words", "1000",
+    ]) == 0
     for rel in ("index.html", "data/leaderboard.json", "data/timeseries.json",
-                "data/meta.json", "figures/leaderboard.png", "figures/trend.png"):
+                "data/meta.json", "data/congresses.json", "data/congress_119.json",
+                "figures/leaderboard.png", "figures/trend.png"):
         assert (out / rel).exists(), rel
+
+
+def test_legacy_leaderboard_dates_use_selected_congress_scope(store, tmp_path):
+    path, daily, bills = store
+    daily = pd.concat([
+        daily,
+        _daily([
+            ["NEW", "2023-04-01", "house", "Mr. NEW", "R", "TX", 118,
+             1, 1_000, 0, 0, 0, 0],
+            ["NEW", "2025-04-01", "house", "Mr. NEW", "R", "TX", 119,
+             1, 1_000, 0, 0, 0, 0],
+        ]),
+    ], ignore_index=True)
+    save_daily(daily, path)
+    module = _load_build_site()
+    out = tmp_path / "site"
+
+    assert module.main([
+        "--daily", str(path), "--bills", str(bills), "--out", str(out),
+        "--congress", "119", "--min-words", "1000",
+    ]) == 0
+
+    legacy = json.loads((out / "data" / "leaderboard.json").read_text())
+    new_row = next(row for row in legacy if row["bioguide"] == "NEW")
+    assert new_row["first_date"] == "2025-02-01"
+    assert new_row["last_date"] == "2025-04-01"
+
+    payload = json.loads((out / "data" / "congress_119.json").read_text())
+    payload_row = next(
+        row for row in payload["leaderboards"]["profanity"]
+        if row["bioguide"] == "NEW"
+    )
+    assert "first_date" not in payload_row
+    assert "last_date" not in payload_row
+
+
+def test_legacy_leaderboard_dates_span_all_congresses(store, tmp_path):
+    path, daily, bills = store
+    daily = pd.concat([
+        daily,
+        _daily([
+            ["NEW", "2023-04-01", "house", "Mr. NEW", "R", "TX", 118,
+             1, 1_000, 0, 0, 0, 0],
+            ["NEW", "2025-04-01", "house", "Mr. NEW", "R", "TX", 119,
+             1, 1_000, 0, 0, 0, 0],
+        ]),
+    ], ignore_index=True)
+    save_daily(daily, path)
+    module = _load_build_site()
+    out = tmp_path / "site"
+
+    assert module.main([
+        "--daily", str(path), "--bills", str(bills), "--out", str(out),
+        "--congress", "all", "--min-words", "1000",
+    ]) == 0
+
+    legacy = json.loads((out / "data" / "leaderboard.json").read_text())
+    new_row = next(row for row in legacy if row["bioguide"] == "NEW")
+    assert new_row["first_date"] == "2023-04-01"
+    assert new_row["last_date"] == "2025-04-01"
 
 
 def test_html_escapes_member_names(tmp_path):
     module = _load_build_site()
     daily = _daily([
-        ["X", "2025-02-01", "house", "<script>alert(1)</script>", "D", "CA", 119,
+        ["X", "2025-02-01", "house", "<script>alert(1)</script>",
+         "<a href='javascript:alert(2)'>D</a>", "CA", 119,
          20, 60_000, 6, 0, 0, 0],
     ])
     path = tmp_path / "speaker_daily"
     save_daily(daily, path)
+    bills = pd.DataFrame([
+        canonical_bill(
+            source="test", source_url="https://example.test/x", source_updated_at="",
+            congress=119, bill_type="HR", bill_number=1, title="<b>bill</b>",
+            origin_chamber="House", introduced_date="2025-01-01",
+            sponsors=[{
+                "bioguideId": "X", "fullName": "<script>alert(1)</script>",
+                "party": "D", "state": "CA",
+            }],
+            actions=[], laws=[],
+        )
+    ])
+    bill_path = tmp_path / "bills"
+    save_bills(bills, bill_path)
     out = tmp_path / "site"
-    assert module.main(["--daily", str(path), "--out", str(out), "--min-words", "1000"]) == 0
+    assert module.main([
+        "--daily", str(path), "--bills", str(bill_path), "--out", str(out),
+        "--min-words", "1000",
+    ]) == 0
     html = (out / "index.html").read_text()
     assert "<script>alert(1)</script>" not in html
     assert "&lt;script&gt;" in html
+    assert "href='javascript:alert(2)'" not in html
+    assert "&lt;a href=&#x27;javascript:alert(2)&#x27;&gt;D&lt;/a&gt;" in html
 
 
 def test_missing_table_is_reported_not_crashed(tmp_path):
@@ -126,14 +249,52 @@ def test_missing_table_is_reported_not_crashed(tmp_path):
 
 
 def test_quoted_hits_are_shown_so_the_exclusion_is_auditable(store, tmp_path):
-    path, _ = store
+    path, _, bills = store
     module = _load_build_site()
     out = tmp_path / "site"
-    module.main(["--daily", str(path), "--out", str(out), "--congress", "118",
-                 "--min-words", "1000"])
+    module.main([
+        "--daily", str(path), "--bills", str(bills), "--out", str(out),
+        "--congress", "118", "--min-words", "1000",
+    ])
     board = json.loads((out / "data" / "leaderboard.json").read_text())
     assert board[0]["profanity_quoted_hits"] == 1
     assert "Quoted" in (out / "index.html").read_text()
+
+
+def test_payload_contains_all_five_transparent_leaderboards(store, tmp_path):
+    path, _, bills = store
+    module = _load_build_site()
+    out = tmp_path / "site"
+    assert module.main([
+        "--daily", str(path), "--bills", str(bills), "--out", str(out),
+        "--min-words", "1000",
+    ]) == 0
+    payload = json.loads((out / "data" / "congress_119.json").read_text())
+    assert set(payload["leaderboards"]) == {
+        "speech", "sponsored", "passed", "enacted", "profanity",
+    }
+    assert payload["leaderboards"]["enacted"][0]["bioguide"] == "NEW"
+    assert payload["leaderboards"]["enacted"][0]["examples"][0]["url"] == (
+        "https://www.congress.gov/bill/119th-congress/house-bill/1"
+    )
+
+
+def test_unseeded_congress_is_labeled_unavailable_not_zero(store, tmp_path):
+    path, daily, bills = store
+    older = _daily([
+        ["LEGACY", "1994-01-25", "house", "Mr. LEGACY", "D", "CA", 103,
+         10, 30_000, 1, 0, 0, 0],
+    ])
+    save_daily(pd.concat([daily, older], ignore_index=True), path)
+    module = _load_build_site()
+    out = tmp_path / "site"
+    assert module.main([
+        "--daily", str(path), "--bills", str(bills), "--out", str(out),
+        "--min-words", "1000",
+    ]) == 0
+    payload = json.loads((out / "data" / "congress_103.json").read_text())
+    assert "has not been seeded" in payload["coverage"]["warning"]
+    assert "partial" in payload["coverage"]["warning"]
 
 
 # ----------------------------------------------------------------------- workflow
@@ -149,7 +310,9 @@ def test_workflow_installs_every_requirements_file_it_needs():
 
 def test_workflow_references_scripts_that_exist():
     workflow = (ROOT / ".github" / "workflows" / "update-site.yml").read_text()
-    for script in ("scripts/update_speakers.py", "scripts/build_site.py"):
+    for script in (
+        "scripts/update_speakers.py", "scripts/update_bills.py", "scripts/build_site.py",
+    ):
         assert script in workflow
         assert (ROOT / script).exists()
 
@@ -167,6 +330,7 @@ def test_workflow_needs_no_api_key_secret():
 
     workflow = (ROOT / ".github" / "workflows" / "update-site.yml").read_text()
     assert "GOVINFO_API_KEY" not in workflow
+    assert "CONGRESS_API_KEY" not in workflow
 
 
 def test_probe_rejects_an_absurdly_wide_window():

@@ -1,0 +1,3986 @@
+{
+  "congress": 118,
+  "label": "Congress 118",
+  "generated_utc": "2026-08-03T20:42:26+00:00",
+  "min_words": 25000,
+  "top": 25,
+  "coverage": {
+    "speech_first_date": "2023-01-04",
+    "speech_last_date": "2024-12-31",
+    "speaker_days": 23249,
+    "members_with_speech": 552,
+    "bills": 16213,
+    "members_with_bills": 549,
+    "bill_sources": [
+      "govinfo"
+    ],
+    "warning": ""
+  },
+  "definitions": {
+    "speech": "Attributed non-procedural spoken words; turns and active days provide context.",
+    "sponsored": "Distinct H.R. and S. bills for which the member is the official sponsor.",
+    "passed": "Sponsored bills with an official measure-level House or Senate passage action.",
+    "enacted": "Sponsored bills with an assigned public or private law number.",
+    "profanity": "Unquoted curated profanity hits per 100,000 attributed words."
+  },
+  "caveats": [
+    "Speech counts include only remarks attributable to a specific member by Bioguide ID; procedural speech and submitted Extensions of Remarks are excluded.",
+    "Profanity uses a narrow, hand-curated list. Passages marked as quotations are excluded from a member's rate and retained as a separate audit count.",
+    "Members below the word threshold are omitted from the profanity ranking because rates computed from small samples are unstable.",
+    "Legislative counts cover sponsored House and Senate bills (H.R. and S.) only; cosponsorships, resolutions, and amendments are outside this version.",
+    "A sponsored bill passing or becoming law is descriptive. It does not establish that one member personally caused the outcome or measure legislative effectiveness by itself.",
+    "The Congressional Record is lightly edited rather than verbatim, and source metadata can be corrected after publication."
+  ],
+  "leaderboards": {
+    "speech": [
+      {
+        "rank": 1,
+        "bioguide": "D000563",
+        "turns": 1346,
+        "words": 686310,
+        "active_days": 225,
+        "profanity_hits": 3,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 113,
+        "bills_passed": 4,
+        "bills_enacted": 2,
+        "passage_share": 0.0353982301,
+        "enactment_share": 0.017699115,
+        "speaker_name": "Mr. DURBIN",
+        "party": "D",
+        "state": "IL",
+        "chamber": "senate",
+        "profanity_per_100k": 0.4371202518,
+        "member_url": "https://bioguide.congress.gov/search/bio/D000563"
+      },
+      {
+        "rank": 2,
+        "bioguide": "S000148",
+        "turns": 3261,
+        "words": 395911,
+        "active_days": 231,
+        "profanity_hits": 2,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 6,
+        "bills_passed": 0,
+        "bills_enacted": 0,
+        "passage_share": 0.0,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. SCHUMER",
+        "party": "D",
+        "state": "NY",
+        "chamber": "senate",
+        "profanity_per_100k": 0.5051640394,
+        "member_url": "https://bioguide.congress.gov/search/bio/S000148"
+      },
+      {
+        "rank": 3,
+        "bioguide": "G000377",
+        "turns": 92,
+        "words": 387532,
+        "active_days": 13,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 5,
+        "bills_passed": 4,
+        "bills_enacted": 3,
+        "passage_share": 0.8,
+        "enactment_share": 0.6,
+        "speaker_name": "Ms. GRANGER",
+        "party": "R",
+        "state": "TX",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/G000377"
+      },
+      {
+        "rank": 4,
+        "bioguide": "C000141",
+        "turns": 459,
+        "words": 312879,
+        "active_days": 137,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 66,
+        "bills_passed": 0,
+        "bills_enacted": 0,
+        "passage_share": 0.0,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. CARDIN",
+        "party": "D",
+        "state": "MD",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/C000141"
+      },
+      {
+        "rank": 5,
+        "bioguide": "T000250",
+        "turns": 962,
+        "words": 311028,
+        "active_days": 228,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 45,
+        "bills_passed": 1,
+        "bills_enacted": 0,
+        "passage_share": 0.0222222222,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. THUNE",
+        "party": "R",
+        "state": "SD",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/T000250"
+      },
+      {
+        "rank": 6,
+        "bioguide": "G000546",
+        "turns": 249,
+        "words": 296643,
+        "active_days": 21,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 16,
+        "bills_passed": 7,
+        "bills_enacted": 4,
+        "passage_share": 0.4375,
+        "enactment_share": 0.25,
+        "speaker_name": "Mr. GRAVES",
+        "party": "R",
+        "state": "MO",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/G000546"
+      },
+      {
+        "rank": 7,
+        "bioguide": "M001111",
+        "turns": 313,
+        "words": 279959,
+        "active_days": 93,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 33,
+        "bills_passed": 1,
+        "bills_enacted": 1,
+        "passage_share": 0.0303030303,
+        "enactment_share": 0.0303030303,
+        "speaker_name": "Mrs. MURRAY",
+        "party": "D",
+        "state": "WA",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/M001111"
+      },
+      {
+        "rank": 8,
+        "bioguide": "C001056",
+        "turns": 247,
+        "words": 262511,
+        "active_days": 150,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 105,
+        "bills_passed": 21,
+        "bills_enacted": 7,
+        "passage_share": 0.2,
+        "enactment_share": 0.0666666667,
+        "speaker_name": "Mr. CORNYN",
+        "party": "R",
+        "state": "TX",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/C001056"
+      },
+      {
+        "rank": 9,
+        "bioguide": "S001183",
+        "turns": 199,
+        "words": 249045,
+        "active_days": 58,
+        "profanity_hits": 137,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 25,
+        "bills_passed": 1,
+        "bills_enacted": 1,
+        "passage_share": 0.04,
+        "enactment_share": 0.04,
+        "speaker_name": "Mr. SCHWEIKERT",
+        "party": "R",
+        "state": "AZ",
+        "chamber": "house",
+        "profanity_per_100k": 55.0101387299,
+        "member_url": "https://bioguide.congress.gov/search/bio/S001183"
+      },
+      {
+        "rank": 10,
+        "bioguide": "R000614",
+        "turns": 508,
+        "words": 241574,
+        "active_days": 92,
+        "profanity_hits": 57,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 41,
+        "bills_passed": 2,
+        "bills_enacted": 0,
+        "passage_share": 0.0487804878,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. ROY",
+        "party": "R",
+        "state": "TX",
+        "chamber": "house",
+        "profanity_per_100k": 23.5952544562,
+        "member_url": "https://bioguide.congress.gov/search/bio/R000614"
+      },
+      {
+        "rank": 11,
+        "bioguide": "M000312",
+        "turns": 718,
+        "words": 206398,
+        "active_days": 93,
+        "profanity_hits": 39,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 17,
+        "bills_passed": 1,
+        "bills_enacted": 0,
+        "passage_share": 0.0588235294,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. McGOVERN",
+        "party": "D",
+        "state": "MA",
+        "chamber": "house",
+        "profanity_per_100k": 18.8955319334,
+        "member_url": "https://bioguide.congress.gov/search/bio/M000312"
+      },
+      {
+        "rank": 12,
+        "bioguide": "J000032",
+        "turns": 327,
+        "words": 199289,
+        "active_days": 103,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 46,
+        "bills_passed": 1,
+        "bills_enacted": 0,
+        "passage_share": 0.0217391304,
+        "enactment_share": 0.0,
+        "speaker_name": "Ms. JACKSON LEE",
+        "party": "D",
+        "state": "TX",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/J000032"
+      },
+      {
+        "rank": 13,
+        "bioguide": "L000577",
+        "turns": 237,
+        "words": 195011,
+        "active_days": 66,
+        "profanity_hits": 3,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 119,
+        "bills_passed": 3,
+        "bills_enacted": 0,
+        "passage_share": 0.025210084,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. LEE",
+        "party": "R",
+        "state": "UT",
+        "chamber": "senate",
+        "profanity_per_100k": 1.5383747583,
+        "member_url": "https://bioguide.congress.gov/search/bio/L000577"
+      },
+      {
+        "rank": 14,
+        "bioguide": "R000575",
+        "turns": 182,
+        "words": 191186,
+        "active_days": 15,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 4,
+        "bills_passed": 2,
+        "bills_enacted": 1,
+        "passage_share": 0.5,
+        "enactment_share": 0.25,
+        "speaker_name": "Mr. ROGERS of Alabama",
+        "party": "R",
+        "state": "AL",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/R000575"
+      },
+      {
+        "rank": 15,
+        "bioguide": "M000355",
+        "turns": 441,
+        "words": 182887,
+        "active_days": 211,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 1,
+        "bills_sponsored": 6,
+        "bills_passed": 2,
+        "bills_enacted": 0,
+        "passage_share": 0.3333333333,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. McCONNELL",
+        "party": "R",
+        "state": "KY",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/M000355"
+      },
+      {
+        "rank": 16,
+        "bioguide": "G000576",
+        "turns": 309,
+        "words": 148743,
+        "active_days": 112,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 30,
+        "bills_passed": 1,
+        "bills_enacted": 1,
+        "passage_share": 0.0333333333,
+        "enactment_share": 0.0333333333,
+        "speaker_name": "Mr. GROTHMAN",
+        "party": "R",
+        "state": "WI",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/G000576"
+      },
+      {
+        "rank": 17,
+        "bioguide": "W000821",
+        "turns": 673,
+        "words": 148255,
+        "active_days": 46,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 12,
+        "bills_passed": 3,
+        "bills_enacted": 2,
+        "passage_share": 0.25,
+        "enactment_share": 0.1666666667,
+        "speaker_name": "Mr. WESTERMAN",
+        "party": "R",
+        "state": "AR",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/W000821"
+      },
+      {
+        "rank": 18,
+        "bioguide": "C001053",
+        "turns": 285,
+        "words": 145620,
+        "active_days": 35,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 20,
+        "bills_passed": 5,
+        "bills_enacted": 2,
+        "passage_share": 0.25,
+        "enactment_share": 0.1,
+        "speaker_name": "Mr. COLE",
+        "party": "R",
+        "state": "OK",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/C001053"
+      },
+      {
+        "rank": 19,
+        "bioguide": "K000401",
+        "turns": 243,
+        "words": 128204,
+        "active_days": 71,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 14,
+        "bills_passed": 3,
+        "bills_enacted": 1,
+        "passage_share": 0.2142857143,
+        "enactment_share": 0.0714285714,
+        "speaker_name": "Mr. KILEY of California",
+        "party": "I",
+        "state": "CA",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/K000401"
+      },
+      {
+        "rank": 20,
+        "bioguide": "L000578",
+        "turns": 291,
+        "words": 124510,
+        "active_days": 161,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 16,
+        "bills_passed": 0,
+        "bills_enacted": 0,
+        "passage_share": 0.0,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. LaMALFA",
+        "party": "R",
+        "state": "CA",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/L000578"
+      },
+      {
+        "rank": 21,
+        "bioguide": "W000802",
+        "turns": 273,
+        "words": 121115,
+        "active_days": 67,
+        "profanity_hits": 10,
+        "profanity_quoted_hits": 2,
+        "bills_sponsored": 51,
+        "bills_passed": 1,
+        "bills_enacted": 1,
+        "passage_share": 0.0196078431,
+        "enactment_share": 0.0196078431,
+        "speaker_name": "Mr. WHITEHOUSE",
+        "party": "D",
+        "state": "RI",
+        "chamber": "senate",
+        "profanity_per_100k": 8.2566156133,
+        "member_url": "https://bioguide.congress.gov/search/bio/W000802"
+      },
+      {
+        "rank": 22,
+        "bioguide": "S001198",
+        "turns": 145,
+        "words": 117494,
+        "active_days": 40,
+        "profanity_hits": 9,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 57,
+        "bills_passed": 5,
+        "bills_enacted": 0,
+        "passage_share": 0.0877192982,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. SULLIVAN",
+        "party": "R",
+        "state": "AK",
+        "chamber": "senate",
+        "profanity_per_100k": 7.6599656153,
+        "member_url": "https://bioguide.congress.gov/search/bio/S001198"
+      },
+      {
+        "rank": 23,
+        "bioguide": "P000603",
+        "turns": 178,
+        "words": 117111,
+        "active_days": 47,
+        "profanity_hits": 9,
+        "profanity_quoted_hits": 1,
+        "bills_sponsored": 36,
+        "bills_passed": 0,
+        "bills_enacted": 0,
+        "passage_share": 0.0,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. PAUL",
+        "party": "R",
+        "state": "KY",
+        "chamber": "senate",
+        "profanity_per_100k": 7.685016779,
+        "member_url": "https://bioguide.congress.gov/search/bio/P000603"
+      },
+      {
+        "rank": 24,
+        "bioguide": "B001295",
+        "turns": 338,
+        "words": 111979,
+        "active_days": 33,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 33,
+        "bills_passed": 3,
+        "bills_enacted": 2,
+        "passage_share": 0.0909090909,
+        "enactment_share": 0.0606060606,
+        "speaker_name": "Mr. BOST",
+        "party": "R",
+        "state": "IL",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/B001295"
+      },
+      {
+        "rank": 25,
+        "bioguide": "M000639",
+        "turns": 148,
+        "words": 111313,
+        "active_days": 55,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 51,
+        "bills_passed": 2,
+        "bills_enacted": 0,
+        "passage_share": 0.0392156863,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. MENENDEZ",
+        "party": "D",
+        "state": "NJ",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/M000639"
+      }
+    ],
+    "sponsored": [
+      {
+        "rank": 1,
+        "bioguide": "B001302",
+        "turns": 240,
+        "words": 57217,
+        "active_days": 41,
+        "profanity_hits": 2,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 604,
+        "bills_passed": 1,
+        "bills_enacted": 0,
+        "passage_share": 0.0016556291,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. BIGGS of Arizona",
+        "party": "R",
+        "state": "AZ",
+        "chamber": "house",
+        "profanity_per_100k": 3.4954646346,
+        "member_url": "https://bioguide.congress.gov/search/bio/B001302",
+        "examples": [
+          {
+            "bill_id": "118-hr-10284",
+            "label": "HR 10284",
+            "title": "Secret Service Prioritization Act of 2024",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/10284"
+          },
+          {
+            "bill_id": "118-hr-10270",
+            "label": "HR 10270",
+            "title": "Congressional Border Security Assessment Act",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/10270"
+          },
+          {
+            "bill_id": "118-hr-10251",
+            "label": "HR 10251",
+            "title": "End Endless Criminal Statutes Act",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/10251"
+          }
+        ]
+      },
+      {
+        "rank": 2,
+        "bioguide": "R000595",
+        "turns": 149,
+        "words": 51778,
+        "active_days": 33,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 248,
+        "bills_passed": 3,
+        "bills_enacted": 2,
+        "passage_share": 0.0120967742,
+        "enactment_share": 0.0080645161,
+        "speaker_name": "Mr. RUBIO",
+        "party": "R",
+        "state": "FL",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/R000595",
+        "examples": [
+          {
+            "bill_id": "118-s-5249",
+            "label": "S 5249",
+            "title": "NO GOTION Act",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5249"
+          },
+          {
+            "bill_id": "118-s-5202",
+            "label": "S 5202",
+            "title": "FREED Act",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5202"
+          },
+          {
+            "bill_id": "118-s-5188",
+            "label": "S 5188",
+            "title": "Patriotic Investment Act",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5188"
+          }
+        ]
+      },
+      {
+        "rank": 3,
+        "bioguide": "P000595",
+        "turns": 85,
+        "words": 31908,
+        "active_days": 45,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 152,
+        "bills_passed": 34,
+        "bills_enacted": 15,
+        "passage_share": 0.2236842105,
+        "enactment_share": 0.0986842105,
+        "speaker_name": "Mr. PETERS",
+        "party": "D",
+        "state": "MI",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/P000595",
+        "examples": [
+          {
+            "bill_id": "118-s-5639",
+            "label": "S 5639",
+            "title": "Counter-UAS Authority Extension Act",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5639"
+          },
+          {
+            "bill_id": "118-s-5562",
+            "label": "S 5562",
+            "title": "A bill to modify United States-Israel anti-tunnel cooperation.",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5562"
+          },
+          {
+            "bill_id": "118-s-5558",
+            "label": "S 5558",
+            "title": "A bill to require all high-mobility multipurpose wheeled vehicles of the Army to be equipped with an anti-lock brake system and electronic stability control kit, and for other purposes.",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5558"
+          }
+        ]
+      },
+      {
+        "rank": 4,
+        "bioguide": "C001070",
+        "turns": 11,
+        "words": 12108,
+        "active_days": 11,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 141,
+        "bills_passed": 1,
+        "bills_enacted": 0,
+        "passage_share": 0.0070921986,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. CASEY",
+        "party": "D",
+        "state": "PA",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/C001070",
+        "examples": [
+          {
+            "bill_id": "118-s-5266",
+            "label": "S 5266",
+            "title": "Clean Slate Act of 2024",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5266"
+          },
+          {
+            "bill_id": "118-s-5240",
+            "label": "S 5240",
+            "title": "CARE for Kids Act of 2024",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5240"
+          },
+          {
+            "bill_id": "118-s-5199",
+            "label": "S 5199",
+            "title": "Fair Flood Protection Act of 2024",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5199"
+          }
+        ]
+      },
+      {
+        "rank": 5,
+        "bioguide": "B001288",
+        "turns": 111,
+        "words": 44414,
+        "active_days": 30,
+        "profanity_hits": 1,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 135,
+        "bills_passed": 1,
+        "bills_enacted": 0,
+        "passage_share": 0.0074074074,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. BOOKER",
+        "party": "D",
+        "state": "NJ",
+        "chamber": "senate",
+        "profanity_per_100k": 2.2515423065,
+        "member_url": "https://bioguide.congress.gov/search/bio/B001288",
+        "examples": [
+          {
+            "bill_id": "118-s-5516",
+            "label": "S 5516",
+            "title": "Vacant Property for the Unhoused Act",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5516"
+          },
+          {
+            "bill_id": "118-s-5507",
+            "label": "S 5507",
+            "title": "Increasing Transparency and Accountability in Federal Spending Act",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5507"
+          },
+          {
+            "bill_id": "118-s-5464",
+            "label": "S 5464",
+            "title": "GME Data Transparency Act of 2024",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5464"
+          }
+        ]
+      },
+      {
+        "rank": 6,
+        "bioguide": "M000133",
+        "turns": 74,
+        "words": 44170,
+        "active_days": 41,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 130,
+        "bills_passed": 2,
+        "bills_enacted": 0,
+        "passage_share": 0.0153846154,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. MARKEY",
+        "party": "D",
+        "state": "MA",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/M000133",
+        "examples": [
+          {
+            "bill_id": "118-s-5634",
+            "label": "S 5634",
+            "title": "Small Business Opportunity Grants Act of 2024",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5634"
+          },
+          {
+            "bill_id": "118-s-5622",
+            "label": "S 5622",
+            "title": "ICEE HOT Act of 2024",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5622"
+          },
+          {
+            "bill_id": "118-s-5597",
+            "label": "S 5597",
+            "title": "NO SPILLS Act of 2024",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5597"
+          }
+        ]
+      },
+      {
+        "rank": 7,
+        "bioguide": "C001098",
+        "turns": 141,
+        "words": 74563,
+        "active_days": 48,
+        "profanity_hits": 8,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 123,
+        "bills_passed": 6,
+        "bills_enacted": 3,
+        "passage_share": 0.0487804878,
+        "enactment_share": 0.0243902439,
+        "speaker_name": "Mr. CRUZ",
+        "party": "R",
+        "state": "TX",
+        "chamber": "senate",
+        "profanity_per_100k": 10.729182034,
+        "member_url": "https://bioguide.congress.gov/search/bio/C001098",
+        "examples": [
+          {
+            "bill_id": "118-s-5599",
+            "label": "S 5599",
+            "title": "Fog Forecast Improvement Act",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5599"
+          },
+          {
+            "bill_id": "118-s-5550",
+            "label": "S 5550",
+            "title": "Maintaining Academy Culture and Assuring Retention of Tradition, Honor, and Unity of the Republic Act (MACARTHUR) Act",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5550"
+          },
+          {
+            "bill_id": "118-s-5529",
+            "label": "S 5529",
+            "title": "A bill to authorize the conveyance by the Secretary of the Army of certain property located at Fort Bliss, Texas, and for other purposes.",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5529"
+          }
+        ]
+      },
+      {
+        "rank": 8,
+        "bioguide": "L000577",
+        "turns": 237,
+        "words": 195011,
+        "active_days": 66,
+        "profanity_hits": 3,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 119,
+        "bills_passed": 3,
+        "bills_enacted": 0,
+        "passage_share": 0.025210084,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. LEE",
+        "party": "R",
+        "state": "UT",
+        "chamber": "senate",
+        "profanity_per_100k": 1.5383747583,
+        "member_url": "https://bioguide.congress.gov/search/bio/L000577",
+        "examples": [
+          {
+            "bill_id": "118-s-5579",
+            "label": "S 5579",
+            "title": "Auto Data Privacy and Autonomy Act",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5579"
+          },
+          {
+            "bill_id": "118-s-5576",
+            "label": "S 5576",
+            "title": "America First Act",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5576"
+          },
+          {
+            "bill_id": "118-s-5533",
+            "label": "S 5533",
+            "title": "A bill to repeal the Impoundment Control Act of 1974.",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5533"
+          }
+        ]
+      },
+      {
+        "rank": 9,
+        "bioguide": "B001310",
+        "turns": 53,
+        "words": 15673,
+        "active_days": 22,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 116,
+        "bills_passed": 7,
+        "bills_enacted": 4,
+        "passage_share": 0.0603448276,
+        "enactment_share": 0.0344827586,
+        "speaker_name": "Mr. BRAUN",
+        "party": "R",
+        "state": "IN",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/B001310",
+        "examples": [
+          {
+            "bill_id": "118-s-5475",
+            "label": "S 5475",
+            "title": "Meeting Demand for Organic Produce Act",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5475"
+          },
+          {
+            "bill_id": "118-s-5263",
+            "label": "S 5263",
+            "title": "Studying NEPA\u2019s Impact on Projects Act",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5263"
+          },
+          {
+            "bill_id": "118-s-5007",
+            "label": "S 5007",
+            "title": "Protecting American Agriculture from Foreign Adversaries Act of 2024",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5007"
+          }
+        ]
+      },
+      {
+        "rank": 10,
+        "bioguide": "K000367",
+        "turns": 110,
+        "words": 77885,
+        "active_days": 60,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 116,
+        "bills_passed": 6,
+        "bills_enacted": 3,
+        "passage_share": 0.0517241379,
+        "enactment_share": 0.025862069,
+        "speaker_name": "Ms. KLOBUCHAR",
+        "party": "D",
+        "state": "MN",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/K000367",
+        "examples": [
+          {
+            "bill_id": "118-s-5615",
+            "label": "S 5615",
+            "title": "Election Security Act of 2024",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5615"
+          },
+          {
+            "bill_id": "118-s-5610",
+            "label": "S 5610",
+            "title": "Invest in Our Democracy Act of 2024",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5610"
+          },
+          {
+            "bill_id": "118-s-5609",
+            "label": "S 5609",
+            "title": "Global Electoral Exchange Act of 2024",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5609"
+          }
+        ]
+      },
+      {
+        "rank": 11,
+        "bioguide": "D000563",
+        "turns": 1346,
+        "words": 686310,
+        "active_days": 225,
+        "profanity_hits": 3,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 113,
+        "bills_passed": 4,
+        "bills_enacted": 2,
+        "passage_share": 0.0353982301,
+        "enactment_share": 0.017699115,
+        "speaker_name": "Mr. DURBIN",
+        "party": "D",
+        "state": "IL",
+        "chamber": "senate",
+        "profanity_per_100k": 0.4371202518,
+        "member_url": "https://bioguide.congress.gov/search/bio/D000563",
+        "examples": [
+          {
+            "bill_id": "118-s-5443",
+            "label": "S 5443",
+            "title": "Protecting Employees and Retirees in Business Bankruptcies Act of 2024",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5443"
+          },
+          {
+            "bill_id": "118-s-5386",
+            "label": "S 5386",
+            "title": "Flood Mapping Modernization and Homeowner Empowerment Pilot Program Act of 2024",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5386"
+          },
+          {
+            "bill_id": "118-s-5362",
+            "label": "S 5362",
+            "title": "Fair Ball Act",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5362"
+          }
+        ]
+      },
+      {
+        "rank": 12,
+        "bioguide": "C001056",
+        "turns": 247,
+        "words": 262511,
+        "active_days": 150,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 105,
+        "bills_passed": 21,
+        "bills_enacted": 7,
+        "passage_share": 0.2,
+        "enactment_share": 0.0666666667,
+        "speaker_name": "Mr. CORNYN",
+        "party": "R",
+        "state": "TX",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/C001056",
+        "examples": [
+          {
+            "bill_id": "118-s-5648",
+            "label": "S 5648",
+            "title": "COINS Act of 2024",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5648"
+          },
+          {
+            "bill_id": "118-s-5598",
+            "label": "S 5598",
+            "title": "A bill to prohibit and require notifications with respect to certain investments by United States persons in the People's Republic of China, and for other purposes.",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5598"
+          },
+          {
+            "bill_id": "118-s-5557",
+            "label": "S 5557",
+            "title": "A bill to require identification in medical records of the Department of Defense of the affiliation of certain non-Department of Defense health care providers, and for other purposes.",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5557"
+          }
+        ]
+      },
+      {
+        "rank": 13,
+        "bioguide": "N000191",
+        "turns": 103,
+        "words": 22377,
+        "active_days": 28,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 102,
+        "bills_passed": 4,
+        "bills_enacted": 3,
+        "passage_share": 0.0392156863,
+        "enactment_share": 0.0294117647,
+        "speaker_name": "Mr. NEGUSE",
+        "party": "D",
+        "state": "CO",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/N000191",
+        "examples": [
+          {
+            "bill_id": "118-hr-10347",
+            "label": "HR 10347",
+            "title": "Magnus White Cyclist Safety Act of 2024",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/10347"
+          },
+          {
+            "bill_id": "118-hr-10234",
+            "label": "HR 10234",
+            "title": "Stop the Spread of Invasive Mussels Act of 2024",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/10234"
+          },
+          {
+            "bill_id": "118-hr-10233",
+            "label": "HR 10233",
+            "title": "To amend title 49, United States Code, to clarify that noise abatement and lead abatement are not unjust discrimination for purposes of project approval for certain airport improvement program project approvals, and for other purposes.",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/10233"
+          }
+        ]
+      },
+      {
+        "rank": 14,
+        "bioguide": "N000147",
+        "turns": 67,
+        "words": 12240,
+        "active_days": 21,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 102,
+        "bills_passed": 2,
+        "bills_enacted": 0,
+        "passage_share": 0.0196078431,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. NORTON",
+        "party": "D",
+        "state": "DC",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/N000147",
+        "examples": [
+          {
+            "bill_id": "118-hr-9661",
+            "label": "HR 9661",
+            "title": "USRC Funding Eligibility Act",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/9661"
+          },
+          {
+            "bill_id": "118-hr-9505",
+            "label": "HR 9505",
+            "title": "District of Columbia Courts and Public Defender Service Voluntary Separation Incentive Payments Act",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/9505"
+          },
+          {
+            "bill_id": "118-hr-9420",
+            "label": "HR 9420",
+            "title": "Congress Leads by Example Act of 2024",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/9420"
+          }
+        ]
+      },
+      {
+        "rank": 15,
+        "bioguide": "S001217",
+        "turns": 78,
+        "words": 41233,
+        "active_days": 43,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 96,
+        "bills_passed": 3,
+        "bills_enacted": 3,
+        "passage_share": 0.03125,
+        "enactment_share": 0.03125,
+        "speaker_name": "Mr. SCOTT of Florida",
+        "party": "R",
+        "state": "FL",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/S001217",
+        "examples": [
+          {
+            "bill_id": "118-s-5633",
+            "label": "S 5633",
+            "title": "Medicare Flex Fund Accounts and Flexible Benefits Act of 2024",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5633"
+          },
+          {
+            "bill_id": "118-s-5572",
+            "label": "S 5572",
+            "title": "Decoupling from Foreign Adversarial Battery Dependence Act",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5572"
+          },
+          {
+            "bill_id": "118-s-5571",
+            "label": "S 5571",
+            "title": "Chinese Military and Surveillance Company Sanctions Act of 2024",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5571"
+          }
+        ]
+      },
+      {
+        "rank": 16,
+        "bioguide": "P000145",
+        "turns": 278,
+        "words": 93663,
+        "active_days": 81,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 91,
+        "bills_passed": 9,
+        "bills_enacted": 2,
+        "passage_share": 0.0989010989,
+        "enactment_share": 0.021978022,
+        "speaker_name": "Mr. PADILLA",
+        "party": "D",
+        "state": "CA",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/P000145",
+        "examples": [
+          {
+            "bill_id": "118-s-5625",
+            "label": "S 5625",
+            "title": "Clean Commute for Kids Act of 2024",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5625"
+          },
+          {
+            "bill_id": "118-s-5532",
+            "label": "S 5532",
+            "title": "Wildfire Intelligence Collaboration and Coordination Act of 2024",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5532"
+          },
+          {
+            "bill_id": "118-s-5361",
+            "label": "S 5361",
+            "title": "Improving Atmospheric River Forecasts Act",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5361"
+          }
+        ]
+      },
+      {
+        "rank": 17,
+        "bioguide": "B001277",
+        "turns": 88,
+        "words": 34519,
+        "active_days": 44,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 88,
+        "bills_passed": 2,
+        "bills_enacted": 0,
+        "passage_share": 0.0227272727,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. BLUMENTHAL",
+        "party": "D",
+        "state": "CT",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/B001277",
+        "examples": [
+          {
+            "bill_id": "118-s-5641",
+            "label": "S 5641",
+            "title": "Complete America\u2019s Great Trails Act",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5641"
+          },
+          {
+            "bill_id": "118-s-5640",
+            "label": "S 5640",
+            "title": "Stop Subsidizing Childhood Obesity Act",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5640"
+          },
+          {
+            "bill_id": "118-s-5587",
+            "label": "S 5587",
+            "title": "Family Reunification Task Force Act",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5587"
+          }
+        ]
+      },
+      {
+        "rank": 18,
+        "bioguide": "C001113",
+        "turns": 80,
+        "words": 24197,
+        "active_days": 40,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 87,
+        "bills_passed": 7,
+        "bills_enacted": 1,
+        "passage_share": 0.0804597701,
+        "enactment_share": 0.0114942529,
+        "speaker_name": "Ms. CORTEZ MASTO",
+        "party": "D",
+        "state": "NV",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/C001113",
+        "examples": [
+          {
+            "bill_id": "118-s-5476",
+            "label": "S 5476",
+            "title": "DOE and NSF Interagency Research Act",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5476"
+          },
+          {
+            "bill_id": "118-s-5434",
+            "label": "S 5434",
+            "title": "Abuse of the Pardon Prevention Act of 2024",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5434"
+          },
+          {
+            "bill_id": "118-s-5407",
+            "label": "S 5407",
+            "title": "Emerging Innovative Border Technologies Act",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5407"
+          }
+        ]
+      },
+      {
+        "rank": 19,
+        "bioguide": "W000800",
+        "turns": 111,
+        "words": 67054,
+        "active_days": 63,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 1,
+        "bills_sponsored": 85,
+        "bills_passed": 1,
+        "bills_enacted": 0,
+        "passage_share": 0.0117647059,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. WELCH",
+        "party": "D",
+        "state": "VT",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/W000800",
+        "examples": [
+          {
+            "bill_id": "118-s-5642",
+            "label": "S 5642",
+            "title": "CLEAR Path Act",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5642"
+          },
+          {
+            "bill_id": "118-s-5617",
+            "label": "S 5617",
+            "title": "Global Climate Resilience Act of 2024",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5617"
+          },
+          {
+            "bill_id": "118-s-5539",
+            "label": "S 5539",
+            "title": "TBD AI Act of 2024",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5539"
+          }
+        ]
+      },
+      {
+        "rank": 20,
+        "bioguide": "M001176",
+        "turns": 140,
+        "words": 47738,
+        "active_days": 42,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 83,
+        "bills_passed": 4,
+        "bills_enacted": 2,
+        "passage_share": 0.0481927711,
+        "enactment_share": 0.0240963855,
+        "speaker_name": "Mr. MERKLEY",
+        "party": "D",
+        "state": "OR",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/M001176",
+        "examples": [
+          {
+            "bill_id": "118-s-2",
+            "label": "S 2",
+            "title": "Ban Gambling on Elections Act of 2024",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/2"
+          },
+          {
+            "bill_id": "118-s-5592",
+            "label": "S 5592",
+            "title": "Protecting America's Economy from the Carbon Bubble Act of 2023",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5592"
+          },
+          {
+            "bill_id": "118-s-5588",
+            "label": "S 5588",
+            "title": "Keep It in the Ground Act of 2024",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5588"
+          }
+        ]
+      },
+      {
+        "rank": 21,
+        "bioguide": "B001243",
+        "turns": 159,
+        "words": 94974,
+        "active_days": 82,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 80,
+        "bills_passed": 3,
+        "bills_enacted": 1,
+        "passage_share": 0.0375,
+        "enactment_share": 0.0125,
+        "speaker_name": "Mrs. BLACKBURN",
+        "party": "R",
+        "state": "TN",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/B001243",
+        "examples": [
+          {
+            "bill_id": "118-s-5604",
+            "label": "S 5604",
+            "title": "SEMI Investment Act",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5604"
+          },
+          {
+            "bill_id": "118-s-5603",
+            "label": "S 5603",
+            "title": "RETIREES FIRST Act",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5603"
+          },
+          {
+            "bill_id": "118-s-5549",
+            "label": "S 5549",
+            "title": "GRACIE Act of 2024",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5549"
+          }
+        ]
+      },
+      {
+        "rank": 22,
+        "bioguide": "C001075",
+        "turns": 85,
+        "words": 43671,
+        "active_days": 46,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 79,
+        "bills_passed": 2,
+        "bills_enacted": 0,
+        "passage_share": 0.0253164557,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. CASSIDY",
+        "party": "R",
+        "state": "LA",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/C001075",
+        "examples": [
+          {
+            "bill_id": "118-s-5515",
+            "label": "S 5515",
+            "title": "Disaster Housing Reform for American Families Act",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5515"
+          },
+          {
+            "bill_id": "118-s-5466",
+            "label": "S 5466",
+            "title": "Flood Insurance Affordability Tax Credit Act",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5466"
+          },
+          {
+            "bill_id": "118-s-5433",
+            "label": "S 5433",
+            "title": "Genomic Data Protection Act",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5433"
+          }
+        ]
+      },
+      {
+        "rank": 23,
+        "bioguide": "K000393",
+        "turns": 151,
+        "words": 84943,
+        "active_days": 56,
+        "profanity_hits": 2,
+        "profanity_quoted_hits": 1,
+        "bills_sponsored": 77,
+        "bills_passed": 2,
+        "bills_enacted": 1,
+        "passage_share": 0.025974026,
+        "enactment_share": 0.012987013,
+        "speaker_name": "Mr. KENNEDY",
+        "party": "R",
+        "state": "LA",
+        "chamber": "senate",
+        "profanity_per_100k": 2.3545200899,
+        "member_url": "https://bioguide.congress.gov/search/bio/K000393",
+        "examples": [
+          {
+            "bill_id": "118-s-5647",
+            "label": "S 5647",
+            "title": "ROOMIE Act",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5647"
+          },
+          {
+            "bill_id": "118-s-5478",
+            "label": "S 5478",
+            "title": "Support Our Educators Act of 2024",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5478"
+          },
+          {
+            "bill_id": "118-s-5461",
+            "label": "S 5461",
+            "title": "PURE Act",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5461"
+          }
+        ]
+      },
+      {
+        "rank": 24,
+        "bioguide": "W000817",
+        "turns": 33,
+        "words": 23535,
+        "active_days": 23,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 77,
+        "bills_passed": 1,
+        "bills_enacted": 0,
+        "passage_share": 0.012987013,
+        "enactment_share": 0.0,
+        "speaker_name": "Ms. WARREN",
+        "party": "D",
+        "state": "MA",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/W000817",
+        "examples": [
+          {
+            "bill_id": "118-s-5638",
+            "label": "S 5638",
+            "title": "Pharmaceutical Supply Chain Defense and Enhancement Act",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5638"
+          },
+          {
+            "bill_id": "118-s-5637",
+            "label": "S 5637",
+            "title": "National Biomedical Research Act",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5637"
+          },
+          {
+            "bill_id": "118-s-5636",
+            "label": "S 5636",
+            "title": "Honoring Promises to Native Nations Act",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5636"
+          }
+        ]
+      },
+      {
+        "rank": 25,
+        "bioguide": "P000618",
+        "turns": 173,
+        "words": 28066,
+        "active_days": 73,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 76,
+        "bills_passed": 2,
+        "bills_enacted": 0,
+        "passage_share": 0.0263157895,
+        "enactment_share": 0.0,
+        "speaker_name": "Ms. PORTER",
+        "party": "D",
+        "state": "CA",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/P000618",
+        "examples": [
+          {
+            "bill_id": "118-hr-10554",
+            "label": "HR 10554",
+            "title": "Pentagon Medical Malpractice Claims Reporting Act",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/10554"
+          },
+          {
+            "bill_id": "118-hr-10162",
+            "label": "HR 10162",
+            "title": "RESERVE Federal Land Act",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/10162"
+          },
+          {
+            "bill_id": "118-hr-9736",
+            "label": "HR 9736",
+            "title": "Corporate Management Accountability Act of 2024",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/9736"
+          }
+        ]
+      }
+    ],
+    "passed": [
+      {
+        "rank": 1,
+        "bioguide": "P000595",
+        "turns": 85,
+        "words": 31908,
+        "active_days": 45,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 152,
+        "bills_passed": 34,
+        "bills_enacted": 15,
+        "passage_share": 0.2236842105,
+        "enactment_share": 0.0986842105,
+        "speaker_name": "Mr. PETERS",
+        "party": "D",
+        "state": "MI",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/P000595",
+        "examples": [
+          {
+            "bill_id": "118-s-5639",
+            "label": "S 5639",
+            "title": "Counter-UAS Authority Extension Act",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5639"
+          },
+          {
+            "bill_id": "118-s-4716",
+            "label": "S 4716",
+            "title": "Financial Management Risk Reduction Act",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/4716"
+          },
+          {
+            "bill_id": "118-s-4698",
+            "label": "S 4698",
+            "title": "DHS Joint Task Forces Reauthorization Act of 2024",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/4698"
+          }
+        ]
+      },
+      {
+        "rank": 2,
+        "bioguide": "C001056",
+        "turns": 247,
+        "words": 262511,
+        "active_days": 150,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 105,
+        "bills_passed": 21,
+        "bills_enacted": 7,
+        "passage_share": 0.2,
+        "enactment_share": 0.0666666667,
+        "speaker_name": "Mr. CORNYN",
+        "party": "R",
+        "state": "TX",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/C001056",
+        "examples": [
+          {
+            "bill_id": "118-s-5060",
+            "label": "S 5060",
+            "title": "PROTECT Our Children Reauthorization Act of 2024",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5060"
+          },
+          {
+            "bill_id": "118-s-4708",
+            "label": "S 4708",
+            "title": "Strengthening Child Exploitation Enforcement Act",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/4708"
+          },
+          {
+            "bill_id": "118-s-3984",
+            "label": "S 3984",
+            "title": "Countering Threats and Attacks on Our Judges Act",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/3984"
+          }
+        ]
+      },
+      {
+        "rank": 3,
+        "bioguide": "P000145",
+        "turns": 278,
+        "words": 93663,
+        "active_days": 81,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 91,
+        "bills_passed": 9,
+        "bills_enacted": 2,
+        "passage_share": 0.0989010989,
+        "enactment_share": 0.021978022,
+        "speaker_name": "Mr. PADILLA",
+        "party": "D",
+        "state": "CA",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/P000145",
+        "examples": [
+          {
+            "bill_id": "118-s-5005",
+            "label": "S 5005",
+            "title": "A bill to authorize additional funding for the San Joaquin River Restoration Settlement Act.",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5005"
+          },
+          {
+            "bill_id": "118-s-4851",
+            "label": "S 4851",
+            "title": "Scarper Ridge Golden Gate National Recreation Area Boundary Adjustment Act of 2024",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/4851"
+          },
+          {
+            "bill_id": "118-s-4489",
+            "label": "S 4489",
+            "title": "A bill to designate the Federal building located at 50 United Nations Plaza in San Francisco, California, as the \"Senator Dianne Feinstein Federal Building,\" and for other purposes.",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/4489"
+          }
+        ]
+      },
+      {
+        "rank": 4,
+        "bioguide": "M001221",
+        "turns": 153,
+        "words": 27585,
+        "active_days": 58,
+        "profanity_hits": 1,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 45,
+        "bills_passed": 9,
+        "bills_enacted": 2,
+        "passage_share": 0.2,
+        "enactment_share": 0.0444444444,
+        "speaker_name": "Mr. MOLINARO",
+        "party": "R",
+        "state": "NY",
+        "chamber": "house",
+        "profanity_per_100k": 3.6251586007,
+        "member_url": "https://bioguide.congress.gov/search/bio/M001221",
+        "examples": [
+          {
+            "bill_id": "118-hr-8689",
+            "label": "HR 8689",
+            "title": "Amtrak Executive Bonus Disclosure Act",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/8689"
+          },
+          {
+            "bill_id": "118-hr-7989",
+            "label": "HR 7989",
+            "title": "ThinkDIFFERENTLY About Disability Employment Act",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/7989"
+          },
+          {
+            "bill_id": "118-hr-6249",
+            "label": "HR 6249",
+            "title": "Think Differently About Emergencies Act",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/6249"
+          }
+        ]
+      },
+      {
+        "rank": 5,
+        "bioguide": "K000397",
+        "turns": 109,
+        "words": 26378,
+        "active_days": 53,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 28,
+        "bills_passed": 9,
+        "bills_enacted": 1,
+        "passage_share": 0.3214285714,
+        "enactment_share": 0.0357142857,
+        "speaker_name": "Mrs. KIM",
+        "party": "R",
+        "state": "CA",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/K000397",
+        "examples": [
+          {
+            "bill_id": "118-hr-7409",
+            "label": "HR 7409",
+            "title": "HEATS Act",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/7409"
+          },
+          {
+            "bill_id": "118-hr-6543",
+            "label": "HR 6543",
+            "title": "No Hidden FEES Act of 2023",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/6543"
+          },
+          {
+            "bill_id": "118-hr-6323",
+            "label": "HR 6323",
+            "title": "Iran Counterterrorism Act of 2023",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/6323"
+          }
+        ]
+      },
+      {
+        "rank": 6,
+        "bioguide": "M001159",
+        "turns": 292,
+        "words": 56988,
+        "active_days": 35,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 33,
+        "bills_passed": 8,
+        "bills_enacted": 2,
+        "passage_share": 0.2424242424,
+        "enactment_share": 0.0606060606,
+        "speaker_name": "Mrs. RODGERS of Washington",
+        "party": "R",
+        "state": "WA",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/M001159",
+        "examples": [
+          {
+            "bill_id": "118-hr-7406",
+            "label": "HR 7406",
+            "title": "DeOndra Dixon INCLUDE Project Act of 2024",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/7406"
+          },
+          {
+            "bill_id": "118-hr-5378",
+            "label": "HR 5378",
+            "title": "Lower Costs, More Transparency Act",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/5378"
+          },
+          {
+            "bill_id": "118-hr-1108",
+            "label": "HR 1108",
+            "title": "To amend the Communications Act of 1934 to extend the authority of the Federal Communications Commission to grant a license or construction permit through a system of competitive bidding.",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/1108"
+          }
+        ]
+      },
+      {
+        "rank": 7,
+        "bioguide": "W000812",
+        "turns": 189,
+        "words": 34299,
+        "active_days": 34,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 23,
+        "bills_passed": 8,
+        "bills_enacted": 1,
+        "passage_share": 0.347826087,
+        "enactment_share": 0.0434782609,
+        "speaker_name": "Mrs. WAGNER",
+        "party": "R",
+        "state": "MO",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/W000812",
+        "examples": [
+          {
+            "bill_id": "118-hr-7151",
+            "label": "HR 7151",
+            "title": "Export Control Enforcement and Enhancement Act",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/7151"
+          },
+          {
+            "bill_id": "118-hr-4723",
+            "label": "HR 4723",
+            "title": "Upholding the Dayton Peace Agreement Through Sanctions Act",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/4723"
+          },
+          {
+            "bill_id": "118-hr-2793",
+            "label": "HR 2793",
+            "title": "Encouraging Public Offerings Act of 2023",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/2793"
+          }
+        ]
+      },
+      {
+        "rank": 8,
+        "bioguide": "B001310",
+        "turns": 53,
+        "words": 15673,
+        "active_days": 22,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 116,
+        "bills_passed": 7,
+        "bills_enacted": 4,
+        "passage_share": 0.0603448276,
+        "enactment_share": 0.0344827586,
+        "speaker_name": "Mr. BRAUN",
+        "party": "R",
+        "state": "IN",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/B001310",
+        "examples": [
+          {
+            "bill_id": "118-s-3574",
+            "label": "S 3574",
+            "title": "National Fossil Act",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/3574"
+          },
+          {
+            "bill_id": "118-s-3126",
+            "label": "S 3126",
+            "title": "Mark Our Place Act",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/3126"
+          },
+          {
+            "bill_id": "118-s-3068",
+            "label": "S 3068",
+            "title": "VA Home Loan Awareness Act of 2023",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/3068"
+          }
+        ]
+      },
+      {
+        "rank": 9,
+        "bioguide": "C001113",
+        "turns": 80,
+        "words": 24197,
+        "active_days": 40,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 87,
+        "bills_passed": 7,
+        "bills_enacted": 1,
+        "passage_share": 0.0804597701,
+        "enactment_share": 0.0114942529,
+        "speaker_name": "Ms. CORTEZ MASTO",
+        "party": "D",
+        "state": "NV",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/C001113",
+        "examples": [
+          {
+            "bill_id": "118-s-3022",
+            "label": "S 3022",
+            "title": "IHS Workforce Parity Act of 2024",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/3022"
+          },
+          {
+            "bill_id": "118-s-2042",
+            "label": "S 2042",
+            "title": "Sloan Canyon Conservation and Lateral Pipeline Act",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/2042"
+          },
+          {
+            "bill_id": "118-s-1760",
+            "label": "S 1760",
+            "title": "Apex Project, Nevada Land Transfer and Authorization Act Amendments Act",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/1760"
+          }
+        ]
+      },
+      {
+        "rank": 10,
+        "bioguide": "B001261",
+        "turns": 171,
+        "words": 79977,
+        "active_days": 75,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 59,
+        "bills_passed": 7,
+        "bills_enacted": 1,
+        "passage_share": 0.1186440678,
+        "enactment_share": 0.0169491525,
+        "speaker_name": "Mr. BARRASSO",
+        "party": "R",
+        "state": "WY",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/B001261",
+        "examples": [
+          {
+            "bill_id": "118-s-5125",
+            "label": "S 5125",
+            "title": "Land Manager Housing and Workforce Improvement Act of 2024",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5125"
+          },
+          {
+            "bill_id": "118-s-3123",
+            "label": "S 3123",
+            "title": "Modernizing Access to Our Public Waters Act",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/3123"
+          },
+          {
+            "bill_id": "118-s-2274",
+            "label": "S 2274",
+            "title": "A bill to designate the facility of the United States Postal Service located at 112 Wyoming Street in Shoshoni, Wyoming, as the \"Dessie A. Bebout Post Office\".",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/2274"
+          }
+        ]
+      },
+      {
+        "rank": 11,
+        "bioguide": "L000599",
+        "turns": 188,
+        "words": 44665,
+        "active_days": 81,
+        "profanity_hits": 2,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 58,
+        "bills_passed": 7,
+        "bills_enacted": 1,
+        "passage_share": 0.1206896552,
+        "enactment_share": 0.0172413793,
+        "speaker_name": "Mr. LAWLER",
+        "party": "R",
+        "state": "NY",
+        "chamber": "house",
+        "profanity_per_100k": 4.4777790216,
+        "member_url": "https://bioguide.congress.gov/search/bio/L000599",
+        "examples": [
+          {
+            "bill_id": "118-hr-9106",
+            "label": "HR 9106",
+            "title": "Enhanced Presidential Security Act of 2024",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/9106"
+          },
+          {
+            "bill_id": "118-hr-8152",
+            "label": "HR 8152",
+            "title": "Remote Access Security Act",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/8152"
+          },
+          {
+            "bill_id": "118-hr-6090",
+            "label": "HR 6090",
+            "title": "Antisemitism Awareness Act of 2023",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/6090"
+          }
+        ]
+      },
+      {
+        "rank": 12,
+        "bioguide": "C001114",
+        "turns": 22,
+        "words": 6618,
+        "active_days": 17,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 1,
+        "bills_sponsored": 47,
+        "bills_passed": 7,
+        "bills_enacted": 3,
+        "passage_share": 0.1489361702,
+        "enactment_share": 0.0638297872,
+        "speaker_name": "Mr. CURTIS",
+        "party": "R",
+        "state": "UT",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/C001114",
+        "examples": [
+          {
+            "bill_id": "118-hr-7872",
+            "label": "HR 7872",
+            "title": "Colorado River Salinity Control Fix Act",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/7872"
+          },
+          {
+            "bill_id": "118-hr-7370",
+            "label": "HR 7370",
+            "title": "GEO Act",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/7370"
+          },
+          {
+            "bill_id": "118-hr-6395",
+            "label": "HR 6395",
+            "title": "Recognizing the Importance of Critical Minerals in Healthcare Act of 2023",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/6395"
+          }
+        ]
+      },
+      {
+        "rank": 13,
+        "bioguide": "L000598",
+        "turns": 65,
+        "words": 15281,
+        "active_days": 35,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 25,
+        "bills_passed": 7,
+        "bills_enacted": 1,
+        "passage_share": 0.28,
+        "enactment_share": 0.04,
+        "speaker_name": "Mr. LaLOTA",
+        "party": "R",
+        "state": "NY",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/L000598",
+        "examples": [
+          {
+            "bill_id": "118-hr-8663",
+            "label": "HR 8663",
+            "title": "DETECT Fentanyl and Xylazine Act of 2024",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/8663"
+          },
+          {
+            "bill_id": "118-hr-7987",
+            "label": "HR 7987",
+            "title": "Plain Language in Contracting Act",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/7987"
+          },
+          {
+            "bill_id": "118-hr-5717",
+            "label": "HR 5717",
+            "title": "No Bailout for Sanctuary Cities Act",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/5717"
+          }
+        ]
+      },
+      {
+        "rank": 14,
+        "bioguide": "G000546",
+        "turns": 249,
+        "words": 296643,
+        "active_days": 21,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 16,
+        "bills_passed": 7,
+        "bills_enacted": 4,
+        "passage_share": 0.4375,
+        "enactment_share": 0.25,
+        "speaker_name": "Mr. GRAVES",
+        "party": "R",
+        "state": "MO",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/G000546",
+        "examples": [
+          {
+            "bill_id": "118-hr-8812",
+            "label": "HR 8812",
+            "title": "Water Resources Development Act of 2024",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/8812"
+          },
+          {
+            "bill_id": "118-hr-8289",
+            "label": "HR 8289",
+            "title": "Airport and Airway Extension Act of 2024, Part II",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/8289"
+          },
+          {
+            "bill_id": "118-hr-7659",
+            "label": "HR 7659",
+            "title": "Coast Guard Authorization Act of 2024",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/7659"
+          }
+        ]
+      },
+      {
+        "rank": 15,
+        "bioguide": "C001098",
+        "turns": 141,
+        "words": 74563,
+        "active_days": 48,
+        "profanity_hits": 8,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 123,
+        "bills_passed": 6,
+        "bills_enacted": 3,
+        "passage_share": 0.0487804878,
+        "enactment_share": 0.0243902439,
+        "speaker_name": "Mr. CRUZ",
+        "party": "R",
+        "state": "TX",
+        "chamber": "senate",
+        "profanity_per_100k": 10.729182034,
+        "member_url": "https://bioguide.congress.gov/search/bio/C001098",
+        "examples": [
+          {
+            "bill_id": "118-s-5465",
+            "label": "S 5465",
+            "title": "A bill to clarify where court may be held for certain district courts in Texas and California.",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5465"
+          },
+          {
+            "bill_id": "118-s-4569",
+            "label": "S 4569",
+            "title": "TAKE IT DOWN Act",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/4569"
+          },
+          {
+            "bill_id": "118-s-3998",
+            "label": "S 3998",
+            "title": "Federal Judiciary Stabilization Act of 2024",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/3998"
+          }
+        ]
+      },
+      {
+        "rank": 16,
+        "bioguide": "K000367",
+        "turns": 110,
+        "words": 77885,
+        "active_days": 60,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 116,
+        "bills_passed": 6,
+        "bills_enacted": 3,
+        "passage_share": 0.0517241379,
+        "enactment_share": 0.025862069,
+        "speaker_name": "Ms. KLOBUCHAR",
+        "party": "D",
+        "state": "MN",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/K000367",
+        "examples": [
+          {
+            "bill_id": "118-s-4803",
+            "label": "S 4803",
+            "title": "A bill to designate the facility of the United States Postal Service located at 31143 State Highway 65 in Pengilly, Minnesota, as the \"First Lieutenant Richard Arne Koski Post Office\".",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/4803"
+          },
+          {
+            "bill_id": "118-s-4610",
+            "label": "S 4610",
+            "title": "A bill to amend title 36, United States Code, to designate the bald eagle as the national bird.",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/4610"
+          },
+          {
+            "bill_id": "118-s-3222",
+            "label": "S 3222",
+            "title": "A bill to ensure the security of office space rented by Senators, and for other purposes.",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/3222"
+          }
+        ]
+      },
+      {
+        "rank": 17,
+        "bioguide": "T000464",
+        "turns": 69,
+        "words": 22550,
+        "active_days": 38,
+        "profanity_hits": 2,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 60,
+        "bills_passed": 6,
+        "bills_enacted": 4,
+        "passage_share": 0.1,
+        "enactment_share": 0.0666666667,
+        "speaker_name": "Mr. TESTER",
+        "party": "D",
+        "state": "MT",
+        "chamber": "senate",
+        "profanity_per_100k": 8.8691796009,
+        "member_url": "https://bioguide.congress.gov/search/bio/T000464",
+        "examples": [
+          {
+            "bill_id": "118-s-2795",
+            "label": "S 2795",
+            "title": "A bill to amend title 38, United States Code, to extend and modify certain authorities and requirements relating to the Department of Veterans Affairs, and for other purposes.",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/2795"
+          },
+          {
+            "bill_id": "118-s-2513",
+            "label": "S 2513",
+            "title": "Veterans Benefits Improvement Act of 2024",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/2513"
+          },
+          {
+            "bill_id": "118-s-1987",
+            "label": "S 1987",
+            "title": "Fort Belknap Indian Community Water Rights Settlement Act of 2024",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/1987"
+          }
+        ]
+      },
+      {
+        "rank": 18,
+        "bioguide": "G000386",
+        "turns": 123,
+        "words": 84536,
+        "active_days": 72,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 58,
+        "bills_passed": 6,
+        "bills_enacted": 1,
+        "passage_share": 0.1034482759,
+        "enactment_share": 0.0172413793,
+        "speaker_name": "Mr. GRASSLEY",
+        "party": "R",
+        "state": "IA",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/G000386",
+        "examples": [
+          {
+            "bill_id": "118-s-3859",
+            "label": "S 3859",
+            "title": "Justice for Murder Victims Act",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/3859"
+          },
+          {
+            "bill_id": "118-s-829",
+            "label": "S 829",
+            "title": "Disclosing Foreign Influence in Lobbying Act",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/829"
+          },
+          {
+            "bill_id": "118-s-724",
+            "label": "S 724",
+            "title": "Preventing Child Sex Abuse Act of 2023",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/724"
+          }
+        ]
+      },
+      {
+        "rank": 19,
+        "bioguide": "S001196",
+        "turns": 24,
+        "words": 5804,
+        "active_days": 17,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 44,
+        "bills_passed": 6,
+        "bills_enacted": 0,
+        "passage_share": 0.1363636364,
+        "enactment_share": 0.0,
+        "speaker_name": "Ms. STEFANIK",
+        "party": "R",
+        "state": "NY",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/S001196",
+        "examples": [
+          {
+            "bill_id": "118-hr-8931",
+            "label": "HR 8931",
+            "title": "To redesignate Saratoga National Historical Park as Saratoga National Battlefield Park.",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/8931"
+          },
+          {
+            "bill_id": "118-hr-3448",
+            "label": "HR 3448",
+            "title": "American Battlefield Protection Program Enhancement Act of 2023",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/3448"
+          },
+          {
+            "bill_id": "118-hr-2864",
+            "label": "HR 2864",
+            "title": "Countering CCP Drones Act",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/2864"
+          }
+        ]
+      },
+      {
+        "rank": 20,
+        "bioguide": "S001135",
+        "turns": 36,
+        "words": 7199,
+        "active_days": 27,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 38,
+        "bills_passed": 6,
+        "bills_enacted": 1,
+        "passage_share": 0.1578947368,
+        "enactment_share": 0.0263157895,
+        "speaker_name": "Mrs. STEEL",
+        "party": "R",
+        "state": "CA",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/S001135",
+        "examples": [
+          {
+            "bill_id": "118-hr-8057",
+            "label": "HR 8057",
+            "title": "To designate the facility of the United States Postal Service located at 9317 Bolsa Avenue in Westminster, California, as the \"Little Saigon Vietnam War Veterans Memorial Post Office\".",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/8057"
+          },
+          {
+            "bill_id": "118-hr-6474",
+            "label": "HR 6474",
+            "title": "To amend the Energy Policy Act of 2005 to expedite geothermal exploration and development in previously studied or developed areas.",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/6474"
+          },
+          {
+            "bill_id": "118-hr-6033",
+            "label": "HR 6033",
+            "title": "SPEAK Act of 2024",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/6033"
+          }
+        ]
+      },
+      {
+        "rank": 21,
+        "bioguide": "M001153",
+        "turns": 51,
+        "words": 58332,
+        "active_days": 33,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 34,
+        "bills_passed": 6,
+        "bills_enacted": 0,
+        "passage_share": 0.1764705882,
+        "enactment_share": 0.0,
+        "speaker_name": "Ms. MURKOWSKI",
+        "party": "R",
+        "state": "AK",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/M001153",
+        "examples": [
+          {
+            "bill_id": "118-s-4974",
+            "label": "S 4974",
+            "title": "A bill to amend the John D. Dingell, Jr. Conservation, Management, and Recreation Act to reauthorize the National Volcano Early Warning and Monitoring System, and for other purposes.",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/4974"
+          },
+          {
+            "bill_id": "118-s-4370",
+            "label": "S 4370",
+            "title": "Tribal Forest Protection Act Amendments Act of 2024",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/4370"
+          },
+          {
+            "bill_id": "118-s-4365",
+            "label": "S 4365",
+            "title": "Veterinary Services to Improve Public Health in Rural Communities Act",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/4365"
+          }
+        ]
+      },
+      {
+        "rank": 22,
+        "bioguide": "C001133",
+        "turns": 106,
+        "words": 24425,
+        "active_days": 53,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 31,
+        "bills_passed": 6,
+        "bills_enacted": 1,
+        "passage_share": 0.1935483871,
+        "enactment_share": 0.0322580645,
+        "speaker_name": "Mr. CISCOMANI",
+        "party": "R",
+        "state": "AZ",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/C001133",
+        "examples": [
+          {
+            "bill_id": "118-hr-8446",
+            "label": "HR 8446",
+            "title": "Critical Mineral Consistency Act of 2024",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/8446"
+          },
+          {
+            "bill_id": "118-hr-8371",
+            "label": "HR 8371",
+            "title": "Senator Elizabeth Dole 21st Century Veterans Healthcare and Benefits Improvement Act",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/8371"
+          },
+          {
+            "bill_id": "118-hr-7100",
+            "label": "HR 7100",
+            "title": "Prioritizing Veterans\u2019 Survivors Act",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/7100"
+          }
+        ]
+      },
+      {
+        "rank": 23,
+        "bioguide": "G000061",
+        "turns": 59,
+        "words": 20116,
+        "active_days": 28,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 24,
+        "bills_passed": 6,
+        "bills_enacted": 2,
+        "passage_share": 0.25,
+        "enactment_share": 0.0833333333,
+        "speaker_name": "Mr. MIKE GARCIA of California",
+        "party": "R",
+        "state": "CA",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/G000061",
+        "examples": [
+          {
+            "bill_id": "118-hr-9468",
+            "label": "HR 9468",
+            "title": "Veterans Benefits Continuity and Accountability Supplemental Appropriations Act, 2024",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/9468"
+          },
+          {
+            "bill_id": "118-hr-8089",
+            "label": "HR 8089",
+            "title": "Medicare and Medicaid Fraud Prevention Act of 2024",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/8089"
+          },
+          {
+            "bill_id": "118-hr-7686",
+            "label": "HR 7686",
+            "title": "To amend the Research and Development, Competition, and Innovation Act to clarify the definition of foreign country for purposes of malign foreign talent recruitment restriction, and for other purposes.",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/7686"
+          }
+        ]
+      },
+      {
+        "rank": 24,
+        "bioguide": "S001212",
+        "turns": 152,
+        "words": 37188,
+        "active_days": 53,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 21,
+        "bills_passed": 6,
+        "bills_enacted": 1,
+        "passage_share": 0.2857142857,
+        "enactment_share": 0.0476190476,
+        "speaker_name": "Mr. STAUBER",
+        "party": "R",
+        "state": "MN",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/S001212",
+        "examples": [
+          {
+            "bill_id": "118-hr-7988",
+            "label": "HR 7988",
+            "title": "SPUR Act",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/7988"
+          },
+          {
+            "bill_id": "118-hr-7103",
+            "label": "HR 7103",
+            "title": "Agency Accountability Act of 2024",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/7103"
+          },
+          {
+            "bill_id": "118-hr-6285",
+            "label": "HR 6285",
+            "title": "Alaska\u2019s Right to Produce Act of 2023",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/6285"
+          }
+        ]
+      },
+      {
+        "rank": 25,
+        "bioguide": "C001108",
+        "turns": 221,
+        "words": 35062,
+        "active_days": 27,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 12,
+        "bills_passed": 6,
+        "bills_enacted": 1,
+        "passage_share": 0.5,
+        "enactment_share": 0.0833333333,
+        "speaker_name": "Mr. COMER",
+        "party": "R",
+        "state": "KY",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/C001108",
+        "examples": [
+          {
+            "bill_id": "118-hr-9598",
+            "label": "HR 9598",
+            "title": "Office of National Drug Control Policy Reauthorization Act of 2024",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/9598"
+          },
+          {
+            "bill_id": "118-hr-9597",
+            "label": "HR 9597",
+            "title": "Federal Acquisition Security Council Improvement Act of 2024",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/9597"
+          },
+          {
+            "bill_id": "118-hr-4984",
+            "label": "HR 4984",
+            "title": "D.C. Robert F. Kennedy Memorial Stadium Campus Revitalization Act",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/4984"
+          }
+        ]
+      }
+    ],
+    "enacted": [
+      {
+        "rank": 1,
+        "bioguide": "P000595",
+        "turns": 85,
+        "words": 31908,
+        "active_days": 45,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 152,
+        "bills_passed": 34,
+        "bills_enacted": 15,
+        "passage_share": 0.2236842105,
+        "enactment_share": 0.0986842105,
+        "speaker_name": "Mr. PETERS",
+        "party": "D",
+        "state": "MI",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/P000595",
+        "examples": [
+          {
+            "bill_id": "118-s-4716",
+            "label": "S 4716",
+            "title": "Financial Management Risk Reduction Act",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/4716"
+          },
+          {
+            "bill_id": "118-s-4698",
+            "label": "S 4698",
+            "title": "DHS Joint Task Forces Reauthorization Act of 2024",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/4698"
+          },
+          {
+            "bill_id": "118-s-3851",
+            "label": "S 3851",
+            "title": "A bill to designate the facility of the United States Postal Service located at 90 McCamly Street South in Battle Creek, Michigan, as the \"Sojourner Truth Post Office\".",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/3851"
+          }
+        ]
+      },
+      {
+        "rank": 2,
+        "bioguide": "C001056",
+        "turns": 247,
+        "words": 262511,
+        "active_days": 150,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 105,
+        "bills_passed": 21,
+        "bills_enacted": 7,
+        "passage_share": 0.2,
+        "enactment_share": 0.0666666667,
+        "speaker_name": "Mr. CORNYN",
+        "party": "R",
+        "state": "TX",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/C001056",
+        "examples": [
+          {
+            "bill_id": "118-s-3706",
+            "label": "S 3706",
+            "title": "Victims' VOICES Act",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/3706"
+          },
+          {
+            "bill_id": "118-s-3250",
+            "label": "S 3250",
+            "title": "A bill to provide remote access to court proceedings for victims of the 1988 Bombing of Pan Am Flight 103 over Lockerbie, Scotland.",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/3250"
+          },
+          {
+            "bill_id": "118-s-2825",
+            "label": "S 2825",
+            "title": "Dustoff Crews of the Vietnam War Congressional Gold Medal Act",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/2825"
+          }
+        ]
+      },
+      {
+        "rank": 3,
+        "bioguide": "B001310",
+        "turns": 53,
+        "words": 15673,
+        "active_days": 22,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 116,
+        "bills_passed": 7,
+        "bills_enacted": 4,
+        "passage_share": 0.0603448276,
+        "enactment_share": 0.0344827586,
+        "speaker_name": "Mr. BRAUN",
+        "party": "R",
+        "state": "IN",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/B001310",
+        "examples": [
+          {
+            "bill_id": "118-s-3126",
+            "label": "S 3126",
+            "title": "Mark Our Place Act",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/3126"
+          },
+          {
+            "bill_id": "118-s-2414",
+            "label": "S 2414",
+            "title": "Working Dog Health and Welfare Act of 2023",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/2414"
+          },
+          {
+            "bill_id": "118-s-1510",
+            "label": "S 1510",
+            "title": "GAO Inspector General Parity Act",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/1510"
+          }
+        ]
+      },
+      {
+        "rank": 4,
+        "bioguide": "T000464",
+        "turns": 69,
+        "words": 22550,
+        "active_days": 38,
+        "profanity_hits": 2,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 60,
+        "bills_passed": 6,
+        "bills_enacted": 4,
+        "passage_share": 0.1,
+        "enactment_share": 0.0666666667,
+        "speaker_name": "Mr. TESTER",
+        "party": "D",
+        "state": "MT",
+        "chamber": "senate",
+        "profanity_per_100k": 8.8691796009,
+        "member_url": "https://bioguide.congress.gov/search/bio/T000464",
+        "examples": [
+          {
+            "bill_id": "118-s-2795",
+            "label": "S 2795",
+            "title": "A bill to amend title 38, United States Code, to extend and modify certain authorities and requirements relating to the Department of Veterans Affairs, and for other purposes.",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/2795"
+          },
+          {
+            "bill_id": "118-s-2513",
+            "label": "S 2513",
+            "title": "Veterans Benefits Improvement Act of 2024",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/2513"
+          },
+          {
+            "bill_id": "118-s-777",
+            "label": "S 777",
+            "title": "Veterans' COLA Act of 2023",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/777"
+          }
+        ]
+      },
+      {
+        "rank": 5,
+        "bioguide": "G000546",
+        "turns": 249,
+        "words": 296643,
+        "active_days": 21,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 16,
+        "bills_passed": 7,
+        "bills_enacted": 4,
+        "passage_share": 0.4375,
+        "enactment_share": 0.25,
+        "speaker_name": "Mr. GRAVES",
+        "party": "R",
+        "state": "MO",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/G000546",
+        "examples": [
+          {
+            "bill_id": "118-hr-8289",
+            "label": "HR 8289",
+            "title": "Airport and Airway Extension Act of 2024, Part II",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/8289"
+          },
+          {
+            "bill_id": "118-hr-7454",
+            "label": "HR 7454",
+            "title": "Airport and Airway Extension Act of 2024",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/7454"
+          },
+          {
+            "bill_id": "118-hr-6503",
+            "label": "HR 6503",
+            "title": "Airport and Airway Extension Act of 2023, Part II",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/6503"
+          }
+        ]
+      },
+      {
+        "rank": 6,
+        "bioguide": "C001098",
+        "turns": 141,
+        "words": 74563,
+        "active_days": 48,
+        "profanity_hits": 8,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 123,
+        "bills_passed": 6,
+        "bills_enacted": 3,
+        "passage_share": 0.0487804878,
+        "enactment_share": 0.0243902439,
+        "speaker_name": "Mr. CRUZ",
+        "party": "R",
+        "state": "TX",
+        "chamber": "senate",
+        "profanity_per_100k": 10.729182034,
+        "member_url": "https://bioguide.congress.gov/search/bio/C001098",
+        "examples": [
+          {
+            "bill_id": "118-s-3998",
+            "label": "S 3998",
+            "title": "Federal Judiciary Stabilization Act of 2024",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/3998"
+          },
+          {
+            "bill_id": "118-s-3946",
+            "label": "S 3946",
+            "title": "A bill to designate the facility of the United States Postal Service located at 1106 Main Street in Bastrop, Texas, as the \"Sergeant Major Billy D. Waugh Post Office\".",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/3946"
+          },
+          {
+            "bill_id": "118-s-992",
+            "label": "S 992",
+            "title": "I-27 Numbering Act of 2023",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/992"
+          }
+        ]
+      },
+      {
+        "rank": 7,
+        "bioguide": "K000367",
+        "turns": 110,
+        "words": 77885,
+        "active_days": 60,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 116,
+        "bills_passed": 6,
+        "bills_enacted": 3,
+        "passage_share": 0.0517241379,
+        "enactment_share": 0.025862069,
+        "speaker_name": "Ms. KLOBUCHAR",
+        "party": "D",
+        "state": "MN",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/K000367",
+        "examples": [
+          {
+            "bill_id": "118-s-4610",
+            "label": "S 4610",
+            "title": "A bill to amend title 36, United States Code, to designate the bald eagle as the national bird.",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/4610"
+          },
+          {
+            "bill_id": "118-s-3222",
+            "label": "S 3222",
+            "title": "A bill to ensure the security of office space rented by Senators, and for other purposes.",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/3222"
+          },
+          {
+            "bill_id": "118-s-2747",
+            "label": "S 2747",
+            "title": "A bill to amend the Federal Election Campaign Act of 1971 to extend the Administrative Fine Program for certain reporting violations.",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/2747"
+          }
+        ]
+      },
+      {
+        "rank": 8,
+        "bioguide": "N000191",
+        "turns": 103,
+        "words": 22377,
+        "active_days": 28,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 102,
+        "bills_passed": 4,
+        "bills_enacted": 3,
+        "passage_share": 0.0392156863,
+        "enactment_share": 0.0294117647,
+        "speaker_name": "Mr. NEGUSE",
+        "party": "D",
+        "state": "CO",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/N000191",
+        "examples": [
+          {
+            "bill_id": "118-hr-5770",
+            "label": "HR 5770",
+            "title": "Water Monitoring and Tracking Essential Resources (WATER) Data Improvement Act",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/5770"
+          },
+          {
+            "bill_id": "118-hr-4385",
+            "label": "HR 4385",
+            "title": "Drought Preparedness Act",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/4385"
+          },
+          {
+            "bill_id": "118-hr-1318",
+            "label": "HR 1318",
+            "title": "Women\u2019s Suffrage National Monument Location Act",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/1318"
+          }
+        ]
+      },
+      {
+        "rank": 9,
+        "bioguide": "S001217",
+        "turns": 78,
+        "words": 41233,
+        "active_days": 43,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 96,
+        "bills_passed": 3,
+        "bills_enacted": 3,
+        "passage_share": 0.03125,
+        "enactment_share": 0.03125,
+        "speaker_name": "Mr. SCOTT of Florida",
+        "party": "R",
+        "state": "FL",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/S001217",
+        "examples": [
+          {
+            "bill_id": "118-s-679",
+            "label": "S 679",
+            "title": "GAO Database Modernization Act of 2023",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/679"
+          },
+          {
+            "bill_id": "118-s-310",
+            "label": "S 310",
+            "title": "Disaster Contract Improvement Act",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/310"
+          },
+          {
+            "bill_id": "118-s-206",
+            "label": "S 206",
+            "title": "END FENTANYL Act",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/206"
+          }
+        ]
+      },
+      {
+        "rank": 10,
+        "bioguide": "C001114",
+        "turns": 22,
+        "words": 6618,
+        "active_days": 17,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 1,
+        "bills_sponsored": 47,
+        "bills_passed": 7,
+        "bills_enacted": 3,
+        "passage_share": 0.1489361702,
+        "enactment_share": 0.0638297872,
+        "speaker_name": "Mr. CURTIS",
+        "party": "R",
+        "state": "UT",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/C001114",
+        "examples": [
+          {
+            "bill_id": "118-hr-7872",
+            "label": "HR 7872",
+            "title": "Colorado River Salinity Control Fix Act",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/7872"
+          },
+          {
+            "bill_id": "118-hr-6395",
+            "label": "HR 6395",
+            "title": "Recognizing the Importance of Critical Minerals in Healthcare Act of 2023",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/6395"
+          },
+          {
+            "bill_id": "118-hr-4094",
+            "label": "HR 4094",
+            "title": "Great Salt Lake Stewardship Act",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/4094"
+          }
+        ]
+      },
+      {
+        "rank": 11,
+        "bioguide": "S001172",
+        "turns": 77,
+        "words": 14400,
+        "active_days": 13,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 34,
+        "bills_passed": 4,
+        "bills_enacted": 3,
+        "passage_share": 0.1176470588,
+        "enactment_share": 0.0882352941,
+        "speaker_name": "Mr. SMITH of Nebraska",
+        "party": "R",
+        "state": "NE",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/S001172",
+        "examples": [
+          {
+            "bill_id": "118-hr-8413",
+            "label": "HR 8413",
+            "title": "Swanson and Hugh Butler Reservoirs Land Conveyances Act",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/8413"
+          },
+          {
+            "bill_id": "118-hr-7507",
+            "label": "HR 7507",
+            "title": "To designate the facility of the United States Postal Service located at 203 East 6th Street in Lexington, Nebraska, as the \u2018William E. and Elsie L. Barrett Post Office Building.",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/7507"
+          },
+          {
+            "bill_id": "118-hr-3801",
+            "label": "HR 3801",
+            "title": "Employer Reporting Improvement Act",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/3801"
+          }
+        ]
+      },
+      {
+        "rank": 12,
+        "bioguide": "F000463",
+        "turns": 73,
+        "words": 34540,
+        "active_days": 43,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 33,
+        "bills_passed": 4,
+        "bills_enacted": 3,
+        "passage_share": 0.1212121212,
+        "enactment_share": 0.0909090909,
+        "speaker_name": "Mrs. FISCHER",
+        "party": "R",
+        "state": "NE",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/F000463",
+        "examples": [
+          {
+            "bill_id": "118-s-5355",
+            "label": "S 5355",
+            "title": "NACIE Improvement Act",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5355"
+          },
+          {
+            "bill_id": "118-s-656",
+            "label": "S 656",
+            "title": "Veteran Improvement Commercial Driver License Act of 2023",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/656"
+          },
+          {
+            "bill_id": "118-s-546",
+            "label": "S 546",
+            "title": "Recruit and Retain Act",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/546"
+          }
+        ]
+      },
+      {
+        "rank": 13,
+        "bioguide": "B001257",
+        "turns": 144,
+        "words": 40076,
+        "active_days": 25,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 31,
+        "bills_passed": 5,
+        "bills_enacted": 3,
+        "passage_share": 0.1612903226,
+        "enactment_share": 0.0967741935,
+        "speaker_name": "Mr. BILIRAKIS",
+        "party": "R",
+        "state": "FL",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/B001257",
+        "examples": [
+          {
+            "bill_id": "118-hr-7189",
+            "label": "HR 7189",
+            "title": "Congenital Heart Futures Reauthorization Act of 2024",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/7189"
+          },
+          {
+            "bill_id": "118-hr-2365",
+            "label": "HR 2365",
+            "title": "Dr. Emmanuel Bilirakis and Honorable Jennifer Wexton National Plan to End Parkinson\u2019s Act",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/2365"
+          },
+          {
+            "bill_id": "118-hr-1823",
+            "label": "HR 1823",
+            "title": "To designate the facility of the United States Postal Service located at 207 East Fort Dade Avenue in Brooksville, Florida, as the \"Specialist Justin Dean Coleman Memorial Post Office Building\".",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/1823"
+          }
+        ]
+      },
+      {
+        "rank": 14,
+        "bioguide": "L000585",
+        "turns": 29,
+        "words": 8670,
+        "active_days": 22,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 30,
+        "bills_passed": 4,
+        "bills_enacted": 3,
+        "passage_share": 0.1333333333,
+        "enactment_share": 0.1,
+        "speaker_name": "Mr. LaHOOD",
+        "party": "R",
+        "state": "IL",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/L000585",
+        "examples": [
+          {
+            "bill_id": "118-hr-9076",
+            "label": "HR 9076",
+            "title": "Supporting America\u2019s Children and Families Act",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/9076"
+          },
+          {
+            "bill_id": "118-hr-7438",
+            "label": "HR 7438",
+            "title": "FIFA World Cup 2026 Commemorative Coin Act",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/7438"
+          },
+          {
+            "bill_id": "118-hr-5861",
+            "label": "HR 5861",
+            "title": "BRIDGE for Workers Act",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/5861"
+          }
+        ]
+      },
+      {
+        "rank": 15,
+        "bioguide": "G000377",
+        "turns": 92,
+        "words": 387532,
+        "active_days": 13,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 5,
+        "bills_passed": 4,
+        "bills_enacted": 3,
+        "passage_share": 0.8,
+        "enactment_share": 0.6,
+        "speaker_name": "Ms. GRANGER",
+        "party": "R",
+        "state": "TX",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/G000377",
+        "examples": [
+          {
+            "bill_id": "118-hr-7463",
+            "label": "HR 7463",
+            "title": "Extension of Continuing Appropriations and Other Matters Act, 2024",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/7463"
+          },
+          {
+            "bill_id": "118-hr-6363",
+            "label": "HR 6363",
+            "title": "Further Continuing Appropriations and Other Extensions Act, 2024",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/6363"
+          },
+          {
+            "bill_id": "118-hr-5860",
+            "label": "HR 5860",
+            "title": "Continuing Appropriations Act, 2024 and Other Extensions Act",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/5860"
+          }
+        ]
+      },
+      {
+        "rank": 16,
+        "bioguide": "R000595",
+        "turns": 149,
+        "words": 51778,
+        "active_days": 33,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 248,
+        "bills_passed": 3,
+        "bills_enacted": 2,
+        "passage_share": 0.0120967742,
+        "enactment_share": 0.0080645161,
+        "speaker_name": "Mr. RUBIO",
+        "party": "R",
+        "state": "FL",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/R000595",
+        "examples": [
+          {
+            "bill_id": "118-s-3764",
+            "label": "S 3764",
+            "title": "United States Commission on International Religious Freedom Reauthorization Act of 2024",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/3764"
+          },
+          {
+            "bill_id": "118-s-50",
+            "label": "S 50",
+            "title": "Pensacola and Perdido Bays Estuary of National Significance Act of 2024",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/50"
+          }
+        ]
+      },
+      {
+        "rank": 17,
+        "bioguide": "D000563",
+        "turns": 1346,
+        "words": 686310,
+        "active_days": 225,
+        "profanity_hits": 3,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 113,
+        "bills_passed": 4,
+        "bills_enacted": 2,
+        "passage_share": 0.0353982301,
+        "enactment_share": 0.017699115,
+        "speaker_name": "Mr. DURBIN",
+        "party": "D",
+        "state": "IL",
+        "chamber": "senate",
+        "profanity_per_100k": 0.4371202518,
+        "member_url": "https://bioguide.congress.gov/search/bio/D000563",
+        "examples": [
+          {
+            "bill_id": "118-s-2051",
+            "label": "S 2051",
+            "title": "Missing Children\u2019s Assistance Reauthorization Act of 2023",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/2051"
+          },
+          {
+            "bill_id": "118-s-265",
+            "label": "S 265",
+            "title": "SIREN Reauthorization Act",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/265"
+          }
+        ]
+      },
+      {
+        "rank": 18,
+        "bioguide": "P000145",
+        "turns": 278,
+        "words": 93663,
+        "active_days": 81,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 91,
+        "bills_passed": 9,
+        "bills_enacted": 2,
+        "passage_share": 0.0989010989,
+        "enactment_share": 0.021978022,
+        "speaker_name": "Mr. PADILLA",
+        "party": "D",
+        "state": "CA",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/P000145",
+        "examples": [
+          {
+            "bill_id": "118-s-4077",
+            "label": "S 4077",
+            "title": "A bill to designate the facility of the United States Postal Service located at 180 Steuart Street in San Francisco, California, as the \"Dianne Feinstein Post Office\".",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/4077"
+          },
+          {
+            "bill_id": "118-s-3857",
+            "label": "S 3857",
+            "title": "Jamul Indian Village Land Transfer Act",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/3857"
+          }
+        ]
+      },
+      {
+        "rank": 19,
+        "bioguide": "M001176",
+        "turns": 140,
+        "words": 47738,
+        "active_days": 42,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 83,
+        "bills_passed": 4,
+        "bills_enacted": 2,
+        "passage_share": 0.0481927711,
+        "enactment_share": 0.0240963855,
+        "speaker_name": "Mr. MERKLEY",
+        "party": "D",
+        "state": "OR",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/M001176",
+        "examples": [
+          {
+            "bill_id": "118-s-1351",
+            "label": "S 1351",
+            "title": "Stop Institutional Child Abuse Act",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/1351"
+          },
+          {
+            "bill_id": "118-s-138",
+            "label": "S 138",
+            "title": "Promoting a Resolution to the Tibet-China Dispute Act",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/138"
+          }
+        ]
+      },
+      {
+        "rank": 20,
+        "bioguide": "H001046",
+        "turns": 41,
+        "words": 7505,
+        "active_days": 26,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 64,
+        "bills_passed": 3,
+        "bills_enacted": 2,
+        "passage_share": 0.046875,
+        "enactment_share": 0.03125,
+        "speaker_name": "Mr. HEINRICH",
+        "party": "D",
+        "state": "NM",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/H001046",
+        "examples": [
+          {
+            "bill_id": "118-s-2781",
+            "label": "S 2781",
+            "title": "Good Samaritan Remediation of Abandoned Hardrock Mines Act of 2024",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/2781"
+          },
+          {
+            "bill_id": "118-s-475",
+            "label": "S 475",
+            "title": "A bill to designate the clinic of the Department of Veterans Affairs in Gallup, New Mexico, as the Hiroshi \"Hershey\" Miyamura VA Clinic.",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/475"
+          }
+        ]
+      },
+      {
+        "rank": 21,
+        "bioguide": "R000608",
+        "turns": 35,
+        "words": 13723,
+        "active_days": 22,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 56,
+        "bills_passed": 3,
+        "bills_enacted": 2,
+        "passage_share": 0.0535714286,
+        "enactment_share": 0.0357142857,
+        "speaker_name": "Ms. ROSEN",
+        "party": "D",
+        "state": "NV",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/R000608",
+        "examples": [
+          {
+            "bill_id": "118-s-3448",
+            "label": "S 3448",
+            "title": "Never Again Education Reauthorization Act of 2023",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/3448"
+          },
+          {
+            "bill_id": "118-s-932",
+            "label": "S 932",
+            "title": "No CORRUPTION Act",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/932"
+          }
+        ]
+      },
+      {
+        "rank": 22,
+        "bioguide": "L000575",
+        "turns": 88,
+        "words": 97752,
+        "active_days": 52,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 54,
+        "bills_passed": 5,
+        "bills_enacted": 2,
+        "passage_share": 0.0925925926,
+        "enactment_share": 0.037037037,
+        "speaker_name": "Mr. LANKFORD",
+        "party": "R",
+        "state": "OK",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/L000575",
+        "examples": [
+          {
+            "bill_id": "118-s-5314",
+            "label": "S 5314",
+            "title": "A bill to designate the medical center of the Department of Veterans Affairs in Tulsa, Oklahoma, as the James Mountain Inhofe VA Medical Center.",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/5314"
+          },
+          {
+            "bill_id": "118-s-111",
+            "label": "S 111",
+            "title": "Providing Accountability Through Transparency Act of 2023",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/111"
+          }
+        ]
+      },
+      {
+        "rank": 23,
+        "bioguide": "R000605",
+        "turns": 30,
+        "words": 6491,
+        "active_days": 15,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 50,
+        "bills_passed": 3,
+        "bills_enacted": 2,
+        "passage_share": 0.06,
+        "enactment_share": 0.04,
+        "speaker_name": "Mr. ROUNDS",
+        "party": "R",
+        "state": "SD",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/R000605",
+        "examples": [
+          {
+            "bill_id": "118-s-3267",
+            "label": "S 3267",
+            "title": "A bill to designate the facility of the United States Postal Service located at 410 Dakota Avenue South in Huron, South Dakota, as the \"First Lieutenant Thomas Michael Martin Post Office Building\".",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/3267"
+          },
+          {
+            "bill_id": "118-s-2143",
+            "label": "S 2143",
+            "title": "A bill to designate the facility of the United States Postal Service located at 320 South 2nd Avenue in Sioux Falls, South Dakota, as the \"Staff Sergeant Robb Lura Rolfing Post Office Building\".",
+            "url": "https://www.congress.gov/bill/118th-congress/senate-bill/2143"
+          }
+        ]
+      },
+      {
+        "rank": 24,
+        "bioguide": "C001103",
+        "turns": 399,
+        "words": 76299,
+        "active_days": 168,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 1,
+        "bills_sponsored": 48,
+        "bills_passed": 3,
+        "bills_enacted": 2,
+        "passage_share": 0.0625,
+        "enactment_share": 0.0416666667,
+        "speaker_name": "Mr. CARTER of Georgia",
+        "party": "R",
+        "state": "GA",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/C001103",
+        "examples": [
+          {
+            "bill_id": "118-hr-6960",
+            "label": "HR 6960",
+            "title": "Emergency Medical Services for Children Reauthorization Act of 2024",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/6960"
+          },
+          {
+            "bill_id": "118-hr-593",
+            "label": "HR 593",
+            "title": "To rename the Department of Veterans Affairs community-based outpatient clinic in Hinesville, Georgia, as the \"John Gibson, Dan James, William Sapp, and Frankie Smiley VA Clinic\".",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/593"
+          }
+        ]
+      },
+      {
+        "rank": 25,
+        "bioguide": "M001221",
+        "turns": 153,
+        "words": 27585,
+        "active_days": 58,
+        "profanity_hits": 1,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 45,
+        "bills_passed": 9,
+        "bills_enacted": 2,
+        "passage_share": 0.2,
+        "enactment_share": 0.0444444444,
+        "speaker_name": "Mr. MOLINARO",
+        "party": "R",
+        "state": "NY",
+        "chamber": "house",
+        "profanity_per_100k": 3.6251586007,
+        "member_url": "https://bioguide.congress.gov/search/bio/M001221",
+        "examples": [
+          {
+            "bill_id": "118-hr-6249",
+            "label": "HR 6249",
+            "title": "Think Differently About Emergencies Act",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/6249"
+          },
+          {
+            "bill_id": "118-hr-670",
+            "label": "HR 670",
+            "title": "Think Differently Database Act",
+            "url": "https://www.congress.gov/bill/118th-congress/house-bill/670"
+          }
+        ]
+      }
+    ],
+    "profanity": [
+      {
+        "rank": 1,
+        "bioguide": "S001183",
+        "turns": 199,
+        "words": 249045,
+        "active_days": 58,
+        "profanity_hits": 137,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 25,
+        "bills_passed": 1,
+        "bills_enacted": 1,
+        "passage_share": 0.04,
+        "enactment_share": 0.04,
+        "speaker_name": "Mr. SCHWEIKERT",
+        "party": "R",
+        "state": "AZ",
+        "chamber": "house",
+        "profanity_per_100k": 55.0101387299,
+        "member_url": "https://bioguide.congress.gov/search/bio/S001183"
+      },
+      {
+        "rank": 2,
+        "bioguide": "R000614",
+        "turns": 508,
+        "words": 241574,
+        "active_days": 92,
+        "profanity_hits": 57,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 41,
+        "bills_passed": 2,
+        "bills_enacted": 0,
+        "passage_share": 0.0487804878,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. ROY",
+        "party": "R",
+        "state": "TX",
+        "chamber": "house",
+        "profanity_per_100k": 23.5952544562,
+        "member_url": "https://bioguide.congress.gov/search/bio/R000614"
+      },
+      {
+        "rank": 3,
+        "bioguide": "M000312",
+        "turns": 718,
+        "words": 206398,
+        "active_days": 93,
+        "profanity_hits": 39,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 17,
+        "bills_passed": 1,
+        "bills_enacted": 0,
+        "passage_share": 0.0588235294,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. McGOVERN",
+        "party": "D",
+        "state": "MA",
+        "chamber": "house",
+        "profanity_per_100k": 18.8955319334,
+        "member_url": "https://bioguide.congress.gov/search/bio/M000312"
+      },
+      {
+        "rank": 4,
+        "bioguide": "G000359",
+        "turns": 81,
+        "words": 47314,
+        "active_days": 25,
+        "profanity_hits": 8,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 18,
+        "bills_passed": 1,
+        "bills_enacted": 1,
+        "passage_share": 0.0555555556,
+        "enactment_share": 0.0555555556,
+        "speaker_name": "Mr. GRAHAM",
+        "party": "R",
+        "state": "SC",
+        "chamber": "senate",
+        "profanity_per_100k": 16.9083146637,
+        "member_url": "https://bioguide.congress.gov/search/bio/G000359"
+      },
+      {
+        "rank": 5,
+        "bioguide": "C001039",
+        "turns": 110,
+        "words": 27821,
+        "active_days": 32,
+        "profanity_hits": 4,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 18,
+        "bills_passed": 2,
+        "bills_enacted": 0,
+        "passage_share": 0.1111111111,
+        "enactment_share": 0.0,
+        "speaker_name": "Mrs. CAMMACK",
+        "party": "R",
+        "state": "FL",
+        "chamber": "house",
+        "profanity_per_100k": 14.3776284102,
+        "member_url": "https://bioguide.congress.gov/search/bio/C001039"
+      },
+      {
+        "rank": 6,
+        "bioguide": "C001098",
+        "turns": 141,
+        "words": 74563,
+        "active_days": 48,
+        "profanity_hits": 8,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 123,
+        "bills_passed": 6,
+        "bills_enacted": 3,
+        "passage_share": 0.0487804878,
+        "enactment_share": 0.0243902439,
+        "speaker_name": "Mr. CRUZ",
+        "party": "R",
+        "state": "TX",
+        "chamber": "senate",
+        "profanity_per_100k": 10.729182034,
+        "member_url": "https://bioguide.congress.gov/search/bio/C001098"
+      },
+      {
+        "rank": 7,
+        "bioguide": "W000802",
+        "turns": 273,
+        "words": 121115,
+        "active_days": 67,
+        "profanity_hits": 10,
+        "profanity_quoted_hits": 2,
+        "bills_sponsored": 51,
+        "bills_passed": 1,
+        "bills_enacted": 1,
+        "passage_share": 0.0196078431,
+        "enactment_share": 0.0196078431,
+        "speaker_name": "Mr. WHITEHOUSE",
+        "party": "D",
+        "state": "RI",
+        "chamber": "senate",
+        "profanity_per_100k": 8.2566156133,
+        "member_url": "https://bioguide.congress.gov/search/bio/W000802"
+      },
+      {
+        "rank": 8,
+        "bioguide": "S001194",
+        "turns": 204,
+        "words": 48509,
+        "active_days": 70,
+        "profanity_hits": 4,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 62,
+        "bills_passed": 2,
+        "bills_enacted": 0,
+        "passage_share": 0.0322580645,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. SCHATZ",
+        "party": "D",
+        "state": "HI",
+        "chamber": "senate",
+        "profanity_per_100k": 8.2458925148,
+        "member_url": "https://bioguide.congress.gov/search/bio/S001194"
+      },
+      {
+        "rank": 9,
+        "bioguide": "B000944",
+        "turns": 101,
+        "words": 62560,
+        "active_days": 45,
+        "profanity_hits": 5,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 75,
+        "bills_passed": 2,
+        "bills_enacted": 1,
+        "passage_share": 0.0266666667,
+        "enactment_share": 0.0133333333,
+        "speaker_name": "Mr. BROWN",
+        "party": "D",
+        "state": "OH",
+        "chamber": "senate",
+        "profanity_per_100k": 7.9923273657,
+        "member_url": "https://bioguide.congress.gov/search/bio/B000944"
+      },
+      {
+        "rank": 10,
+        "bioguide": "P000603",
+        "turns": 178,
+        "words": 117111,
+        "active_days": 47,
+        "profanity_hits": 9,
+        "profanity_quoted_hits": 1,
+        "bills_sponsored": 36,
+        "bills_passed": 0,
+        "bills_enacted": 0,
+        "passage_share": 0.0,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. PAUL",
+        "party": "R",
+        "state": "KY",
+        "chamber": "senate",
+        "profanity_per_100k": 7.685016779,
+        "member_url": "https://bioguide.congress.gov/search/bio/P000603"
+      },
+      {
+        "rank": 11,
+        "bioguide": "S001198",
+        "turns": 145,
+        "words": 117494,
+        "active_days": 40,
+        "profanity_hits": 9,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 57,
+        "bills_passed": 5,
+        "bills_enacted": 0,
+        "passage_share": 0.0877192982,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. SULLIVAN",
+        "party": "R",
+        "state": "AK",
+        "chamber": "senate",
+        "profanity_per_100k": 7.6599656153,
+        "member_url": "https://bioguide.congress.gov/search/bio/S001198"
+      },
+      {
+        "rank": 12,
+        "bioguide": "C001095",
+        "turns": 51,
+        "words": 28806,
+        "active_days": 35,
+        "profanity_hits": 2,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 65,
+        "bills_passed": 0,
+        "bills_enacted": 0,
+        "passage_share": 0.0,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. COTTON",
+        "party": "R",
+        "state": "AR",
+        "chamber": "senate",
+        "profanity_per_100k": 6.9429979865,
+        "member_url": "https://bioguide.congress.gov/search/bio/C001095"
+      },
+      {
+        "rank": 13,
+        "bioguide": "W000779",
+        "turns": 154,
+        "words": 64334,
+        "active_days": 61,
+        "profanity_hits": 4,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 73,
+        "bills_passed": 2,
+        "bills_enacted": 1,
+        "passage_share": 0.0273972603,
+        "enactment_share": 0.0136986301,
+        "speaker_name": "Mr. WYDEN",
+        "party": "D",
+        "state": "OR",
+        "chamber": "senate",
+        "profanity_per_100k": 6.2175521497,
+        "member_url": "https://bioguide.congress.gov/search/bio/W000779"
+      },
+      {
+        "rank": 14,
+        "bioguide": "T000476",
+        "turns": 112,
+        "words": 34880,
+        "active_days": 47,
+        "profanity_hits": 2,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 40,
+        "bills_passed": 2,
+        "bills_enacted": 0,
+        "passage_share": 0.05,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. TILLIS",
+        "party": "R",
+        "state": "NC",
+        "chamber": "senate",
+        "profanity_per_100k": 5.7339449541,
+        "member_url": "https://bioguide.congress.gov/search/bio/T000476"
+      },
+      {
+        "rank": 15,
+        "bioguide": "S000344",
+        "turns": 103,
+        "words": 36286,
+        "active_days": 35,
+        "profanity_hits": 2,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 15,
+        "bills_passed": 1,
+        "bills_enacted": 0,
+        "passage_share": 0.0666666667,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. SHERMAN",
+        "party": "D",
+        "state": "CA",
+        "chamber": "house",
+        "profanity_per_100k": 5.5117676239,
+        "member_url": "https://bioguide.congress.gov/search/bio/S000344"
+      },
+      {
+        "rank": 16,
+        "bioguide": "P000605",
+        "turns": 448,
+        "words": 74499,
+        "active_days": 53,
+        "profanity_hits": 4,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 38,
+        "bills_passed": 3,
+        "bills_enacted": 0,
+        "passage_share": 0.0789473684,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. PERRY",
+        "party": "R",
+        "state": "PA",
+        "chamber": "house",
+        "profanity_per_100k": 5.3691995866,
+        "member_url": "https://bioguide.congress.gov/search/bio/P000605"
+      },
+      {
+        "rank": 17,
+        "bioguide": "R000617",
+        "turns": 118,
+        "words": 40334,
+        "active_days": 54,
+        "profanity_hits": 2,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 7,
+        "bills_passed": 1,
+        "bills_enacted": 0,
+        "passage_share": 0.1428571429,
+        "enactment_share": 0.0,
+        "speaker_name": "Mrs. RAMIREZ",
+        "party": "D",
+        "state": "IL",
+        "chamber": "house",
+        "profanity_per_100k": 4.9585957257,
+        "member_url": "https://bioguide.congress.gov/search/bio/R000617"
+      },
+      {
+        "rank": 18,
+        "bioguide": "L000599",
+        "turns": 188,
+        "words": 44665,
+        "active_days": 81,
+        "profanity_hits": 2,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 58,
+        "bills_passed": 7,
+        "bills_enacted": 1,
+        "passage_share": 0.1206896552,
+        "enactment_share": 0.0172413793,
+        "speaker_name": "Mr. LAWLER",
+        "party": "R",
+        "state": "NY",
+        "chamber": "house",
+        "profanity_per_100k": 4.4777790216,
+        "member_url": "https://bioguide.congress.gov/search/bio/L000599"
+      },
+      {
+        "rank": 19,
+        "bioguide": "V000137",
+        "turns": 60,
+        "words": 47254,
+        "active_days": 21,
+        "profanity_hits": 2,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 34,
+        "bills_passed": 0,
+        "bills_enacted": 0,
+        "passage_share": 0.0,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. VANCE",
+        "party": "R",
+        "state": "OH",
+        "chamber": "senate",
+        "profanity_per_100k": 4.2324459305,
+        "member_url": "https://bioguide.congress.gov/search/bio/V000137"
+      },
+      {
+        "rank": 20,
+        "bioguide": "Y000064",
+        "turns": 57,
+        "words": 26432,
+        "active_days": 36,
+        "profanity_hits": 1,
+        "profanity_quoted_hits": 1,
+        "bills_sponsored": 33,
+        "bills_passed": 1,
+        "bills_enacted": 0,
+        "passage_share": 0.0303030303,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. YOUNG",
+        "party": "R",
+        "state": "IN",
+        "chamber": "senate",
+        "profanity_per_100k": 3.7832929782,
+        "member_url": "https://bioguide.congress.gov/search/bio/Y000064"
+      },
+      {
+        "rank": 21,
+        "bioguide": "L000600",
+        "turns": 240,
+        "words": 55128,
+        "active_days": 77,
+        "profanity_hits": 2,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 27,
+        "bills_passed": 3,
+        "bills_enacted": 1,
+        "passage_share": 0.1111111111,
+        "enactment_share": 0.037037037,
+        "speaker_name": "Mr. LANGWORTHY",
+        "party": "R",
+        "state": "NY",
+        "chamber": "house",
+        "profanity_per_100k": 3.627920476,
+        "member_url": "https://bioguide.congress.gov/search/bio/L000600"
+      },
+      {
+        "rank": 22,
+        "bioguide": "M001221",
+        "turns": 153,
+        "words": 27585,
+        "active_days": 58,
+        "profanity_hits": 1,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 45,
+        "bills_passed": 9,
+        "bills_enacted": 2,
+        "passage_share": 0.2,
+        "enactment_share": 0.0444444444,
+        "speaker_name": "Mr. MOLINARO",
+        "party": "R",
+        "state": "NY",
+        "chamber": "house",
+        "profanity_per_100k": 3.6251586007,
+        "member_url": "https://bioguide.congress.gov/search/bio/M001221"
+      },
+      {
+        "rank": 23,
+        "bioguide": "B001302",
+        "turns": 240,
+        "words": 57217,
+        "active_days": 41,
+        "profanity_hits": 2,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 604,
+        "bills_passed": 1,
+        "bills_enacted": 0,
+        "passage_share": 0.0016556291,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. BIGGS of Arizona",
+        "party": "R",
+        "state": "AZ",
+        "chamber": "house",
+        "profanity_per_100k": 3.4954646346,
+        "member_url": "https://bioguide.congress.gov/search/bio/B001302"
+      },
+      {
+        "rank": 24,
+        "bioguide": "C000127",
+        "turns": 83,
+        "words": 32386,
+        "active_days": 33,
+        "profanity_hits": 1,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 32,
+        "bills_passed": 4,
+        "bills_enacted": 1,
+        "passage_share": 0.125,
+        "enactment_share": 0.03125,
+        "speaker_name": "Ms. CANTWELL",
+        "party": "D",
+        "state": "WA",
+        "chamber": "senate",
+        "profanity_per_100k": 3.0877539678,
+        "member_url": "https://bioguide.congress.gov/search/bio/C000127"
+      },
+      {
+        "rank": 25,
+        "bioguide": "J000299",
+        "turns": 107,
+        "words": 34018,
+        "active_days": 23,
+        "profanity_hits": 1,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 8,
+        "bills_passed": 0,
+        "bills_enacted": 0,
+        "passage_share": 0.0,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. JOHNSON of Louisiana",
+        "party": "R",
+        "state": "LA",
+        "chamber": "house",
+        "profanity_per_100k": 2.9396202011,
+        "member_url": "https://bioguide.congress.gov/search/bio/J000299"
+      }
+    ]
+  }
+}

@@ -1,0 +1,4046 @@
+{
+  "congress": 111,
+  "label": "Congress 111",
+  "generated_utc": "2026-08-03T20:42:22+00:00",
+  "min_words": 25000,
+  "top": 25,
+  "coverage": {
+    "speech_first_date": "2009-01-06",
+    "speech_last_date": "2010-12-29",
+    "speaker_days": 40677,
+    "members_with_speech": 549,
+    "bills": 10621,
+    "members_with_bills": 550,
+    "bill_sources": [
+      "govinfo"
+    ],
+    "warning": ""
+  },
+  "definitions": {
+    "speech": "Attributed non-procedural spoken words; turns and active days provide context.",
+    "sponsored": "Distinct H.R. and S. bills for which the member is the official sponsor.",
+    "passed": "Sponsored bills with an official measure-level House or Senate passage action.",
+    "enacted": "Sponsored bills with an assigned public or private law number.",
+    "profanity": "Unquoted curated profanity hits per 100,000 attributed words."
+  },
+  "caveats": [
+    "Speech counts include only remarks attributable to a specific member by Bioguide ID; procedural speech and submitted Extensions of Remarks are excluded.",
+    "Profanity uses a narrow, hand-curated list. Passages marked as quotations are excluded from a member's rate and retained as a separate audit count.",
+    "Members below the word threshold are omitted from the profanity ranking because rates computed from small samples are unstable.",
+    "Legislative counts cover sponsored House and Senate bills (H.R. and S.) only; cosponsorships, resolutions, and amendments are outside this version.",
+    "A sponsored bill passing or becoming law is descriptive. It does not establish that one member personally caused the outcome or measure legislative effectiveness by itself.",
+    "The Congressional Record is lightly edited rather than verbatim, and source metadata can be corrected after publication."
+  ],
+  "leaderboards": {
+    "speech": [
+      {
+        "rank": 1,
+        "bioguide": "D000563",
+        "turns": 2855,
+        "words": 1197869,
+        "active_days": 274,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 66,
+        "bills_passed": 10,
+        "bills_enacted": 6,
+        "passage_share": 0.1515151515,
+        "enactment_share": 0.0909090909,
+        "speaker_name": "Mr. DURBIN",
+        "party": "D",
+        "state": "IL",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/D000563"
+      },
+      {
+        "rank": 2,
+        "bioguide": "R000146",
+        "turns": 4225,
+        "words": 818026,
+        "active_days": 317,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 50,
+        "bills_passed": 2,
+        "bills_enacted": 1,
+        "passage_share": 0.04,
+        "enactment_share": 0.02,
+        "speaker_name": "Mr. REID",
+        "party": "D",
+        "state": "NV",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/R000146"
+      },
+      {
+        "rank": 3,
+        "bioguide": "K000352",
+        "turns": 1277,
+        "words": 797895,
+        "active_days": 256,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 1,
+        "bills_sponsored": 11,
+        "bills_passed": 0,
+        "bills_enacted": 0,
+        "passage_share": 0.0,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. KYL",
+        "party": "R",
+        "state": "AZ",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/K000352"
+      },
+      {
+        "rank": 4,
+        "bioguide": "K000362",
+        "turns": 935,
+        "words": 735512,
+        "active_days": 134,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 9,
+        "bills_passed": 0,
+        "bills_enacted": 0,
+        "passage_share": 0.0,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. KING of Iowa",
+        "party": "R",
+        "state": "IA",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/K000362"
+      },
+      {
+        "rank": 5,
+        "bioguide": "L000174",
+        "turns": 1036,
+        "words": 679827,
+        "active_days": 224,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 1,
+        "bills_sponsored": 58,
+        "bills_passed": 10,
+        "bills_enacted": 8,
+        "passage_share": 0.1724137931,
+        "enactment_share": 0.1379310345,
+        "speaker_name": "Mr. LEAHY",
+        "party": "D",
+        "state": "VT",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/L000174"
+      },
+      {
+        "rank": 6,
+        "bioguide": "D000432",
+        "turns": 1080,
+        "words": 605501,
+        "active_days": 182,
+        "profanity_hits": 1,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 33,
+        "bills_passed": 2,
+        "bills_enacted": 0,
+        "passage_share": 0.0606060606,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. DORGAN",
+        "party": "D",
+        "state": "ND",
+        "chamber": "senate",
+        "profanity_per_100k": 0.1651524936,
+        "member_url": "https://bioguide.congress.gov/search/bio/D000432"
+      },
+      {
+        "rank": 7,
+        "bioguide": "D000388",
+        "turns": 1573,
+        "words": 604128,
+        "active_days": 173,
+        "profanity_hits": 1,
+        "profanity_quoted_hits": 1,
+        "bills_sponsored": 66,
+        "bills_passed": 6,
+        "bills_enacted": 4,
+        "passage_share": 0.0909090909,
+        "enactment_share": 0.0606060606,
+        "speaker_name": "Mr. DODD",
+        "party": "D",
+        "state": "CT",
+        "chamber": "senate",
+        "profanity_per_100k": 0.1655278352,
+        "member_url": "https://bioguide.congress.gov/search/bio/D000388"
+      },
+      {
+        "rank": 8,
+        "bioguide": "F000062",
+        "turns": 586,
+        "words": 557790,
+        "active_days": 135,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 2,
+        "bills_sponsored": 129,
+        "bills_passed": 10,
+        "bills_enacted": 3,
+        "passage_share": 0.0775193798,
+        "enactment_share": 0.023255814,
+        "speaker_name": "Mrs. FEINSTEIN",
+        "party": "D",
+        "state": "CA",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/F000062"
+      },
+      {
+        "rank": 9,
+        "bioguide": "M000303",
+        "turns": 1334,
+        "words": 476919,
+        "active_days": 180,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 22,
+        "bills_passed": 2,
+        "bills_enacted": 1,
+        "passage_share": 0.0909090909,
+        "enactment_share": 0.0454545455,
+        "speaker_name": "Mr. McCAIN",
+        "party": "R",
+        "state": "AZ",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/M000303"
+      },
+      {
+        "rank": 10,
+        "bioguide": "B000468",
+        "turns": 488,
+        "words": 475881,
+        "active_days": 182,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 80,
+        "bills_passed": 2,
+        "bills_enacted": 1,
+        "passage_share": 0.025,
+        "enactment_share": 0.0125,
+        "speaker_name": "Mr. BINGAMAN",
+        "party": "D",
+        "state": "NM",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/B000468"
+      },
+      {
+        "rank": 11,
+        "bioguide": "G000386",
+        "turns": 626,
+        "words": 457734,
+        "active_days": 169,
+        "profanity_hits": 1,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 40,
+        "bills_passed": 1,
+        "bills_enacted": 0,
+        "passage_share": 0.025,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. GRASSLEY",
+        "party": "R",
+        "state": "IA",
+        "chamber": "senate",
+        "profanity_per_100k": 0.2184674942,
+        "member_url": "https://bioguide.congress.gov/search/bio/G000386"
+      },
+      {
+        "rank": 12,
+        "bioguide": "A000360",
+        "turns": 843,
+        "words": 438566,
+        "active_days": 159,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 26,
+        "bills_passed": 0,
+        "bills_enacted": 0,
+        "passage_share": 0.0,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. ALEXANDER",
+        "party": "R",
+        "state": "TN",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/A000360"
+      },
+      {
+        "rank": 13,
+        "bioguide": "S001141",
+        "turns": 710,
+        "words": 431976,
+        "active_days": 162,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 11,
+        "bills_passed": 0,
+        "bills_enacted": 0,
+        "passage_share": 0.0,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. SESSIONS",
+        "party": "R",
+        "state": "AL",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/S001141"
+      },
+      {
+        "rank": 14,
+        "bioguide": "C000560",
+        "turns": 1059,
+        "words": 429301,
+        "active_days": 137,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 12,
+        "bills_passed": 0,
+        "bills_enacted": 0,
+        "passage_share": 0.0,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. COBURN",
+        "party": "R",
+        "state": "OK",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/C000560"
+      },
+      {
+        "rank": 15,
+        "bioguide": "S000709",
+        "turns": 475,
+        "words": 403784,
+        "active_days": 125,
+        "profanity_hits": 1,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 116,
+        "bills_passed": 0,
+        "bills_enacted": 0,
+        "passage_share": 0.0,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. SPECTER",
+        "party": "D",
+        "state": "PA",
+        "chamber": "senate",
+        "profanity_per_100k": 0.2476571632,
+        "member_url": "https://bioguide.congress.gov/search/bio/S000709"
+      },
+      {
+        "rank": 16,
+        "bioguide": "G000552",
+        "turns": 642,
+        "words": 400105,
+        "active_days": 155,
+        "profanity_hits": 4,
+        "profanity_quoted_hits": 5,
+        "bills_sponsored": 13,
+        "bills_passed": 1,
+        "bills_enacted": 0,
+        "passage_share": 0.0769230769,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. GOHMERT",
+        "party": "R",
+        "state": "TX",
+        "chamber": "house",
+        "profanity_per_100k": 0.9997375689,
+        "member_url": "https://bioguide.congress.gov/search/bio/G000552"
+      },
+      {
+        "rank": 17,
+        "bioguide": "M000355",
+        "turns": 999,
+        "words": 392903,
+        "active_days": 278,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 2,
+        "bills_sponsored": 5,
+        "bills_passed": 0,
+        "bills_enacted": 0,
+        "passage_share": 0.0,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. McCONNELL",
+        "party": "R",
+        "state": "KY",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/M000355"
+      },
+      {
+        "rank": 18,
+        "bioguide": "A000358",
+        "turns": 1858,
+        "words": 380870,
+        "active_days": 90,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 8,
+        "bills_passed": 3,
+        "bills_enacted": 0,
+        "passage_share": 0.375,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. AKIN",
+        "party": "R",
+        "state": "MO",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/A000358"
+      },
+      {
+        "rank": 19,
+        "bioguide": "B000243",
+        "turns": 1713,
+        "words": 375834,
+        "active_days": 139,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 51,
+        "bills_passed": 3,
+        "bills_enacted": 2,
+        "passage_share": 0.0588235294,
+        "enactment_share": 0.0392156863,
+        "speaker_name": "Mr. BAUCUS",
+        "party": "D",
+        "state": "MT",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/B000243"
+      },
+      {
+        "rank": 20,
+        "bioguide": "L000261",
+        "turns": 904,
+        "words": 355310,
+        "active_days": 187,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 56,
+        "bills_passed": 6,
+        "bills_enacted": 2,
+        "passage_share": 0.1071428571,
+        "enactment_share": 0.0357142857,
+        "speaker_name": "Mr. LEVIN",
+        "party": "D",
+        "state": "MI",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/L000261"
+      },
+      {
+        "rank": 21,
+        "bioguide": "H000206",
+        "turns": 566,
+        "words": 341400,
+        "active_days": 118,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 40,
+        "bills_passed": 1,
+        "bills_enacted": 1,
+        "passage_share": 0.025,
+        "enactment_share": 0.025,
+        "speaker_name": "Mr. HARKIN",
+        "party": "D",
+        "state": "IA",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/H000206"
+      },
+      {
+        "rank": 22,
+        "bioguide": "F000061",
+        "turns": 378,
+        "words": 332303,
+        "active_days": 144,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 68,
+        "bills_passed": 2,
+        "bills_enacted": 1,
+        "passage_share": 0.0294117647,
+        "enactment_share": 0.0147058824,
+        "speaker_name": "Mr. FEINGOLD",
+        "party": "D",
+        "state": "WI",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/F000061"
+      },
+      {
+        "rank": 23,
+        "bioguide": "C000141",
+        "turns": 514,
+        "words": 326936,
+        "active_days": 166,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 40,
+        "bills_passed": 1,
+        "bills_enacted": 1,
+        "passage_share": 0.025,
+        "enactment_share": 0.025,
+        "speaker_name": "Mr. CARDIN",
+        "party": "D",
+        "state": "MD",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/C000141"
+      },
+      {
+        "rank": 24,
+        "bioguide": "S000663",
+        "turns": 339,
+        "words": 326364,
+        "active_days": 152,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 61,
+        "bills_passed": 1,
+        "bills_enacted": 1,
+        "passage_share": 0.0163934426,
+        "enactment_share": 0.0163934426,
+        "speaker_name": "Ms. SNOWE",
+        "party": "R",
+        "state": "ME",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/S000663"
+      },
+      {
+        "rank": 25,
+        "bioguide": "H000338",
+        "turns": 438,
+        "words": 318890,
+        "active_days": 133,
+        "profanity_hits": 1,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 24,
+        "bills_passed": 1,
+        "bills_enacted": 1,
+        "passage_share": 0.0416666667,
+        "enactment_share": 0.0416666667,
+        "speaker_name": "Mr. HATCH",
+        "party": "R",
+        "state": "UT",
+        "chamber": "senate",
+        "profanity_per_100k": 0.3135877575,
+        "member_url": "https://bioguide.congress.gov/search/bio/H000338"
+      }
+    ],
+    "sponsored": [
+      {
+        "rank": 1,
+        "bioguide": "S000148",
+        "turns": 411,
+        "words": 140334,
+        "active_days": 106,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 133,
+        "bills_passed": 5,
+        "bills_enacted": 5,
+        "passage_share": 0.037593985,
+        "enactment_share": 0.037593985,
+        "speaker_name": "Mr. SCHUMER",
+        "party": "D",
+        "state": "NY",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/S000148",
+        "examples": [
+          {
+            "bill_id": "111-s-4037",
+            "label": "S 4037",
+            "title": "Security Screening Confidential Data Privacy Act",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/4037"
+          },
+          {
+            "bill_id": "111-s-4029",
+            "label": "S 4029",
+            "title": "Preventing Sex Offenders Access to Children in Our Communities Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/4029"
+          },
+          {
+            "bill_id": "111-s-4028",
+            "label": "S 4028",
+            "title": "Erin's Law",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/4028"
+          }
+        ]
+      },
+      {
+        "rank": 2,
+        "bioguide": "F000062",
+        "turns": 586,
+        "words": 557790,
+        "active_days": 135,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 2,
+        "bills_sponsored": 129,
+        "bills_passed": 10,
+        "bills_enacted": 3,
+        "passage_share": 0.0775193798,
+        "enactment_share": 0.023255814,
+        "speaker_name": "Mrs. FEINSTEIN",
+        "party": "D",
+        "state": "CA",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/F000062",
+        "examples": [
+          {
+            "bill_id": "111-s-4048",
+            "label": "S 4048",
+            "title": "FISA Sunsets Extension Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/4048"
+          },
+          {
+            "bill_id": "111-s-4010",
+            "label": "S 4010",
+            "title": "A bill for the relief of Shigeru Yamada.",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/4010"
+          },
+          {
+            "bill_id": "111-s-3982",
+            "label": "S 3982",
+            "title": "A bill to amend the limitation on liability for certain passenger rail accidents or incidents under section 28103 of title 49, United States Code, and for other purposes.",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3982"
+          }
+        ]
+      },
+      {
+        "rank": 3,
+        "bioguide": "S000709",
+        "turns": 475,
+        "words": 403784,
+        "active_days": 125,
+        "profanity_hits": 1,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 116,
+        "bills_passed": 0,
+        "bills_enacted": 0,
+        "passage_share": 0.0,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. SPECTER",
+        "party": "D",
+        "state": "PA",
+        "chamber": "senate",
+        "profanity_per_100k": 0.2476571632,
+        "member_url": "https://bioguide.congress.gov/search/bio/S000709",
+        "examples": [
+          {
+            "bill_id": "111-s-4054",
+            "label": "S 4054",
+            "title": "Notice Pleading Restoration Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/4054"
+          },
+          {
+            "bill_id": "111-s-4045",
+            "label": "S 4045",
+            "title": "Armed Career Criminal Sentencing Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/4045"
+          },
+          {
+            "bill_id": "111-s-4033",
+            "label": "S 4033",
+            "title": "Restoration of Legal Rights for Claimants under Holocaust-Era Insurance Policies Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/4033"
+          }
+        ]
+      },
+      {
+        "rank": 4,
+        "bioguide": "B000944",
+        "turns": 394,
+        "words": 122966,
+        "active_days": 69,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 107,
+        "bills_passed": 2,
+        "bills_enacted": 0,
+        "passage_share": 0.0186915888,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. BROWN",
+        "party": "D",
+        "state": "OH",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/B000944",
+        "examples": [
+          {
+            "bill_id": "111-s-4055",
+            "label": "S 4055",
+            "title": "Trade Adjustment Assistance Extension Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/4055"
+          },
+          {
+            "bill_id": "111-s-4034",
+            "label": "S 4034",
+            "title": "SMART Act",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/4034"
+          },
+          {
+            "bill_id": "111-s-3979",
+            "label": "S 3979",
+            "title": "Aiding Those Facing Foreclosure Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3979"
+          }
+        ]
+      },
+      {
+        "rank": 5,
+        "bioguide": "C001070",
+        "turns": 0,
+        "words": 0,
+        "active_days": 0,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 99,
+        "bills_passed": 0,
+        "bills_enacted": 0,
+        "passage_share": 0.0,
+        "enactment_share": 0.0,
+        "speaker_name": "Sen. Casey, Robert P., Jr. [D-PA]",
+        "party": "D",
+        "state": "PA",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/C001070",
+        "examples": [
+          {
+            "bill_id": "111-s-4056",
+            "label": "S 4056",
+            "title": "A bill to amend the Internal Revenue Code of 1986 to permit the disclosure of certain tax return information for the purposes of missing or exploited children investigations.",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/4056"
+          },
+          {
+            "bill_id": "111-s-4040",
+            "label": "S 4040",
+            "title": "A bill to preserve Medicare beneficiary choice by restoring and expanding the Medicare open enrollment and disenrollment opportunities repealed by section 3204(a) of the Patient Protection and Affordable Care Act.",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/4040"
+          },
+          {
+            "bill_id": "111-s-4039",
+            "label": "S 4039",
+            "title": "Campus SaVE Act",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/4039"
+          }
+        ]
+      },
+      {
+        "rank": 6,
+        "bioguide": "K000148",
+        "turns": 677,
+        "words": 249168,
+        "active_days": 122,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 96,
+        "bills_passed": 5,
+        "bills_enacted": 4,
+        "passage_share": 0.0520833333,
+        "enactment_share": 0.0416666667,
+        "speaker_name": "Mr. KERRY",
+        "party": "D",
+        "state": "MA",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/K000148",
+        "examples": [
+          {
+            "bill_id": "111-s-4058",
+            "label": "S 4058",
+            "title": "Helping Heroes Keep Their Homes Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/4058"
+          },
+          {
+            "bill_id": "111-s-4046",
+            "label": "S 4046",
+            "title": "Workplace Religious Freedom Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/4046"
+          },
+          {
+            "bill_id": "111-s-3951",
+            "label": "S 3951",
+            "title": "A bill to authorize United States participation in, and appropriations for, the United States contribution to the ninth replenishment of the resources of the Asian Development Fund and the United States subscription to the fifth general capital increase of the Asian Development Bank.",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3951"
+          }
+        ]
+      },
+      {
+        "rank": 7,
+        "bioguide": "M000639",
+        "turns": 260,
+        "words": 135496,
+        "active_days": 93,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 2,
+        "bills_sponsored": 94,
+        "bills_passed": 1,
+        "bills_enacted": 1,
+        "passage_share": 0.0106382979,
+        "enactment_share": 0.0106382979,
+        "speaker_name": "Mr. MENENDEZ",
+        "party": "D",
+        "state": "NJ",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/M000639",
+        "examples": [
+          {
+            "bill_id": "111-s-4059",
+            "label": "S 4059",
+            "title": "Choice Neighborhoods Initiative Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/4059"
+          },
+          {
+            "bill_id": "111-s-4041",
+            "label": "S 4041",
+            "title": "Prepaid Card Consumer Protection Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/4041"
+          },
+          {
+            "bill_id": "111-s-4011",
+            "label": "S 4011",
+            "title": "Western Hemisphere Drug Policy Commission Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/4011"
+          }
+        ]
+      },
+      {
+        "rank": 8,
+        "bioguide": "V000127",
+        "turns": 358,
+        "words": 104860,
+        "active_days": 87,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 82,
+        "bills_passed": 1,
+        "bills_enacted": 1,
+        "passage_share": 0.012195122,
+        "enactment_share": 0.012195122,
+        "speaker_name": "Mr. VITTER",
+        "party": "R",
+        "state": "LA",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/V000127",
+        "examples": [
+          {
+            "bill_id": "111-s-4015",
+            "label": "S 4015",
+            "title": "Public Access to Historical Records Act",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/4015"
+          },
+          {
+            "bill_id": "111-s-3999",
+            "label": "S 3999",
+            "title": "A bill to provide for reductions in the number of employees in Federal departments and agencies, freeze Federal employee compensation, reduce funding to the White House and Congress, and for other purposes.",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3999"
+          },
+          {
+            "bill_id": "111-s-3814",
+            "label": "S 3814",
+            "title": "National Flood Insurance Program Reextension Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3814"
+          }
+        ]
+      },
+      {
+        "rank": 9,
+        "bioguide": "B000468",
+        "turns": 488,
+        "words": 475881,
+        "active_days": 182,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 80,
+        "bills_passed": 2,
+        "bills_enacted": 1,
+        "passage_share": 0.025,
+        "enactment_share": 0.0125,
+        "speaker_name": "Mr. BINGAMAN",
+        "party": "D",
+        "state": "NM",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/B000468",
+        "examples": [
+          {
+            "bill_id": "111-s-3948",
+            "label": "S 3948",
+            "title": "Regulated Investment Company Modernization Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3948"
+          },
+          {
+            "bill_id": "111-s-3935",
+            "label": "S 3935",
+            "title": "Advanced Energy Tax Incentives Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3935"
+          },
+          {
+            "bill_id": "111-s-3925",
+            "label": "S 3925",
+            "title": "Implementation of National Consensus Appliance Agreements Act",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3925"
+          }
+        ]
+      },
+      {
+        "rank": 10,
+        "bioguide": "G000555",
+        "turns": 83,
+        "words": 43024,
+        "active_days": 40,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 74,
+        "bills_passed": 1,
+        "bills_enacted": 0,
+        "passage_share": 0.0135135135,
+        "enactment_share": 0.0,
+        "speaker_name": "Mrs. GILLIBRAND",
+        "party": "D",
+        "state": "NY",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/G000555",
+        "examples": [
+          {
+            "bill_id": "111-s-3986",
+            "label": "S 3986",
+            "title": "Healthy Food Financing Initiative",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3986"
+          },
+          {
+            "bill_id": "111-s-3943",
+            "label": "S 3943",
+            "title": "Onondaga Lake Restoration Act",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3943"
+          },
+          {
+            "bill_id": "111-s-3937",
+            "label": "S 3937",
+            "title": "Suburban Core Opportunity, Restoration, and Enhancement (SCORE) Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3937"
+          }
+        ]
+      },
+      {
+        "rank": 11,
+        "bioguide": "W000779",
+        "turns": 310,
+        "words": 253212,
+        "active_days": 101,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 72,
+        "bills_passed": 4,
+        "bills_enacted": 2,
+        "passage_share": 0.0555555556,
+        "enactment_share": 0.0277777778,
+        "speaker_name": "Mr. WYDEN",
+        "party": "D",
+        "state": "OR",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/W000779",
+        "examples": [
+          {
+            "bill_id": "111-s-4024",
+            "label": "S 4024",
+            "title": "Medicare Enhancements for Needed Drugs Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/4024"
+          },
+          {
+            "bill_id": "111-s-3993",
+            "label": "S 3993",
+            "title": "Geothermal Production Expansion Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3993"
+          },
+          {
+            "bill_id": "111-s-3989",
+            "label": "S 3989",
+            "title": "A bill to amend the Internal Revenue Code of 1986 to allow an offset against income tax refunds to pay for restitution and other State judicial debts that are past-due.",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3989"
+          }
+        ]
+      },
+      {
+        "rank": 12,
+        "bioguide": "K000367",
+        "turns": 235,
+        "words": 116903,
+        "active_days": 87,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 69,
+        "bills_passed": 3,
+        "bills_enacted": 3,
+        "passage_share": 0.0434782609,
+        "enactment_share": 0.0434782609,
+        "speaker_name": "Ms. KLOBUCHAR",
+        "party": "D",
+        "state": "MN",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/K000367",
+        "examples": [
+          {
+            "bill_id": "111-s-4042",
+            "label": "S 4042",
+            "title": "Access to Information About Missing Children Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/4042"
+          },
+          {
+            "bill_id": "111-s-4013",
+            "label": "S 4013",
+            "title": "A bill to direct the Secretary of Transportation to promulgate a rule to improve the daytime and nighttime visibility of agricultural equipment that may be operated on a public road.",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/4013"
+          },
+          {
+            "bill_id": "111-s-3873",
+            "label": "S 3873",
+            "title": "Children's Environmental Health Protection Act",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3873"
+          }
+        ]
+      },
+      {
+        "rank": 13,
+        "bioguide": "B001135",
+        "turns": 202,
+        "words": 112724,
+        "active_days": 44,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 69,
+        "bills_passed": 1,
+        "bills_enacted": 1,
+        "passage_share": 0.0144927536,
+        "enactment_share": 0.0144927536,
+        "speaker_name": "Mr. BURR",
+        "party": "R",
+        "state": "NC",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/B001135",
+        "examples": [
+          {
+            "bill_id": "111-s-4006",
+            "label": "S 4006",
+            "title": "ACCESS ADAP Act",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/4006"
+          },
+          {
+            "bill_id": "111-s-3535",
+            "label": "S 3535",
+            "title": "Next Generation Energy Security Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3535"
+          },
+          {
+            "bill_id": "111-s-3401",
+            "label": "S 3401",
+            "title": "Addressing Cost Containment Measures To Ensure the Sustainability and Success of ADAP Act",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3401"
+          }
+        ]
+      },
+      {
+        "rank": 14,
+        "bioguide": "R000361",
+        "turns": 0,
+        "words": 0,
+        "active_days": 0,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 68,
+        "bills_passed": 7,
+        "bills_enacted": 5,
+        "passage_share": 0.1029411765,
+        "enactment_share": 0.0735294118,
+        "speaker_name": "Sen. Rockefeller, John D., IV [D-WV]",
+        "party": "D",
+        "state": "WV",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/R000361",
+        "examples": [
+          {
+            "bill_id": "111-s-3931",
+            "label": "S 3931",
+            "title": "Guardians of Freedom Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3931"
+          },
+          {
+            "bill_id": "111-s-3913",
+            "label": "S 3913",
+            "title": "Guardians of Freedom Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3913"
+          },
+          {
+            "bill_id": "111-s-3863",
+            "label": "S 3863",
+            "title": "Monongahela Conservation Legacy Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3863"
+          }
+        ]
+      },
+      {
+        "rank": 15,
+        "bioguide": "F000061",
+        "turns": 378,
+        "words": 332303,
+        "active_days": 144,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 68,
+        "bills_passed": 2,
+        "bills_enacted": 1,
+        "passage_share": 0.0294117647,
+        "enactment_share": 0.0147058824,
+        "speaker_name": "Mr. FEINGOLD",
+        "party": "D",
+        "state": "WI",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/F000061",
+        "examples": [
+          {
+            "bill_id": "111-s-3894",
+            "label": "S 3894",
+            "title": "LOCAL TV Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3894"
+          },
+          {
+            "bill_id": "111-s-3771",
+            "label": "S 3771",
+            "title": "Improving Student Testing Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3771"
+          },
+          {
+            "bill_id": "111-s-3770",
+            "label": "S 3770",
+            "title": "Flexibility and Innovation in Education Act",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3770"
+          }
+        ]
+      },
+      {
+        "rank": 16,
+        "bioguide": "D000563",
+        "turns": 2855,
+        "words": 1197869,
+        "active_days": 274,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 66,
+        "bills_passed": 10,
+        "bills_enacted": 6,
+        "passage_share": 0.1515151515,
+        "enactment_share": 0.0909090909,
+        "speaker_name": "Mr. DURBIN",
+        "party": "D",
+        "state": "IL",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/D000563",
+        "examples": [
+          {
+            "bill_id": "111-s-3994",
+            "label": "S 3994",
+            "title": "Flood Insurance Affordability and Risk Notification Act",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3994"
+          },
+          {
+            "bill_id": "111-s-3992",
+            "label": "S 3992",
+            "title": "DREAM Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3992"
+          },
+          {
+            "bill_id": "111-s-3963",
+            "label": "S 3963",
+            "title": "DREAM Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3963"
+          }
+        ]
+      },
+      {
+        "rank": 17,
+        "bioguide": "D000388",
+        "turns": 1573,
+        "words": 604128,
+        "active_days": 173,
+        "profanity_hits": 1,
+        "profanity_quoted_hits": 1,
+        "bills_sponsored": 66,
+        "bills_passed": 6,
+        "bills_enacted": 4,
+        "passage_share": 0.0909090909,
+        "enactment_share": 0.0606060606,
+        "speaker_name": "Mr. DODD",
+        "party": "D",
+        "state": "CT",
+        "chamber": "senate",
+        "profanity_per_100k": 0.1655278352,
+        "member_url": "https://bioguide.congress.gov/search/bio/D000388",
+        "examples": [
+          {
+            "bill_id": "111-s-4044",
+            "label": "S 4044",
+            "title": "Combating Autism Reauthorization Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/4044"
+          },
+          {
+            "bill_id": "111-s-4043",
+            "label": "S 4043",
+            "title": "Garrett Lee Smith Memorial Act Reauthorization of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/4043"
+          },
+          {
+            "bill_id": "111-s-4036",
+            "label": "S 4036",
+            "title": "A bill to clarify the National Credit Union Administration authority to make stabilization fund expenditures without borrowing from the Treasury.",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/4036"
+          }
+        ]
+      },
+      {
+        "rank": 18,
+        "bioguide": "M000087",
+        "turns": 180,
+        "words": 62523,
+        "active_days": 89,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 65,
+        "bills_passed": 9,
+        "bills_enacted": 4,
+        "passage_share": 0.1384615385,
+        "enactment_share": 0.0615384615,
+        "speaker_name": "Mr. SEAN PATRICK MALONEY of New York",
+        "party": "D",
+        "state": "NY",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/M000087",
+        "examples": [
+          {
+            "bill_id": "111-hr-6567",
+            "label": "HR 6567",
+            "title": "To amend title 38, United States Code, to improve and make permanent the Department of Veterans Affairs loan guarantee for the purchase of residential cooperative housing units, and for other purposes.",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/6567"
+          },
+          {
+            "bill_id": "111-hr-6491",
+            "label": "HR 6491",
+            "title": "Human Trafficking Fraud Enforcement Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/6491"
+          },
+          {
+            "bill_id": "111-hr-6098",
+            "label": "HR 6098",
+            "title": "Incorporation Transparency and Law Enforcement Assistance Act",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/6098"
+          }
+        ]
+      },
+      {
+        "rank": 19,
+        "bioguide": "B000711",
+        "turns": 751,
+        "words": 302087,
+        "active_days": 165,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 64,
+        "bills_passed": 4,
+        "bills_enacted": 4,
+        "passage_share": 0.0625,
+        "enactment_share": 0.0625,
+        "speaker_name": "Mrs. BOXER",
+        "party": "D",
+        "state": "CA",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/B000711",
+        "examples": [
+          {
+            "bill_id": "111-s-4016",
+            "label": "S 4016",
+            "title": "Columbia River Basin Restoration Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/4016"
+          },
+          {
+            "bill_id": "111-s-3899",
+            "label": "S 3899",
+            "title": "Violence Against Children Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3899"
+          },
+          {
+            "bill_id": "111-s-3879",
+            "label": "S 3879",
+            "title": "Sacramento River National Recreation Area Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3879"
+          }
+        ]
+      },
+      {
+        "rank": 20,
+        "bioguide": "L000123",
+        "turns": 130,
+        "words": 61829,
+        "active_days": 55,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 63,
+        "bills_passed": 1,
+        "bills_enacted": 0,
+        "passage_share": 0.0158730159,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. LAUTENBERG",
+        "party": "D",
+        "state": "NJ",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/L000123",
+        "examples": [
+          {
+            "bill_id": "111-s-3996",
+            "label": "S 3996",
+            "title": "Christopher's Law",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3996"
+          },
+          {
+            "bill_id": "111-s-3960",
+            "label": "S 3960",
+            "title": "Tyler Clementi Higher Education Anti-Harassment Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3960"
+          },
+          {
+            "bill_id": "111-s-3890",
+            "label": "S 3890",
+            "title": "A bill to amend section 310 of the Supplemental Appropriations Act, 2009, to extend the period of time during which claims for retroactive stop-loss special pay may be submitted, and for other purposes.",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3890"
+          }
+        ]
+      },
+      {
+        "rank": 21,
+        "bioguide": "G000359",
+        "turns": 190,
+        "words": 78633,
+        "active_days": 55,
+        "profanity_hits": 9,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 63,
+        "bills_passed": 0,
+        "bills_enacted": 0,
+        "passage_share": 0.0,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. GRAHAM",
+        "party": "R",
+        "state": "SC",
+        "chamber": "senate",
+        "profanity_per_100k": 11.4455762848,
+        "member_url": "https://bioguide.congress.gov/search/bio/G000359",
+        "examples": [
+          {
+            "bill_id": "111-s-20",
+            "label": "S 20",
+            "title": "Clean Energy Standard Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/20"
+          },
+          {
+            "bill_id": "111-s-19",
+            "label": "S 19",
+            "title": "Oil Sands Energy Security Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/19"
+          },
+          {
+            "bill_id": "111-s-17",
+            "label": "S 17",
+            "title": "Former Charleston Naval Base Land Exchange Act of 2009",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/17"
+          }
+        ]
+      },
+      {
+        "rank": 22,
+        "bioguide": "S001169",
+        "turns": 23,
+        "words": 8087,
+        "active_days": 20,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 62,
+        "bills_passed": 2,
+        "bills_enacted": 1,
+        "passage_share": 0.0322580645,
+        "enactment_share": 0.0161290323,
+        "speaker_name": "Mr. SESTAK",
+        "party": "D",
+        "state": "PA",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/S001169",
+        "examples": [
+          {
+            "bill_id": "111-hr-6141",
+            "label": "HR 6141",
+            "title": "Marcellus Shale On-the-Job Training Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/6141"
+          },
+          {
+            "bill_id": "111-hr-6121",
+            "label": "HR 6121",
+            "title": "Renewable Energy Investment Incentive Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/6121"
+          },
+          {
+            "bill_id": "111-hr-6101",
+            "label": "HR 6101",
+            "title": "To amend part A of title IV of the Energy Conservation and Production Act to require the Secretary of Energy to determine whether there are systemic impediments to carrying out the weatherization program under that part, and for other purposes.",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/6101"
+          }
+        ]
+      },
+      {
+        "rank": 23,
+        "bioguide": "F000116",
+        "turns": 361,
+        "words": 117186,
+        "active_days": 35,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 61,
+        "bills_passed": 11,
+        "bills_enacted": 4,
+        "passage_share": 0.1803278689,
+        "enactment_share": 0.0655737705,
+        "speaker_name": "Mr. FILNER",
+        "party": "D",
+        "state": "CA",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/F000116",
+        "examples": [
+          {
+            "bill_id": "111-hr-6504",
+            "label": "HR 6504",
+            "title": "Homebuyer Tax Credit Renewal Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/6504"
+          },
+          {
+            "bill_id": "111-hr-6424",
+            "label": "HR 6424",
+            "title": "For the relief of Lauli'i Matu'u.",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/6424"
+          },
+          {
+            "bill_id": "111-hr-6421",
+            "label": "HR 6421",
+            "title": "Consumer Protection Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/6421"
+          }
+        ]
+      },
+      {
+        "rank": 24,
+        "bioguide": "L000035",
+        "turns": 315,
+        "words": 136302,
+        "active_days": 98,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 61,
+        "bills_passed": 2,
+        "bills_enacted": 2,
+        "passage_share": 0.0327868852,
+        "enactment_share": 0.0327868852,
+        "speaker_name": "Mrs. LINCOLN",
+        "party": "D",
+        "state": "AR",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/L000035",
+        "examples": [
+          {
+            "bill_id": "111-s-3915",
+            "label": "S 3915",
+            "title": "Medicare Rural Physician Recruitment and Retention Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3915"
+          },
+          {
+            "bill_id": "111-s-3875",
+            "label": "S 3875",
+            "title": "Honor America's Guard-Reserve Retirees Act",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3875"
+          },
+          {
+            "bill_id": "111-s-3850",
+            "label": "S 3850",
+            "title": "Hunting, Fishing and Recreational Shooting Protection Act",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3850"
+          }
+        ]
+      },
+      {
+        "rank": 25,
+        "bioguide": "P000583",
+        "turns": 68,
+        "words": 36595,
+        "active_days": 47,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 61,
+        "bills_passed": 1,
+        "bills_enacted": 1,
+        "passage_share": 0.0163934426,
+        "enactment_share": 0.0163934426,
+        "speaker_name": "Mr. PAUL",
+        "party": "R",
+        "state": "TX",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/P000583",
+        "examples": [
+          {
+            "bill_id": "111-hr-6416",
+            "label": "HR 6416",
+            "title": "American Traveller Dignity Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/6416"
+          },
+          {
+            "bill_id": "111-hr-5970",
+            "label": "HR 5970",
+            "title": "SEC Transparency Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/5970"
+          },
+          {
+            "bill_id": "111-hr-5444",
+            "label": "HR 5444",
+            "title": "Private Option Health Care Act",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/5444"
+          }
+        ]
+      }
+    ],
+    "passed": [
+      {
+        "rank": 1,
+        "bioguide": "O000006",
+        "turns": 511,
+        "words": 183888,
+        "active_days": 77,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 34,
+        "bills_passed": 16,
+        "bills_enacted": 9,
+        "passage_share": 0.4705882353,
+        "enactment_share": 0.2647058824,
+        "speaker_name": "Mr. OBERSTAR",
+        "party": "D",
+        "state": "MN",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/O000006",
+        "examples": [
+          {
+            "bill_id": "111-hr-6516",
+            "label": "HR 6516",
+            "title": "To make technical corrections to provisions of law enacted by the Coast Guard Authorization Act of 2010.",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/6516"
+          },
+          {
+            "bill_id": "111-hr-6473",
+            "label": "HR 6473",
+            "title": "Airport and Airway Extension Act of 2010, Part IV",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/6473"
+          },
+          {
+            "bill_id": "111-hr-5900",
+            "label": "HR 5900",
+            "title": "Airline Safety and Federal Aviation Administration Extension Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/5900"
+          }
+        ]
+      },
+      {
+        "rank": 2,
+        "bioguide": "R000053",
+        "turns": 197,
+        "words": 53114,
+        "active_days": 50,
+        "profanity_hits": 1,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 33,
+        "bills_passed": 14,
+        "bills_enacted": 14,
+        "passage_share": 0.4242424242,
+        "enactment_share": 0.4242424242,
+        "speaker_name": "Mr. RANGEL",
+        "party": "D",
+        "state": "NY",
+        "chamber": "house",
+        "profanity_per_100k": 1.8827427797,
+        "member_url": "https://bioguide.congress.gov/search/bio/R000053",
+        "examples": [
+          {
+            "bill_id": "111-hr-5160",
+            "label": "HR 5160",
+            "title": "Haiti Economic Lift Program Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/5160"
+          },
+          {
+            "bill_id": "111-hr-4691",
+            "label": "HR 4691",
+            "title": "Temporary Extension Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/4691"
+          },
+          {
+            "bill_id": "111-hr-4462",
+            "label": "HR 4462",
+            "title": "To accelerate the income tax benefits for charitable cash contributions for the relief of victims of the earthquake in Haiti.",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/4462"
+          }
+        ]
+      },
+      {
+        "rank": 3,
+        "bioguide": "M000725",
+        "turns": 247,
+        "words": 75452,
+        "active_days": 43,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 30,
+        "bills_passed": 12,
+        "bills_enacted": 2,
+        "passage_share": 0.4,
+        "enactment_share": 0.0666666667,
+        "speaker_name": "Mr. GEORGE MILLER of California",
+        "party": "D",
+        "state": "CA",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/M000725",
+        "examples": [
+          {
+            "bill_id": "111-hr-6547",
+            "label": "HR 6547",
+            "title": "Protecting Students from Sexual and Violent Predators Act",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/6547"
+          },
+          {
+            "bill_id": "111-hr-6469",
+            "label": "HR 6469",
+            "title": "To amend section 17 of the Richard B. Russell National School Lunch Act to include a condition of receipt of funds under the child and adult care food program.",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/6469"
+          },
+          {
+            "bill_id": "111-hr-5851",
+            "label": "HR 5851",
+            "title": "Offshore Oil and Gas Worker Whistleblower Protection Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/5851"
+          }
+        ]
+      },
+      {
+        "rank": 4,
+        "bioguide": "G000309",
+        "turns": 457,
+        "words": 119088,
+        "active_days": 27,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 24,
+        "bills_passed": 12,
+        "bills_enacted": 3,
+        "passage_share": 0.5,
+        "enactment_share": 0.125,
+        "speaker_name": "Mr. GORDON of Tennessee",
+        "party": "D",
+        "state": "TN",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/G000309",
+        "examples": [
+          {
+            "bill_id": "111-hr-5866",
+            "label": "HR 5866",
+            "title": "Nuclear Energy Research and Development Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/5866"
+          },
+          {
+            "bill_id": "111-hr-5716",
+            "label": "HR 5716",
+            "title": "Safer Oil and Natural Gas Drilling Technology Research and Development Act",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/5716"
+          },
+          {
+            "bill_id": "111-hr-5116",
+            "label": "HR 5116",
+            "title": "America COMPETES Reauthorization Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/5116"
+          }
+        ]
+      },
+      {
+        "rank": 5,
+        "bioguide": "F000116",
+        "turns": 361,
+        "words": 117186,
+        "active_days": 35,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 61,
+        "bills_passed": 11,
+        "bills_enacted": 4,
+        "passage_share": 0.1803278689,
+        "enactment_share": 0.0655737705,
+        "speaker_name": "Mr. FILNER",
+        "party": "D",
+        "state": "CA",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/F000116",
+        "examples": [
+          {
+            "bill_id": "111-hr-6132",
+            "label": "HR 6132",
+            "title": "Veterans Benefits and Economic Welfare Improvement Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/6132"
+          },
+          {
+            "bill_id": "111-hr-5953",
+            "label": "HR 5953",
+            "title": "To direct the Secretary of Veterans Affairs to display in each facility of the Department of Veterans Affairs a Women Veterans Bill of Rights and to display in each prosthetics and orthotics clinic of the Department an Injured and Amputee Veterans Bill of Rights, and for other purposes.",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/5953"
+          },
+          {
+            "bill_id": "111-hr-5014",
+            "label": "HR 5014",
+            "title": "To clarify the health care provided by the Secretary of Veterans Affairs that constitutes minimum essential coverage.",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/5014"
+          }
+        ]
+      },
+      {
+        "rank": 6,
+        "bioguide": "F000062",
+        "turns": 586,
+        "words": 557790,
+        "active_days": 135,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 2,
+        "bills_sponsored": 129,
+        "bills_passed": 10,
+        "bills_enacted": 3,
+        "passage_share": 0.0775193798,
+        "enactment_share": 0.023255814,
+        "speaker_name": "Mrs. FEINSTEIN",
+        "party": "D",
+        "state": "CA",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/F000062",
+        "examples": [
+          {
+            "bill_id": "111-s-4010",
+            "label": "S 4010",
+            "title": "A bill for the relief of Shigeru Yamada.",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/4010"
+          },
+          {
+            "bill_id": "111-s-3789",
+            "label": "S 3789",
+            "title": "Social Security Number Protection Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3789"
+          },
+          {
+            "bill_id": "111-s-3611",
+            "label": "S 3611",
+            "title": "Intelligence Authorization Act for Fiscal Year 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3611"
+          }
+        ]
+      },
+      {
+        "rank": 7,
+        "bioguide": "D000563",
+        "turns": 2855,
+        "words": 1197869,
+        "active_days": 274,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 66,
+        "bills_passed": 10,
+        "bills_enacted": 6,
+        "passage_share": 0.1515151515,
+        "enactment_share": 0.0909090909,
+        "speaker_name": "Mr. DURBIN",
+        "party": "D",
+        "state": "IL",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/D000563",
+        "examples": [
+          {
+            "bill_id": "111-s-1789",
+            "label": "S 1789",
+            "title": "Fair Sentencing Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/1789"
+          },
+          {
+            "bill_id": "111-s-1472",
+            "label": "S 1472",
+            "title": "Human Rights Enforcement Act of 2009",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/1472"
+          },
+          {
+            "bill_id": "111-s-1107",
+            "label": "S 1107",
+            "title": "Judicial Survivors Protection Act of 2009",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/1107"
+          }
+        ]
+      },
+      {
+        "rank": 8,
+        "bioguide": "L000174",
+        "turns": 1036,
+        "words": 679827,
+        "active_days": 224,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 1,
+        "bills_sponsored": 58,
+        "bills_passed": 10,
+        "bills_enacted": 8,
+        "passage_share": 0.1724137931,
+        "enactment_share": 0.1379310345,
+        "speaker_name": "Mr. LEAHY",
+        "party": "D",
+        "state": "VT",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/L000174",
+        "examples": [
+          {
+            "bill_id": "111-s-3794",
+            "label": "S 3794",
+            "title": "FOR VETS Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3794"
+          },
+          {
+            "bill_id": "111-s-3717",
+            "label": "S 3717",
+            "title": "A bill to amend the Securities Exchange Act of 1934, the Investment Company Act of 1940, and the Investment Advisers Act of 1940 to provide for certain disclosures under section 552 of title 5, United States Code, (commonly referred to as the Freedom of Information Act), and for other purposes.",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3717"
+          },
+          {
+            "bill_id": "111-s-3689",
+            "label": "S 3689",
+            "title": "Copyright Cleanup, Clarification, and Corrections Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3689"
+          }
+        ]
+      },
+      {
+        "rank": 9,
+        "bioguide": "N000147",
+        "turns": 229,
+        "words": 57474,
+        "active_days": 47,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 45,
+        "bills_passed": 10,
+        "bills_enacted": 2,
+        "passage_share": 0.2222222222,
+        "enactment_share": 0.0444444444,
+        "speaker_name": "Mr. NORTON",
+        "party": "D",
+        "state": "DC",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/N000147",
+        "examples": [
+          {
+            "bill_id": "111-hr-6278",
+            "label": "HR 6278",
+            "title": "Kingman and Heritage Islands Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/6278"
+          },
+          {
+            "bill_id": "111-hr-6118",
+            "label": "HR 6118",
+            "title": "To designate the facility of the United States Postal Service located at 2 Massachusetts Avenue, NE, in Washington, D.C., as the \"Dorothy I. Height Post Office\".",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/6118"
+          },
+          {
+            "bill_id": "111-hr-5702",
+            "label": "HR 5702",
+            "title": "To amend the District of Columbia Home Rule Act to reduce the waiting period for holding special elections to fill vacancies in local offices in the District of Columbia.",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/5702"
+          }
+        ]
+      },
+      {
+        "rank": 10,
+        "bioguide": "M000087",
+        "turns": 180,
+        "words": 62523,
+        "active_days": 89,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 65,
+        "bills_passed": 9,
+        "bills_enacted": 4,
+        "passage_share": 0.1384615385,
+        "enactment_share": 0.0615384615,
+        "speaker_name": "Mr. SEAN PATRICK MALONEY of New York",
+        "party": "D",
+        "state": "NY",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/M000087",
+        "examples": [
+          {
+            "bill_id": "111-hr-4621",
+            "label": "HR 4621",
+            "title": "Prevent Deceptive Census Look Alike Mailings Act",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/4621"
+          },
+          {
+            "bill_id": "111-hr-3639",
+            "label": "HR 3639",
+            "title": "Expedited CARD Reform for Consumers Act of 2009",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/3639"
+          },
+          {
+            "bill_id": "111-hr-1700",
+            "label": "HR 1700",
+            "title": "National Women's History Museum Act of 2009",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/1700"
+          }
+        ]
+      },
+      {
+        "rank": 11,
+        "bioguide": "L000304",
+        "turns": 358,
+        "words": 180876,
+        "active_days": 93,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 49,
+        "bills_passed": 9,
+        "bills_enacted": 5,
+        "passage_share": 0.1836734694,
+        "enactment_share": 0.1020408163,
+        "speaker_name": "Mr. LIEBERMAN",
+        "party": "I",
+        "state": "CT",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/L000304",
+        "examples": [
+          {
+            "bill_id": "111-s-3249",
+            "label": "S 3249",
+            "title": "Predisaster Hazard Mitigation Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3249"
+          },
+          {
+            "bill_id": "111-s-2868",
+            "label": "S 2868",
+            "title": "Federal Supply Schedules Usage Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/2868"
+          },
+          {
+            "bill_id": "111-s-2865",
+            "label": "S 2865",
+            "title": "Congressional Award Program Reauthorization Act of 2009",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/2865"
+          }
+        ]
+      },
+      {
+        "rank": 12,
+        "bioguide": "F000339",
+        "turns": 822,
+        "words": 167168,
+        "active_days": 53,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 40,
+        "bills_passed": 9,
+        "bills_enacted": 6,
+        "passage_share": 0.225,
+        "enactment_share": 0.15,
+        "speaker_name": "Mr. FRANK of Massachusetts",
+        "party": "D",
+        "state": "MA",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/F000339",
+        "examples": [
+          {
+            "bill_id": "111-hr-5981",
+            "label": "HR 5981",
+            "title": "To increase the flexibility of the Secretary of Housing and Urban Development with respect to the amount of premiums charged for FHA single family housing mortgage insurance, and for other purposes.",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/5981"
+          },
+          {
+            "bill_id": "111-hr-5872",
+            "label": "HR 5872",
+            "title": "General and Special Risk Insurance Funds Availability Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/5872"
+          },
+          {
+            "bill_id": "111-hr-5758",
+            "label": "HR 5758",
+            "title": "To designate the facility of the United States Postal Service located at 2 Government Center in Fall River, Massachusetts, as the \"Sergeant Robert Barrett Post Office Building\".",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/5758"
+          }
+        ]
+      },
+      {
+        "rank": 13,
+        "bioguide": "L000263",
+        "turns": 482,
+        "words": 112058,
+        "active_days": 60,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 23,
+        "bills_passed": 9,
+        "bills_enacted": 7,
+        "passage_share": 0.3913043478,
+        "enactment_share": 0.3043478261,
+        "speaker_name": "Mr. LEVIN",
+        "party": "D",
+        "state": "MI",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/L000263",
+        "examples": [
+          {
+            "bill_id": "111-hr-6517",
+            "label": "HR 6517",
+            "title": "Omnibus Trade Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/6517"
+          },
+          {
+            "bill_id": "111-hr-6190",
+            "label": "HR 6190",
+            "title": "Airport and Airway Extension Act of 2010, Part III",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/6190"
+          },
+          {
+            "bill_id": "111-hr-5712",
+            "label": "HR 5712",
+            "title": "Physician Payment and Therapy Relief Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/5712"
+          }
+        ]
+      },
+      {
+        "rank": 14,
+        "bioguide": "A000069",
+        "turns": 239,
+        "words": 272193,
+        "active_days": 112,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 57,
+        "bills_passed": 8,
+        "bills_enacted": 4,
+        "passage_share": 0.1403508772,
+        "enactment_share": 0.0701754386,
+        "speaker_name": "Mr. AKAKA",
+        "party": "D",
+        "state": "HI",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/A000069",
+        "examples": [
+          {
+            "bill_id": "111-s-3447",
+            "label": "S 3447",
+            "title": "Post-9/11 Veterans Educational Assistance Improvements Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3447"
+          },
+          {
+            "bill_id": "111-s-3162",
+            "label": "S 3162",
+            "title": "A bill to clarify the health care provided by the Secretary of Veterans Affairs that constitutes minimum essential coverage.",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3162"
+          },
+          {
+            "bill_id": "111-s-1963",
+            "label": "S 1963",
+            "title": "Caregivers and Veterans Omnibus Health Services Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/1963"
+          }
+        ]
+      },
+      {
+        "rank": 15,
+        "bioguide": "C000714",
+        "turns": 491,
+        "words": 116100,
+        "active_days": 98,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 48,
+        "bills_passed": 8,
+        "bills_enacted": 4,
+        "passage_share": 0.1666666667,
+        "enactment_share": 0.0833333333,
+        "speaker_name": "Mr. CONYERS",
+        "party": "D",
+        "state": "MI",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/C000714",
+        "examples": [
+          {
+            "bill_id": "111-hr-6198",
+            "label": "HR 6198",
+            "title": "Bankruptcy Technical Corrections Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/6198"
+          },
+          {
+            "bill_id": "111-hr-5503",
+            "label": "HR 5503",
+            "title": "Securing Protections for the Injured from Limitations on Liability Act",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/5503"
+          },
+          {
+            "bill_id": "111-hr-3570",
+            "label": "HR 3570",
+            "title": "Satellite Home Viewer Reauthorization Act of 2009",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/3570"
+          }
+        ]
+      },
+      {
+        "rank": 16,
+        "bioguide": "R000361",
+        "turns": 0,
+        "words": 0,
+        "active_days": 0,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 68,
+        "bills_passed": 7,
+        "bills_enacted": 5,
+        "passage_share": 0.1029411765,
+        "enactment_share": 0.0735294118,
+        "speaker_name": "Sen. Rockefeller, John D., IV [D-WV]",
+        "party": "D",
+        "state": "WV",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/R000361",
+        "examples": [
+          {
+            "bill_id": "111-s-3729",
+            "label": "S 3729",
+            "title": "National Aeronautics and Space Administration Authorization Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3729"
+          },
+          {
+            "bill_id": "111-s-3386",
+            "label": "S 3386",
+            "title": "Restore Online Shoppers' Confidence Act",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3386"
+          },
+          {
+            "bill_id": "111-s-3187",
+            "label": "S 3187",
+            "title": "Federal Aviation Administration Extension Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3187"
+          }
+        ]
+      },
+      {
+        "rank": 17,
+        "bioguide": "H001037",
+        "turns": 32,
+        "words": 16918,
+        "active_days": 26,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 34,
+        "bills_passed": 7,
+        "bills_enacted": 1,
+        "passage_share": 0.2058823529,
+        "enactment_share": 0.0294117647,
+        "speaker_name": "Ms. HERSETH SANDLIN",
+        "party": "D",
+        "state": "SD",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/H001037",
+        "examples": [
+          {
+            "bill_id": "111-hr-5651",
+            "label": "HR 5651",
+            "title": "To designate the Federal building and United States courthouse located at 515 9th Street in Rapid City, South Dakota, as the \"Andrew W. Bogue Federal Building and United States Courthouse\".",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/5651"
+          },
+          {
+            "bill_id": "111-hr-5360",
+            "label": "HR 5360",
+            "title": "HELP Veterans Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/5360"
+          },
+          {
+            "bill_id": "111-hr-2489",
+            "label": "HR 2489",
+            "title": "National Land Remote Sensing Outreach Act",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/2489"
+          }
+        ]
+      },
+      {
+        "rank": 18,
+        "bioguide": "W000187",
+        "turns": 143,
+        "words": 47236,
+        "active_days": 58,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 26,
+        "bills_passed": 7,
+        "bills_enacted": 2,
+        "passage_share": 0.2692307692,
+        "enactment_share": 0.0769230769,
+        "speaker_name": "Ms. WATERS",
+        "party": "D",
+        "state": "CA",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/W000187",
+        "examples": [
+          {
+            "bill_id": "111-hr-5569",
+            "label": "HR 5569",
+            "title": "National Flood Insurance Program Extension Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/5569"
+          },
+          {
+            "bill_id": "111-hr-5114",
+            "label": "HR 5114",
+            "title": "Flood Insurance Reform Priorities Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/5114"
+          },
+          {
+            "bill_id": "111-hr-5072",
+            "label": "HR 5072",
+            "title": "FHA Reform Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/5072"
+          }
+        ]
+      },
+      {
+        "rank": 19,
+        "bioguide": "J000288",
+        "turns": 292,
+        "words": 66447,
+        "active_days": 77,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 21,
+        "bills_passed": 7,
+        "bills_enacted": 3,
+        "passage_share": 0.3333333333,
+        "enactment_share": 0.1428571429,
+        "speaker_name": "Mr. JOHNSON of Georgia",
+        "party": "D",
+        "state": "GA",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/J000288",
+        "examples": [
+          {
+            "bill_id": "111-hr-6560",
+            "label": "HR 6560",
+            "title": "Removal Clarification Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/6560"
+          },
+          {
+            "bill_id": "111-hr-5986",
+            "label": "HR 5986",
+            "title": "Neglected Infections of Impoverished Americans Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/5986"
+          },
+          {
+            "bill_id": "111-hr-5330",
+            "label": "HR 5330",
+            "title": "To amend the Antitrust Criminal Penalty Enhancement and Reform Act of 2004 to extend the operation of such Act, and for other purposes.",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/5330"
+          }
+        ]
+      },
+      {
+        "rank": 20,
+        "bioguide": "M001142",
+        "turns": 34,
+        "words": 9231,
+        "active_days": 21,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 18,
+        "bills_passed": 7,
+        "bills_enacted": 2,
+        "passage_share": 0.3888888889,
+        "enactment_share": 0.1111111111,
+        "speaker_name": "Mr. MATHESON",
+        "party": "D",
+        "state": "UT",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/M001142",
+        "examples": [
+          {
+            "bill_id": "111-hr-2950",
+            "label": "HR 2950",
+            "title": "To direct the Secretary of the Interior to allow for prepayment of repayment contracts between the United States and the Uintah Water Conservancy District.",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/2950"
+          },
+          {
+            "bill_id": "111-hr-2008",
+            "label": "HR 2008",
+            "title": "Bonneville Unit Clean Hydropower Facilitation Act",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/2008"
+          },
+          {
+            "bill_id": "111-hr-1796",
+            "label": "HR 1796",
+            "title": "Carbon Monoxide Poisoning Prevention Act",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/1796"
+          }
+        ]
+      },
+      {
+        "rank": 21,
+        "bioguide": "D000388",
+        "turns": 1573,
+        "words": 604128,
+        "active_days": 173,
+        "profanity_hits": 1,
+        "profanity_quoted_hits": 1,
+        "bills_sponsored": 66,
+        "bills_passed": 6,
+        "bills_enacted": 4,
+        "passage_share": 0.0909090909,
+        "enactment_share": 0.0606060606,
+        "speaker_name": "Mr. DODD",
+        "party": "D",
+        "state": "CT",
+        "chamber": "senate",
+        "profanity_per_100k": 0.1655278352,
+        "member_url": "https://bioguide.congress.gov/search/bio/D000388",
+        "examples": [
+          {
+            "bill_id": "111-s-4036",
+            "label": "S 4036",
+            "title": "A bill to clarify the National Credit Union Administration authority to make stabilization fund expenditures without borrowing from the Treasury.",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/4036"
+          },
+          {
+            "bill_id": "111-s-3817",
+            "label": "S 3817",
+            "title": "CAPTA Reauthorization Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3817"
+          },
+          {
+            "bill_id": "111-s-2961",
+            "label": "S 2961",
+            "title": "Haiti Recovery Act",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/2961"
+          }
+        ]
+      },
+      {
+        "rank": 22,
+        "bioguide": "L000261",
+        "turns": 904,
+        "words": 355310,
+        "active_days": 187,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 56,
+        "bills_passed": 6,
+        "bills_enacted": 2,
+        "passage_share": 0.1071428571,
+        "enactment_share": 0.0357142857,
+        "speaker_name": "Mr. LEVIN",
+        "party": "D",
+        "state": "MI",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/L000261",
+        "examples": [
+          {
+            "bill_id": "111-s-1421",
+            "label": "S 1421",
+            "title": "Asian Carp Prevention and Control Act",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/1421"
+          },
+          {
+            "bill_id": "111-s-1393",
+            "label": "S 1393",
+            "title": "Department of Energy National Security Act for Fiscal Year 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/1393"
+          },
+          {
+            "bill_id": "111-s-1392",
+            "label": "S 1392",
+            "title": "Military Construction Authorization Act for Fiscal Year 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/1392"
+          }
+        ]
+      },
+      {
+        "rank": 23,
+        "bioguide": "L000550",
+        "turns": 463,
+        "words": 293859,
+        "active_days": 89,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 56,
+        "bills_passed": 6,
+        "bills_enacted": 4,
+        "passage_share": 0.1071428571,
+        "enactment_share": 0.0714285714,
+        "speaker_name": "Ms. LANDRIEU",
+        "party": "D",
+        "state": "LA",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/L000550",
+        "examples": [
+          {
+            "bill_id": "111-s-4053",
+            "label": "S 4053",
+            "title": "SBIR/STTR Reauthorization Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/4053"
+          },
+          {
+            "bill_id": "111-s-3839",
+            "label": "S 3839",
+            "title": "A bill to provide for an additional temporary extension of programs under the Small Business Act and the Small Business Investment Act of 1958, and for other purposes.",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3839"
+          },
+          {
+            "bill_id": "111-s-3253",
+            "label": "S 3253",
+            "title": "A bill to provide for an additional temporary extension of programs under the Small Business Act and the Small Business Investment Act of 1958, and for other purposes.",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3253"
+          }
+        ]
+      },
+      {
+        "rank": 24,
+        "bioguide": "C000174",
+        "turns": 164,
+        "words": 132869,
+        "active_days": 61,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 50,
+        "bills_passed": 6,
+        "bills_enacted": 3,
+        "passage_share": 0.12,
+        "enactment_share": 0.06,
+        "speaker_name": "Mr. CARPER",
+        "party": "D",
+        "state": "DE",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/C000174",
+        "examples": [
+          {
+            "bill_id": "111-s-3250",
+            "label": "S 3250",
+            "title": "Federal Buildings Personnel Training Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3250"
+          },
+          {
+            "bill_id": "111-s-3167",
+            "label": "S 3167",
+            "title": "Census Oversight Efficiency and Management Reform Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3167"
+          },
+          {
+            "bill_id": "111-s-2872",
+            "label": "S 2872",
+            "title": "A bill to authorize appropriations for the National Historical Publications and Records Commission through fiscal year 2014, and for other purposes.",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/2872"
+          }
+        ]
+      },
+      {
+        "rank": 25,
+        "bioguide": "I000026",
+        "turns": 158,
+        "words": 48973,
+        "active_days": 70,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 33,
+        "bills_passed": 6,
+        "bills_enacted": 3,
+        "passage_share": 0.1818181818,
+        "enactment_share": 0.0909090909,
+        "speaker_name": "Mr. INSLEE",
+        "party": "D",
+        "state": "WA",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/I000026",
+        "examples": [
+          {
+            "bill_id": "111-hr-6540",
+            "label": "HR 6540",
+            "title": "Defense Level Playing Field Act",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/6540"
+          },
+          {
+            "bill_id": "111-hr-5809",
+            "label": "HR 5809",
+            "title": "Diesel Emissions Reduction Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/5809"
+          },
+          {
+            "bill_id": "111-hr-2344",
+            "label": "HR 2344",
+            "title": "Webcaster Settlement Act of 2009",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/2344"
+          }
+        ]
+      }
+    ],
+    "enacted": [
+      {
+        "rank": 1,
+        "bioguide": "R000053",
+        "turns": 197,
+        "words": 53114,
+        "active_days": 50,
+        "profanity_hits": 1,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 33,
+        "bills_passed": 14,
+        "bills_enacted": 14,
+        "passage_share": 0.4242424242,
+        "enactment_share": 0.4242424242,
+        "speaker_name": "Mr. RANGEL",
+        "party": "D",
+        "state": "NY",
+        "chamber": "house",
+        "profanity_per_100k": 1.8827427797,
+        "member_url": "https://bioguide.congress.gov/search/bio/R000053",
+        "examples": [
+          {
+            "bill_id": "111-hr-5160",
+            "label": "HR 5160",
+            "title": "Haiti Economic Lift Program Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/5160"
+          },
+          {
+            "bill_id": "111-hr-4691",
+            "label": "HR 4691",
+            "title": "Temporary Extension Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/4691"
+          },
+          {
+            "bill_id": "111-hr-4462",
+            "label": "HR 4462",
+            "title": "To accelerate the income tax benefits for charitable cash contributions for the relief of victims of the earthquake in Haiti.",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/4462"
+          }
+        ]
+      },
+      {
+        "rank": 2,
+        "bioguide": "O000006",
+        "turns": 511,
+        "words": 183888,
+        "active_days": 77,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 34,
+        "bills_passed": 16,
+        "bills_enacted": 9,
+        "passage_share": 0.4705882353,
+        "enactment_share": 0.2647058824,
+        "speaker_name": "Mr. OBERSTAR",
+        "party": "D",
+        "state": "MN",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/O000006",
+        "examples": [
+          {
+            "bill_id": "111-hr-6516",
+            "label": "HR 6516",
+            "title": "To make technical corrections to provisions of law enacted by the Coast Guard Authorization Act of 2010.",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/6516"
+          },
+          {
+            "bill_id": "111-hr-6473",
+            "label": "HR 6473",
+            "title": "Airport and Airway Extension Act of 2010, Part IV",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/6473"
+          },
+          {
+            "bill_id": "111-hr-5900",
+            "label": "HR 5900",
+            "title": "Airline Safety and Federal Aviation Administration Extension Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/5900"
+          }
+        ]
+      },
+      {
+        "rank": 3,
+        "bioguide": "L000174",
+        "turns": 1036,
+        "words": 679827,
+        "active_days": 224,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 1,
+        "bills_sponsored": 58,
+        "bills_passed": 10,
+        "bills_enacted": 8,
+        "passage_share": 0.1724137931,
+        "enactment_share": 0.1379310345,
+        "speaker_name": "Mr. LEAHY",
+        "party": "D",
+        "state": "VT",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/L000174",
+        "examples": [
+          {
+            "bill_id": "111-s-3794",
+            "label": "S 3794",
+            "title": "FOR VETS Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3794"
+          },
+          {
+            "bill_id": "111-s-3717",
+            "label": "S 3717",
+            "title": "A bill to amend the Securities Exchange Act of 1934, the Investment Company Act of 1940, and the Investment Advisers Act of 1940 to provide for certain disclosures under section 552 of title 5, United States Code, (commonly referred to as the Freedom of Information Act), and for other purposes.",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3717"
+          },
+          {
+            "bill_id": "111-s-3689",
+            "label": "S 3689",
+            "title": "Copyright Cleanup, Clarification, and Corrections Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3689"
+          }
+        ]
+      },
+      {
+        "rank": 4,
+        "bioguide": "L000263",
+        "turns": 482,
+        "words": 112058,
+        "active_days": 60,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 23,
+        "bills_passed": 9,
+        "bills_enacted": 7,
+        "passage_share": 0.3913043478,
+        "enactment_share": 0.3043478261,
+        "speaker_name": "Mr. LEVIN",
+        "party": "D",
+        "state": "MI",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/L000263",
+        "examples": [
+          {
+            "bill_id": "111-hr-6517",
+            "label": "HR 6517",
+            "title": "Omnibus Trade Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/6517"
+          },
+          {
+            "bill_id": "111-hr-6190",
+            "label": "HR 6190",
+            "title": "Airport and Airway Extension Act of 2010, Part III",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/6190"
+          },
+          {
+            "bill_id": "111-hr-5712",
+            "label": "HR 5712",
+            "title": "Physician Payment and Therapy Relief Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/5712"
+          }
+        ]
+      },
+      {
+        "rank": 5,
+        "bioguide": "D000563",
+        "turns": 2855,
+        "words": 1197869,
+        "active_days": 274,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 66,
+        "bills_passed": 10,
+        "bills_enacted": 6,
+        "passage_share": 0.1515151515,
+        "enactment_share": 0.0909090909,
+        "speaker_name": "Mr. DURBIN",
+        "party": "D",
+        "state": "IL",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/D000563",
+        "examples": [
+          {
+            "bill_id": "111-s-1789",
+            "label": "S 1789",
+            "title": "Fair Sentencing Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/1789"
+          },
+          {
+            "bill_id": "111-s-1472",
+            "label": "S 1472",
+            "title": "Human Rights Enforcement Act of 2009",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/1472"
+          },
+          {
+            "bill_id": "111-s-1107",
+            "label": "S 1107",
+            "title": "Judicial Survivors Protection Act of 2009",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/1107"
+          }
+        ]
+      },
+      {
+        "rank": 6,
+        "bioguide": "F000339",
+        "turns": 822,
+        "words": 167168,
+        "active_days": 53,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 40,
+        "bills_passed": 9,
+        "bills_enacted": 6,
+        "passage_share": 0.225,
+        "enactment_share": 0.15,
+        "speaker_name": "Mr. FRANK of Massachusetts",
+        "party": "D",
+        "state": "MA",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/F000339",
+        "examples": [
+          {
+            "bill_id": "111-hr-5981",
+            "label": "HR 5981",
+            "title": "To increase the flexibility of the Secretary of Housing and Urban Development with respect to the amount of premiums charged for FHA single family housing mortgage insurance, and for other purposes.",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/5981"
+          },
+          {
+            "bill_id": "111-hr-5872",
+            "label": "HR 5872",
+            "title": "General and Special Risk Insurance Funds Availability Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/5872"
+          },
+          {
+            "bill_id": "111-hr-5758",
+            "label": "HR 5758",
+            "title": "To designate the facility of the United States Postal Service located at 2 Government Center in Fall River, Massachusetts, as the \"Sergeant Robert Barrett Post Office Building\".",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/5758"
+          }
+        ]
+      },
+      {
+        "rank": 7,
+        "bioguide": "S000148",
+        "turns": 411,
+        "words": 140334,
+        "active_days": 106,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 133,
+        "bills_passed": 5,
+        "bills_enacted": 5,
+        "passage_share": 0.037593985,
+        "enactment_share": 0.037593985,
+        "speaker_name": "Mr. SCHUMER",
+        "party": "D",
+        "state": "NY",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/S000148",
+        "examples": [
+          {
+            "bill_id": "111-s-3998",
+            "label": "S 3998",
+            "title": "Criminal History Background Checks Pilot Extension Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3998"
+          },
+          {
+            "bill_id": "111-s-3567",
+            "label": "S 3567",
+            "title": "A bill to designate the facility of the United States Postal Service located at 100 Broadway in Lynbrook, New York, as the \"Navy Corpsman Jeffrey L. Wiener Post Office Building\".",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3567"
+          },
+          {
+            "bill_id": "111-s-2950",
+            "label": "S 2950",
+            "title": "Criminal History Background Checks Pilot Extension Act of 2009",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/2950"
+          }
+        ]
+      },
+      {
+        "rank": 8,
+        "bioguide": "R000361",
+        "turns": 0,
+        "words": 0,
+        "active_days": 0,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 68,
+        "bills_passed": 7,
+        "bills_enacted": 5,
+        "passage_share": 0.1029411765,
+        "enactment_share": 0.0735294118,
+        "speaker_name": "Sen. Rockefeller, John D., IV [D-WV]",
+        "party": "D",
+        "state": "WV",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/R000361",
+        "examples": [
+          {
+            "bill_id": "111-s-3729",
+            "label": "S 3729",
+            "title": "National Aeronautics and Space Administration Authorization Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3729"
+          },
+          {
+            "bill_id": "111-s-3386",
+            "label": "S 3386",
+            "title": "Restore Online Shoppers' Confidence Act",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3386"
+          },
+          {
+            "bill_id": "111-s-3186",
+            "label": "S 3186",
+            "title": "Satellite Television Extension Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3186"
+          }
+        ]
+      },
+      {
+        "rank": 9,
+        "bioguide": "L000304",
+        "turns": 358,
+        "words": 180876,
+        "active_days": 93,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 49,
+        "bills_passed": 9,
+        "bills_enacted": 5,
+        "passage_share": 0.1836734694,
+        "enactment_share": 0.1020408163,
+        "speaker_name": "Mr. LIEBERMAN",
+        "party": "I",
+        "state": "CT",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/L000304",
+        "examples": [
+          {
+            "bill_id": "111-s-2868",
+            "label": "S 2868",
+            "title": "Federal Supply Schedules Usage Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/2868"
+          },
+          {
+            "bill_id": "111-s-2865",
+            "label": "S 2865",
+            "title": "Congressional Award Program Reauthorization Act of 2009",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/2865"
+          },
+          {
+            "bill_id": "111-s-1860",
+            "label": "S 1860",
+            "title": "A bill to permit each current member of the Board of Directors of the Office of Compliance to serve for 3 terms.",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/1860"
+          }
+        ]
+      },
+      {
+        "rank": 10,
+        "bioguide": "O000007",
+        "turns": 478,
+        "words": 84612,
+        "active_days": 49,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 9,
+        "bills_passed": 6,
+        "bills_enacted": 5,
+        "passage_share": 0.6666666667,
+        "enactment_share": 0.5555555556,
+        "speaker_name": "Mr. OBEY",
+        "party": "D",
+        "state": "WI",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/O000007",
+        "examples": [
+          {
+            "bill_id": "111-hr-4899",
+            "label": "HR 4899",
+            "title": "Supplemental Appropriations Act, 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/4899"
+          },
+          {
+            "bill_id": "111-hr-3435",
+            "label": "HR 3435",
+            "title": "Making supplemental appropriations for fiscal year 2009 for the Consumer Assistance to Recycle and Save Program.",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/3435"
+          },
+          {
+            "bill_id": "111-hr-2346",
+            "label": "HR 2346",
+            "title": "Supplemental Appropriations Act, 2009",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/2346"
+          }
+        ]
+      },
+      {
+        "rank": 11,
+        "bioguide": "K000148",
+        "turns": 677,
+        "words": 249168,
+        "active_days": 122,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 96,
+        "bills_passed": 5,
+        "bills_enacted": 4,
+        "passage_share": 0.0520833333,
+        "enactment_share": 0.0416666667,
+        "speaker_name": "Mr. KERRY",
+        "party": "D",
+        "state": "MA",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/K000148",
+        "examples": [
+          {
+            "bill_id": "111-s-4058",
+            "label": "S 4058",
+            "title": "Helping Heroes Keep Their Homes Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/4058"
+          },
+          {
+            "bill_id": "111-s-3847",
+            "label": "S 3847",
+            "title": "Security Cooperation Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3847"
+          },
+          {
+            "bill_id": "111-s-1707",
+            "label": "S 1707",
+            "title": "Enhanced Partnership with Pakistan Act of 2009",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/1707"
+          }
+        ]
+      },
+      {
+        "rank": 12,
+        "bioguide": "D000388",
+        "turns": 1573,
+        "words": 604128,
+        "active_days": 173,
+        "profanity_hits": 1,
+        "profanity_quoted_hits": 1,
+        "bills_sponsored": 66,
+        "bills_passed": 6,
+        "bills_enacted": 4,
+        "passage_share": 0.0909090909,
+        "enactment_share": 0.0606060606,
+        "speaker_name": "Mr. DODD",
+        "party": "D",
+        "state": "CT",
+        "chamber": "senate",
+        "profanity_per_100k": 0.1655278352,
+        "member_url": "https://bioguide.congress.gov/search/bio/D000388",
+        "examples": [
+          {
+            "bill_id": "111-s-4036",
+            "label": "S 4036",
+            "title": "A bill to clarify the National Credit Union Administration authority to make stabilization fund expenditures without borrowing from the Treasury.",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/4036"
+          },
+          {
+            "bill_id": "111-s-3817",
+            "label": "S 3817",
+            "title": "CAPTA Reauthorization Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3817"
+          },
+          {
+            "bill_id": "111-s-1677",
+            "label": "S 1677",
+            "title": "Defense Production Act Reauthorization of 2009",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/1677"
+          }
+        ]
+      },
+      {
+        "rank": 13,
+        "bioguide": "M000087",
+        "turns": 180,
+        "words": 62523,
+        "active_days": 89,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 65,
+        "bills_passed": 9,
+        "bills_enacted": 4,
+        "passage_share": 0.1384615385,
+        "enactment_share": 0.0615384615,
+        "speaker_name": "Mr. SEAN PATRICK MALONEY of New York",
+        "party": "D",
+        "state": "NY",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/M000087",
+        "examples": [
+          {
+            "bill_id": "111-hr-4621",
+            "label": "HR 4621",
+            "title": "Prevent Deceptive Census Look Alike Mailings Act",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/4621"
+          },
+          {
+            "bill_id": "111-hr-847",
+            "label": "HR 847",
+            "title": "James Zadroga 9/11 Health and Compensation Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/847"
+          },
+          {
+            "bill_id": "111-hr-774",
+            "label": "HR 774",
+            "title": "To designate the facility of the United States Postal Service located at 46-02 21st Street in Long Island City, New York, as the \"Geraldine Ferraro Post Office Building\".",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/774"
+          }
+        ]
+      },
+      {
+        "rank": 14,
+        "bioguide": "B000711",
+        "turns": 751,
+        "words": 302087,
+        "active_days": 165,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 64,
+        "bills_passed": 4,
+        "bills_enacted": 4,
+        "passage_share": 0.0625,
+        "enactment_share": 0.0625,
+        "speaker_name": "Mrs. BOXER",
+        "party": "D",
+        "state": "CA",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/B000711",
+        "examples": [
+          {
+            "bill_id": "111-s-3874",
+            "label": "S 3874",
+            "title": "Reduction of Lead in Drinking Water Act",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3874"
+          },
+          {
+            "bill_id": "111-s-3372",
+            "label": "S 3372",
+            "title": "A bill to modify the date on which the Administrator of the Environmental Protection Agency and applicable States may require permits for discharges from certain vessels.",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3372"
+          },
+          {
+            "bill_id": "111-s-1055",
+            "label": "S 1055",
+            "title": "A bill to grant the congressional gold medal, collectively, to the 100th Infantry Battalion and the 442nd Regimental Combat Team, United States Army, in recognition of their dedicated service during World War II.",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/1055"
+          }
+        ]
+      },
+      {
+        "rank": 15,
+        "bioguide": "F000116",
+        "turns": 361,
+        "words": 117186,
+        "active_days": 35,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 61,
+        "bills_passed": 11,
+        "bills_enacted": 4,
+        "passage_share": 0.1803278689,
+        "enactment_share": 0.0655737705,
+        "speaker_name": "Mr. FILNER",
+        "party": "D",
+        "state": "CA",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/F000116",
+        "examples": [
+          {
+            "bill_id": "111-hr-5014",
+            "label": "HR 5014",
+            "title": "To clarify the health care provided by the Secretary of Veterans Affairs that constitutes minimum essential coverage.",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/5014"
+          },
+          {
+            "bill_id": "111-hr-3219",
+            "label": "HR 3219",
+            "title": "Veterans' Benefits Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/3219"
+          },
+          {
+            "bill_id": "111-hr-1377",
+            "label": "HR 1377",
+            "title": "To amend title 38, United States Code, to expand veteran eligibility for reimbursement by the Secretary of Veterans Affairs for emergency treatment furnished in a non-Department facility, and for other purposes.",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/1377"
+          }
+        ]
+      },
+      {
+        "rank": 16,
+        "bioguide": "A000069",
+        "turns": 239,
+        "words": 272193,
+        "active_days": 112,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 57,
+        "bills_passed": 8,
+        "bills_enacted": 4,
+        "passage_share": 0.1403508772,
+        "enactment_share": 0.0701754386,
+        "speaker_name": "Mr. AKAKA",
+        "party": "D",
+        "state": "HI",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/A000069",
+        "examples": [
+          {
+            "bill_id": "111-s-3447",
+            "label": "S 3447",
+            "title": "Post-9/11 Veterans Educational Assistance Improvements Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3447"
+          },
+          {
+            "bill_id": "111-s-1963",
+            "label": "S 1963",
+            "title": "Caregivers and Veterans Omnibus Health Services Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/1963"
+          },
+          {
+            "bill_id": "111-s-1717",
+            "label": "S 1717",
+            "title": "A bill to authorize major medical facility leases for the Department of Veterans Affairs for fiscal year 2010, and for other purposes.",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/1717"
+          }
+        ]
+      },
+      {
+        "rank": 17,
+        "bioguide": "L000550",
+        "turns": 463,
+        "words": 293859,
+        "active_days": 89,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 56,
+        "bills_passed": 6,
+        "bills_enacted": 4,
+        "passage_share": 0.1071428571,
+        "enactment_share": 0.0714285714,
+        "speaker_name": "Ms. LANDRIEU",
+        "party": "D",
+        "state": "LA",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/L000550",
+        "examples": [
+          {
+            "bill_id": "111-s-3839",
+            "label": "S 3839",
+            "title": "A bill to provide for an additional temporary extension of programs under the Small Business Act and the Small Business Investment Act of 1958, and for other purposes.",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3839"
+          },
+          {
+            "bill_id": "111-s-3253",
+            "label": "S 3253",
+            "title": "A bill to provide for an additional temporary extension of programs under the Small Business Act and the Small Business Investment Act of 1958, and for other purposes.",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3253"
+          },
+          {
+            "bill_id": "111-s-1929",
+            "label": "S 1929",
+            "title": "A bill to provide for an additional temporary extension of programs under the Small Business Act and the Small Business Investment Act of 1958, and for other purposes.",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/1929"
+          }
+        ]
+      },
+      {
+        "rank": 18,
+        "bioguide": "C000714",
+        "turns": 491,
+        "words": 116100,
+        "active_days": 98,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 48,
+        "bills_passed": 8,
+        "bills_enacted": 4,
+        "passage_share": 0.1666666667,
+        "enactment_share": 0.0833333333,
+        "speaker_name": "Mr. CONYERS",
+        "party": "D",
+        "state": "MI",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/C000714",
+        "examples": [
+          {
+            "bill_id": "111-hr-6198",
+            "label": "HR 6198",
+            "title": "Bankruptcy Technical Corrections Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/6198"
+          },
+          {
+            "bill_id": "111-hr-3237",
+            "label": "HR 3237",
+            "title": "To enact certain laws relating to national and commercial space programs as title 51, United States Code, \"National and Commercial Space Programs\".",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/3237"
+          },
+          {
+            "bill_id": "111-hr-3114",
+            "label": "HR 3114",
+            "title": "To authorize the Director of the United States Patent and Trademark Office to use funds made available under the Trademark Act of 1946 for patent operations in order to avoid furloughs and reductions-in-force, and for other purposes.",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/3114"
+          }
+        ]
+      },
+      {
+        "rank": 19,
+        "bioguide": "W000802",
+        "turns": 658,
+        "words": 254030,
+        "active_days": 133,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 41,
+        "bills_passed": 4,
+        "bills_enacted": 4,
+        "passage_share": 0.0975609756,
+        "enactment_share": 0.0975609756,
+        "speaker_name": "Mr. WHITEHOUSE",
+        "party": "D",
+        "state": "RI",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/W000802",
+        "examples": [
+          {
+            "bill_id": "111-s-4005",
+            "label": "S 4005",
+            "title": "Preserving Foreign Criminal Assets for Forfeiture Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/4005"
+          },
+          {
+            "bill_id": "111-s-2847",
+            "label": "S 2847",
+            "title": "CALM Act",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/2847"
+          },
+          {
+            "bill_id": "111-s-1782",
+            "label": "S 1782",
+            "title": "Federal Judiciary Administrative Improvements Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/1782"
+          }
+        ]
+      },
+      {
+        "rank": 20,
+        "bioguide": "V000081",
+        "turns": 320,
+        "words": 40878,
+        "active_days": 28,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 9,
+        "bills_passed": 4,
+        "bills_enacted": 4,
+        "passage_share": 0.4444444444,
+        "enactment_share": 0.4444444444,
+        "speaker_name": "Ms. VELAZQUEZ",
+        "party": "D",
+        "state": "NY",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/V000081",
+        "examples": [
+          {
+            "bill_id": "111-hr-5849",
+            "label": "HR 5849",
+            "title": "To provide for an additional temporary extension of programs under the Small Business Act and the Small Business Investment Act of 1958, and for other purposes.",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/5849"
+          },
+          {
+            "bill_id": "111-hr-4508",
+            "label": "HR 4508",
+            "title": "To provide for an additional temporary extension of programs under the Small Business Act and the Small Business Investment Act of 1958, and for other purposes.",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/4508"
+          },
+          {
+            "bill_id": "111-hr-3614",
+            "label": "HR 3614",
+            "title": "To provide for an additional temporary extension of programs under the Small Business Act and the Small Business Investment Act of 1958, and for other purposes.",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/3614"
+          }
+        ]
+      },
+      {
+        "rank": 21,
+        "bioguide": "F000062",
+        "turns": 586,
+        "words": 557790,
+        "active_days": 135,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 2,
+        "bills_sponsored": 129,
+        "bills_passed": 10,
+        "bills_enacted": 3,
+        "passage_share": 0.0775193798,
+        "enactment_share": 0.023255814,
+        "speaker_name": "Mrs. FEINSTEIN",
+        "party": "D",
+        "state": "CA",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/F000062",
+        "examples": [
+          {
+            "bill_id": "111-s-4010",
+            "label": "S 4010",
+            "title": "A bill for the relief of Shigeru Yamada.",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/4010"
+          },
+          {
+            "bill_id": "111-s-3789",
+            "label": "S 3789",
+            "title": "Social Security Number Protection Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3789"
+          },
+          {
+            "bill_id": "111-s-1749",
+            "label": "S 1749",
+            "title": "Cell Phone Contraband Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/1749"
+          }
+        ]
+      },
+      {
+        "rank": 22,
+        "bioguide": "K000367",
+        "turns": 235,
+        "words": 116903,
+        "active_days": 87,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 69,
+        "bills_passed": 3,
+        "bills_enacted": 3,
+        "passage_share": 0.0434782609,
+        "enactment_share": 0.0434782609,
+        "speaker_name": "Ms. KLOBUCHAR",
+        "party": "D",
+        "state": "MN",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/K000367",
+        "examples": [
+          {
+            "bill_id": "111-s-3397",
+            "label": "S 3397",
+            "title": "Secure and Responsible Drug Disposal Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3397"
+          },
+          {
+            "bill_id": "111-s-1660",
+            "label": "S 1660",
+            "title": "Formaldehyde Standards for Composite Wood Products Act",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/1660"
+          },
+          {
+            "bill_id": "111-s-1376",
+            "label": "S 1376",
+            "title": "International Adoption Simplification Act",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/1376"
+          }
+        ]
+      },
+      {
+        "rank": 23,
+        "bioguide": "C000174",
+        "turns": 164,
+        "words": 132869,
+        "active_days": 61,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 50,
+        "bills_passed": 6,
+        "bills_enacted": 3,
+        "passage_share": 0.12,
+        "enactment_share": 0.06,
+        "speaker_name": "Mr. CARPER",
+        "party": "D",
+        "state": "DE",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/C000174",
+        "examples": [
+          {
+            "bill_id": "111-s-3250",
+            "label": "S 3250",
+            "title": "Federal Buildings Personnel Training Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/3250"
+          },
+          {
+            "bill_id": "111-s-1508",
+            "label": "S 1508",
+            "title": "Improper Payments Elimination and Recovery Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/1508"
+          },
+          {
+            "bill_id": "111-s-1338",
+            "label": "S 1338",
+            "title": "A bill to require the accreditation of English language training programs, and for other purposes.",
+            "url": "https://www.congress.gov/bill/111th-congress/senate-bill/1338"
+          }
+        ]
+      },
+      {
+        "rank": 24,
+        "bioguide": "I000026",
+        "turns": 158,
+        "words": 48973,
+        "active_days": 70,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 33,
+        "bills_passed": 6,
+        "bills_enacted": 3,
+        "passage_share": 0.1818181818,
+        "enactment_share": 0.0909090909,
+        "speaker_name": "Mr. INSLEE",
+        "party": "D",
+        "state": "WA",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/I000026",
+        "examples": [
+          {
+            "bill_id": "111-hr-5809",
+            "label": "HR 5809",
+            "title": "Diesel Emissions Reduction Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/5809"
+          },
+          {
+            "bill_id": "111-hr-2344",
+            "label": "HR 2344",
+            "title": "Webcaster Settlement Act of 2009",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/2344"
+          },
+          {
+            "bill_id": "111-hr-955",
+            "label": "HR 955",
+            "title": "To designate the facility of the United States Postal Service located at 10355 Northeast Valley Road in Rollingbay, Washington, as the \"John 'Bud' Hawk Post Office\".",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/955"
+          }
+        ]
+      },
+      {
+        "rank": 25,
+        "bioguide": "G000309",
+        "turns": 457,
+        "words": 119088,
+        "active_days": 27,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 24,
+        "bills_passed": 12,
+        "bills_enacted": 3,
+        "passage_share": 0.5,
+        "enactment_share": 0.125,
+        "speaker_name": "Mr. GORDON of Tennessee",
+        "party": "D",
+        "state": "TN",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/G000309",
+        "examples": [
+          {
+            "bill_id": "111-hr-5116",
+            "label": "HR 5116",
+            "title": "America COMPETES Reauthorization Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/5116"
+          },
+          {
+            "bill_id": "111-hr-3819",
+            "label": "HR 3819",
+            "title": "To extend the commercial space transportation liability regime.",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/3819"
+          },
+          {
+            "bill_id": "111-hr-2923",
+            "label": "HR 2923",
+            "title": "Combat Methamphetamine Enhancement Act of 2010",
+            "url": "https://www.congress.gov/bill/111th-congress/house-bill/2923"
+          }
+        ]
+      }
+    ],
+    "profanity": [
+      {
+        "rank": 1,
+        "bioguide": "G000359",
+        "turns": 190,
+        "words": 78633,
+        "active_days": 55,
+        "profanity_hits": 9,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 63,
+        "bills_passed": 0,
+        "bills_enacted": 0,
+        "passage_share": 0.0,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. GRAHAM",
+        "party": "R",
+        "state": "SC",
+        "chamber": "senate",
+        "profanity_per_100k": 11.4455762848,
+        "member_url": "https://bioguide.congress.gov/search/bio/G000359"
+      },
+      {
+        "rank": 2,
+        "bioguide": "S000344",
+        "turns": 53,
+        "words": 34559,
+        "active_days": 25,
+        "profanity_hits": 2,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 17,
+        "bills_passed": 0,
+        "bills_enacted": 0,
+        "passage_share": 0.0,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. SHERMAN",
+        "party": "D",
+        "state": "CA",
+        "chamber": "house",
+        "profanity_per_100k": 5.7872044909,
+        "member_url": "https://bioguide.congress.gov/search/bio/S000344"
+      },
+      {
+        "rank": 3,
+        "bioguide": "R000409",
+        "turns": 67,
+        "words": 113263,
+        "active_days": 41,
+        "profanity_hits": 6,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 9,
+        "bills_passed": 0,
+        "bills_enacted": 0,
+        "passage_share": 0.0,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. ROHRABACHER",
+        "party": "R",
+        "state": "CA",
+        "chamber": "house",
+        "profanity_per_100k": 5.2974051544,
+        "member_url": "https://bioguide.congress.gov/search/bio/R000409"
+      },
+      {
+        "rank": 4,
+        "bioguide": "G000556",
+        "turns": 79,
+        "words": 38424,
+        "active_days": 51,
+        "profanity_hits": 2,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 18,
+        "bills_passed": 2,
+        "bills_enacted": 1,
+        "passage_share": 0.1111111111,
+        "enactment_share": 0.0555555556,
+        "speaker_name": "Mr. GRAYSON",
+        "party": "D",
+        "state": "FL",
+        "chamber": "house",
+        "profanity_per_100k": 5.2050801582,
+        "member_url": "https://bioguide.congress.gov/search/bio/G000556"
+      },
+      {
+        "rank": 5,
+        "bioguide": "W000792",
+        "turns": 155,
+        "words": 52621,
+        "active_days": 30,
+        "profanity_hits": 2,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 45,
+        "bills_passed": 4,
+        "bills_enacted": 0,
+        "passage_share": 0.0888888889,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. WEINER",
+        "party": "D",
+        "state": "NY",
+        "chamber": "house",
+        "profanity_per_100k": 3.8007639536,
+        "member_url": "https://bioguide.congress.gov/search/bio/W000792"
+      },
+      {
+        "rank": 6,
+        "bioguide": "E000179",
+        "turns": 161,
+        "words": 50356,
+        "active_days": 68,
+        "profanity_hits": 1,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 28,
+        "bills_passed": 5,
+        "bills_enacted": 1,
+        "passage_share": 0.1785714286,
+        "enactment_share": 0.0357142857,
+        "speaker_name": "Mr. ENGEL",
+        "party": "D",
+        "state": "NY",
+        "chamber": "house",
+        "profanity_per_100k": 1.985860672,
+        "member_url": "https://bioguide.congress.gov/search/bio/E000179"
+      },
+      {
+        "rank": 7,
+        "bioguide": "R000053",
+        "turns": 197,
+        "words": 53114,
+        "active_days": 50,
+        "profanity_hits": 1,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 33,
+        "bills_passed": 14,
+        "bills_enacted": 14,
+        "passage_share": 0.4242424242,
+        "enactment_share": 0.4242424242,
+        "speaker_name": "Mr. RANGEL",
+        "party": "D",
+        "state": "NY",
+        "chamber": "house",
+        "profanity_per_100k": 1.8827427797,
+        "member_url": "https://bioguide.congress.gov/search/bio/R000053"
+      },
+      {
+        "rank": 8,
+        "bioguide": "C000880",
+        "turns": 254,
+        "words": 285456,
+        "active_days": 110,
+        "profanity_hits": 5,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 26,
+        "bills_passed": 0,
+        "bills_enacted": 0,
+        "passage_share": 0.0,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. CRAPO",
+        "party": "R",
+        "state": "ID",
+        "chamber": "senate",
+        "profanity_per_100k": 1.7515834314,
+        "member_url": "https://bioguide.congress.gov/search/bio/C000880"
+      },
+      {
+        "rank": 9,
+        "bioguide": "J000255",
+        "turns": 111,
+        "words": 58192,
+        "active_days": 80,
+        "profanity_hits": 1,
+        "profanity_quoted_hits": 3,
+        "bills_sponsored": 21,
+        "bills_passed": 2,
+        "bills_enacted": 0,
+        "passage_share": 0.0952380952,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. JONES",
+        "party": "R",
+        "state": "NC",
+        "chamber": "house",
+        "profanity_per_100k": 1.7184492714,
+        "member_url": "https://bioguide.congress.gov/search/bio/J000255"
+      },
+      {
+        "rank": 10,
+        "bioguide": "D000355",
+        "turns": 187,
+        "words": 58812,
+        "active_days": 72,
+        "profanity_hits": 1,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 17,
+        "bills_passed": 4,
+        "bills_enacted": 3,
+        "passage_share": 0.2352941176,
+        "enactment_share": 0.1764705882,
+        "speaker_name": "Mr. DINGELL",
+        "party": "D",
+        "state": "MI",
+        "chamber": "house",
+        "profanity_per_100k": 1.7003332653,
+        "member_url": "https://bioguide.congress.gov/search/bio/D000355"
+      },
+      {
+        "rank": 11,
+        "bioguide": "D000492",
+        "turns": 978,
+        "words": 185594,
+        "active_days": 102,
+        "profanity_hits": 3,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 6,
+        "bills_passed": 0,
+        "bills_enacted": 0,
+        "passage_share": 0.0,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. DREIER",
+        "party": "R",
+        "state": "CA",
+        "chamber": "house",
+        "profanity_per_100k": 1.6164315657,
+        "member_url": "https://bioguide.congress.gov/search/bio/D000492"
+      },
+      {
+        "rank": 12,
+        "bioguide": "B001066",
+        "turns": 251,
+        "words": 63021,
+        "active_days": 79,
+        "profanity_hits": 1,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 32,
+        "bills_passed": 0,
+        "bills_enacted": 0,
+        "passage_share": 0.0,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. BUNNING",
+        "party": "R",
+        "state": "KY",
+        "chamber": "senate",
+        "profanity_per_100k": 1.5867726631,
+        "member_url": "https://bioguide.congress.gov/search/bio/B001066"
+      },
+      {
+        "rank": 13,
+        "bioguide": "M000312",
+        "turns": 596,
+        "words": 151923,
+        "active_days": 86,
+        "profanity_hits": 2,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 18,
+        "bills_passed": 1,
+        "bills_enacted": 1,
+        "passage_share": 0.0555555556,
+        "enactment_share": 0.0555555556,
+        "speaker_name": "Mr. McGOVERN",
+        "party": "D",
+        "state": "MA",
+        "chamber": "house",
+        "profanity_per_100k": 1.3164563628,
+        "member_url": "https://bioguide.congress.gov/search/bio/M000312"
+      },
+      {
+        "rank": 14,
+        "bioguide": "B000589",
+        "turns": 143,
+        "words": 76622,
+        "active_days": 74,
+        "profanity_hits": 1,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 6,
+        "bills_passed": 0,
+        "bills_enacted": 0,
+        "passage_share": 0.0,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. BOEHNER",
+        "party": "R",
+        "state": "OH",
+        "chamber": "house",
+        "profanity_per_100k": 1.3051081935,
+        "member_url": "https://bioguide.congress.gov/search/bio/B000589"
+      },
+      {
+        "rank": 15,
+        "bioguide": "G000559",
+        "turns": 431,
+        "words": 86728,
+        "active_days": 51,
+        "profanity_hits": 1,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 7,
+        "bills_passed": 0,
+        "bills_enacted": 0,
+        "passage_share": 0.0,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. GARAMENDI",
+        "party": "D",
+        "state": "CA",
+        "chamber": "house",
+        "profanity_per_100k": 1.1530301633,
+        "member_url": "https://bioguide.congress.gov/search/bio/G000559"
+      },
+      {
+        "rank": 16,
+        "bioguide": "F000010",
+        "turns": 249,
+        "words": 98822,
+        "active_days": 49,
+        "profanity_hits": 1,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 16,
+        "bills_passed": 0,
+        "bills_enacted": 0,
+        "passage_share": 0.0,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. FALEOMAVAEGA",
+        "party": "D",
+        "state": "AS",
+        "chamber": "house",
+        "profanity_per_100k": 1.0119204226,
+        "member_url": "https://bioguide.congress.gov/search/bio/F000010"
+      },
+      {
+        "rank": 17,
+        "bioguide": "G000552",
+        "turns": 642,
+        "words": 400105,
+        "active_days": 155,
+        "profanity_hits": 4,
+        "profanity_quoted_hits": 5,
+        "bills_sponsored": 13,
+        "bills_passed": 1,
+        "bills_enacted": 0,
+        "passage_share": 0.0769230769,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. GOHMERT",
+        "party": "R",
+        "state": "TX",
+        "chamber": "house",
+        "profanity_per_100k": 0.9997375689,
+        "member_url": "https://bioguide.congress.gov/search/bio/G000552"
+      },
+      {
+        "rank": 18,
+        "bioguide": "B001250",
+        "turns": 346,
+        "words": 125785,
+        "active_days": 74,
+        "profanity_hits": 1,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 16,
+        "bills_passed": 3,
+        "bills_enacted": 1,
+        "passage_share": 0.1875,
+        "enactment_share": 0.0625,
+        "speaker_name": "Mr. BISHOP of Utah",
+        "party": "R",
+        "state": "UT",
+        "chamber": "house",
+        "profanity_per_100k": 0.7950073538,
+        "member_url": "https://bioguide.congress.gov/search/bio/B001250"
+      },
+      {
+        "rank": 19,
+        "bioguide": "K000373",
+        "turns": 675,
+        "words": 286960,
+        "active_days": 145,
+        "profanity_hits": 2,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 5,
+        "bills_passed": 1,
+        "bills_enacted": 1,
+        "passage_share": 0.2,
+        "enactment_share": 0.2,
+        "speaker_name": "Mr. KAUFMAN",
+        "party": "D",
+        "state": "DE",
+        "chamber": "senate",
+        "profanity_per_100k": 0.696961249,
+        "member_url": "https://bioguide.congress.gov/search/bio/K000373"
+      },
+      {
+        "rank": 20,
+        "bioguide": "M001153",
+        "turns": 211,
+        "words": 168336,
+        "active_days": 84,
+        "profanity_hits": 1,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 33,
+        "bills_passed": 2,
+        "bills_enacted": 2,
+        "passage_share": 0.0606060606,
+        "enactment_share": 0.0606060606,
+        "speaker_name": "Ms. MURKOWSKI",
+        "party": "R",
+        "state": "AK",
+        "chamber": "senate",
+        "profanity_per_100k": 0.5940499952,
+        "member_url": "https://bioguide.congress.gov/search/bio/M001153"
+      },
+      {
+        "rank": 21,
+        "bioguide": "B001261",
+        "turns": 403,
+        "words": 170109,
+        "active_days": 117,
+        "profanity_hits": 1,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 16,
+        "bills_passed": 0,
+        "bills_enacted": 0,
+        "passage_share": 0.0,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. BARRASSO",
+        "party": "R",
+        "state": "WY",
+        "chamber": "senate",
+        "profanity_per_100k": 0.5878583732,
+        "member_url": "https://bioguide.congress.gov/search/bio/B001261"
+      },
+      {
+        "rank": 22,
+        "bioguide": "I000025",
+        "turns": 510,
+        "words": 195769,
+        "active_days": 113,
+        "profanity_hits": 1,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 44,
+        "bills_passed": 0,
+        "bills_enacted": 0,
+        "passage_share": 0.0,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. INOUYE",
+        "party": "D",
+        "state": "HI",
+        "chamber": "senate",
+        "profanity_per_100k": 0.5108061031,
+        "member_url": "https://bioguide.congress.gov/search/bio/I000025"
+      },
+      {
+        "rank": 23,
+        "bioguide": "G000550",
+        "turns": 546,
+        "words": 196400,
+        "active_days": 133,
+        "profanity_hits": 1,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 18,
+        "bills_passed": 1,
+        "bills_enacted": 0,
+        "passage_share": 0.0555555556,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. GINGREY of Georgia",
+        "party": "R",
+        "state": "GA",
+        "chamber": "house",
+        "profanity_per_100k": 0.5091649695,
+        "member_url": "https://bioguide.congress.gov/search/bio/G000550"
+      },
+      {
+        "rank": 24,
+        "bioguide": "H000338",
+        "turns": 438,
+        "words": 318890,
+        "active_days": 133,
+        "profanity_hits": 1,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 24,
+        "bills_passed": 1,
+        "bills_enacted": 1,
+        "passage_share": 0.0416666667,
+        "enactment_share": 0.0416666667,
+        "speaker_name": "Mr. HATCH",
+        "party": "R",
+        "state": "UT",
+        "chamber": "senate",
+        "profanity_per_100k": 0.3135877575,
+        "member_url": "https://bioguide.congress.gov/search/bio/H000338"
+      },
+      {
+        "rank": 25,
+        "bioguide": "S000709",
+        "turns": 475,
+        "words": 403784,
+        "active_days": 125,
+        "profanity_hits": 1,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 116,
+        "bills_passed": 0,
+        "bills_enacted": 0,
+        "passage_share": 0.0,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. SPECTER",
+        "party": "D",
+        "state": "PA",
+        "chamber": "senate",
+        "profanity_per_100k": 0.2476571632,
+        "member_url": "https://bioguide.congress.gov/search/bio/S000709"
+      }
+    ]
+  }
+}

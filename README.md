@@ -354,42 +354,93 @@ Charts use a shared **Substack-style** plotting toolkit (`analysis/plotting/`, m
 `uk_decline` portfolio look) — see [`docs/PLOTTING.md`](docs/PLOTTING.md) for the palette,
 helpers, and how to reuse it.
 
-## The website: a continuously updated profanity leaderboard
+## The website: congressional activity and language
 
-`site/` is a self-contained static site ranking members of Congress by how often they swear on
-the floor, with a chamber-level trend over time. It is designed to run **unattended**.
+The GitHub Pages site combines the existing speaker summaries with official bill-status records
+to publish five separate, auditable rankings for each Congress:
+
+1. attributed spoken words;
+2. sponsored House and Senate bills;
+3. sponsored bills that passed at least one chamber;
+4. sponsored bills that became law; and
+5. profanity per 100,000 attributed words.
+
+It deliberately does **not** collapse these into an “effectiveness” score. Sponsoring a bill that
+passes or becomes law is a descriptive milestone, not proof that one member personally caused the
+outcome. The legislative rankings currently cover `H.R.` and `S.` measures only; cosponsorships,
+resolutions, and amendments are excluded.
+
+### Seed and update bill data
+
+Bill records use two official sources with one canonical schema:
+
+* **Congresses 103-107:** one-time Congress.gov API seed. Set `CONGRESS_API_KEY` in `.env`
+  (an existing `GOVINFO_API_KEY` is accepted as a fallback because both use api.data.gov).
+* **Congress 108-present:** no-key GovInfo Bill Status bulk XML. Full backfills use the official
+  per-Congress H.R./S. archives; scheduled updates fetch only new or changed current-Congress
+  records.
+
+```bash
+# One-time historical seed; resumable through its checkpoint file.
+python scripts/seed_legacy_bills.py
+
+# One-time official bulk backfill, then routine current-Congress refreshes.
+python scripts/update_bills.py --backfill 108 --congress 119
+python scripts/update_bills.py
+
+# Speech refresh and site render.
+python scripts/update_speakers.py
+python scripts/build_site.py
+```
+
+Normalized state is committed as one compact file per Congress:
+
+```text
+data/site/speaker_daily/congress_NNN.parquet
+data/site/bills/congress_NNN.parquet
+```
+
+The site writes `site/data/congresses.json` and `site/data/congress_NNN.json` for direct reuse.
+Congress 103 speech coverage begins on 1994-01-25, so that Congress's speech and profanity
+rankings are partial and are labeled accordingly.
+
+## How the site runs unattended
+
+`site/` is a self-contained static dashboard with no application server or database. It is
+designed to update **unattended**.
 
 ### Why it can run unattended
 
 The obvious approach — rebuild everything from the corpus on a schedule — cannot work in CI: the
-turn corpus is ~6 GB and is not in the repository. So the site is driven by a small **committed
-state file** instead:
+turn corpus is ~6 GB and is not in the repository. So the site is driven by small **committed
+state partitions** instead:
 
 ```
 data/site/speaker_daily/congress_NNN.parquet    one row per (bioguide, date, chamber)
+data/site/bills/congress_NNN.parquet            one row per H.R./S. bill
 ```
 
-That table is an append-only summary, which is all the leaderboard needs. A scheduled job reads
-the last date it contains, downloads only the issues published since then into a temp directory,
-scores those days, and merges the counts back in. Nothing else is required — no corpus, no cache,
-no manual step.
+The speaker table is an append-only summary. A scheduled job reads its last date, downloads only
+new Congressional Record issues, scores those days, and merges the counts back in. The bill
+updater independently reads official Bill Status metadata and replaces only new or changed
+current-Congress records.
 
 ```bash
 python scripts/update_speakers.py    # extend the table with newly published days
-python scripts/build_site.py         # render site/ from the table
+python scripts/update_bills.py       # refresh current-Congress H.R./S. statuses
+python scripts/build_site.py         # render site/ from both committed tables
 ```
 
 `build_site.py` ranks the **sitting Congress** by default (`--congress latest`); pass a number
 for a specific one or `--congress all` for an all-time board. The default is deliberate: it keeps
 the scheduled build showing the current Congress and producing the same output as a local run.
 
-`.github/workflows/update-site.yml` runs both daily at 07:20 UTC, commits the refreshed table and
-site, and publishes to GitHub Pages.
+`.github/workflows/update-site.yml` runs the refreshes daily at 07:20 UTC, commits the refreshed
+tables and site, and publishes to GitHub Pages.
 
-**No API key or repository secret is required.** Issues are discovered by probing the public
-GovInfo bulk URLs (`content/pkg/CREC-YYYY-MM-DD.zip` — a published day answers `200`, a day with
-no session redirects) rather than the rate-limited GovInfo API. Verified to return exactly the
-same packages as the API. Nothing sensitive ever has to be stored in repository settings.
+**No API key or repository secret is required for scheduled updates.** Record issues and current
+bill statuses both come from public GovInfo bulk URLs. The Congress.gov API key is used only for
+the one-time local seed of Congresses 103-107.
 
 To enable it:
 
@@ -413,8 +464,10 @@ The build writes machine-readable output alongside the HTML, so a blog can pull 
 directly rather than screen-scraping:
 
 ```
-site/data/leaderboard.json     ranked members with rates, counts and word totals
-site/data/timeseries.json      chamber-level rate per year
+site/data/congresses.json      available Congress selectors
+site/data/congress_NNN.json    all five leaderboards, definitions, and coverage
+site/data/leaderboard.json     compatibility profanity leaderboard for the initial view
+site/data/timeseries.json      chamber-level profanity rate per year
 site/data/meta.json            build stamp, thresholds, coverage, caveat text
 site/figures/*.png             charts in the project's house style
 ```

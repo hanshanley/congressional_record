@@ -80,3 +80,32 @@ category and stratum rather than hiding low-recall results.
 OCR error, quotation, sarcasm, historical language drift, incomplete party attribution, and source
 differences can affect rates. Charts are descriptive and do not identify a causal effect of
 polarization or any other political process.
+
+## Member activity dashboard
+
+The static site joins floor-speech summaries to official legislative records by Bioguide ID.
+It publishes separate rankings rather than a composite score:
+
+- attributed non-procedural House/Senate spoken words, with turns and active days as context;
+- distinct sponsored House and Senate bills (`H.R.` and `S.` only);
+- sponsored bills with an official measure-level House or Senate passage action;
+- sponsored bills assigned a public or private law number; and
+- unquoted curated profanity hits per 100,000 attributed words, subject to the site's minimum-word
+  threshold.
+
+Bill sponsorship, passage, and enactment are descriptive milestones. Sponsorship is not sole
+authorship, and a bill passing or becoming law does not establish that its sponsor personally
+caused that outcome. Cosponsorships, resolutions, amendments, committee productivity, and vote
+behavior are not included in the first version.
+
+Canonical bill rows preserve their official source URL, update timestamp, sponsor Bioguide ID,
+matched passage action codes, and law citation. GovInfo Bill Status bulk XML supplies Congress 108
+forward without an API key. Congress.gov API data supplies Congresses 103-107 through a one-time,
+keyed seed. Both adapters emit the same schema and are checked against overlapping Congress 108
+fixtures. Routine automation refreshes only the current Congress; historical corrections require
+an explicit full refresh.
+
+The committed speech table begins Congress 103 on 1994-01-25 rather than at the start of the
+Congress, so Congress 103 speaking and profanity rankings are explicitly labeled partial.
+Extensions of Remarks remain in the underlying audit table but are excluded from these member
+rankings because they are submitted for publication rather than spoken on the floor.
