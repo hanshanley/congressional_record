@@ -387,3 +387,79 @@ def test_request_failure_hides_api_key_and_retry_is_bounded(
     assert len(cli_session.calls) == 1
     assert "Congress.gov request failed after 1 attempt" in cli_output
     assert secret not in cli_output
+
+
+def test_rate_limit_honors_long_retry_after():
+    sleeps = []
+    session = FakeSession(
+        {
+            "/v3/bill/103/hr": [
+                FakeResponse(
+                    {"error": "over rate limit"},
+                    status_code=429,
+                    headers={"Retry-After": "2903"},
+                ),
+                FakeResponse(
+                    {"bills": [{"number": "1"}], "pagination": {}}
+                ),
+            ]
+        }
+    )
+    client = CongressAPIClient(
+        "secret",
+        session=session,
+        min_interval=0,
+        max_retries=1,
+        sleep=sleeps.append,
+    )
+    assert [row["number"] for row in client.iter_bill_summaries(103, "HR")] == ["1"]
+    assert sleeps == [2903.0]
+
+
+@pytest.mark.parametrize(
+    ("number", "sponsor_bioguide", "sponsor_name"),
+    [
+        (2842, "B001149", "Rep. Burton, Dan [R-IN-5]"),
+        (2843, "E000179", "Rep. Engel, Eliot L. [D-NY-17]"),
+    ],
+)
+def test_known_broken_bill_detail_uses_official_metadata_override(
+    number, sponsor_bioguide, sponsor_name
+):
+    summary = {
+        "congress": 107,
+        "type": "HR",
+        "number": str(number),
+        "title": "A bill with a broken Congress.gov detail endpoint.",
+        "originChamber": "House",
+        "originChamberCode": "H",
+        "updateDate": "2025-01-02",
+        "url": f"https://api.congress.gov/v3/bill/107/hr/{number}?format=json",
+    }
+    session = FakeSession(
+        {
+            f"/v3/bill/107/hr/{number}": [
+                FakeResponse({"error": "broken MemberTerm"}, status_code=500)
+            ],
+            f"/v3/bill/107/hr/{number}/actions": [
+                FakeResponse(
+                    {
+                        "actions": [
+                            {
+                                "actionDate": "2001-09-05",
+                                "actionCode": "1000",
+                                "text": "Introduced in House",
+                            }
+                        ],
+                        "pagination": {},
+                    }
+                )
+            ],
+        }
+    )
+    row = CongressAPIClient(
+        "secret", session=session, min_interval=0, max_retries=0
+    ).fetch_canonical_bill(107, "HR", number, summary=summary)
+    assert row["bill_id"] == f"107-hr-{number}"
+    assert row["sponsor_bioguide"] == sponsor_bioguide
+    assert row["sponsor_name"] == sponsor_name

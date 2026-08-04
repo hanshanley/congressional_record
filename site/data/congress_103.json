@@ -1,7 +1,7 @@
 {
   "congress": 103,
   "label": "Congress 103",
-  "generated_utc": "2026-08-03T20:42:19+00:00",
+  "generated_utc": "2026-08-04T16:55:43+00:00",
   "min_words": 25000,
   "top": 25,
   "coverage": {
@@ -9,10 +9,12 @@
     "speech_last_date": "1994-12-20",
     "speaker_days": 18650,
     "members_with_speech": 517,
-    "bills": 0,
-    "members_with_bills": 0,
-    "bill_sources": [],
-    "warning": "Speech coverage for Congress 103 begins on 1994-01-25, so its speaking and profanity rankings are partial. Legislative data for Congress 103 has not been seeded; bill leaderboards are unavailable rather than zero."
+    "bills": 7879,
+    "members_with_bills": 540,
+    "bill_sources": [
+      "congress.gov"
+    ],
+    "warning": "Speech coverage for Congress 103 begins on 1994-01-25, so its speaking and profanity rankings are partial."
   },
   "definitions": {
     "speech": "Attributed non-procedural spoken words; turns and active days provide context.",
@@ -39,10 +41,10 @@
         "active_days": 112,
         "profanity_hits": 1,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
+        "bills_sponsored": 28,
+        "bills_passed": 1,
         "bills_enacted": 0,
-        "passage_share": 0.0,
+        "passage_share": 0.0357142857,
         "enactment_share": 0.0,
         "speaker_name": "Mr. DOLE",
         "party": "R",
@@ -59,11 +61,11 @@
         "active_days": 101,
         "profanity_hits": 1,
         "profanity_quoted_hits": 3,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 63,
+        "bills_passed": 3,
+        "bills_enacted": 1,
+        "passage_share": 0.0476190476,
+        "enactment_share": 0.0158730159,
         "speaker_name": "Mr. SIMON",
         "party": "D",
         "state": "IL",
@@ -79,11 +81,11 @@
         "active_days": 90,
         "profanity_hits": 0,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 46,
+        "bills_passed": 9,
+        "bills_enacted": 3,
+        "passage_share": 0.1956521739,
+        "enactment_share": 0.0652173913,
         "speaker_name": "Mr. McCAIN",
         "party": "R",
         "state": "AZ",
@@ -99,11 +101,11 @@
         "active_days": 111,
         "profanity_hits": 0,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 21,
+        "bills_passed": 3,
+        "bills_enacted": 1,
+        "passage_share": 0.1428571429,
+        "enactment_share": 0.0476190476,
         "speaker_name": "Mr. MITCHELL",
         "party": "D",
         "state": "ME",
@@ -119,11 +121,11 @@
         "active_days": 92,
         "profanity_hits": 5,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 32,
+        "bills_passed": 5,
+        "bills_enacted": 3,
+        "passage_share": 0.15625,
+        "enactment_share": 0.09375,
         "speaker_name": "Mr. HATCH",
         "party": "R",
         "state": "UT",
@@ -139,11 +141,11 @@
         "active_days": 96,
         "profanity_hits": 0,
         "profanity_quoted_hits": 2,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 44,
+        "bills_passed": 6,
+        "bills_enacted": 4,
+        "passage_share": 0.1363636364,
+        "enactment_share": 0.0909090909,
         "speaker_name": "Mr. PELL",
         "party": "D",
         "state": "RI",
@@ -159,11 +161,11 @@
         "active_days": 64,
         "profanity_hits": 0,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 22,
+        "bills_passed": 13,
+        "bills_enacted": 1,
+        "passage_share": 0.5909090909,
+        "enactment_share": 0.0454545455,
         "speaker_name": "Mr. NUNN",
         "party": "D",
         "state": "GA",
@@ -179,7 +181,7 @@
         "active_days": 76,
         "profanity_hits": 2,
         "profanity_quoted_hits": 1,
-        "bills_sponsored": 0,
+        "bills_sponsored": 23,
         "bills_passed": 0,
         "bills_enacted": 0,
         "passage_share": 0.0,
@@ -199,11 +201,11 @@
         "active_days": 69,
         "profanity_hits": 0,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 51,
+        "bills_passed": 11,
+        "bills_enacted": 3,
+        "passage_share": 0.2156862745,
+        "enactment_share": 0.0588235294,
         "speaker_name": "Mr. KENNEDY",
         "party": "D",
         "state": "MA",
@@ -219,11 +221,11 @@
         "active_days": 69,
         "profanity_hits": 2,
         "profanity_quoted_hits": 2,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 27,
+        "bills_passed": 3,
+        "bills_enacted": 2,
+        "passage_share": 0.1111111111,
+        "enactment_share": 0.0740740741,
         "speaker_name": "Mr. KERRY",
         "party": "D",
         "state": "MA",
@@ -239,7 +241,7 @@
         "active_days": 129,
         "profanity_hits": 6,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
+        "bills_sponsored": 43,
         "bills_passed": 0,
         "bills_enacted": 0,
         "passage_share": 0.0,
@@ -259,11 +261,11 @@
         "active_days": 60,
         "profanity_hits": 1,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 31,
+        "bills_passed": 2,
+        "bills_enacted": 1,
+        "passage_share": 0.064516129,
+        "enactment_share": 0.0322580645,
         "speaker_name": "Mr. HOLLINGS",
         "party": "D",
         "state": "SC",
@@ -279,11 +281,11 @@
         "active_days": 97,
         "profanity_hits": 1,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 22,
+        "bills_passed": 2,
+        "bills_enacted": 2,
+        "passage_share": 0.0909090909,
+        "enactment_share": 0.0909090909,
         "speaker_name": "Mr. FORD",
         "party": "D",
         "state": "KY",
@@ -299,11 +301,11 @@
         "active_days": 84,
         "profanity_hits": 0,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 31,
+        "bills_passed": 11,
+        "bills_enacted": 6,
+        "passage_share": 0.3548387097,
+        "enactment_share": 0.1935483871,
         "speaker_name": "Mr. LEAHY",
         "party": "D",
         "state": "VT",
@@ -319,7 +321,7 @@
         "active_days": 92,
         "profanity_hits": 0,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
+        "bills_sponsored": 38,
         "bills_passed": 0,
         "bills_enacted": 0,
         "passage_share": 0.0,
@@ -339,11 +341,11 @@
         "active_days": 81,
         "profanity_hits": 1,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 27,
+        "bills_passed": 3,
+        "bills_enacted": 3,
+        "passage_share": 0.1111111111,
+        "enactment_share": 0.1111111111,
         "speaker_name": "Mr. PRESSLER",
         "party": "R",
         "state": "SD",
@@ -359,11 +361,11 @@
         "active_days": 68,
         "profanity_hits": 0,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 23,
+        "bills_passed": 2,
+        "bills_enacted": 1,
+        "passage_share": 0.0869565217,
+        "enactment_share": 0.0434782609,
         "speaker_name": "Mr. COHEN",
         "party": "R",
         "state": "ME",
@@ -379,7 +381,7 @@
         "active_days": 67,
         "profanity_hits": 0,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
+        "bills_sponsored": 3,
         "bills_passed": 0,
         "bills_enacted": 0,
         "passage_share": 0.0,
@@ -399,11 +401,11 @@
         "active_days": 95,
         "profanity_hits": 0,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 42,
+        "bills_passed": 3,
+        "bills_enacted": 2,
+        "passage_share": 0.0714285714,
+        "enactment_share": 0.0476190476,
         "speaker_name": "Mr. MOYNIHAN",
         "party": "D",
         "state": "NY",
@@ -419,11 +421,11 @@
         "active_days": 68,
         "profanity_hits": 1,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 25,
+        "bills_passed": 3,
+        "bills_enacted": 1,
+        "passage_share": 0.12,
+        "enactment_share": 0.04,
         "speaker_name": "Mr. DOMENICI",
         "party": "R",
         "state": "NM",
@@ -439,11 +441,11 @@
         "active_days": 90,
         "profanity_hits": 1,
         "profanity_quoted_hits": 3,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 62,
+        "bills_passed": 7,
+        "bills_enacted": 2,
+        "passage_share": 0.1129032258,
+        "enactment_share": 0.0322580645,
         "speaker_name": "Mr. DeCONCINI",
         "party": "D",
         "state": "AZ",
@@ -459,11 +461,11 @@
         "active_days": 63,
         "profanity_hits": 0,
         "profanity_quoted_hits": 1,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 18,
+        "bills_passed": 3,
+        "bills_enacted": 2,
+        "passage_share": 0.1666666667,
+        "enactment_share": 0.1111111111,
         "speaker_name": "Mr. CRAIG",
         "party": "R",
         "state": "ID",
@@ -479,11 +481,11 @@
         "active_days": 77,
         "profanity_hits": 0,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 24,
+        "bills_passed": 1,
+        "bills_enacted": 1,
+        "passage_share": 0.0416666667,
+        "enactment_share": 0.0416666667,
         "speaker_name": "Mrs. FEINSTEIN",
         "party": "D",
         "state": "CA",
@@ -499,11 +501,11 @@
         "active_days": 72,
         "profanity_hits": 0,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 30,
+        "bills_passed": 5,
+        "bills_enacted": 2,
+        "passage_share": 0.1666666667,
+        "enactment_share": 0.0666666667,
         "speaker_name": "Mr. DODD",
         "party": "D",
         "state": "CT",
@@ -519,11 +521,11 @@
         "active_days": 45,
         "profanity_hits": 0,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 24,
+        "bills_passed": 6,
+        "bills_enacted": 1,
+        "passage_share": 0.25,
+        "enactment_share": 0.0416666667,
         "speaker_name": "Mr. VENTO",
         "party": "D",
         "state": "MN",
@@ -532,9 +534,3012 @@
         "member_url": "https://bioguide.congress.gov/search/bio/V000087"
       }
     ],
-    "sponsored": [],
-    "passed": [],
-    "enacted": [],
+    "sponsored": [
+      {
+        "rank": 1,
+        "bioguide": "I000025",
+        "turns": 502,
+        "words": 92072,
+        "active_days": 63,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 80,
+        "bills_passed": 2,
+        "bills_enacted": 1,
+        "passage_share": 0.025,
+        "enactment_share": 0.0125,
+        "speaker_name": "Mr. INOUYE",
+        "party": "D",
+        "state": "HI",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/I000025",
+        "examples": [
+          {
+            "bill_id": "103-s-2420",
+            "label": "S 2420",
+            "title": "Guam War Restitution Act",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2420"
+          },
+          {
+            "bill_id": "103-s-2336",
+            "label": "S 2336",
+            "title": "Federal Communications Commission Authorization Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2336"
+          },
+          {
+            "bill_id": "103-s-2269",
+            "label": "S 2269",
+            "title": "Native American Cultural Protection and Free Exercise of Religion Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2269"
+          }
+        ]
+      },
+      {
+        "rank": 2,
+        "bioguide": "R000361",
+        "turns": 0,
+        "words": 0,
+        "active_days": 0,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 67,
+        "bills_passed": 13,
+        "bills_enacted": 4,
+        "passage_share": 0.1940298507,
+        "enactment_share": 0.0597014925,
+        "speaker_name": "Sen. Rockefeller, John D., IV [D-WV]",
+        "party": "D",
+        "state": "WV",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/R000361",
+        "examples": [
+          {
+            "bill_id": "103-s-2513",
+            "label": "S 2513",
+            "title": "A bill to enhance the research conducted by the Agency for Health Care Policy and Research concerning primary care, and for other purposes.",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2513"
+          },
+          {
+            "bill_id": "103-s-2442",
+            "label": "S 2442",
+            "title": "Appalachian Regional Development Act Amendments of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2442"
+          },
+          {
+            "bill_id": "103-s-2387",
+            "label": "S 2387",
+            "title": "A bill to amend the Service Members Occupational Conversion and Training Act of 1992 to permit a period of training under the Act of more than 18 months, and for other purposes.",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2387"
+          }
+        ]
+      },
+      {
+        "rank": 3,
+        "bioguide": "J000033",
+        "turns": 0,
+        "words": 0,
+        "active_days": 0,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 65,
+        "bills_passed": 2,
+        "bills_enacted": 2,
+        "passage_share": 0.0307692308,
+        "enactment_share": 0.0307692308,
+        "speaker_name": "Rep. Jacobs, Andrew, Jr. [D-IN-10]",
+        "party": "D",
+        "state": "IN",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/J000033",
+        "examples": [
+          {
+            "bill_id": "103-hr-5001",
+            "label": "HR 5001",
+            "title": "Federal Support Payment Act",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/5001"
+          },
+          {
+            "bill_id": "103-hr-4515",
+            "label": "HR 4515",
+            "title": "To amend title XI of the Social Security Act to provide that the penalty for failure of employers to file certain reports with respect to the Medicare and Medicaid Coverage Data Bank shall apply only with respect to reports required in calendar years beginning after 90 days after necessary regulations are promulgated.",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/4515"
+          },
+          {
+            "bill_id": "103-hr-4501",
+            "label": "HR 4501",
+            "title": "To designate the Federal building and United States courthouse located at 46 East Ohio Street in Indianapolis, Indiana, as the \"Holder-Noland Federal Building and United States Courthouse\".",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/4501"
+          }
+        ]
+      },
+      {
+        "rank": 4,
+        "bioguide": "S000423",
+        "turns": 765,
+        "words": 387156,
+        "active_days": 101,
+        "profanity_hits": 1,
+        "profanity_quoted_hits": 3,
+        "bills_sponsored": 63,
+        "bills_passed": 3,
+        "bills_enacted": 1,
+        "passage_share": 0.0476190476,
+        "enactment_share": 0.0158730159,
+        "speaker_name": "Mr. SIMON",
+        "party": "D",
+        "state": "IL",
+        "chamber": "senate",
+        "profanity_per_100k": 0.2582938144,
+        "member_url": "https://bioguide.congress.gov/search/bio/S000423",
+        "examples": [
+          {
+            "bill_id": "103-s-2562",
+            "label": "S 2562",
+            "title": "Presidential Succession Clarification Act",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2562"
+          },
+          {
+            "bill_id": "103-s-2547",
+            "label": "S 2547",
+            "title": "ERISA Audit Improvement Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2547"
+          },
+          {
+            "bill_id": "103-s-2517",
+            "label": "S 2517",
+            "title": "A bill to amend the Fastener Quality Act.",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2517"
+          }
+        ]
+      },
+      {
+        "rank": 5,
+        "bioguide": "D000185",
+        "turns": 660,
+        "words": 214246,
+        "active_days": 90,
+        "profanity_hits": 1,
+        "profanity_quoted_hits": 3,
+        "bills_sponsored": 62,
+        "bills_passed": 7,
+        "bills_enacted": 2,
+        "passage_share": 0.1129032258,
+        "enactment_share": 0.0322580645,
+        "speaker_name": "Mr. DeCONCINI",
+        "party": "D",
+        "state": "AZ",
+        "chamber": "senate",
+        "profanity_per_100k": 0.4667531716,
+        "member_url": "https://bioguide.congress.gov/search/bio/D000185",
+        "examples": [
+          {
+            "bill_id": "103-s-2555",
+            "label": "S 2555",
+            "title": "Cooperative Units of Research in Infectious Disease (CURID) of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2555"
+          },
+          {
+            "bill_id": "103-s-2488",
+            "label": "S 2488",
+            "title": "Patent Application Publication Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2488"
+          },
+          {
+            "bill_id": "103-s-2401",
+            "label": "S 2401",
+            "title": "National Commission on Major League Baseball Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2401"
+          }
+        ]
+      },
+      {
+        "rank": 6,
+        "bioguide": "S000810",
+        "turns": 124,
+        "words": 10812,
+        "active_days": 19,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 60,
+        "bills_passed": 2,
+        "bills_enacted": 2,
+        "passage_share": 0.0333333333,
+        "enactment_share": 0.0333333333,
+        "speaker_name": "Mr. STARK",
+        "party": "D",
+        "state": "CA",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/S000810",
+        "examples": [
+          {
+            "bill_id": "103-hr-5252",
+            "label": "HR 5252",
+            "title": "Social Security Act Amendments of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/5252"
+          },
+          {
+            "bill_id": "103-hr-5195",
+            "label": "HR 5195",
+            "title": "Contact Lens Prescription Release Act",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/5195"
+          },
+          {
+            "bill_id": "103-hr-5153",
+            "label": "HR 5153",
+            "title": "To amend title XVIII of the Social Security Act to provide for an open enrollment period under part B of the medicare program for individuals formerly covered as retirees under group health plans of local educational agencies.",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/5153"
+          }
+        ]
+      },
+      {
+        "rank": 7,
+        "bioguide": "J000189",
+        "turns": 677,
+        "words": 131486,
+        "active_days": 63,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 59,
+        "bills_passed": 12,
+        "bills_enacted": 4,
+        "passage_share": 0.2033898305,
+        "enactment_share": 0.0677966102,
+        "speaker_name": "Mr. JOHNSTON",
+        "party": "D",
+        "state": "LA",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/J000189",
+        "examples": [
+          {
+            "bill_id": "103-s-2506",
+            "label": "S 2506",
+            "title": "Wetlands Regulatory Reform Act of 1995",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2506"
+          },
+          {
+            "bill_id": "103-s-2466",
+            "label": "S 2466",
+            "title": "Energy Policy and Conservation Act Amendments of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2466"
+          },
+          {
+            "bill_id": "103-s-2461",
+            "label": "S 2461",
+            "title": "Energy Policy and Conservation Act Amendments Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2461"
+          }
+        ]
+      },
+      {
+        "rank": 8,
+        "bioguide": "W000665",
+        "turns": 197,
+        "words": 83079,
+        "active_days": 66,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 55,
+        "bills_passed": 0,
+        "bills_enacted": 0,
+        "passage_share": 0.0,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. WOFFORD",
+        "party": "D",
+        "state": "PA",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/W000665",
+        "examples": [
+          {
+            "bill_id": "103-s-2482",
+            "label": "S 2482",
+            "title": "A bill to provide for the restoration of Washington Square in Philadelphia, Pennsylvania, and for the inclusion of Washington Square within Independence National Historical Park, and for other purposes.",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2482"
+          },
+          {
+            "bill_id": "103-s-2464",
+            "label": "S 2464",
+            "title": "A bill entitled the \"Congressional Health Insurance Accountability Act.\"",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2464"
+          },
+          {
+            "bill_id": "103-s-2367",
+            "label": "S 2367",
+            "title": "Crime Victims Fund Enhancement Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2367"
+          }
+        ]
+      },
+      {
+        "rank": 9,
+        "bioguide": "S000148",
+        "turns": 105,
+        "words": 21952,
+        "active_days": 34,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 54,
+        "bills_passed": 7,
+        "bills_enacted": 3,
+        "passage_share": 0.1296296296,
+        "enactment_share": 0.0555555556,
+        "speaker_name": "Mr. SCHUMER",
+        "party": "D",
+        "state": "NY",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/S000148",
+        "examples": [
+          {
+            "bill_id": "103-hr-5307",
+            "label": "HR 5307",
+            "title": "To amend title 28, United States Code, with respect to photographing, recording, and broadcasting court proceedings.",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/5307"
+          },
+          {
+            "bill_id": "103-hr-5063",
+            "label": "HR 5063",
+            "title": "To amend the Immigration Act of 1990 to provide for complete use of visas made available under the diversity transition program.",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/5063"
+          },
+          {
+            "bill_id": "103-hr-4969",
+            "label": "HR 4969",
+            "title": "To amend the Communications Act of 1934 to limit the rates and charges that may be imposed on interstate and foreign communications made through providers of operator services.",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/4969"
+          }
+        ]
+      },
+      {
+        "rank": 10,
+        "bioguide": "R000229",
+        "turns": 218,
+        "words": 111219,
+        "active_days": 64,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 53,
+        "bills_passed": 13,
+        "bills_enacted": 9,
+        "passage_share": 0.2452830189,
+        "enactment_share": 0.1698113208,
+        "speaker_name": "Mr. RICHARDSON",
+        "party": "D",
+        "state": "NM",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/R000229",
+        "examples": [
+          {
+            "bill_id": "103-hr-5277",
+            "label": "HR 5277",
+            "title": "To address the need for private financing of home ownership and economic development on and near reservation lands, and for other purposes.",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/5277"
+          },
+          {
+            "bill_id": "103-hr-4842",
+            "label": "HR 4842",
+            "title": "Indian Self-Determination Act Amendments of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/4842"
+          },
+          {
+            "bill_id": "103-hr-4833",
+            "label": "HR 4833",
+            "title": "American Indian Trust Fund Management Reform Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/4833"
+          }
+        ]
+      },
+      {
+        "rank": 11,
+        "bioguide": "T000058",
+        "turns": 167,
+        "words": 27143,
+        "active_days": 21,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 53,
+        "bills_passed": 7,
+        "bills_enacted": 2,
+        "passage_share": 0.1320754717,
+        "enactment_share": 0.0377358491,
+        "speaker_name": "Mr. TAUZIN",
+        "party": "R",
+        "state": "LA",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/T000058",
+        "examples": [
+          {
+            "bill_id": "103-hr-5229",
+            "label": "HR 5229",
+            "title": "Panama Canal Amendments Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/5229"
+          },
+          {
+            "bill_id": "103-hr-5197",
+            "label": "HR 5197",
+            "title": "To suspend temporarily the duty on nickel isoindoline pigment.",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/5197"
+          },
+          {
+            "bill_id": "103-hr-5196",
+            "label": "HR 5196",
+            "title": "To suspend temporarily the duty on C.I. Pigment Yellow 139.",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/5196"
+          }
+        ]
+      },
+      {
+        "rank": 12,
+        "bioguide": "S000675",
+        "turns": 562,
+        "words": 136826,
+        "active_days": 60,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 52,
+        "bills_passed": 0,
+        "bills_enacted": 0,
+        "passage_share": 0.0,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. SOLOMON",
+        "party": "R",
+        "state": "NY",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/S000675",
+        "examples": [
+          {
+            "bill_id": "103-hr-4970",
+            "label": "HR 4970",
+            "title": "To amend vaccine injury compensation portion of the Public Health Service Act to permit a petition for compensation to be submitted within 48 months of the first symptoms of injury.",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/4970"
+          },
+          {
+            "bill_id": "103-hr-4421",
+            "label": "HR 4421",
+            "title": "To amend the Internal Revenue Code of 1986 to provide that tax-exempt interest shall not be taken into account in determining the amount of social security benefits included in gross income.",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/4421"
+          },
+          {
+            "bill_id": "103-hr-3992",
+            "label": "HR 3992",
+            "title": "To prohibit foreign assistance to Russia unless certain requirements relating to Russian intelligence activities, relations between Russia and certain neighboring countries, and the reform of the Russian economy are met.",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/3992"
+          }
+        ]
+      },
+      {
+        "rank": 13,
+        "bioguide": "K000105",
+        "turns": 729,
+        "words": 279277,
+        "active_days": 69,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 51,
+        "bills_passed": 11,
+        "bills_enacted": 3,
+        "passage_share": 0.2156862745,
+        "enactment_share": 0.0588235294,
+        "speaker_name": "Mr. KENNEDY",
+        "party": "D",
+        "state": "MA",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/K000105",
+        "examples": [
+          {
+            "bill_id": "103-s-2516",
+            "label": "S 2516",
+            "title": "Job Training Consolidation and Reform Act",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2516"
+          },
+          {
+            "bill_id": "103-s-2489",
+            "label": "S 2489",
+            "title": "Ryan White CARE Reauthorization Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2489"
+          },
+          {
+            "bill_id": "103-s-2433",
+            "label": "S 2433",
+            "title": "Nursing Education Consolidation and Reauthorization Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2433"
+          }
+        ]
+      },
+      {
+        "rank": 14,
+        "bioguide": "L000123",
+        "turns": 305,
+        "words": 165774,
+        "active_days": 74,
+        "profanity_hits": 1,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 51,
+        "bills_passed": 1,
+        "bills_enacted": 0,
+        "passage_share": 0.0196078431,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. LAUTENBERG",
+        "party": "D",
+        "state": "NJ",
+        "chamber": "senate",
+        "profanity_per_100k": 0.6032309047,
+        "member_url": "https://bioguide.congress.gov/search/bio/L000123",
+        "examples": [
+          {
+            "bill_id": "103-s-2450",
+            "label": "S 2450",
+            "title": "Tax Compliance Enforcement Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2450"
+          },
+          {
+            "bill_id": "103-s-2443",
+            "label": "S 2443",
+            "title": "Gun Victim Compensation Act",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2443"
+          },
+          {
+            "bill_id": "103-s-2426",
+            "label": "S 2426",
+            "title": "A bill to amend the Housing and Community Development Act of 1974 to prohibit the Secretary of Housing and Urban Development from recapturing, adjusting, withdrawing, or reducing any UDAG funds from recipients of UDAG grants, and for other purposes.",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2426"
+          }
+        ]
+      },
+      {
+        "rank": 15,
+        "bioguide": "R000249",
+        "turns": 0,
+        "words": 0,
+        "active_days": 0,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 50,
+        "bills_passed": 4,
+        "bills_enacted": 4,
+        "passage_share": 0.08,
+        "enactment_share": 0.08,
+        "speaker_name": "Sen. Riegle, Donald W., Jr. [D-MI]",
+        "party": "D",
+        "state": "MI",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/R000249",
+        "examples": [
+          {
+            "bill_id": "103-s-2402",
+            "label": "S 2402",
+            "title": "Homeowners Insurance Disclosure Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2402"
+          },
+          {
+            "bill_id": "103-s-2395",
+            "label": "S 2395",
+            "title": "An act to designate the United States Courthouse in Detroit, Michigan, as the \"Theodore Levin Courthouse\", and for other purposes.",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2395"
+          },
+          {
+            "bill_id": "103-s-2361",
+            "label": "S 2361",
+            "title": "Burt Lake Band of Ottawa and Chippewa Indians Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2361"
+          }
+        ]
+      },
+      {
+        "rank": 16,
+        "bioguide": "S000477",
+        "turns": 17,
+        "words": 15457,
+        "active_days": 13,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 49,
+        "bills_passed": 6,
+        "bills_enacted": 2,
+        "passage_share": 0.1224489796,
+        "enactment_share": 0.0408163265,
+        "speaker_name": "Mr. SLATTERY",
+        "party": "D",
+        "state": "KS",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/S000477",
+        "examples": [
+          {
+            "bill_id": "103-hr-4844",
+            "label": "HR 4844",
+            "title": "For the relief of Gulnur Akbal Walmsley.",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/4844"
+          },
+          {
+            "bill_id": "103-hr-4805",
+            "label": "HR 4805",
+            "title": "To amend title 23, United States Code, relating to penalties for use of motorcycle helmets.",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/4805"
+          },
+          {
+            "bill_id": "103-hr-4088",
+            "label": "HR 4088",
+            "title": "Veterans' Benefits Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/4088"
+          }
+        ]
+      },
+      {
+        "rank": 17,
+        "bioguide": "B000468",
+        "turns": 111,
+        "words": 83093,
+        "active_days": 50,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 48,
+        "bills_passed": 10,
+        "bills_enacted": 4,
+        "passage_share": 0.2083333333,
+        "enactment_share": 0.0833333333,
+        "speaker_name": "Mr. BINGAMAN",
+        "party": "D",
+        "state": "NM",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/B000468",
+        "examples": [
+          {
+            "bill_id": "103-s-2382",
+            "label": "S 2382",
+            "title": "A bill to amend the Tariff Act of 1930 to provide parity between the United States and certain free trade agreement countries with respect to the exemption for personal and household effects purchased abroad by returning residents, and for other purposes.",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2382"
+          },
+          {
+            "bill_id": "103-s-2232",
+            "label": "S 2232",
+            "title": "A bill to amend the Federal Water Pollution Control Act to authorize appropriations for each of fiscal years 1994 through 1998 for the construction of wastewater treatment works to serve United States colonias by providing water pollution control in the vicinity of the international boundary between the United States and Mexico, and for other purposes.",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2232"
+          },
+          {
+            "bill_id": "103-s-2231",
+            "label": "S 2231",
+            "title": "U.S.-Mexico Border Water Pollution Control Act",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2231"
+          }
+        ]
+      },
+      {
+        "rank": 18,
+        "bioguide": "R000460",
+        "turns": 0,
+        "words": 0,
+        "active_days": 0,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 48,
+        "bills_passed": 1,
+        "bills_enacted": 1,
+        "passage_share": 0.0208333333,
+        "enactment_share": 0.0208333333,
+        "speaker_name": "Sen. Roth Jr., William V. [R-DE]",
+        "party": "R",
+        "state": "DE",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/R000460",
+        "examples": [
+          {
+            "bill_id": "103-s-2552",
+            "label": "S 2552",
+            "title": "Illegal Alien Credit Denial Act",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2552"
+          },
+          {
+            "bill_id": "103-s-2532",
+            "label": "S 2532",
+            "title": "Medical Savings Account Tax Incentive Act",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2532"
+          },
+          {
+            "bill_id": "103-s-2400",
+            "label": "S 2400",
+            "title": "Northern Yukon-Arctic International Wildlife Refuge Act",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2400"
+          }
+        ]
+      },
+      {
+        "rank": 19,
+        "bioguide": "T000254",
+        "turns": 292,
+        "words": 140015,
+        "active_days": 75,
+        "profanity_hits": 2,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 47,
+        "bills_passed": 1,
+        "bills_enacted": 1,
+        "passage_share": 0.0212765957,
+        "enactment_share": 0.0212765957,
+        "speaker_name": "Mr. THURMOND",
+        "party": "R",
+        "state": "SC",
+        "chamber": "senate",
+        "profanity_per_100k": 1.4284183837,
+        "member_url": "https://bioguide.congress.gov/search/bio/T000254",
+        "examples": [
+          {
+            "bill_id": "103-s-2436",
+            "label": "S 2436",
+            "title": "A bill to amend title 1 of the United States Code to clarify the effect and application of legislation.",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2436"
+          },
+          {
+            "bill_id": "103-s-2037",
+            "label": "S 2037",
+            "title": "South Carolina National Heritage Corridor Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2037"
+          },
+          {
+            "bill_id": "103-s-1730",
+            "label": "S 1730",
+            "title": "A bill to suspend temporarily the duty on 3,4-Dimethylbenzaldehyde (3,4-DBAL).",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/1730"
+          }
+        ]
+      },
+      {
+        "rank": 20,
+        "bioguide": "M000303",
+        "turns": 592,
+        "words": 330990,
+        "active_days": 90,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 46,
+        "bills_passed": 9,
+        "bills_enacted": 3,
+        "passage_share": 0.1956521739,
+        "enactment_share": 0.0652173913,
+        "speaker_name": "Mr. McCAIN",
+        "party": "R",
+        "state": "AZ",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/M000303",
+        "examples": [
+          {
+            "bill_id": "103-s-2417",
+            "label": "S 2417",
+            "title": "Emergency Spending Control Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2417"
+          },
+          {
+            "bill_id": "103-s-2128",
+            "label": "S 2128",
+            "title": "A bill to authorize an entrance fee surcharge at the Grand Canyon National Park, and for other purposes.",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2128"
+          },
+          {
+            "bill_id": "103-s-2103",
+            "label": "S 2103",
+            "title": "A bill to make the provisions of title IV of the Trade Act of 1974 applicable to Cambodia.",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2103"
+          }
+        ]
+      },
+      {
+        "rank": 21,
+        "bioguide": "D000064",
+        "turns": 220,
+        "words": 110167,
+        "active_days": 46,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 45,
+        "bills_passed": 4,
+        "bills_enacted": 3,
+        "passage_share": 0.0888888889,
+        "enactment_share": 0.0666666667,
+        "speaker_name": "Mr. DASCHLE",
+        "party": "D",
+        "state": "SD",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/D000064",
+        "examples": [
+          {
+            "bill_id": "103-s-2453",
+            "label": "S 2453",
+            "title": "Pathogen Reduction Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2453"
+          },
+          {
+            "bill_id": "103-s-2312",
+            "label": "S 2312",
+            "title": "A bill to maintain the ability of United Staets agriculture to remain viable and competitive in domestic and international markets, to meet the food and fiber needs of United States and international consumers, and for other purposes.",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2312"
+          },
+          {
+            "bill_id": "103-s-2242",
+            "label": "S 2242",
+            "title": "National Institute for the Environment Act",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2242"
+          }
+        ]
+      },
+      {
+        "rank": 22,
+        "bioguide": "P000193",
+        "turns": 434,
+        "words": 302378,
+        "active_days": 96,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 2,
+        "bills_sponsored": 44,
+        "bills_passed": 6,
+        "bills_enacted": 4,
+        "passage_share": 0.1363636364,
+        "enactment_share": 0.0909090909,
+        "speaker_name": "Mr. PELL",
+        "party": "D",
+        "state": "RI",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/P000193",
+        "examples": [
+          {
+            "bill_id": "103-s-2554",
+            "label": "S 2554",
+            "title": "Special Envoy for Tibet Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2554"
+          },
+          {
+            "bill_id": "103-s-2499",
+            "label": "S 2499",
+            "title": "Worker-Management Relations for the 21st Century Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2499"
+          },
+          {
+            "bill_id": "103-s-2475",
+            "label": "S 2475",
+            "title": "African Conflict Resolution Act",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2475"
+          }
+        ]
+      },
+      {
+        "rank": 23,
+        "bioguide": "M000678",
+        "turns": 395,
+        "words": 153586,
+        "active_days": 71,
+        "profanity_hits": 3,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 44,
+        "bills_passed": 3,
+        "bills_enacted": 2,
+        "passage_share": 0.0681818182,
+        "enactment_share": 0.0454545455,
+        "speaker_name": "Mr. METZENBAUM",
+        "party": "D",
+        "state": "OH",
+        "chamber": "senate",
+        "profanity_per_100k": 1.9533030354,
+        "member_url": "https://bioguide.congress.gov/search/bio/M000678",
+        "examples": [
+          {
+            "bill_id": "103-s-2531",
+            "label": "S 2531",
+            "title": "Pension Bill of Rights Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2531"
+          },
+          {
+            "bill_id": "103-s-2504",
+            "label": "S 2504",
+            "title": "Contingent Workforce Equity Act",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2504"
+          },
+          {
+            "bill_id": "103-s-2380",
+            "label": "S 2380",
+            "title": "Baseball Fans Protection Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2380"
+          }
+        ]
+      },
+      {
+        "rank": 24,
+        "bioguide": "M000865",
+        "turns": 197,
+        "words": 106646,
+        "active_days": 44,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 43,
+        "bills_passed": 8,
+        "bills_enacted": 2,
+        "passage_share": 0.1860465116,
+        "enactment_share": 0.0465116279,
+        "speaker_name": "Mr. MONTGOMERY",
+        "party": "D",
+        "state": "MS",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/M000865",
+        "examples": [
+          {
+            "bill_id": "103-hr-5289",
+            "label": "HR 5289",
+            "title": "For the relief of John T. Monk.",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/5289"
+          },
+          {
+            "bill_id": "103-hr-5244",
+            "label": "HR 5244",
+            "title": "Veterans' Benefits Improvements Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/5244"
+          },
+          {
+            "bill_id": "103-hr-5191",
+            "label": "HR 5191",
+            "title": "To amend the charter of the Veterans of Foreign Wars.",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/5191"
+          }
+        ]
+      },
+      {
+        "rank": 25,
+        "bioguide": "H000463",
+        "turns": 1113,
+        "words": 271850,
+        "active_days": 129,
+        "profanity_hits": 6,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 43,
+        "bills_passed": 0,
+        "bills_enacted": 0,
+        "passage_share": 0.0,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. HELMS",
+        "party": "R",
+        "state": "NC",
+        "chamber": "senate",
+        "profanity_per_100k": 2.2070995034,
+        "member_url": "https://bioguide.congress.gov/search/bio/H000463",
+        "examples": [
+          {
+            "bill_id": "103-s-1911",
+            "label": "S 1911",
+            "title": "A bill to suspend temporarily the duty on 5-Chloro-2-(2,4-dichlorophenoxy) phenol.",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/1911"
+          },
+          {
+            "bill_id": "103-s-1901",
+            "label": "S 1901",
+            "title": "A bill to require the Secretary of Agriculture to issue regulations authorizing the purchase and eradication of swine infected with or exposed to brucellosis, and for other purposes.",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/1901"
+          },
+          {
+            "bill_id": "103-s-1577",
+            "label": "S 1577",
+            "title": "A bill to amend title II of the Social Security Act to prohibit the payment of benefits to any individual confined to a public institution pursuant to court order based on a verdict that the individual is guilty of a criminal offense, but insane, or not guilty of such an offense by reason of insanity, and for other purposes.",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/1577"
+          }
+        ]
+      }
+    ],
+    "passed": [
+      {
+        "rank": 1,
+        "bioguide": "B000880",
+        "turns": 454,
+        "words": 105878,
+        "active_days": 28,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 23,
+        "bills_passed": 15,
+        "bills_enacted": 7,
+        "passage_share": 0.652173913,
+        "enactment_share": 0.3043478261,
+        "speaker_name": "Mr. BROOKS",
+        "party": "D",
+        "state": "TX",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/B000880",
+        "examples": [
+          {
+            "bill_id": "103-hr-5116",
+            "label": "HR 5116",
+            "title": "Bankruptcy Reform Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/5116"
+          },
+          {
+            "bill_id": "103-hr-4781",
+            "label": "HR 4781",
+            "title": "International Antitrust Enforcement Assistance Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/4781"
+          },
+          {
+            "bill_id": "103-hr-4778",
+            "label": "HR 4778",
+            "title": "To codify without substantive change recent laws related to transportation and to improve the United States Code.",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/4778"
+          }
+        ]
+      },
+      {
+        "rank": 2,
+        "bioguide": "R000361",
+        "turns": 0,
+        "words": 0,
+        "active_days": 0,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 67,
+        "bills_passed": 13,
+        "bills_enacted": 4,
+        "passage_share": 0.1940298507,
+        "enactment_share": 0.0597014925,
+        "speaker_name": "Sen. Rockefeller, John D., IV [D-WV]",
+        "party": "D",
+        "state": "WV",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/R000361",
+        "examples": [
+          {
+            "bill_id": "103-s-2277",
+            "label": "S 2277",
+            "title": "An original bill to authorize major medical facility construction projects for the Department of Veterans Affairs for fiscal year 1995, and for other purposes.",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2277"
+          },
+          {
+            "bill_id": "103-s-1927",
+            "label": "S 1927",
+            "title": "Veterans' Compensation Cost-of-Living Adjustment Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/1927"
+          },
+          {
+            "bill_id": "103-s-1908",
+            "label": "S 1908",
+            "title": "Veterans' Claims Adjudication Improvement Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/1908"
+          }
+        ]
+      },
+      {
+        "rank": 3,
+        "bioguide": "R000229",
+        "turns": 218,
+        "words": 111219,
+        "active_days": 64,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 53,
+        "bills_passed": 13,
+        "bills_enacted": 9,
+        "passage_share": 0.2452830189,
+        "enactment_share": 0.1698113208,
+        "speaker_name": "Mr. RICHARDSON",
+        "party": "D",
+        "state": "NM",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/R000229",
+        "examples": [
+          {
+            "bill_id": "103-hr-4842",
+            "label": "HR 4842",
+            "title": "Indian Self-Determination Act Amendments of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/4842"
+          },
+          {
+            "bill_id": "103-hr-4833",
+            "label": "HR 4833",
+            "title": "American Indian Trust Fund Management Reform Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/4833"
+          },
+          {
+            "bill_id": "103-hr-4709",
+            "label": "HR 4709",
+            "title": "To make certain technical corrections, and for other purposes.",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/4709"
+          }
+        ]
+      },
+      {
+        "rank": 4,
+        "bioguide": "N000171",
+        "turns": 881,
+        "words": 301554,
+        "active_days": 64,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 22,
+        "bills_passed": 13,
+        "bills_enacted": 1,
+        "passage_share": 0.5909090909,
+        "enactment_share": 0.0454545455,
+        "speaker_name": "Mr. NUNN",
+        "party": "D",
+        "state": "GA",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/N000171",
+        "examples": [
+          {
+            "bill_id": "103-s-2430",
+            "label": "S 2430",
+            "title": "A bill to facilitate recovery from the recent flooding in Georgia, Alabama, and Florida resulting from Tropical Storm Alberto by providing greater flexibility for depository institutions and their regulators, and for other purposes.",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2430"
+          },
+          {
+            "bill_id": "103-s-2211",
+            "label": "S 2211",
+            "title": "Omnibus National Defense Authorization Act for Fiscal Year 1995",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2211"
+          },
+          {
+            "bill_id": "103-s-2210",
+            "label": "S 2210",
+            "title": "Department of Energy National Security Act for Fiscal Year 1995",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2210"
+          }
+        ]
+      },
+      {
+        "rank": 5,
+        "bioguide": "J000189",
+        "turns": 677,
+        "words": 131486,
+        "active_days": 63,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 59,
+        "bills_passed": 12,
+        "bills_enacted": 4,
+        "passage_share": 0.2033898305,
+        "enactment_share": 0.0677966102,
+        "speaker_name": "Mr. JOHNSTON",
+        "party": "D",
+        "state": "LA",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/J000189",
+        "examples": [
+          {
+            "bill_id": "103-s-2466",
+            "label": "S 2466",
+            "title": "Energy Policy and Conservation Act Amendments of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2466"
+          },
+          {
+            "bill_id": "103-s-2384",
+            "label": "S 2384",
+            "title": "Federal Power Act Amendments of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2384"
+          },
+          {
+            "bill_id": "103-s-2251",
+            "label": "S 2251",
+            "title": "Energy Policy and Conservation Act Amendments of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2251"
+          }
+        ]
+      },
+      {
+        "rank": 6,
+        "bioguide": "N000147",
+        "turns": 180,
+        "words": 34103,
+        "active_days": 46,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 39,
+        "bills_passed": 12,
+        "bills_enacted": 8,
+        "passage_share": 0.3076923077,
+        "enactment_share": 0.2051282051,
+        "speaker_name": "Mr. NORTON",
+        "party": "D",
+        "state": "DC",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/N000147",
+        "examples": [
+          {
+            "bill_id": "103-hr-5179",
+            "label": "HR 5179",
+            "title": "Child Support Reform Amendments Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/5179"
+          },
+          {
+            "bill_id": "103-hr-5164",
+            "label": "HR 5164",
+            "title": "OCC and OTS Health Benefits Continuation Act",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/5164"
+          },
+          {
+            "bill_id": "103-hr-4884",
+            "label": "HR 4884",
+            "title": "Criminal Justice Information Services Placement Assistance Act",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/4884"
+          }
+        ]
+      },
+      {
+        "rank": 7,
+        "bioguide": "K000105",
+        "turns": 729,
+        "words": 279277,
+        "active_days": 69,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 51,
+        "bills_passed": 11,
+        "bills_enacted": 3,
+        "passage_share": 0.2156862745,
+        "enactment_share": 0.0588235294,
+        "speaker_name": "Mr. KENNEDY",
+        "party": "D",
+        "state": "MA",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/K000105",
+        "examples": [
+          {
+            "bill_id": "103-s-2433",
+            "label": "S 2433",
+            "title": "Nursing Education Consolidation and Reauthorization Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2433"
+          },
+          {
+            "bill_id": "103-s-2352",
+            "label": "S 2352",
+            "title": "Mental Health and Substance Abuse Programs Reauthorization Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2352"
+          },
+          {
+            "bill_id": "103-s-1774",
+            "label": "S 1774",
+            "title": "Bone Marrow Donor Program Reauthorization Act of 1993",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/1774"
+          }
+        ]
+      },
+      {
+        "rank": 8,
+        "bioguide": "S001040",
+        "turns": 214,
+        "words": 83641,
+        "active_days": 28,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 36,
+        "bills_passed": 11,
+        "bills_enacted": 1,
+        "passage_share": 0.3055555556,
+        "enactment_share": 0.0277777778,
+        "speaker_name": "Mr. Studds",
+        "party": "D",
+        "state": "MA",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/S001040",
+        "examples": [
+          {
+            "bill_id": "103-hr-4504",
+            "label": "HR 4504",
+            "title": "Striped Bass Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/4504"
+          },
+          {
+            "bill_id": "103-hr-4003",
+            "label": "HR 4003",
+            "title": "Maritime Security and Competitiveness Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/4003"
+          },
+          {
+            "bill_id": "103-hr-3512",
+            "label": "HR 3512",
+            "title": "National Environmental Policy Act Administrative Reorganization Amendments of 1993",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/3512"
+          }
+        ]
+      },
+      {
+        "rank": 9,
+        "bioguide": "G000272",
+        "turns": 222,
+        "words": 164834,
+        "active_days": 46,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 31,
+        "bills_passed": 11,
+        "bills_enacted": 2,
+        "passage_share": 0.3548387097,
+        "enactment_share": 0.064516129,
+        "speaker_name": "Mr. GONZALEZ",
+        "party": "D",
+        "state": "TX",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/G000272",
+        "examples": [
+          {
+            "bill_id": "103-hr-5245",
+            "label": "HR 5245",
+            "title": "Housing Programs Extension Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/5245"
+          },
+          {
+            "bill_id": "103-hr-5178",
+            "label": "HR 5178",
+            "title": "To amend the Fair Credit Reporting Act, and for other purposes.",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/5178"
+          },
+          {
+            "bill_id": "103-hr-4067",
+            "label": "HR 4067",
+            "title": "Multifamily Housing Property Disposition Reform Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/4067"
+          }
+        ]
+      },
+      {
+        "rank": 10,
+        "bioguide": "L000174",
+        "turns": 850,
+        "words": 254346,
+        "active_days": 84,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 31,
+        "bills_passed": 11,
+        "bills_enacted": 6,
+        "passage_share": 0.3548387097,
+        "enactment_share": 0.1935483871,
+        "speaker_name": "Mr. LEAHY",
+        "party": "D",
+        "state": "VT",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/L000174",
+        "examples": [
+          {
+            "bill_id": "103-s-2560",
+            "label": "S 2560",
+            "title": "A bill to allow the collection and payment of funds following the completion of cooperative work involving the protection, management, and improvement of the National Forest System, and for other purposes.",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2560"
+          },
+          {
+            "bill_id": "103-s-2500",
+            "label": "S 2500",
+            "title": "Sheep Promotion, Research, and Information Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2500"
+          },
+          {
+            "bill_id": "103-s-2375",
+            "label": "S 2375",
+            "title": "A bill to amend title 18, United States Code, to make clear a telecommunications carrier's duty to cooperate in the interception of communications for law enforcement purposes, and for other purposes,",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2375"
+          }
+        ]
+      },
+      {
+        "rank": 11,
+        "bioguide": "D000203",
+        "turns": 0,
+        "words": 0,
+        "active_days": 0,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 25,
+        "bills_passed": 11,
+        "bills_enacted": 5,
+        "passage_share": 0.44,
+        "enactment_share": 0.2,
+        "speaker_name": "Rep. de la Garza, E. [D-TX-15]",
+        "party": "D",
+        "state": "TX",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/D000203",
+        "examples": [
+          {
+            "bill_id": "103-hr-5156",
+            "label": "HR 5156",
+            "title": "Making a technical correction to the Food Stamp Act of 1977.",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/5156"
+          },
+          {
+            "bill_id": "103-hr-4581",
+            "label": "HR 4581",
+            "title": "To provide for the imposition of temporary fees in connection with the handling of complaints of violations of the Perishable Agriculture Commodities Act, 1930.",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/4581"
+          },
+          {
+            "bill_id": "103-hr-4379",
+            "label": "HR 4379",
+            "title": "Farm Credit System Agricultural Export and Risk Management Act",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/4379"
+          }
+        ]
+      },
+      {
+        "rank": 12,
+        "bioguide": "H000114",
+        "turns": 159,
+        "words": 35810,
+        "active_days": 23,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 22,
+        "bills_passed": 11,
+        "bills_enacted": 6,
+        "passage_share": 0.5,
+        "enactment_share": 0.2727272727,
+        "speaker_name": "Mr. HAMILTON",
+        "party": "D",
+        "state": "IN",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/H000114",
+        "examples": [
+          {
+            "bill_id": "103-hr-5155",
+            "label": "HR 5155",
+            "title": "To authorize the transfer of naval vessels to certain foreign countries.",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/5155"
+          },
+          {
+            "bill_id": "103-hr-5108",
+            "label": "HR 5108",
+            "title": "To extend the Export Administration Act of 1979.",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/5108"
+          },
+          {
+            "bill_id": "103-hr-5030",
+            "label": "HR 5030",
+            "title": "International Narcotics Control Corrections Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/5030"
+          }
+        ]
+      },
+      {
+        "rank": 13,
+        "bioguide": "B000468",
+        "turns": 111,
+        "words": 83093,
+        "active_days": 50,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 48,
+        "bills_passed": 10,
+        "bills_enacted": 4,
+        "passage_share": 0.2083333333,
+        "enactment_share": 0.0833333333,
+        "speaker_name": "Mr. BINGAMAN",
+        "party": "D",
+        "state": "NM",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/B000468",
+        "examples": [
+          {
+            "bill_id": "103-s-1919",
+            "label": "S 1919",
+            "title": "Rio Puerco Watershed Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/1919"
+          },
+          {
+            "bill_id": "103-s-1897",
+            "label": "S 1897",
+            "title": "Sante Fe National Forest Boundary Adjustment Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/1897"
+          },
+          {
+            "bill_id": "103-s-1880",
+            "label": "S 1880",
+            "title": "A bill to provide that the National Education Commission on Time and Learning shall terminate on September 30, 1994.",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/1880"
+          }
+        ]
+      },
+      {
+        "rank": 14,
+        "bioguide": "W000215",
+        "turns": 181,
+        "words": 50464,
+        "active_days": 24,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 31,
+        "bills_passed": 10,
+        "bills_enacted": 2,
+        "passage_share": 0.3225806452,
+        "enactment_share": 0.064516129,
+        "speaker_name": "Mr. WAXMAN",
+        "party": "D",
+        "state": "CA",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/W000215",
+        "examples": [
+          {
+            "bill_id": "103-hr-3869",
+            "label": "HR 3869",
+            "title": "Minority Health Improvement Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/3869"
+          },
+          {
+            "bill_id": "103-hr-3505",
+            "label": "HR 3505",
+            "title": "Developmental Disabilities Assistance and Bill of Rights Act Amendments of 1993",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/3505"
+          },
+          {
+            "bill_id": "103-hr-2659",
+            "label": "HR 2659",
+            "title": "Organ Transplant Program Reauthorization Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/2659"
+          }
+        ]
+      },
+      {
+        "rank": 15,
+        "bioguide": "M000303",
+        "turns": 592,
+        "words": 330990,
+        "active_days": 90,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 46,
+        "bills_passed": 9,
+        "bills_enacted": 3,
+        "passage_share": 0.1956521739,
+        "enactment_share": 0.0652173913,
+        "speaker_name": "Mr. McCAIN",
+        "party": "R",
+        "state": "AZ",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/M000303",
+        "examples": [
+          {
+            "bill_id": "103-s-2075",
+            "label": "S 2075",
+            "title": "Indian Child Protection and Family Violence Prevention Act Amendments of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2075"
+          },
+          {
+            "bill_id": "103-s-2067",
+            "label": "S 2067",
+            "title": "A bill to elevate the position of Director of Indian Health Service to Assistant Secretary of Health and Human Services, to provide for the organizational independence of the Indian Health Service within the Department of Health and Human Services, and for other purposes.",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2067"
+          },
+          {
+            "bill_id": "103-s-2036",
+            "label": "S 2036",
+            "title": "Indian Self-Determination Contract Reform Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2036"
+          }
+        ]
+      },
+      {
+        "rank": 16,
+        "bioguide": "H000930",
+        "turns": 200,
+        "words": 72896,
+        "active_days": 41,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 42,
+        "bills_passed": 9,
+        "bills_enacted": 3,
+        "passage_share": 0.2142857143,
+        "enactment_share": 0.0714285714,
+        "speaker_name": "Mr. HUGHES",
+        "party": "D",
+        "state": "NJ",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/H000930",
+        "examples": [
+          {
+            "bill_id": "103-hr-4307",
+            "label": "HR 4307",
+            "title": "To amend title 35, United States Code, with respect to applications for process patents.",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/4307"
+          },
+          {
+            "bill_id": "103-hr-2840",
+            "label": "HR 2840",
+            "title": "Copyright Royalty Tribunal Reform Act of 1993",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/2840"
+          },
+          {
+            "bill_id": "103-hr-2814",
+            "label": "HR 2814",
+            "title": "Civil Rules Amendments Act of 1993",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/2814"
+          }
+        ]
+      },
+      {
+        "rank": 17,
+        "bioguide": "M000865",
+        "turns": 197,
+        "words": 106646,
+        "active_days": 44,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 43,
+        "bills_passed": 8,
+        "bills_enacted": 2,
+        "passage_share": 0.1860465116,
+        "enactment_share": 0.0465116279,
+        "speaker_name": "Mr. MONTGOMERY",
+        "party": "D",
+        "state": "MS",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/M000865",
+        "examples": [
+          {
+            "bill_id": "103-hr-5244",
+            "label": "HR 5244",
+            "title": "Veterans' Benefits Improvements Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/5244"
+          },
+          {
+            "bill_id": "103-hr-4776",
+            "label": "HR 4776",
+            "title": "Veterans' Employment Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/4776"
+          },
+          {
+            "bill_id": "103-hr-4768",
+            "label": "HR 4768",
+            "title": "Veterans' Education and Training Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/4768"
+          }
+        ]
+      },
+      {
+        "rank": 18,
+        "bioguide": "D000209",
+        "turns": 0,
+        "words": 0,
+        "active_days": 0,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 20,
+        "bills_passed": 8,
+        "bills_enacted": 6,
+        "passage_share": 0.4,
+        "enactment_share": 0.3,
+        "speaker_name": "Del. de Lugo, Ron [D-VI-At Large]",
+        "party": "D",
+        "state": "VI",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/D000209",
+        "examples": [
+          {
+            "bill_id": "103-hr-4571",
+            "label": "HR 4571",
+            "title": "To designate the United States post office located at 103-104 Estate Richmond in Saint Croix, Virgin Islands, as the \"Wilbert Armstrong United States Post Office\".",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/4571"
+          },
+          {
+            "bill_id": "103-hr-4194",
+            "label": "HR 4194",
+            "title": "To designate the United States Post Office located in the Tutu Park Mall in Saint Thomas, Virgin Islands, as the \"Earle B. Ottley United States Post Office\".",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/4194"
+          },
+          {
+            "bill_id": "103-hr-4193",
+            "label": "HR 4193",
+            "title": "To designate the United States Post Office located at 100 Vester Gade, in Cruz Bay, Saint John, Virgin Islands, as the \"Ubaldina Simmons United States Post Office\".",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/4193"
+          }
+        ]
+      },
+      {
+        "rank": 19,
+        "bioguide": "D000185",
+        "turns": 660,
+        "words": 214246,
+        "active_days": 90,
+        "profanity_hits": 1,
+        "profanity_quoted_hits": 3,
+        "bills_sponsored": 62,
+        "bills_passed": 7,
+        "bills_enacted": 2,
+        "passage_share": 0.1129032258,
+        "enactment_share": 0.0322580645,
+        "speaker_name": "Mr. DeCONCINI",
+        "party": "D",
+        "state": "AZ",
+        "chamber": "senate",
+        "profanity_per_100k": 0.4667531716,
+        "member_url": "https://bioguide.congress.gov/search/bio/D000185",
+        "examples": [
+          {
+            "bill_id": "103-s-2341",
+            "label": "S 2341",
+            "title": "Patent Reexamination Reform Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2341"
+          },
+          {
+            "bill_id": "103-s-2272",
+            "label": "S 2272",
+            "title": "Patent Prior User Rights Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2272"
+          },
+          {
+            "bill_id": "103-s-2100",
+            "label": "S 2100",
+            "title": "Stewardship End-Result Contracts Demonstration Act",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2100"
+          }
+        ]
+      },
+      {
+        "rank": 20,
+        "bioguide": "S000148",
+        "turns": 105,
+        "words": 21952,
+        "active_days": 34,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 54,
+        "bills_passed": 7,
+        "bills_enacted": 3,
+        "passage_share": 0.1296296296,
+        "enactment_share": 0.0555555556,
+        "speaker_name": "Mr. SCHUMER",
+        "party": "D",
+        "state": "NY",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/S000148",
+        "examples": [
+          {
+            "bill_id": "103-hr-4926",
+            "label": "HR 4926",
+            "title": "National Treatment in Banking Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/4926"
+          },
+          {
+            "bill_id": "103-hr-4497",
+            "label": "HR 4497",
+            "title": "To award a congressional gold medal to Rabbi Menachem Mendel Schneerson.",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/4497"
+          },
+          {
+            "bill_id": "103-hr-4296",
+            "label": "HR 4296",
+            "title": "Public Safety and Recreational Firearms Use Protection Act",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/4296"
+          }
+        ]
+      },
+      {
+        "rank": 21,
+        "bioguide": "T000058",
+        "turns": 167,
+        "words": 27143,
+        "active_days": 21,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 53,
+        "bills_passed": 7,
+        "bills_enacted": 2,
+        "passage_share": 0.1320754717,
+        "enactment_share": 0.0377358491,
+        "speaker_name": "Mr. TAUZIN",
+        "party": "R",
+        "state": "LA",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/T000058",
+        "examples": [
+          {
+            "bill_id": "103-hr-4422",
+            "label": "HR 4422",
+            "title": "Coast Guard Authorization Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/4422"
+          },
+          {
+            "bill_id": "103-hr-4246",
+            "label": "HR 4246",
+            "title": "Panama Canal Commission Authorization Act, Fiscal Year 1995",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/4246"
+          },
+          {
+            "bill_id": "103-hr-3786",
+            "label": "HR 3786",
+            "title": "Recreational Boating Safety Improvement Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/3786"
+          }
+        ]
+      },
+      {
+        "rank": 22,
+        "bioguide": "T000350",
+        "turns": 0,
+        "words": 0,
+        "active_days": 0,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 39,
+        "bills_passed": 7,
+        "bills_enacted": 1,
+        "passage_share": 0.1794871795,
+        "enactment_share": 0.0256410256,
+        "speaker_name": "Rep. Traficant, James A., Jr. [D-OH-17]",
+        "party": "D",
+        "state": "OH",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/T000350",
+        "examples": [
+          {
+            "bill_id": "103-hr-4772",
+            "label": "HR 4772",
+            "title": "To designate the Federal building and United States courthouse located at 215 South Evans Street in Greenville, North Carolina, as the \"Walter B. Jones Federal Building and United States Courthouse\".",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/4772"
+          },
+          {
+            "bill_id": "103-hr-4727",
+            "label": "HR 4727",
+            "title": "To designate the Federal building located at 125 Market Street in Youngstown, Ohio, as the \"Thomas D. Lambros Federal Building\".",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/4727"
+          },
+          {
+            "bill_id": "103-hr-4577",
+            "label": "HR 4577",
+            "title": "To designate the Federal building and United States courthouse located at 242 East Main Street in Bowling Green, Kentucky, as the \"William H. Natcher Federal Building and United States Courthouse\".",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/4577"
+          }
+        ]
+      },
+      {
+        "rank": 23,
+        "bioguide": "L000556",
+        "turns": 63,
+        "words": 14155,
+        "active_days": 10,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 30,
+        "bills_passed": 7,
+        "bills_enacted": 1,
+        "passage_share": 0.2333333333,
+        "enactment_share": 0.0333333333,
+        "speaker_name": "Mr. LaFALCE",
+        "party": "D",
+        "state": "NY",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/L000556",
+        "examples": [
+          {
+            "bill_id": "103-hr-4801",
+            "label": "HR 4801",
+            "title": "Small Business Reauthorization and Amendment Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/4801"
+          },
+          {
+            "bill_id": "103-hr-4322",
+            "label": "HR 4322",
+            "title": "To amend the Small Business Act to increase the authorization for the development company program, and for other purposes.",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/4322"
+          },
+          {
+            "bill_id": "103-hr-2960",
+            "label": "HR 2960",
+            "title": "To amend the Competitiveness Policy Council Act to provide for reauthorization, to rename the Council, and for other purposes.",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/2960"
+          }
+        ]
+      },
+      {
+        "rank": 24,
+        "bioguide": "W000154",
+        "turns": 464,
+        "words": 160045,
+        "active_days": 64,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 24,
+        "bills_passed": 7,
+        "bills_enacted": 1,
+        "passage_share": 0.2916666667,
+        "enactment_share": 0.0416666667,
+        "speaker_name": "Mr. WARNER",
+        "party": "R",
+        "state": "VA",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/W000154",
+        "examples": [
+          {
+            "bill_id": "103-s-1650",
+            "label": "S 1650",
+            "title": "A bill to designate the United States Courthouse for the Eastern District of Virginia in Alexandria, Virginia, as the Albert V. Bryan United States Courthouse.",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/1650"
+          },
+          {
+            "bill_id": "103-s-1033",
+            "label": "S 1033",
+            "title": "Shenandoah Valley National Battlefields Partnership Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/1033"
+          },
+          {
+            "bill_id": "103-s-760",
+            "label": "S 760",
+            "title": "A bill for the relief of Leteane Montasi.",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/760"
+          }
+        ]
+      },
+      {
+        "rank": 25,
+        "bioguide": "M000133",
+        "turns": 73,
+        "words": 46006,
+        "active_days": 22,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 22,
+        "bills_passed": 7,
+        "bills_enacted": 1,
+        "passage_share": 0.3181818182,
+        "enactment_share": 0.0454545455,
+        "speaker_name": "Mr. MARKEY",
+        "party": "D",
+        "state": "MA",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/M000133",
+        "examples": [
+          {
+            "bill_id": "103-hr-4522",
+            "label": "HR 4522",
+            "title": "Federal Communications Commission Authorization Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/4522"
+          },
+          {
+            "bill_id": "103-hr-3636",
+            "label": "HR 3636",
+            "title": "National Communications Competition and Information Infrastructure Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/3636"
+          },
+          {
+            "bill_id": "103-hr-2639",
+            "label": "HR 2639",
+            "title": "Telecommunications Infrastructure and Facilities Assistance Act of 1993",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/2639"
+          }
+        ]
+      }
+    ],
+    "enacted": [
+      {
+        "rank": 1,
+        "bioguide": "R000229",
+        "turns": 218,
+        "words": 111219,
+        "active_days": 64,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 53,
+        "bills_passed": 13,
+        "bills_enacted": 9,
+        "passage_share": 0.2452830189,
+        "enactment_share": 0.1698113208,
+        "speaker_name": "Mr. RICHARDSON",
+        "party": "D",
+        "state": "NM",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/R000229",
+        "examples": [
+          {
+            "bill_id": "103-hr-4842",
+            "label": "HR 4842",
+            "title": "Indian Self-Determination Act Amendments of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/4842"
+          },
+          {
+            "bill_id": "103-hr-4833",
+            "label": "HR 4833",
+            "title": "American Indian Trust Fund Management Reform Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/4833"
+          },
+          {
+            "bill_id": "103-hr-4709",
+            "label": "HR 4709",
+            "title": "To make certain technical corrections, and for other purposes.",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/4709"
+          }
+        ]
+      },
+      {
+        "rank": 2,
+        "bioguide": "N000147",
+        "turns": 180,
+        "words": 34103,
+        "active_days": 46,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 39,
+        "bills_passed": 12,
+        "bills_enacted": 8,
+        "passage_share": 0.3076923077,
+        "enactment_share": 0.2051282051,
+        "speaker_name": "Mr. NORTON",
+        "party": "D",
+        "state": "DC",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/N000147",
+        "examples": [
+          {
+            "bill_id": "103-hr-4361",
+            "label": "HR 4361",
+            "title": "Federal Employees Family Friendly Leave Act",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/4361"
+          },
+          {
+            "bill_id": "103-hr-4205",
+            "label": "HR 4205",
+            "title": "To amend title 11, D.C. Code, to clarify that blind individuals are eligible to serve as jurors in the Superior Court of the District of Columbia.",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/4205"
+          },
+          {
+            "bill_id": "103-hr-3676",
+            "label": "HR 3676",
+            "title": "To amend the District of Columbia Spouse Equity Act of 1988 to provide for coverage of the former spouses of judges of the District of Columbia courts.",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/3676"
+          }
+        ]
+      },
+      {
+        "rank": 3,
+        "bioguide": "B000880",
+        "turns": 454,
+        "words": 105878,
+        "active_days": 28,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 23,
+        "bills_passed": 15,
+        "bills_enacted": 7,
+        "passage_share": 0.652173913,
+        "enactment_share": 0.3043478261,
+        "speaker_name": "Mr. BROOKS",
+        "party": "D",
+        "state": "TX",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/B000880",
+        "examples": [
+          {
+            "bill_id": "103-hr-5116",
+            "label": "HR 5116",
+            "title": "Bankruptcy Reform Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/5116"
+          },
+          {
+            "bill_id": "103-hr-4781",
+            "label": "HR 4781",
+            "title": "International Antitrust Enforcement Assistance Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/4781"
+          },
+          {
+            "bill_id": "103-hr-4778",
+            "label": "HR 4778",
+            "title": "To codify without substantive change recent laws related to transportation and to improve the United States Code.",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/4778"
+          }
+        ]
+      },
+      {
+        "rank": 4,
+        "bioguide": "L000174",
+        "turns": 850,
+        "words": 254346,
+        "active_days": 84,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 31,
+        "bills_passed": 11,
+        "bills_enacted": 6,
+        "passage_share": 0.3548387097,
+        "enactment_share": 0.1935483871,
+        "speaker_name": "Mr. LEAHY",
+        "party": "D",
+        "state": "VT",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/L000174",
+        "examples": [
+          {
+            "bill_id": "103-s-2500",
+            "label": "S 2500",
+            "title": "Sheep Promotion, Research, and Information Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2500"
+          },
+          {
+            "bill_id": "103-s-2005",
+            "label": "S 2005",
+            "title": "A bill to make certain technical corrections, and for other purposes.",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2005"
+          },
+          {
+            "bill_id": "103-s-1930",
+            "label": "S 1930",
+            "title": "Farmers Home Administration Improvement Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/1930"
+          }
+        ]
+      },
+      {
+        "rank": 5,
+        "bioguide": "H000114",
+        "turns": 159,
+        "words": 35810,
+        "active_days": 23,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 22,
+        "bills_passed": 11,
+        "bills_enacted": 6,
+        "passage_share": 0.5,
+        "enactment_share": 0.2727272727,
+        "speaker_name": "Mr. HAMILTON",
+        "party": "D",
+        "state": "IN",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/H000114",
+        "examples": [
+          {
+            "bill_id": "103-hr-5155",
+            "label": "HR 5155",
+            "title": "To authorize the transfer of naval vessels to certain foreign countries.",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/5155"
+          },
+          {
+            "bill_id": "103-hr-4635",
+            "label": "HR 4635",
+            "title": "To extend the Export Administration Act of 1979.",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/4635"
+          },
+          {
+            "bill_id": "103-hr-4429",
+            "label": "HR 4429",
+            "title": "To authorize the transfer of naval vessels to certain foreign countries.",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/4429"
+          }
+        ]
+      },
+      {
+        "rank": 6,
+        "bioguide": "D000209",
+        "turns": 0,
+        "words": 0,
+        "active_days": 0,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 20,
+        "bills_passed": 8,
+        "bills_enacted": 6,
+        "passage_share": 0.4,
+        "enactment_share": 0.3,
+        "speaker_name": "Del. de Lugo, Ron [D-VI-At Large]",
+        "party": "D",
+        "state": "VI",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/D000209",
+        "examples": [
+          {
+            "bill_id": "103-hr-4571",
+            "label": "HR 4571",
+            "title": "To designate the United States post office located at 103-104 Estate Richmond in Saint Croix, Virgin Islands, as the \"Wilbert Armstrong United States Post Office\".",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/4571"
+          },
+          {
+            "bill_id": "103-hr-4193",
+            "label": "HR 4193",
+            "title": "To designate the United States Post Office located at 100 Vester Gade, in Cruz Bay, Saint John, Virgin Islands, as the \"Ubaldina Simmons United States Post Office\".",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/4193"
+          },
+          {
+            "bill_id": "103-hr-4192",
+            "label": "HR 4192",
+            "title": "To designate the United States Post Office located at 100 Veterans Drive in Saint Thomas, Virgin Islands, as the \"Arturo R. Watlington, Sr. United States Post Office\".",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/4192"
+          }
+        ]
+      },
+      {
+        "rank": 7,
+        "bioguide": "R000458",
+        "turns": 29,
+        "words": 67936,
+        "active_days": 14,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 16,
+        "bills_passed": 7,
+        "bills_enacted": 6,
+        "passage_share": 0.4375,
+        "enactment_share": 0.375,
+        "speaker_name": "Mr. ROSTENKOWSKI",
+        "party": "D",
+        "state": "IL",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/R000458",
+        "examples": [
+          {
+            "bill_id": "103-hr-4066",
+            "label": "HR 4066",
+            "title": "To suspend temporarily the duty on the personal effects of participants in, and certain other individuals associated with, the 1994 World Cup Soccer Games, the 1994 World Rowing Championships, the 1995 Special Olympics World Games, the 1996 Summer Olympics, and the 1996 Paralympics.",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/4066"
+          },
+          {
+            "bill_id": "103-hr-3450",
+            "label": "HR 3450",
+            "title": "North American Free Trade Agreement Implementation Act",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/3450"
+          },
+          {
+            "bill_id": "103-hr-3167",
+            "label": "HR 3167",
+            "title": "Unemployment Compensation Amendments of 1993",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/3167"
+          }
+        ]
+      },
+      {
+        "rank": 8,
+        "bioguide": "D000203",
+        "turns": 0,
+        "words": 0,
+        "active_days": 0,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 25,
+        "bills_passed": 11,
+        "bills_enacted": 5,
+        "passage_share": 0.44,
+        "enactment_share": 0.2,
+        "speaker_name": "Rep. de la Garza, E. [D-TX-15]",
+        "party": "D",
+        "state": "TX",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/D000203",
+        "examples": [
+          {
+            "bill_id": "103-hr-4581",
+            "label": "HR 4581",
+            "title": "To provide for the imposition of temporary fees in connection with the handling of complaints of violations of the Perishable Agriculture Commodities Act, 1930.",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/4581"
+          },
+          {
+            "bill_id": "103-hr-4379",
+            "label": "HR 4379",
+            "title": "Farm Credit System Agricultural Export and Risk Management Act",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/4379"
+          },
+          {
+            "bill_id": "103-hr-4217",
+            "label": "HR 4217",
+            "title": "Federal Crop Insurance Reform and Department of Agriculture Reauthorization Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/4217"
+          }
+        ]
+      },
+      {
+        "rank": 9,
+        "bioguide": "M000794",
+        "turns": 122,
+        "words": 69108,
+        "active_days": 39,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 21,
+        "bills_passed": 7,
+        "bills_enacted": 5,
+        "passage_share": 0.3333333333,
+        "enactment_share": 0.2380952381,
+        "speaker_name": "Mr. MINETA",
+        "party": "D",
+        "state": "CA",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/M000794",
+        "examples": [
+          {
+            "bill_id": "103-hr-4812",
+            "label": "HR 4812",
+            "title": "To direct the Administrator of General Services to acquire by transfer the Old U.S. Mint in San Francisco, California, and for other purposes.",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/4812"
+          },
+          {
+            "bill_id": "103-hr-3567",
+            "label": "HR 3567",
+            "title": "John F. Kennedy Center Act Amendments of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/3567"
+          },
+          {
+            "bill_id": "103-hr-2677",
+            "label": "HR 2677",
+            "title": "To authorize the Board of Regents of the Smithsonian Institution to plan, design, and construct the West Court of the National Museum of Natural History building.",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/2677"
+          }
+        ]
+      },
+      {
+        "rank": 10,
+        "bioguide": "G000120",
+        "turns": 69,
+        "words": 34018,
+        "active_days": 33,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 19,
+        "bills_passed": 7,
+        "bills_enacted": 5,
+        "passage_share": 0.3684210526,
+        "enactment_share": 0.2631578947,
+        "speaker_name": "Mr. GEJDENSON",
+        "party": "D",
+        "state": "CT",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/G000120",
+        "examples": [
+          {
+            "bill_id": "103-hr-5246",
+            "label": "HR 5246",
+            "title": "International Narcotics Control Corrections Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/5246"
+          },
+          {
+            "bill_id": "103-hr-4950",
+            "label": "HR 4950",
+            "title": "Jobs Through Trade Expansion Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/4950"
+          },
+          {
+            "bill_id": "103-hr-4653",
+            "label": "HR 4653",
+            "title": "Mohegan Nation of Connecticut Land Claims Settlement Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/4653"
+          }
+        ]
+      },
+      {
+        "rank": 11,
+        "bioguide": "N000009",
+        "turns": 42,
+        "words": 2083,
+        "active_days": 2,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 8,
+        "bills_passed": 6,
+        "bills_enacted": 5,
+        "passage_share": 0.75,
+        "enactment_share": 0.625,
+        "speaker_name": "Mr. NATCHER",
+        "party": "D",
+        "state": "KY",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/N000009",
+        "examples": [
+          {
+            "bill_id": "103-hr-3759",
+            "label": "HR 3759",
+            "title": "Emergency Supplemental Appropriations Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/3759"
+          },
+          {
+            "bill_id": "103-hr-2667",
+            "label": "HR 2667",
+            "title": "Emergency Supplemental Appropriations for Relief From the Major, Widespread Flooding in the Midwest Act of 1993",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/2667"
+          },
+          {
+            "bill_id": "103-hr-2518",
+            "label": "HR 2518",
+            "title": "Departments of Labor, Health and Human Services, and Education, and Related Agencies Appropriations Act, 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/2518"
+          }
+        ]
+      },
+      {
+        "rank": 12,
+        "bioguide": "R000361",
+        "turns": 0,
+        "words": 0,
+        "active_days": 0,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 67,
+        "bills_passed": 13,
+        "bills_enacted": 4,
+        "passage_share": 0.1940298507,
+        "enactment_share": 0.0597014925,
+        "speaker_name": "Sen. Rockefeller, John D., IV [D-WV]",
+        "party": "D",
+        "state": "WV",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/R000361",
+        "examples": [
+          {
+            "bill_id": "103-s-1927",
+            "label": "S 1927",
+            "title": "Veterans' Compensation Cost-of-Living Adjustment Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/1927"
+          },
+          {
+            "bill_id": "103-s-1904",
+            "label": "S 1904",
+            "title": "Board of Veterans' Appeals Administrative Procedures Improvement Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/1904"
+          },
+          {
+            "bill_id": "103-s-662",
+            "label": "S 662",
+            "title": "A bill to amend title 38, United States Code, and title XIX of the Social Security Act to make technical corrections relating to the Veterans Health Care Act of 1992.",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/662"
+          }
+        ]
+      },
+      {
+        "rank": 13,
+        "bioguide": "J000189",
+        "turns": 677,
+        "words": 131486,
+        "active_days": 63,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 59,
+        "bills_passed": 12,
+        "bills_enacted": 4,
+        "passage_share": 0.2033898305,
+        "enactment_share": 0.0677966102,
+        "speaker_name": "Mr. JOHNSTON",
+        "party": "D",
+        "state": "LA",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/J000189",
+        "examples": [
+          {
+            "bill_id": "103-s-2466",
+            "label": "S 2466",
+            "title": "Energy Policy and Conservation Act Amendments of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2466"
+          },
+          {
+            "bill_id": "103-s-1769",
+            "label": "S 1769",
+            "title": "A bill to make a technical correction, and for other purposes.",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/1769"
+          },
+          {
+            "bill_id": "103-s-983",
+            "label": "S 983",
+            "title": "El Camino Real Para Los Texas Study Act of 1993",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/983"
+          }
+        ]
+      },
+      {
+        "rank": 14,
+        "bioguide": "R000249",
+        "turns": 0,
+        "words": 0,
+        "active_days": 0,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 50,
+        "bills_passed": 4,
+        "bills_enacted": 4,
+        "passage_share": 0.08,
+        "enactment_share": 0.08,
+        "speaker_name": "Sen. Riegle, Donald W., Jr. [D-MI]",
+        "party": "D",
+        "state": "MI",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/R000249",
+        "examples": [
+          {
+            "bill_id": "103-s-2395",
+            "label": "S 2395",
+            "title": "An act to designate the United States Courthouse in Detroit, Michigan, as the \"Theodore Levin Courthouse\", and for other purposes.",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2395"
+          },
+          {
+            "bill_id": "103-s-1299",
+            "label": "S 1299",
+            "title": "Multifamily Housing Property Disposition Reform Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/1299"
+          },
+          {
+            "bill_id": "103-s-1066",
+            "label": "S 1066",
+            "title": "A bill to restore Federal services to the Pokagon Band of Potawatomi Indians.",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/1066"
+          }
+        ]
+      },
+      {
+        "rank": 15,
+        "bioguide": "B000468",
+        "turns": 111,
+        "words": 83093,
+        "active_days": 50,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 48,
+        "bills_passed": 10,
+        "bills_enacted": 4,
+        "passage_share": 0.2083333333,
+        "enactment_share": 0.0833333333,
+        "speaker_name": "Mr. BINGAMAN",
+        "party": "D",
+        "state": "NM",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/B000468",
+        "examples": [
+          {
+            "bill_id": "103-s-1880",
+            "label": "S 1880",
+            "title": "A bill to provide that the National Education Commission on Time and Learning shall terminate on September 30, 1994.",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/1880"
+          },
+          {
+            "bill_id": "103-s-1225",
+            "label": "S 1225",
+            "title": "United States-Mexico Border Health Commission Act",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/1225"
+          },
+          {
+            "bill_id": "103-s-836",
+            "label": "S 836",
+            "title": "El Camino Real de Tierra Adentro Study Act of 1993",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/836"
+          }
+        ]
+      },
+      {
+        "rank": 16,
+        "bioguide": "P000193",
+        "turns": 434,
+        "words": 302378,
+        "active_days": 96,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 2,
+        "bills_sponsored": 44,
+        "bills_passed": 6,
+        "bills_enacted": 4,
+        "passage_share": 0.1363636364,
+        "enactment_share": 0.0909090909,
+        "speaker_name": "Mr. PELL",
+        "party": "D",
+        "state": "RI",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/P000193",
+        "examples": [
+          {
+            "bill_id": "103-s-2475",
+            "label": "S 2475",
+            "title": "African Conflict Resolution Act",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2475"
+          },
+          {
+            "bill_id": "103-s-1667",
+            "label": "S 1667",
+            "title": "A bill to extend authorities under the Middle East Peace Facilitation Act of 1993 by six months.",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/1667"
+          },
+          {
+            "bill_id": "103-s-1507",
+            "label": "S 1507",
+            "title": "Higher Education Technical Amendments of 1993",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/1507"
+          }
+        ]
+      },
+      {
+        "rank": 17,
+        "bioguide": "B001057",
+        "turns": 815,
+        "words": 158992,
+        "active_days": 70,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 1,
+        "bills_sponsored": 30,
+        "bills_passed": 6,
+        "bills_enacted": 4,
+        "passage_share": 0.2,
+        "enactment_share": 0.1333333333,
+        "speaker_name": "Mr. BUMPERS",
+        "party": "D",
+        "state": "AR",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/B001057",
+        "examples": [
+          {
+            "bill_id": "103-s-2087",
+            "label": "S 2087",
+            "title": "An Act to extend the time period for compliance with the Nutrition Labeling and Education Act of 1990 for certain food products packaged prior to August 8, 1994.",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2087"
+          },
+          {
+            "bill_id": "103-s-2060",
+            "label": "S 2060",
+            "title": "Small Business Administration Reauthorization and Amendments Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2060"
+          },
+          {
+            "bill_id": "103-s-2004",
+            "label": "S 2004",
+            "title": "A bill to extend until July 1, 1998, the exemption from ineligibility based on a high default rate for certain institutions of higher education.",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2004"
+          }
+        ]
+      },
+      {
+        "rank": 18,
+        "bioguide": "W000326",
+        "turns": 17,
+        "words": 7579,
+        "active_days": 14,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 19,
+        "bills_passed": 4,
+        "bills_enacted": 4,
+        "passage_share": 0.2105263158,
+        "enactment_share": 0.2105263158,
+        "speaker_name": "Mr. WHEAT",
+        "party": "D",
+        "state": "MO",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/W000326",
+        "examples": [
+          {
+            "bill_id": "103-hr-4896",
+            "label": "HR 4896",
+            "title": "To grant the consent of the Congress to the Kansas and Missouri Metropolitan Culture District Compact.",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/4896"
+          },
+          {
+            "bill_id": "103-hr-4551",
+            "label": "HR 4551",
+            "title": "To designate the Post Office building located at 301 West Lexington in Independence, Missouri, as the \"William J. Randall Post Office\".",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/4551"
+          },
+          {
+            "bill_id": "103-hr-2559",
+            "label": "HR 2559",
+            "title": "An Act to designate the Federal building located at 601 East 12th Street in Kansas City, Missouri, as the \"Richard Bolling Federal Building and the United States Courthouse\" located at Ninth and Locust Streets, in Kansas City, Missouri, as the \"Charles Evans Whittaker United States Courthouse\".",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/2559"
+          }
+        ]
+      },
+      {
+        "rank": 19,
+        "bioguide": "S000148",
+        "turns": 105,
+        "words": 21952,
+        "active_days": 34,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 54,
+        "bills_passed": 7,
+        "bills_enacted": 3,
+        "passage_share": 0.1296296296,
+        "enactment_share": 0.0555555556,
+        "speaker_name": "Mr. SCHUMER",
+        "party": "D",
+        "state": "NY",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/S000148",
+        "examples": [
+          {
+            "bill_id": "103-hr-4497",
+            "label": "HR 4497",
+            "title": "To award a congressional gold medal to Rabbi Menachem Mendel Schneerson.",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/4497"
+          },
+          {
+            "bill_id": "103-hr-1308",
+            "label": "HR 1308",
+            "title": "Religious Freedom Restoration Act of 1993",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/1308"
+          },
+          {
+            "bill_id": "103-hr-1025",
+            "label": "HR 1025",
+            "title": "Brady Handgun Violence Prevention Act",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/1025"
+          }
+        ]
+      },
+      {
+        "rank": 20,
+        "bioguide": "K000105",
+        "turns": 729,
+        "words": 279277,
+        "active_days": 69,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 51,
+        "bills_passed": 11,
+        "bills_enacted": 3,
+        "passage_share": 0.2156862745,
+        "enactment_share": 0.0588235294,
+        "speaker_name": "Mr. KENNEDY",
+        "party": "D",
+        "state": "MA",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/K000105",
+        "examples": [
+          {
+            "bill_id": "103-s-801",
+            "label": "S 801",
+            "title": "A bill to authorize the conduct and development of NAEP assessments for fiscal year 1994.",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/801"
+          },
+          {
+            "bill_id": "103-s-636",
+            "label": "S 636",
+            "title": "Freedom of Access to Clinic Entrances Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/636"
+          },
+          {
+            "bill_id": "103-s-1",
+            "label": "S 1",
+            "title": "National Institutes of Health Revitalization Act of 1993",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/1"
+          }
+        ]
+      },
+      {
+        "rank": 21,
+        "bioguide": "M000303",
+        "turns": 592,
+        "words": 330990,
+        "active_days": 90,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 46,
+        "bills_passed": 9,
+        "bills_enacted": 3,
+        "passage_share": 0.1956521739,
+        "enactment_share": 0.0652173913,
+        "speaker_name": "Mr. McCAIN",
+        "party": "R",
+        "state": "AZ",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/M000303",
+        "examples": [
+          {
+            "bill_id": "103-s-1146",
+            "label": "S 1146",
+            "title": "Yavapai-Prescott Indian Tribe Water Rights Settlement Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/1146"
+          },
+          {
+            "bill_id": "103-s-720",
+            "label": "S 720",
+            "title": "Indian Lands Open Dump Cleanup Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/720"
+          },
+          {
+            "bill_id": "103-s-654",
+            "label": "S 654",
+            "title": "A bill to amend the Indian Environmental General Assistance Program Act of 1992 to extend the authorization of appropriations.",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/654"
+          }
+        ]
+      },
+      {
+        "rank": 22,
+        "bioguide": "D000064",
+        "turns": 220,
+        "words": 110167,
+        "active_days": 46,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 45,
+        "bills_passed": 4,
+        "bills_enacted": 3,
+        "passage_share": 0.0888888889,
+        "enactment_share": 0.0666666667,
+        "speaker_name": "Mr. DASCHLE",
+        "party": "D",
+        "state": "SD",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/D000064",
+        "examples": [
+          {
+            "bill_id": "103-s-2099",
+            "label": "S 2099",
+            "title": "Northern Great Plains Rural Development Act",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/2099"
+          },
+          {
+            "bill_id": "103-s-1490",
+            "label": "S 1490",
+            "title": "United States Grain Standards Act Amendments of 1993",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/1490"
+          },
+          {
+            "bill_id": "103-s-164",
+            "label": "S 164",
+            "title": "A bill to authorize the adjustment of the boundaries of the South Dakota portion of the Sioux Ranger District of Custer National Forest, and for other purposes.",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/164"
+          }
+        ]
+      },
+      {
+        "rank": 23,
+        "bioguide": "H000930",
+        "turns": 200,
+        "words": 72896,
+        "active_days": 41,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 42,
+        "bills_passed": 9,
+        "bills_enacted": 3,
+        "passage_share": 0.2142857143,
+        "enactment_share": 0.0714285714,
+        "speaker_name": "Mr. HUGHES",
+        "party": "D",
+        "state": "NJ",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/H000930",
+        "examples": [
+          {
+            "bill_id": "103-hr-2840",
+            "label": "HR 2840",
+            "title": "Copyright Royalty Tribunal Reform Act of 1993",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/2840"
+          },
+          {
+            "bill_id": "103-hr-2650",
+            "label": "HR 2650",
+            "title": "To designate portions of the Maurice River and its tributaries in the State of New Jersey as components of the National Wild and Scenic Rivers Systems.",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/2650"
+          },
+          {
+            "bill_id": "103-hr-2632",
+            "label": "HR 2632",
+            "title": "Patent and Trademark Office Authorization Act of 1993",
+            "url": "https://www.congress.gov/bill/103rd-congress/house-bill/2632"
+          }
+        ]
+      },
+      {
+        "rank": 24,
+        "bioguide": "H000338",
+        "turns": 547,
+        "words": 314548,
+        "active_days": 92,
+        "profanity_hits": 5,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 32,
+        "bills_passed": 5,
+        "bills_enacted": 3,
+        "passage_share": 0.15625,
+        "enactment_share": 0.09375,
+        "speaker_name": "Mr. HATCH",
+        "party": "R",
+        "state": "UT",
+        "chamber": "senate",
+        "profanity_per_100k": 1.589582512,
+        "member_url": "https://bioguide.congress.gov/search/bio/H000338",
+        "examples": [
+          {
+            "bill_id": "103-s-859",
+            "label": "S 859",
+            "title": "A bill to reduce the restrictions on lands conveyed by deed under the Act of June 8, 1926.",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/859"
+          },
+          {
+            "bill_id": "103-s-784",
+            "label": "S 784",
+            "title": "Dietary Supplement Health and Education Act of 1994",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/784"
+          },
+          {
+            "bill_id": "103-s-184",
+            "label": "S 184",
+            "title": "Utah Schools and Lands Improvement Act of 1993",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/184"
+          }
+        ]
+      },
+      {
+        "rank": 25,
+        "bioguide": "P000556",
+        "turns": 194,
+        "words": 84941,
+        "active_days": 50,
+        "profanity_hits": 1,
+        "profanity_quoted_hits": 1,
+        "bills_sponsored": 28,
+        "bills_passed": 5,
+        "bills_enacted": 3,
+        "passage_share": 0.1785714286,
+        "enactment_share": 0.1071428571,
+        "speaker_name": "Mr. PRYOR",
+        "party": "D",
+        "state": "AR",
+        "chamber": "senate",
+        "profanity_per_100k": 1.1772877644,
+        "member_url": "https://bioguide.congress.gov/search/bio/P000556",
+        "examples": [
+          {
+            "bill_id": "103-s-1130",
+            "label": "S 1130",
+            "title": "Federal Employees Leave Sharing Amendments Act of 1993",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/1130"
+          },
+          {
+            "bill_id": "103-s-994",
+            "label": "S 994",
+            "title": "Fresh Cut Flowers and Fresh Cut Greens Promotion and Information Act of 1993",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/994"
+          },
+          {
+            "bill_id": "103-s-717",
+            "label": "S 717",
+            "title": "Egg Research and Consumer Information Act Amendments of 1993",
+            "url": "https://www.congress.gov/bill/103rd-congress/senate-bill/717"
+          }
+        ]
+      }
+    ],
     "profanity": [
       {
         "rank": 1,
@@ -544,7 +3549,7 @@
         "active_days": 19,
         "profanity_hits": 1,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
+        "bills_sponsored": 16,
         "bills_passed": 0,
         "bills_enacted": 0,
         "passage_share": 0.0,
@@ -564,7 +3569,7 @@
         "active_days": 24,
         "profanity_hits": 1,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
+        "bills_sponsored": 17,
         "bills_passed": 0,
         "bills_enacted": 0,
         "passage_share": 0.0,
@@ -584,7 +3589,7 @@
         "active_days": 24,
         "profanity_hits": 1,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
+        "bills_sponsored": 3,
         "bills_passed": 0,
         "bills_enacted": 0,
         "passage_share": 0.0,
@@ -604,11 +3609,11 @@
         "active_days": 18,
         "profanity_hits": 1,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 16,
+        "bills_passed": 1,
+        "bills_enacted": 1,
+        "passage_share": 0.0625,
+        "enactment_share": 0.0625,
         "speaker_name": "Mr. McCANDLESS",
         "party": "R",
         "state": "CA",
@@ -624,11 +3629,11 @@
         "active_days": 68,
         "profanity_hits": 2,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 34,
+        "bills_passed": 3,
+        "bills_enacted": 2,
+        "passage_share": 0.0882352941,
+        "enactment_share": 0.0588235294,
         "speaker_name": "Mrs. SCHROEDER",
         "party": "D",
         "state": "CO",
@@ -644,11 +3649,11 @@
         "active_days": 26,
         "profanity_hits": 1,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 15,
+        "bills_passed": 3,
+        "bills_enacted": 3,
+        "passage_share": 0.2,
+        "enactment_share": 0.2,
         "speaker_name": "Mr. OBEY",
         "party": "D",
         "state": "WI",
@@ -664,7 +3669,7 @@
         "active_days": 42,
         "profanity_hits": 1,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
+        "bills_sponsored": 12,
         "bills_passed": 0,
         "bills_enacted": 0,
         "passage_share": 0.0,
@@ -684,7 +3689,7 @@
         "active_days": 129,
         "profanity_hits": 6,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
+        "bills_sponsored": 43,
         "bills_passed": 0,
         "bills_enacted": 0,
         "passage_share": 0.0,
@@ -704,7 +3709,7 @@
         "active_days": 46,
         "profanity_hits": 1,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
+        "bills_sponsored": 4,
         "bills_passed": 0,
         "bills_enacted": 0,
         "passage_share": 0.0,
@@ -724,11 +3729,11 @@
         "active_days": 71,
         "profanity_hits": 3,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 44,
+        "bills_passed": 3,
+        "bills_enacted": 2,
+        "passage_share": 0.0681818182,
+        "enactment_share": 0.0454545455,
         "speaker_name": "Mr. METZENBAUM",
         "party": "D",
         "state": "OH",
@@ -744,10 +3749,10 @@
         "active_days": 43,
         "profanity_hits": 2,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
+        "bills_sponsored": 17,
+        "bills_passed": 1,
         "bills_enacted": 0,
-        "passage_share": 0.0,
+        "passage_share": 0.0588235294,
         "enactment_share": 0.0,
         "speaker_name": "Mr. LOTT",
         "party": "R",
@@ -764,7 +3769,7 @@
         "active_days": 54,
         "profanity_hits": 1,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
+        "bills_sponsored": 7,
         "bills_passed": 0,
         "bills_enacted": 0,
         "passage_share": 0.0,
@@ -784,7 +3789,7 @@
         "active_days": 30,
         "profanity_hits": 1,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
+        "bills_sponsored": 2,
         "bills_passed": 0,
         "bills_enacted": 0,
         "passage_share": 0.0,
@@ -804,10 +3809,10 @@
         "active_days": 57,
         "profanity_hits": 3,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
+        "bills_sponsored": 10,
+        "bills_passed": 1,
         "bills_enacted": 0,
-        "passage_share": 0.0,
+        "passage_share": 0.1,
         "enactment_share": 0.0,
         "speaker_name": "Mr. WALLOP",
         "party": "R",
@@ -824,7 +3829,7 @@
         "active_days": 20,
         "profanity_hits": 1,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
+        "bills_sponsored": 10,
         "bills_passed": 0,
         "bills_enacted": 0,
         "passage_share": 0.0,
@@ -844,11 +3849,11 @@
         "active_days": 92,
         "profanity_hits": 5,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 32,
+        "bills_passed": 5,
+        "bills_enacted": 3,
+        "passage_share": 0.15625,
+        "enactment_share": 0.09375,
         "speaker_name": "Mr. HATCH",
         "party": "R",
         "state": "UT",
@@ -864,7 +3869,7 @@
         "active_days": 52,
         "profanity_hits": 1,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
+        "bills_sponsored": 13,
         "bills_passed": 0,
         "bills_enacted": 0,
         "passage_share": 0.0,
@@ -884,11 +3889,11 @@
         "active_days": 75,
         "profanity_hits": 2,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 47,
+        "bills_passed": 1,
+        "bills_enacted": 1,
+        "passage_share": 0.0212765957,
+        "enactment_share": 0.0212765957,
         "speaker_name": "Mr. THURMOND",
         "party": "R",
         "state": "SC",
@@ -904,11 +3909,11 @@
         "active_days": 30,
         "profanity_hits": 1,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 7,
+        "bills_passed": 1,
+        "bills_enacted": 1,
+        "passage_share": 0.1428571429,
+        "enactment_share": 0.1428571429,
         "speaker_name": "Mr. KERREY",
         "party": "D",
         "state": "NE",
@@ -924,11 +3929,11 @@
         "active_days": 50,
         "profanity_hits": 1,
         "profanity_quoted_hits": 1,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 28,
+        "bills_passed": 5,
+        "bills_enacted": 3,
+        "passage_share": 0.1785714286,
+        "enactment_share": 0.1071428571,
         "speaker_name": "Mr. PRYOR",
         "party": "D",
         "state": "AR",
@@ -944,11 +3949,11 @@
         "active_days": 56,
         "profanity_hits": 2,
         "profanity_quoted_hits": 2,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 22,
+        "bills_passed": 1,
+        "bills_enacted": 1,
+        "passage_share": 0.0454545455,
+        "enactment_share": 0.0454545455,
         "speaker_name": "Mr. GRAHAM of Florida",
         "party": "D",
         "state": "FL",
@@ -964,7 +3969,7 @@
         "active_days": 31,
         "profanity_hits": 1,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
+        "bills_sponsored": 6,
         "bills_passed": 0,
         "bills_enacted": 0,
         "passage_share": 0.0,
@@ -984,11 +3989,11 @@
         "active_days": 48,
         "profanity_hits": 1,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 13,
+        "bills_passed": 1,
+        "bills_enacted": 1,
+        "passage_share": 0.0769230769,
+        "enactment_share": 0.0769230769,
         "speaker_name": "Mr. JEFFORDS",
         "party": "I",
         "state": "VT",
@@ -1004,11 +4009,11 @@
         "active_days": 67,
         "profanity_hits": 1,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 9,
+        "bills_passed": 2,
+        "bills_enacted": 2,
+        "passage_share": 0.2222222222,
+        "enactment_share": 0.2222222222,
         "speaker_name": "Mr. SASSER",
         "party": "D",
         "state": "TN",
@@ -1024,11 +4029,11 @@
         "active_days": 61,
         "profanity_hits": 1,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 25,
+        "bills_passed": 2,
+        "bills_enacted": 1,
+        "passage_share": 0.08,
+        "enactment_share": 0.04,
         "speaker_name": "Mrs. BOXER",
         "party": "D",
         "state": "CA",

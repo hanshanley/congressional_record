@@ -1,7 +1,7 @@
 {
   "congress": 106,
   "label": "Congress 106",
-  "generated_utc": "2026-08-03T20:42:20+00:00",
+  "generated_utc": "2026-08-04T16:55:44+00:00",
   "min_words": 25000,
   "top": 25,
   "coverage": {
@@ -9,10 +9,12 @@
     "speech_last_date": "2001-01-02",
     "speaker_days": 41326,
     "members_with_speech": 528,
-    "bills": 0,
-    "members_with_bills": 0,
-    "bill_sources": [],
-    "warning": "Legislative data for Congress 106 has not been seeded; bill leaderboards are unavailable rather than zero."
+    "bills": 8968,
+    "members_with_bills": 543,
+    "bill_sources": [
+      "congress.gov"
+    ],
+    "warning": ""
   },
   "definitions": {
     "speech": "Attributed non-procedural spoken words; turns and active days provide context.",
@@ -39,11 +41,11 @@
         "active_days": 200,
         "profanity_hits": 1,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 36,
+        "bills_passed": 2,
+        "bills_enacted": 1,
+        "passage_share": 0.0555555556,
+        "enactment_share": 0.0277777778,
         "speaker_name": "Mr. KENNEDY",
         "party": "D",
         "state": "MA",
@@ -59,11 +61,11 @@
         "active_days": 210,
         "profanity_hits": 2,
         "profanity_quoted_hits": 1,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 43,
+        "bills_passed": 2,
+        "bills_enacted": 2,
+        "passage_share": 0.0465116279,
+        "enactment_share": 0.0465116279,
         "speaker_name": "Mr. LEAHY",
         "party": "D",
         "state": "VT",
@@ -79,7 +81,7 @@
         "active_days": 201,
         "profanity_hits": 1,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
+        "bills_sponsored": 35,
         "bills_passed": 0,
         "bills_enacted": 0,
         "passage_share": 0.0,
@@ -99,11 +101,11 @@
         "active_days": 176,
         "profanity_hits": 2,
         "profanity_quoted_hits": 1,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 91,
+        "bills_passed": 11,
+        "bills_enacted": 2,
+        "passage_share": 0.1208791209,
+        "enactment_share": 0.021978022,
         "speaker_name": "Mr. McCAIN",
         "party": "R",
         "state": "AZ",
@@ -119,7 +121,7 @@
         "active_days": 181,
         "profanity_hits": 1,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
+        "bills_sponsored": 52,
         "bills_passed": 0,
         "bills_enacted": 0,
         "passage_share": 0.0,
@@ -139,11 +141,11 @@
         "active_days": 161,
         "profanity_hits": 0,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 70,
+        "bills_passed": 16,
+        "bills_enacted": 10,
+        "passage_share": 0.2285714286,
+        "enactment_share": 0.1428571429,
         "speaker_name": "Mr. HATCH",
         "party": "R",
         "state": "UT",
@@ -159,11 +161,11 @@
         "active_days": 245,
         "profanity_hits": 0,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 19,
+        "bills_passed": 5,
+        "bills_enacted": 3,
+        "passage_share": 0.2631578947,
+        "enactment_share": 0.1578947368,
         "speaker_name": "Mr. LOTT",
         "party": "R",
         "state": "MS",
@@ -179,11 +181,11 @@
         "active_days": 172,
         "profanity_hits": 0,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 39,
+        "bills_passed": 9,
+        "bills_enacted": 5,
+        "passage_share": 0.2307692308,
+        "enactment_share": 0.1282051282,
         "speaker_name": "Mr. DOMENICI",
         "party": "R",
         "state": "NM",
@@ -199,11 +201,11 @@
         "active_days": 240,
         "profanity_hits": 0,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 35,
+        "bills_passed": 7,
+        "bills_enacted": 3,
+        "passage_share": 0.2,
+        "enactment_share": 0.0857142857,
         "speaker_name": "Mr. REID",
         "party": "D",
         "state": "NV",
@@ -219,11 +221,11 @@
         "active_days": 191,
         "profanity_hits": 0,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 20,
+        "bills_passed": 1,
+        "bills_enacted": 1,
+        "passage_share": 0.05,
+        "enactment_share": 0.05,
         "speaker_name": "Mr. DORGAN",
         "party": "D",
         "state": "ND",
@@ -239,11 +241,11 @@
         "active_days": 169,
         "profanity_hits": 0,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 36,
+        "bills_passed": 3,
+        "bills_enacted": 2,
+        "passage_share": 0.0833333333,
+        "enactment_share": 0.0555555556,
         "speaker_name": "Mr. FEINGOLD",
         "party": "D",
         "state": "WI",
@@ -259,11 +261,11 @@
         "active_days": 154,
         "profanity_hits": 0,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 95,
+        "bills_passed": 3,
+        "bills_enacted": 3,
+        "passage_share": 0.0315789474,
+        "enactment_share": 0.0315789474,
         "speaker_name": "Mr. MOYNIHAN",
         "party": "D",
         "state": "NY",
@@ -279,11 +281,11 @@
         "active_days": 133,
         "profanity_hits": 0,
         "profanity_quoted_hits": 1,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 43,
+        "bills_passed": 4,
+        "bills_enacted": 1,
+        "passage_share": 0.0930232558,
+        "enactment_share": 0.023255814,
         "speaker_name": "Mr. SPECTER",
         "party": "D",
         "state": "PA",
@@ -299,11 +301,11 @@
         "active_days": 174,
         "profanity_hits": 0,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 70,
+        "bills_passed": 19,
+        "bills_enacted": 7,
+        "passage_share": 0.2714285714,
+        "enactment_share": 0.1,
         "speaker_name": "Mr. MURKOWSKI",
         "party": "R",
         "state": "AK",
@@ -319,10 +321,10 @@
         "active_days": 163,
         "profanity_hits": 0,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
+        "bills_sponsored": 49,
+        "bills_passed": 1,
         "bills_enacted": 0,
-        "passage_share": 0.0,
+        "passage_share": 0.0204081633,
         "enactment_share": 0.0,
         "speaker_name": "Mr. HARKIN",
         "party": "D",
@@ -339,11 +341,11 @@
         "active_days": 129,
         "profanity_hits": 0,
         "profanity_quoted_hits": 3,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 33,
+        "bills_passed": 3,
+        "bills_enacted": 2,
+        "passage_share": 0.0909090909,
+        "enactment_share": 0.0606060606,
         "speaker_name": "Mr. HOLLINGS",
         "party": "D",
         "state": "SC",
@@ -359,11 +361,11 @@
         "active_days": 151,
         "profanity_hits": 0,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 65,
+        "bills_passed": 5,
+        "bills_enacted": 3,
+        "passage_share": 0.0769230769,
+        "enactment_share": 0.0461538462,
         "speaker_name": "Mr. GRASSLEY",
         "party": "R",
         "state": "IA",
@@ -379,11 +381,11 @@
         "active_days": 139,
         "profanity_hits": 2,
         "profanity_quoted_hits": 4,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 33,
+        "bills_passed": 10,
+        "bills_enacted": 2,
+        "passage_share": 0.303030303,
+        "enactment_share": 0.0606060606,
         "speaker_name": "Mr. WARNER",
         "party": "R",
         "state": "VA",
@@ -399,11 +401,11 @@
         "active_days": 143,
         "profanity_hits": 1,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 26,
+        "bills_passed": 1,
+        "bills_enacted": 1,
+        "passage_share": 0.0384615385,
+        "enactment_share": 0.0384615385,
         "speaker_name": "Mr. SMITH of New Hampshire",
         "party": "R",
         "state": "NH",
@@ -419,10 +421,10 @@
         "active_days": 173,
         "profanity_hits": 0,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
+        "bills_sponsored": 41,
+        "bills_passed": 1,
         "bills_enacted": 0,
-        "passage_share": 0.0,
+        "passage_share": 0.0243902439,
         "enactment_share": 0.0,
         "speaker_name": "Mrs. BOXER",
         "party": "D",
@@ -439,11 +441,11 @@
         "active_days": 154,
         "profanity_hits": 0,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 74,
+        "bills_passed": 11,
+        "bills_enacted": 5,
+        "passage_share": 0.1486486486,
+        "enactment_share": 0.0675675676,
         "speaker_name": "Mrs. FEINSTEIN",
         "party": "D",
         "state": "CA",
@@ -459,11 +461,11 @@
         "active_days": 176,
         "profanity_hits": 1,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 29,
+        "bills_passed": 6,
+        "bills_enacted": 6,
+        "passage_share": 0.2068965517,
+        "enactment_share": 0.2068965517,
         "speaker_name": "Mr. CRAIG",
         "party": "R",
         "state": "ID",
@@ -479,7 +481,7 @@
         "active_days": 140,
         "profanity_hits": 1,
         "profanity_quoted_hits": 1,
-        "bills_sponsored": 0,
+        "bills_sponsored": 37,
         "bills_passed": 0,
         "bills_enacted": 0,
         "passage_share": 0.0,
@@ -499,11 +501,11 @@
         "active_days": 189,
         "profanity_hits": 0,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 40,
+        "bills_passed": 4,
+        "bills_enacted": 1,
+        "passage_share": 0.1,
+        "enactment_share": 0.025,
         "speaker_name": "Mr. DASCHLE",
         "party": "D",
         "state": "SD",
@@ -519,11 +521,11 @@
         "active_days": 136,
         "profanity_hits": 0,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 68,
+        "bills_passed": 20,
+        "bills_enacted": 12,
+        "passage_share": 0.2941176471,
+        "enactment_share": 0.1764705882,
         "speaker_name": "Mr. CAMPBELL",
         "party": "R",
         "state": "CO",
@@ -532,9 +534,3012 @@
         "member_url": "https://bioguide.congress.gov/search/bio/C000077"
       }
     ],
-    "sponsored": [],
-    "passed": [],
-    "enacted": [],
+    "sponsored": [
+      {
+        "rank": 1,
+        "bioguide": "M001054",
+        "turns": 819,
+        "words": 496379,
+        "active_days": 154,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 95,
+        "bills_passed": 3,
+        "bills_enacted": 3,
+        "passage_share": 0.0315789474,
+        "enactment_share": 0.0315789474,
+        "speaker_name": "Mr. MOYNIHAN",
+        "party": "D",
+        "state": "NY",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/M001054",
+        "examples": [
+          {
+            "bill_id": "106-s-3259",
+            "label": "S 3259",
+            "title": "Historic Performing Arts Facility Rehabilitation Act",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/3259"
+          },
+          {
+            "bill_id": "106-s-3195",
+            "label": "S 3195",
+            "title": "United States Open Society Commission Act",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/3195"
+          },
+          {
+            "bill_id": "106-s-3154",
+            "label": "S 3154",
+            "title": "Erie Canalway National Heritage Corridor Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/3154"
+          }
+        ]
+      },
+      {
+        "rank": 2,
+        "bioguide": "A000210",
+        "turns": 206,
+        "words": 52573,
+        "active_days": 64,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 93,
+        "bills_passed": 1,
+        "bills_enacted": 0,
+        "passage_share": 0.0107526882,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. ANDREWS",
+        "party": "D",
+        "state": "NJ",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/A000210",
+        "examples": [
+          {
+            "bill_id": "106-hr-5607",
+            "label": "HR 5607",
+            "title": "To prohibit an insurer from treating a veteran differently in the terms or conditions of motor vehicle insurance because a motor vehicle operated by the veteran, during a period of military service by the veteran, was insured or owned by the United States.",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/5607"
+          },
+          {
+            "bill_id": "106-hr-5549",
+            "label": "HR 5549",
+            "title": "Retirement Enhancement Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/5549"
+          },
+          {
+            "bill_id": "106-hr-5546",
+            "label": "HR 5546",
+            "title": "Retirement Enhancement Revenue Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/5546"
+          }
+        ]
+      },
+      {
+        "rank": 3,
+        "bioguide": "M000303",
+        "turns": 1257,
+        "words": 617742,
+        "active_days": 176,
+        "profanity_hits": 2,
+        "profanity_quoted_hits": 1,
+        "bills_sponsored": 91,
+        "bills_passed": 11,
+        "bills_enacted": 2,
+        "passage_share": 0.1208791209,
+        "enactment_share": 0.021978022,
+        "speaker_name": "Mr. McCAIN",
+        "party": "R",
+        "state": "AZ",
+        "chamber": "senate",
+        "profanity_per_100k": 0.3237597573,
+        "member_url": "https://bioguide.congress.gov/search/bio/M000303",
+        "examples": [
+          {
+            "bill_id": "106-s-3237",
+            "label": "S 3237",
+            "title": "International Climate Change Science Commission Act",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/3237"
+          },
+          {
+            "bill_id": "106-s-3235",
+            "label": "S 3235",
+            "title": "Telecommunications Ownership Diversification Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/3235"
+          },
+          {
+            "bill_id": "106-s-3059",
+            "label": "S 3059",
+            "title": "Motor Vehicle and Motor Vehicle Equipment Defect Notification Improvement Act",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/3059"
+          }
+        ]
+      },
+      {
+        "rank": 4,
+        "bioguide": "F000062",
+        "turns": 591,
+        "words": 411570,
+        "active_days": 154,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 74,
+        "bills_passed": 11,
+        "bills_enacted": 5,
+        "passage_share": 0.1486486486,
+        "enactment_share": 0.0675675676,
+        "speaker_name": "Mrs. FEINSTEIN",
+        "party": "D",
+        "state": "CA",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/F000062",
+        "examples": [
+          {
+            "bill_id": "106-s-3219",
+            "label": "S 3219",
+            "title": "Social Security Number Confidentiality Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/3219"
+          },
+          {
+            "bill_id": "106-s-3178",
+            "label": "S 3178",
+            "title": "A bill to amend title 5, United States Code, to provide that the mandatory separation age for Federal firefighters be made the same age that applies with respect to Federal law enforcement officers.",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/3178"
+          },
+          {
+            "bill_id": "106-s-3117",
+            "label": "S 3117",
+            "title": "Unaccompanied Alien Child Protection Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/3117"
+          }
+        ]
+      },
+      {
+        "rank": 5,
+        "bioguide": "M001085",
+        "turns": 949,
+        "words": 479126,
+        "active_days": 174,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 70,
+        "bills_passed": 19,
+        "bills_enacted": 7,
+        "passage_share": 0.2714285714,
+        "enactment_share": 0.1,
+        "speaker_name": "Mr. MURKOWSKI",
+        "party": "R",
+        "state": "AK",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/M001085",
+        "examples": [
+          {
+            "bill_id": "106-s-3193",
+            "label": "S 3193",
+            "title": "A bill to amend section 527 of the Internal Revenue Code of 1986 to exempt State and local political committees from required notification of section 527 status.",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/3193"
+          },
+          {
+            "bill_id": "106-s-3171",
+            "label": "S 3171",
+            "title": "Energy Security for American Consumers Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/3171"
+          },
+          {
+            "bill_id": "106-s-3150",
+            "label": "S 3150",
+            "title": "Heritage Land Transfer Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/3150"
+          }
+        ]
+      },
+      {
+        "rank": 6,
+        "bioguide": "H000338",
+        "turns": 1375,
+        "words": 600846,
+        "active_days": 161,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 70,
+        "bills_passed": 16,
+        "bills_enacted": 10,
+        "passage_share": 0.2285714286,
+        "enactment_share": 0.1428571429,
+        "speaker_name": "Mr. HATCH",
+        "party": "R",
+        "state": "UT",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/H000338",
+        "examples": [
+          {
+            "bill_id": "106-s-3270",
+            "label": "S 3270",
+            "title": "A bill to amend title XVIII of the Social Security Act to provide for a modification of medicare billing requirements for certain Indian providers.",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/3270"
+          },
+          {
+            "bill_id": "106-s-3226",
+            "label": "S 3226",
+            "title": "Religious Workers Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/3226"
+          },
+          {
+            "bill_id": "106-s-3204",
+            "label": "S 3204",
+            "title": "A bill to make certain corrections in copyright law.",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/3204"
+          }
+        ]
+      },
+      {
+        "rank": 7,
+        "bioguide": "C000077",
+        "turns": 428,
+        "words": 378047,
+        "active_days": 136,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 68,
+        "bills_passed": 20,
+        "bills_enacted": 12,
+        "passage_share": 0.2941176471,
+        "enactment_share": 0.1764705882,
+        "speaker_name": "Mr. CAMPBELL",
+        "party": "R",
+        "state": "CO",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/C000077",
+        "examples": [
+          {
+            "bill_id": "106-s-3146",
+            "label": "S 3146",
+            "title": "American Land Sovereignty Protection Act",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/3146"
+          },
+          {
+            "bill_id": "106-s-3031",
+            "label": "S 3031",
+            "title": "Native American Laws Technical Corrections Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/3031"
+          },
+          {
+            "bill_id": "106-s-2956",
+            "label": "S 2956",
+            "title": "Colorado Canyons National Conservation Area and Black Ridge Canyons Wilderness Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/2956"
+          }
+        ]
+      },
+      {
+        "rank": 8,
+        "bioguide": "G000386",
+        "turns": 945,
+        "words": 451260,
+        "active_days": 151,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 65,
+        "bills_passed": 5,
+        "bills_enacted": 3,
+        "passage_share": 0.0769230769,
+        "enactment_share": 0.0461538462,
+        "speaker_name": "Mr. GRASSLEY",
+        "party": "R",
+        "state": "IA",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/G000386",
+        "examples": [
+          {
+            "bill_id": "106-s-3186",
+            "label": "S 3186",
+            "title": "Bankruptcy Reform Act of 2000 ",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/3186"
+          },
+          {
+            "bill_id": "106-s-3177",
+            "label": "S 3177",
+            "title": "Nursing Home Staff Improvement Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/3177"
+          },
+          {
+            "bill_id": "106-s-3091",
+            "label": "S 3091",
+            "title": "Packers and Stockyards Enforcement Improvement Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/3091"
+          }
+        ]
+      },
+      {
+        "rank": 9,
+        "bioguide": "S000663",
+        "turns": 282,
+        "words": 235674,
+        "active_days": 103,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 62,
+        "bills_passed": 3,
+        "bills_enacted": 1,
+        "passage_share": 0.0483870968,
+        "enactment_share": 0.0161290323,
+        "speaker_name": "Ms. SNOWE",
+        "party": "R",
+        "state": "ME",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/S000663",
+        "examples": [
+          {
+            "bill_id": "106-s-3189",
+            "label": "S 3189",
+            "title": "Child Support Distribution Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/3189"
+          },
+          {
+            "bill_id": "106-s-3141",
+            "label": "S 3141",
+            "title": "Providing Annual Pap Tests to Save Women's Lives Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/3141"
+          },
+          {
+            "bill_id": "106-s-3023",
+            "label": "S 3023",
+            "title": "Pregnancy Discrimination Act Amendments of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/3023"
+          }
+        ]
+      },
+      {
+        "rank": 10,
+        "bioguide": "J000072",
+        "turns": 1117,
+        "words": 365846,
+        "active_days": 164,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 60,
+        "bills_passed": 4,
+        "bills_enacted": 2,
+        "passage_share": 0.0666666667,
+        "enactment_share": 0.0333333333,
+        "speaker_name": "Mr. JEFFORDS",
+        "party": "I",
+        "state": "VT",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/J000072",
+        "examples": [
+          {
+            "bill_id": "106-s-3262",
+            "label": "S 3262",
+            "title": "Public Broadcasting Integrity Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/3262"
+          },
+          {
+            "bill_id": "106-s-3208",
+            "label": "S 3208",
+            "title": "Internet Prescription Drug Consumer Protection Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/3208"
+          },
+          {
+            "bill_id": "106-s-3198",
+            "label": "S 3198",
+            "title": "A bill to provide a pool credit under Federal milk marketing orders for handlers of certified organic milk used for Class I purposes.",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/3198"
+          }
+        ]
+      },
+      {
+        "rank": 11,
+        "bioguide": "S000148",
+        "turns": 564,
+        "words": 158790,
+        "active_days": 123,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 58,
+        "bills_passed": 2,
+        "bills_enacted": 2,
+        "passage_share": 0.0344827586,
+        "enactment_share": 0.0344827586,
+        "speaker_name": "Mr. SCHUMER",
+        "party": "D",
+        "state": "NY",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/S000148",
+        "examples": [
+          {
+            "bill_id": "106-s-3273",
+            "label": "S 3273",
+            "title": "Voting Study and Improvement Act of 2000 ",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/3273"
+          },
+          {
+            "bill_id": "106-s-3244",
+            "label": "S 3244",
+            "title": "A bill to amend title 49, United States Code, relating to the airport noise and access review program.",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/3244"
+          },
+          {
+            "bill_id": "106-s-3124",
+            "label": "S 3124",
+            "title": "Prosecution Drug Treatment Alternative to Prison Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/3124"
+          }
+        ]
+      },
+      {
+        "rank": 12,
+        "bioguide": "S000810",
+        "turns": 285,
+        "words": 62870,
+        "active_days": 64,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 57,
+        "bills_passed": 0,
+        "bills_enacted": 0,
+        "passage_share": 0.0,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. STARK",
+        "party": "D",
+        "state": "CA",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/S000810",
+        "examples": [
+          {
+            "bill_id": "106-hr-5646",
+            "label": "HR 5646",
+            "title": "Nursing Facility Staffing Improvement Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/5646"
+          },
+          {
+            "bill_id": "106-hr-5558",
+            "label": "HR 5558",
+            "title": "Medicare Truth in Labeling Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/5558"
+          },
+          {
+            "bill_id": "106-hr-5449",
+            "label": "HR 5449",
+            "title": "Medicare Partial Hospitalization Services Restoration and Integrity Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/5449"
+          }
+        ]
+      },
+      {
+        "rank": 13,
+        "bioguide": "C000556",
+        "turns": 201,
+        "words": 66769,
+        "active_days": 38,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 56,
+        "bills_passed": 11,
+        "bills_enacted": 3,
+        "passage_share": 0.1964285714,
+        "enactment_share": 0.0535714286,
+        "speaker_name": "Mr. COBLE",
+        "party": "R",
+        "state": "NC",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/C000556",
+        "examples": [
+          {
+            "bill_id": "106-hr-5562",
+            "label": "HR 5562",
+            "title": "Multidistrict Litigation Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/5562"
+          },
+          {
+            "bill_id": "106-hr-5107",
+            "label": "HR 5107",
+            "title": "Work Made for Hire and Copyright Corrections Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/5107"
+          },
+          {
+            "bill_id": "106-hr-5106",
+            "label": "HR 5106",
+            "title": "Copyright Technical Corrections Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/5106"
+          }
+        ]
+      },
+      {
+        "rank": 14,
+        "bioguide": "S000097",
+        "turns": 174,
+        "words": 55828,
+        "active_days": 32,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 55,
+        "bills_passed": 10,
+        "bills_enacted": 2,
+        "passage_share": 0.1818181818,
+        "enactment_share": 0.0363636364,
+        "speaker_name": "Mr. SAXTON",
+        "party": "R",
+        "state": "NJ",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/S000097",
+        "examples": [
+          {
+            "bill_id": "106-hr-5471",
+            "label": "HR 5471",
+            "title": "To amend the Internal Revenue Code of 1986 to allow individuals an exclusion from gross income for certain amounts of capital gains distributions from regulated investment companies.",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/5471"
+          },
+          {
+            "bill_id": "106-hr-5470",
+            "label": "HR 5470",
+            "title": "To provide for the opposition of the United States to the provision of any resources or assistance by the International Monetary Fund to the Palestinian Authority until the Secretary of State certifies that Israel and the Palestinian Authority have signed an agreement on borders and security arrangements for Israel and a Palestinian state.",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/5470"
+          },
+          {
+            "bill_id": "106-hr-5201",
+            "label": "HR 5201",
+            "title": "For the relief of Richard Steinmetz.",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/5201"
+          }
+        ]
+      },
+      {
+        "rank": 15,
+        "bioguide": "C000813",
+        "turns": 838,
+        "words": 143118,
+        "active_days": 113,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 54,
+        "bills_passed": 3,
+        "bills_enacted": 2,
+        "passage_share": 0.0555555556,
+        "enactment_share": 0.037037037,
+        "speaker_name": "Mr. COVERDELL",
+        "party": "R",
+        "state": "GA",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/C000813",
+        "examples": [
+          {
+            "bill_id": "106-s-2776",
+            "label": "S 2776",
+            "title": "Medical Research Investment Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/2776"
+          },
+          {
+            "bill_id": "106-s-2664",
+            "label": "S 2664",
+            "title": "A bill to suspend temporarily the duty on machines used in the manufacture of digital versatile discs.",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/2664"
+          },
+          {
+            "bill_id": "106-s-2663",
+            "label": "S 2663",
+            "title": "A bill to suspend temporarily the duty on machines, and their parts, for use in the manufacture of digital versatile discs (DVDs).",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/2663"
+          }
+        ]
+      },
+      {
+        "rank": 16,
+        "bioguide": "M000350",
+        "turns": 307,
+        "words": 115019,
+        "active_days": 57,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 53,
+        "bills_passed": 12,
+        "bills_enacted": 3,
+        "passage_share": 0.2264150943,
+        "enactment_share": 0.0566037736,
+        "speaker_name": "Mr. McCOLLUM",
+        "party": "R",
+        "state": "FL",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/M000350",
+        "examples": [
+          {
+            "bill_id": "106-hr-5393",
+            "label": "HR 5393",
+            "title": "To amend title 18, United States Code, to provide a criminal penalty for the unauthorized placement of a writing with a consumer product, and for other purposes.",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/5393"
+          },
+          {
+            "bill_id": "106-hr-5312",
+            "label": "HR 5312",
+            "title": "Protecting Our Children From Drugs Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/5312"
+          },
+          {
+            "bill_id": "106-hr-5136",
+            "label": "HR 5136",
+            "title": "To make permanent the authority of the Marshal of the Supreme Court and the Supreme Court Police to provide security beyond the Supreme Court building and grounds.",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/5136"
+          }
+        ]
+      },
+      {
+        "rank": 17,
+        "bioguide": "E000187",
+        "turns": 87,
+        "words": 54420,
+        "active_days": 39,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 53,
+        "bills_passed": 1,
+        "bills_enacted": 1,
+        "passage_share": 0.0188679245,
+        "enactment_share": 0.0188679245,
+        "speaker_name": "Mr. ENGLISH of Pennsylvania",
+        "party": "R",
+        "state": "PA",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/E000187",
+        "examples": [
+          {
+            "bill_id": "106-hr-5569",
+            "label": "HR 5569",
+            "title": "To amend the Internal Revenue Code of 1986 to tax the net capital gain of closely held corporations in the same manner as individuals.",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/5569"
+          },
+          {
+            "bill_id": "106-hr-5553",
+            "label": "HR 5553",
+            "title": "To amend title II of the Social Security Act to establish, for purposes of disability determinations under such title, a uniform minimum level of earnings, for demonstrating ability to engage in substantial gainful activity, at the level currently applicable solely to blind individuals.",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/5553"
+          },
+          {
+            "bill_id": "106-hr-5335",
+            "label": "HR 5335",
+            "title": "To amend the Federal Election campaign Act of 1971 to require candidates for election for Federal office to raise the majority of their contributions from individuals who reside in the State the candidate seeks to represent, and for other purposes.",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/5335"
+          }
+        ]
+      },
+      {
+        "rank": 18,
+        "bioguide": "T000317",
+        "turns": 366,
+        "words": 185390,
+        "active_days": 129,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 53,
+        "bills_passed": 1,
+        "bills_enacted": 1,
+        "passage_share": 0.0188679245,
+        "enactment_share": 0.0188679245,
+        "speaker_name": "Mr. TORRICELLI",
+        "party": "D",
+        "state": "NJ",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/T000317",
+        "examples": [
+          {
+            "bill_id": "106-s-3281",
+            "label": "S 3281",
+            "title": "A bill to designate the United States Post Office located at 60 Third Avenue in Long Branch, New Jersey, as the Pat King Post Office Building.",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/3281"
+          },
+          {
+            "bill_id": "106-s-3271",
+            "label": "S 3271",
+            "title": "Greening the Government Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/3271"
+          },
+          {
+            "bill_id": "106-s-3192",
+            "label": "S 3192",
+            "title": "Police Gun Buyback Assistance Act",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/3192"
+          }
+        ]
+      },
+      {
+        "rank": 19,
+        "bioguide": "A000355",
+        "turns": 667,
+        "words": 371607,
+        "active_days": 169,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 52,
+        "bills_passed": 8,
+        "bills_enacted": 5,
+        "passage_share": 0.1538461538,
+        "enactment_share": 0.0961538462,
+        "speaker_name": "Mr. ABRAHAM",
+        "party": "R",
+        "state": "MI",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/A000355",
+        "examples": [
+          {
+            "bill_id": "106-s-3276",
+            "label": "S 3276",
+            "title": "A bill to make technical corrections to the College Scholarship Fraud Prevention Act of 2000 and certain amendments made by that Act.",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/3276"
+          },
+          {
+            "bill_id": "106-s-3206",
+            "label": "S 3206",
+            "title": "Victims of Rape Health Protection Act",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/3206"
+          },
+          {
+            "bill_id": "106-s-3174",
+            "label": "S 3174",
+            "title": "A bill to amend the Internal Revenue Code of 1986 to allow a long-term capital gains deduction for individuals.",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/3174"
+          }
+        ]
+      },
+      {
+        "rank": 20,
+        "bioguide": "D000563",
+        "turns": 1275,
+        "words": 614738,
+        "active_days": 181,
+        "profanity_hits": 1,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 52,
+        "bills_passed": 0,
+        "bills_enacted": 0,
+        "passage_share": 0.0,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. DURBIN",
+        "party": "D",
+        "state": "IL",
+        "chamber": "senate",
+        "profanity_per_100k": 0.1626709265,
+        "member_url": "https://bioguide.congress.gov/search/bio/D000563",
+        "examples": [
+          {
+            "bill_id": "106-s-3285",
+            "label": "S 3285",
+            "title": "A bill to amend the Internal Revenue Code of 1986 to exclude tobacco products from qualifying foreign trade property in the treatment of extraterritorial income.",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/3285"
+          },
+          {
+            "bill_id": "106-s-3284",
+            "label": "S 3284",
+            "title": "Offering People True Insurance Options Nationwide Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/3284"
+          },
+          {
+            "bill_id": "106-s-3255",
+            "label": "S 3255",
+            "title": "Medicaid DSH Fairness Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/3255"
+          }
+        ]
+      },
+      {
+        "rank": 21,
+        "bioguide": "Y000033",
+        "turns": 405,
+        "words": 124315,
+        "active_days": 37,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 50,
+        "bills_passed": 14,
+        "bills_enacted": 7,
+        "passage_share": 0.28,
+        "enactment_share": 0.14,
+        "speaker_name": "Mr. YOUNG",
+        "party": "R",
+        "state": "AK",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/Y000033",
+        "examples": [
+          {
+            "bill_id": "106-hr-5565",
+            "label": "HR 5565",
+            "title": "Western Alaska Community Development Quota Program Implementation Improvement Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/5565"
+          },
+          {
+            "bill_id": "106-hr-5388",
+            "label": "HR 5388",
+            "title": "To designate a building proposed to be located within the boundaries of the Chincoteague National Wildlife Refuge, as the \"Herbert H. Bateman Educational and Administrative Center\".",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/5388"
+          },
+          {
+            "bill_id": "106-hr-5287",
+            "label": "HR 5287",
+            "title": "Jewish Heritage Museum Act",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/5287"
+          }
+        ]
+      },
+      {
+        "rank": 22,
+        "bioguide": "A000356",
+        "turns": 516,
+        "words": 280335,
+        "active_days": 141,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 50,
+        "bills_passed": 3,
+        "bills_enacted": 1,
+        "passage_share": 0.06,
+        "enactment_share": 0.02,
+        "speaker_name": "Mr. ASHCROFT",
+        "party": "R",
+        "state": "MO",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/A000356",
+        "examples": [
+          {
+            "bill_id": "106-s-3264",
+            "label": "S 3264",
+            "title": "Records Access Improvements Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/3264"
+          },
+          {
+            "bill_id": "106-s-3263",
+            "label": "S 3263",
+            "title": "Children's Classroom Trust Fund Act",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/3263"
+          },
+          {
+            "bill_id": "106-s-3159",
+            "label": "S 3159",
+            "title": "A bill to amend the Fair Labor Standards Act of 1938 to clarify provisions relating to the use of accrued compensatory time by certain public employees.",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/3159"
+          }
+        ]
+      },
+      {
+        "rank": 23,
+        "bioguide": "G000367",
+        "turns": 601,
+        "words": 318967,
+        "active_days": 150,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 50,
+        "bills_passed": 0,
+        "bills_enacted": 0,
+        "passage_share": 0.0,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. GRAMS",
+        "party": "R",
+        "state": "MN",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/G000367",
+        "examples": [
+          {
+            "bill_id": "106-s-3138",
+            "label": "S 3138",
+            "title": "Child Tax Credit Expansion Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/3138"
+          },
+          {
+            "bill_id": "106-s-3123",
+            "label": "S 3123",
+            "title": "Consumer Rights in Federal Class Actions Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/3123"
+          },
+          {
+            "bill_id": "106-s-3099",
+            "label": "S 3099",
+            "title": "A bill to amend the Internal Revenue Code of 1986 to clarify the exemption from tax for small property and casualty insurance companies, and for other purposes.",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/3099"
+          }
+        ]
+      },
+      {
+        "rank": 24,
+        "bioguide": "G000212",
+        "turns": 1135,
+        "words": 287868,
+        "active_days": 158,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 49,
+        "bills_passed": 15,
+        "bills_enacted": 8,
+        "passage_share": 0.306122449,
+        "enactment_share": 0.1632653061,
+        "speaker_name": "Mr. GILMAN",
+        "party": "R",
+        "state": "NY",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/G000212",
+        "examples": [
+          {
+            "bill_id": "106-hr-5363",
+            "label": "HR 5363",
+            "title": "To provide for the review by Congress of proposed construction of court facilities.",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/5363"
+          },
+          {
+            "bill_id": "106-hr-5272",
+            "label": "HR 5272",
+            "title": "Peace Through Negotiations Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/5272"
+          },
+          {
+            "bill_id": "106-hr-5242",
+            "label": "HR 5242",
+            "title": "Governors Island Preservation Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/5242"
+          }
+        ]
+      },
+      {
+        "rank": 25,
+        "bioguide": "B000468",
+        "turns": 483,
+        "words": 337296,
+        "active_days": 130,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 49,
+        "bills_passed": 4,
+        "bills_enacted": 1,
+        "passage_share": 0.0816326531,
+        "enactment_share": 0.0204081633,
+        "speaker_name": "Mr. BINGAMAN",
+        "party": "D",
+        "state": "NM",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/B000468",
+        "examples": [
+          {
+            "bill_id": "106-s-3286",
+            "label": "S 3286",
+            "title": "PILT and Refuge Revenue Sharing Permanent Funding Act",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/3286"
+          },
+          {
+            "bill_id": "106-s-3282",
+            "label": "S 3282",
+            "title": "Department of Energy University Nuclear Science and Engineering Act",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/3282"
+          },
+          {
+            "bill_id": "106-s-3278",
+            "label": "S 3278",
+            "title": "Department of Energy Nanoscale Science and Engineering Act",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/3278"
+          }
+        ]
+      }
+    ],
+    "passed": [
+      {
+        "rank": 1,
+        "bioguide": "C000077",
+        "turns": 428,
+        "words": 378047,
+        "active_days": 136,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 68,
+        "bills_passed": 20,
+        "bills_enacted": 12,
+        "passage_share": 0.2941176471,
+        "enactment_share": 0.1764705882,
+        "speaker_name": "Mr. CAMPBELL",
+        "party": "R",
+        "state": "CO",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/C000077",
+        "examples": [
+          {
+            "bill_id": "106-s-2950",
+            "label": "S 2950",
+            "title": "Sand Creek Massacre National Historic Site Establishment Act of 2000 ",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/2950"
+          },
+          {
+            "bill_id": "106-s-2872",
+            "label": "S 2872",
+            "title": "Indian Arts and Crafts Enforcement Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/2872"
+          },
+          {
+            "bill_id": "106-s-2719",
+            "label": "S 2719",
+            "title": "Native American Business Development, Trade Promotion, and Tourism Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/2719"
+          }
+        ]
+      },
+      {
+        "rank": 2,
+        "bioguide": "M001085",
+        "turns": 949,
+        "words": 479126,
+        "active_days": 174,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 70,
+        "bills_passed": 19,
+        "bills_enacted": 7,
+        "passage_share": 0.2714285714,
+        "enactment_share": 0.1,
+        "speaker_name": "Mr. MURKOWSKI",
+        "party": "R",
+        "state": "AK",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/M001085",
+        "examples": [
+          {
+            "bill_id": "106-s-2511",
+            "label": "S 2511",
+            "title": "Kenai Mountains-Turnagain Arm National Heritage  Area Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/2511"
+          },
+          {
+            "bill_id": "106-s-2439",
+            "label": "S 2439",
+            "title": "A bill to authorize the appropriation of funds for the construction of the Southeastern Alaska Intertie system, and for other purposes.",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/2439"
+          },
+          {
+            "bill_id": "106-s-2253",
+            "label": "S 2253",
+            "title": "Rails to Resources Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/2253"
+          }
+        ]
+      },
+      {
+        "rank": 3,
+        "bioguide": "H000338",
+        "turns": 1375,
+        "words": 600846,
+        "active_days": 161,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 70,
+        "bills_passed": 16,
+        "bills_enacted": 10,
+        "passage_share": 0.2285714286,
+        "enactment_share": 0.1428571429,
+        "speaker_name": "Mr. HATCH",
+        "party": "R",
+        "state": "UT",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/H000338",
+        "examples": [
+          {
+            "bill_id": "106-s-2869",
+            "label": "S 2869",
+            "title": "Religious Land Use and Institutionalized Persons Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/2869"
+          },
+          {
+            "bill_id": "106-s-2812",
+            "label": "S 2812",
+            "title": "A bill to amend the Immigration and Nationality Act to provide a waiver of the oath of renunciation and allegiance for naturalization of aliens having certain disabilities.",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/2812"
+          },
+          {
+            "bill_id": "106-s-2045",
+            "label": "S 2045",
+            "title": "Kids 2000 Act",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/2045"
+          }
+        ]
+      },
+      {
+        "rank": 4,
+        "bioguide": "G000212",
+        "turns": 1135,
+        "words": 287868,
+        "active_days": 158,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 49,
+        "bills_passed": 15,
+        "bills_enacted": 8,
+        "passage_share": 0.306122449,
+        "enactment_share": 0.1632653061,
+        "speaker_name": "Mr. GILMAN",
+        "party": "R",
+        "state": "NY",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/G000212",
+        "examples": [
+          {
+            "bill_id": "106-hr-5272",
+            "label": "HR 5272",
+            "title": "Peace Through Negotiations Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/5272"
+          },
+          {
+            "bill_id": "106-hr-5239",
+            "label": "HR 5239",
+            "title": "Export Administration Modification and Clarification Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/5239"
+          },
+          {
+            "bill_id": "106-hr-5224",
+            "label": "HR 5224",
+            "title": "International Food Relief Partnership Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/5224"
+          }
+        ]
+      },
+      {
+        "rank": 5,
+        "bioguide": "S000394",
+        "turns": 488,
+        "words": 100467,
+        "active_days": 48,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 27,
+        "bills_passed": 15,
+        "bills_enacted": 4,
+        "passage_share": 0.5555555556,
+        "enactment_share": 0.1481481481,
+        "speaker_name": "Mr. SHUSTER",
+        "party": "R",
+        "state": "PA",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/S000394",
+        "examples": [
+          {
+            "bill_id": "106-hr-5637",
+            "label": "HR 5637",
+            "title": "To provide that an amount available for fiscal year 2001 for the Department of Transportation shall be available to reimburse certain costs incurred for clean-up of former Coast Guard facilities at Cape May, New Jersey, and to authorize the Coast Guard to transfer funds and authority for demolition and removal of a structure at former Coast Guard property in Traverse City, Michigan.",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/5637"
+          },
+          {
+            "bill_id": "106-hr-4844",
+            "label": "HR 4844",
+            "title": "Railroad Retirement and Survivors' Improvement Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/4844"
+          },
+          {
+            "bill_id": "106-hr-4052",
+            "label": "HR 4052",
+            "title": "Transportation and Infrastructure Reports Restoration Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/4052"
+          }
+        ]
+      },
+      {
+        "rank": 6,
+        "bioguide": "Y000033",
+        "turns": 405,
+        "words": 124315,
+        "active_days": 37,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 50,
+        "bills_passed": 14,
+        "bills_enacted": 7,
+        "passage_share": 0.28,
+        "enactment_share": 0.14,
+        "speaker_name": "Mr. YOUNG",
+        "party": "R",
+        "state": "AK",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/Y000033",
+        "examples": [
+          {
+            "bill_id": "106-hr-5388",
+            "label": "HR 5388",
+            "title": "To designate a building proposed to be located within the boundaries of the Chincoteague National Wildlife Refuge, as the \"Herbert H. Bateman Educational and Administrative Center\".",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/5388"
+          },
+          {
+            "bill_id": "106-hr-4345",
+            "label": "HR 4345",
+            "title": "Alaska Native Claims Technical Amendments Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/4345"
+          },
+          {
+            "bill_id": "106-hr-4148",
+            "label": "HR 4148",
+            "title": "Tribal Contract Support Cost Technical Amendments of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/4148"
+          }
+        ]
+      },
+      {
+        "rank": 7,
+        "bioguide": "M000350",
+        "turns": 307,
+        "words": 115019,
+        "active_days": 57,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 53,
+        "bills_passed": 12,
+        "bills_enacted": 3,
+        "passage_share": 0.2264150943,
+        "enactment_share": 0.0566037736,
+        "speaker_name": "Mr. McCOLLUM",
+        "party": "R",
+        "state": "FL",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/M000350",
+        "examples": [
+          {
+            "bill_id": "106-hr-5312",
+            "label": "HR 5312",
+            "title": "Protecting Our Children From Drugs Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/5312"
+          },
+          {
+            "bill_id": "106-hr-5136",
+            "label": "HR 5136",
+            "title": "To make permanent the authority of the Marshal of the Supreme Court and the Supreme Court Police to provide security beyond the Supreme Court building and grounds.",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/5136"
+          },
+          {
+            "bill_id": "106-hr-5062",
+            "label": "HR 5062",
+            "title": "To establish the eligibility of certain aliens lawfully admitted for permanent residence for cancellation of removal under section 240A of the Immigration and Nationality Act.",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/5062"
+          }
+        ]
+      },
+      {
+        "rank": 8,
+        "bioguide": "T000024",
+        "turns": 123,
+        "words": 46166,
+        "active_days": 25,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 37,
+        "bills_passed": 12,
+        "bills_enacted": 3,
+        "passage_share": 0.3243243243,
+        "enactment_share": 0.0810810811,
+        "speaker_name": "Mr. TALENT",
+        "party": "R",
+        "state": "MO",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/T000024",
+        "examples": [
+          {
+            "bill_id": "106-hr-4945",
+            "label": "HR 4945",
+            "title": "Small Business Competition Preservation Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/4945"
+          },
+          {
+            "bill_id": "106-hr-3845",
+            "label": "HR 3845",
+            "title": "Small Business Investment Corrections Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/3845"
+          },
+          {
+            "bill_id": "106-hr-3843",
+            "label": "HR 3843",
+            "title": "Small Business Reauthorization Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/3843"
+          }
+        ]
+      },
+      {
+        "rank": 9,
+        "bioguide": "M000303",
+        "turns": 1257,
+        "words": 617742,
+        "active_days": 176,
+        "profanity_hits": 2,
+        "profanity_quoted_hits": 1,
+        "bills_sponsored": 91,
+        "bills_passed": 11,
+        "bills_enacted": 2,
+        "passage_share": 0.1208791209,
+        "enactment_share": 0.021978022,
+        "speaker_name": "Mr. McCAIN",
+        "party": "R",
+        "state": "AZ",
+        "chamber": "senate",
+        "profanity_per_100k": 0.3237597573,
+        "member_url": "https://bioguide.congress.gov/search/bio/M000303",
+        "examples": [
+          {
+            "bill_id": "106-s-2487",
+            "label": "S 2487",
+            "title": "Maritime Administration Authorization Act for Fiscal Year 2001",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/2487"
+          },
+          {
+            "bill_id": "106-s-2438",
+            "label": "S 2438",
+            "title": "Pipeline Safety Improvement Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/2438"
+          },
+          {
+            "bill_id": "106-s-2412",
+            "label": "S 2412",
+            "title": "National Transportation Safety Board Amendments Act of 2000\r\n",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/2412"
+          }
+        ]
+      },
+      {
+        "rank": 10,
+        "bioguide": "F000062",
+        "turns": 591,
+        "words": 411570,
+        "active_days": 154,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 74,
+        "bills_passed": 11,
+        "bills_enacted": 5,
+        "passage_share": 0.1486486486,
+        "enactment_share": 0.0675675676,
+        "speaker_name": "Mrs. FEINSTEIN",
+        "party": "D",
+        "state": "CA",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/F000062",
+        "examples": [
+          {
+            "bill_id": "106-s-2977",
+            "label": "S 2977",
+            "title": "A bill to assist in the establishment of an interpretive center and museum in the vicinity of the Diamond Valley Lake in southern California to ensure the protection and interpretation of the paleontology discoveries made at the lake and to develop a trail system for the lake for use by pedestrians and nonmotorized vehicles.",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/2977"
+          },
+          {
+            "bill_id": "106-s-2386",
+            "label": "S 2386",
+            "title": "Semipostal Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/2386"
+          },
+          {
+            "bill_id": "106-s-2111",
+            "label": "S 2111",
+            "title": "A bill to direct the Secretary of Agriculture to convey for fair market value 1.06 acres of land in the San Bernardino National Forest, California, to KATY 101.3 FM, a California corporation.",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/2111"
+          }
+        ]
+      },
+      {
+        "rank": 11,
+        "bioguide": "C000556",
+        "turns": 201,
+        "words": 66769,
+        "active_days": 38,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 56,
+        "bills_passed": 11,
+        "bills_enacted": 3,
+        "passage_share": 0.1964285714,
+        "enactment_share": 0.0535714286,
+        "speaker_name": "Mr. COBLE",
+        "party": "R",
+        "state": "NC",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/C000556",
+        "examples": [
+          {
+            "bill_id": "106-hr-5562",
+            "label": "HR 5562",
+            "title": "Multidistrict Litigation Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/5562"
+          },
+          {
+            "bill_id": "106-hr-5107",
+            "label": "HR 5107",
+            "title": "Work Made for Hire and Copyright Corrections Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/5107"
+          },
+          {
+            "bill_id": "106-hr-5106",
+            "label": "HR 5106",
+            "title": "Copyright Technical Corrections Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/5106"
+          }
+        ]
+      },
+      {
+        "rank": 12,
+        "bioguide": "L000155",
+        "turns": 254,
+        "words": 102143,
+        "active_days": 47,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 28,
+        "bills_passed": 11,
+        "bills_enacted": 5,
+        "passage_share": 0.3928571429,
+        "enactment_share": 0.1785714286,
+        "speaker_name": "Mr. LAZIO",
+        "party": "R",
+        "state": "NY",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/L000155",
+        "examples": [
+          {
+            "bill_id": "106-hr-5267",
+            "label": "HR 5267",
+            "title": "To designate the United States courthouse located at 100 Federal Plaza in Central Islip, New York, as the \"Theodore Roosevelt United States Courthouse\".",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/5267"
+          },
+          {
+            "bill_id": "106-hr-5193",
+            "label": "HR 5193",
+            "title": "FHA Downpayment Simplification Extension Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/5193"
+          },
+          {
+            "bill_id": "106-hr-4920",
+            "label": "HR 4920",
+            "title": "Developmental Disabilities Assistance and Bill of Rights Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/4920"
+          }
+        ]
+      },
+      {
+        "rank": 13,
+        "bioguide": "H000172",
+        "turns": 562,
+        "words": 192747,
+        "active_days": 58,
+        "profanity_hits": 1,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 23,
+        "bills_passed": 11,
+        "bills_enacted": 8,
+        "passage_share": 0.4782608696,
+        "enactment_share": 0.347826087,
+        "speaker_name": "Mr. HANSEN",
+        "party": "R",
+        "state": "UT",
+        "chamber": "house",
+        "profanity_per_100k": 0.5188148194,
+        "member_url": "https://bioguide.congress.gov/search/bio/H000172",
+        "examples": [
+          {
+            "bill_id": "106-hr-4721",
+            "label": "HR 4721",
+            "title": "To provide for all right, title, and interest in and to certain property in Washington County, Utah, to be vested in the United States.",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/4721"
+          },
+          {
+            "bill_id": "106-hr-4583",
+            "label": "HR 4583",
+            "title": "To extend the authorization for the Air Force Memorial Foundation to establish a memorial in the District of Columbia or its environs.",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/4583"
+          },
+          {
+            "bill_id": "106-hr-4579",
+            "label": "HR 4579",
+            "title": "Utah West Desert Land Exchange Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/4579"
+          }
+        ]
+      },
+      {
+        "rank": 14,
+        "bioguide": "S000097",
+        "turns": 174,
+        "words": 55828,
+        "active_days": 32,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 55,
+        "bills_passed": 10,
+        "bills_enacted": 2,
+        "passage_share": 0.1818181818,
+        "enactment_share": 0.0363636364,
+        "speaker_name": "Mr. SAXTON",
+        "party": "R",
+        "state": "NJ",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/S000097",
+        "examples": [
+          {
+            "bill_id": "106-hr-5086",
+            "label": "HR 5086",
+            "title": "Coastal and Fisheries Improvement Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/5086"
+          },
+          {
+            "bill_id": "106-hr-4840",
+            "label": "HR 4840",
+            "title": "Atlantic Coastal Fisheries Act of 2000 ",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/4840"
+          },
+          {
+            "bill_id": "106-hr-4442",
+            "label": "HR 4442",
+            "title": "National Wildlife Refuge System Centennial Act",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/4442"
+          }
+        ]
+      },
+      {
+        "rank": 15,
+        "bioguide": "W000154",
+        "turns": 2215,
+        "words": 447239,
+        "active_days": 139,
+        "profanity_hits": 2,
+        "profanity_quoted_hits": 4,
+        "bills_sponsored": 33,
+        "bills_passed": 10,
+        "bills_enacted": 2,
+        "passage_share": 0.303030303,
+        "enactment_share": 0.0606060606,
+        "speaker_name": "Mr. WARNER",
+        "party": "R",
+        "state": "VA",
+        "chamber": "senate",
+        "profanity_per_100k": 0.4471881924,
+        "member_url": "https://bioguide.congress.gov/search/bio/W000154",
+        "examples": [
+          {
+            "bill_id": "106-s-2885",
+            "label": "S 2885",
+            "title": "Jamestown 400th Commemoration Commission Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/2885"
+          },
+          {
+            "bill_id": "106-s-2552",
+            "label": "S 2552",
+            "title": "Department of Energy National Security Act for Fiscal Year 2001",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/2552"
+          },
+          {
+            "bill_id": "106-s-2551",
+            "label": "S 2551",
+            "title": "Military Construction Authorization Act for Fiscal Year 2001",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/2551"
+          }
+        ]
+      },
+      {
+        "rank": 16,
+        "bioguide": "L000169",
+        "turns": 204,
+        "words": 185173,
+        "active_days": 41,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 24,
+        "bills_passed": 10,
+        "bills_enacted": 6,
+        "passage_share": 0.4166666667,
+        "enactment_share": 0.25,
+        "speaker_name": "Mr. LEACH",
+        "party": "R",
+        "state": "IA",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/L000169",
+        "examples": [
+          {
+            "bill_id": "106-hr-5640",
+            "label": "HR 5640",
+            "title": "American Homeownership and Economic Opportunity Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/5640"
+          },
+          {
+            "bill_id": "106-hr-3544",
+            "label": "HR 3544",
+            "title": "Pope John Paul II Congressional Gold Medal Act",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/3544"
+          },
+          {
+            "bill_id": "106-hr-3519",
+            "label": "HR 3519",
+            "title": "Global AIDS and Tuberculosis Relief Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/3519"
+          }
+        ]
+      },
+      {
+        "rank": 17,
+        "bioguide": "F000439",
+        "turns": 458,
+        "words": 238959,
+        "active_days": 102,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 43,
+        "bills_passed": 9,
+        "bills_enacted": 2,
+        "passage_share": 0.2093023256,
+        "enactment_share": 0.0465116279,
+        "speaker_name": "Mr. FRIST",
+        "party": "R",
+        "state": "TN",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/F000439",
+        "examples": [
+          {
+            "bill_id": "106-s-3201",
+            "label": "S 3201",
+            "title": "A bill to rename the National Museum of American Art.",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/3201"
+          },
+          {
+            "bill_id": "106-s-2677",
+            "label": "S 2677",
+            "title": "Zimbabwe Democracy Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/2677"
+          },
+          {
+            "bill_id": "106-s-2046",
+            "label": "S 2046",
+            "title": "Federal Research Investment Act",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/2046"
+          }
+        ]
+      },
+      {
+        "rank": 18,
+        "bioguide": "D000407",
+        "turns": 1976,
+        "words": 566262,
+        "active_days": 172,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 39,
+        "bills_passed": 9,
+        "bills_enacted": 5,
+        "passage_share": 0.2307692308,
+        "enactment_share": 0.1282051282,
+        "speaker_name": "Mr. DOMENICI",
+        "party": "R",
+        "state": "NM",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/D000407",
+        "examples": [
+          {
+            "bill_id": "106-s-2917",
+            "label": "S 2917",
+            "title": "Santo Domingo Pueblo Claims Settlement Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/2917"
+          },
+          {
+            "bill_id": "106-s-2757",
+            "label": "S 2757",
+            "title": "A bill to provide for the transfer or other disposition of certain lands at Melrose Air Force Range, New Mexico, and Yakima Training Center, Washington.",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/2757"
+          },
+          {
+            "bill_id": "106-s-1892",
+            "label": "S 1892",
+            "title": "A bill to authorize the acquisition of the Valles Caldera, to provide for an effective land and wildlife management program for this resource within the Department of Agriculture, and for other purposes.",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/1892"
+          }
+        ]
+      },
+      {
+        "rank": 19,
+        "bioguide": "B001126",
+        "turns": 389,
+        "words": 122907,
+        "active_days": 136,
+        "profanity_hits": 1,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 29,
+        "bills_passed": 9,
+        "bills_enacted": 6,
+        "passage_share": 0.3103448276,
+        "enactment_share": 0.2068965517,
+        "speaker_name": "Mr. BURNS",
+        "party": "R",
+        "state": "MT",
+        "chamber": "senate",
+        "profanity_per_100k": 0.8136233087,
+        "member_url": "https://bioguide.congress.gov/search/bio/B001126",
+        "examples": [
+          {
+            "bill_id": "106-s-2097",
+            "label": "S 2097",
+            "title": "Launching Our Communities' Access to Local Television Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/2097"
+          },
+          {
+            "bill_id": "106-s-1218",
+            "label": "S 1218",
+            "title": "A bill to direct the Secretary of the Interior to issue to the Landusky School District, without consideration, a patent for the surface and mineral estates of certain lots, and for other purposes.",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/1218"
+          },
+          {
+            "bill_id": "106-s-1205",
+            "label": "S 1205",
+            "title": "Military Construction Appropriations Act, 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/1205"
+          }
+        ]
+      },
+      {
+        "rank": 20,
+        "bioguide": "C000567",
+        "turns": 618,
+        "words": 145090,
+        "active_days": 82,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 27,
+        "bills_passed": 9,
+        "bills_enacted": 5,
+        "passage_share": 0.3333333333,
+        "enactment_share": 0.1851851852,
+        "speaker_name": "Mr. COCHRAN",
+        "party": "R",
+        "state": "MS",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/C000567",
+        "examples": [
+          {
+            "bill_id": "106-s-2789",
+            "label": "S 2789",
+            "title": "Congressional Recognition for Excellence in Arts Education Act",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/2789"
+          },
+          {
+            "bill_id": "106-s-2686",
+            "label": "S 2686",
+            "title": "A bill to amend chapter 36 of title 39, United States Code, to modify rates relating to reduced rate mail matter, and for other purposes.",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/2686"
+          },
+          {
+            "bill_id": "106-s-2638",
+            "label": "S 2638",
+            "title": "Pecos National Historical Park Land Exchange Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/2638"
+          }
+        ]
+      },
+      {
+        "rank": 21,
+        "bioguide": "B000556",
+        "turns": 238,
+        "words": 117071,
+        "active_days": 65,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 25,
+        "bills_passed": 9,
+        "bills_enacted": 3,
+        "passage_share": 0.36,
+        "enactment_share": 0.12,
+        "speaker_name": "Mr. BLILEY",
+        "party": "R",
+        "state": "VA",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/B000556",
+        "examples": [
+          {
+            "bill_id": "106-hr-5225",
+            "label": "HR 5225",
+            "title": "Richmond National Battlefield Park Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/5225"
+          },
+          {
+            "bill_id": "106-hr-3261",
+            "label": "HR 3261",
+            "title": "Communications Satellite Competition and Privatization Act of 1999",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/3261"
+          },
+          {
+            "bill_id": "106-hr-2981",
+            "label": "HR 2981",
+            "title": "To extend energy conservation programs under the Energy Policy and Conservation Act through March 31, 2000.",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/2981"
+          }
+        ]
+      },
+      {
+        "rank": 22,
+        "bioguide": "S001142",
+        "turns": 220,
+        "words": 112915,
+        "active_days": 77,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 19,
+        "bills_passed": 9,
+        "bills_enacted": 5,
+        "passage_share": 0.4736842105,
+        "enactment_share": 0.2631578947,
+        "speaker_name": "Mr. SMITH",
+        "party": "R",
+        "state": "OR",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/S001142",
+        "examples": [
+          {
+            "bill_id": "106-s-2882",
+            "label": "S 2882",
+            "title": "Klamath Basin Water Supply Enhancement Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/2882"
+          },
+          {
+            "bill_id": "106-s-2425",
+            "label": "S 2425",
+            "title": "Bend Feed Canal Pipeline Project Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/2425"
+          },
+          {
+            "bill_id": "106-s-1697",
+            "label": "S 1697",
+            "title": "Reclamation Reform Refund Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/1697"
+          }
+        ]
+      },
+      {
+        "rank": 23,
+        "bioguide": "A000355",
+        "turns": 667,
+        "words": 371607,
+        "active_days": 169,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 52,
+        "bills_passed": 8,
+        "bills_enacted": 5,
+        "passage_share": 0.1538461538,
+        "enactment_share": 0.0961538462,
+        "speaker_name": "Mr. ABRAHAM",
+        "party": "R",
+        "state": "MI",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/A000355",
+        "examples": [
+          {
+            "bill_id": "106-s-3276",
+            "label": "S 3276",
+            "title": "A bill to make technical corrections to the College Scholarship Fraud Prevention Act of 2000 and certain amendments made by that Act.",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/3276"
+          },
+          {
+            "bill_id": "106-s-2406",
+            "label": "S 2406",
+            "title": "Mother Teresa Religious Workers Act",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/2406"
+          },
+          {
+            "bill_id": "106-s-1455",
+            "label": "S 1455",
+            "title": "College Scholarship Fraud Prevention Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/1455"
+          }
+        ]
+      },
+      {
+        "rank": 24,
+        "bioguide": "T000188",
+        "turns": 348,
+        "words": 60857,
+        "active_days": 66,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 31,
+        "bills_passed": 8,
+        "bills_enacted": 4,
+        "passage_share": 0.2580645161,
+        "enactment_share": 0.1290322581,
+        "speaker_name": "Mr. THOMAS",
+        "party": "R",
+        "state": "CA",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/T000188",
+        "examples": [
+          {
+            "bill_id": "106-hr-5410",
+            "label": "HR 5410",
+            "title": "Library of Congress Fiscal Operations Improvement Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/5410"
+          },
+          {
+            "bill_id": "106-hr-5174",
+            "label": "HR 5174",
+            "title": "To amend titles 10 and 18, United States Code, and the Revised Statutes to remove the uncertainty regarding the authority of the Department of Defense to permit buildings located on military installations and reserve component facilities to be used as polling places in Federal, State, and local elections for public office.",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/5174"
+          },
+          {
+            "bill_id": "106-hr-4846",
+            "label": "HR 4846",
+            "title": "National Recording Preservation Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/4846"
+          }
+        ]
+      },
+      {
+        "rank": 25,
+        "bioguide": "K000352",
+        "turns": 447,
+        "words": 288383,
+        "active_days": 91,
+        "profanity_hits": 2,
+        "profanity_quoted_hits": 1,
+        "bills_sponsored": 27,
+        "bills_passed": 8,
+        "bills_enacted": 6,
+        "passage_share": 0.2962962963,
+        "enactment_share": 0.2222222222,
+        "speaker_name": "Mr. KYL",
+        "party": "R",
+        "state": "AZ",
+        "chamber": "senate",
+        "profanity_per_100k": 0.6935221563,
+        "member_url": "https://bioguide.congress.gov/search/bio/K000352",
+        "examples": [
+          {
+            "bill_id": "106-s-3205",
+            "label": "S 3205",
+            "title": "Counterterrorism Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/3205"
+          },
+          {
+            "bill_id": "106-s-2019",
+            "label": "S 2019",
+            "title": "A bill for the relief of Malia Miller.",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/2019"
+          },
+          {
+            "bill_id": "106-s-1595",
+            "label": "S 1595",
+            "title": "A bill to designate the United States courthouse at 401 West Washington Street in Phoenix, Arizona, as the \"Sandra Day O'Connor United States Courthouse\".",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/1595"
+          }
+        ]
+      }
+    ],
+    "enacted": [
+      {
+        "rank": 1,
+        "bioguide": "C000077",
+        "turns": 428,
+        "words": 378047,
+        "active_days": 136,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 68,
+        "bills_passed": 20,
+        "bills_enacted": 12,
+        "passage_share": 0.2941176471,
+        "enactment_share": 0.1764705882,
+        "speaker_name": "Mr. CAMPBELL",
+        "party": "R",
+        "state": "CO",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/C000077",
+        "examples": [
+          {
+            "bill_id": "106-s-2950",
+            "label": "S 2950",
+            "title": "Sand Creek Massacre National Historic Site Establishment Act of 2000 ",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/2950"
+          },
+          {
+            "bill_id": "106-s-2872",
+            "label": "S 2872",
+            "title": "Indian Arts and Crafts Enforcement Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/2872"
+          },
+          {
+            "bill_id": "106-s-2719",
+            "label": "S 2719",
+            "title": "Native American Business Development, Trade Promotion, and Tourism Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/2719"
+          }
+        ]
+      },
+      {
+        "rank": 2,
+        "bioguide": "H000338",
+        "turns": 1375,
+        "words": 600846,
+        "active_days": 161,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 70,
+        "bills_passed": 16,
+        "bills_enacted": 10,
+        "passage_share": 0.2285714286,
+        "enactment_share": 0.1428571429,
+        "speaker_name": "Mr. HATCH",
+        "party": "R",
+        "state": "UT",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/H000338",
+        "examples": [
+          {
+            "bill_id": "106-s-2869",
+            "label": "S 2869",
+            "title": "Religious Land Use and Institutionalized Persons Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/2869"
+          },
+          {
+            "bill_id": "106-s-2812",
+            "label": "S 2812",
+            "title": "A bill to amend the Immigration and Nationality Act to provide a waiver of the oath of renunciation and allegiance for naturalization of aliens having certain disabilities.",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/2812"
+          },
+          {
+            "bill_id": "106-s-2045",
+            "label": "S 2045",
+            "title": "Kids 2000 Act",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/2045"
+          }
+        ]
+      },
+      {
+        "rank": 3,
+        "bioguide": "G000212",
+        "turns": 1135,
+        "words": 287868,
+        "active_days": 158,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 49,
+        "bills_passed": 15,
+        "bills_enacted": 8,
+        "passage_share": 0.306122449,
+        "enactment_share": 0.1632653061,
+        "speaker_name": "Mr. GILMAN",
+        "party": "R",
+        "state": "NY",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/G000212",
+        "examples": [
+          {
+            "bill_id": "106-hr-5239",
+            "label": "HR 5239",
+            "title": "Export Administration Modification and Clarification Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/5239"
+          },
+          {
+            "bill_id": "106-hr-4919",
+            "label": "HR 4919",
+            "title": "Security Assistance Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/4919"
+          },
+          {
+            "bill_id": "106-hr-2909",
+            "label": "HR 2909",
+            "title": "Intercountry Adoption Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/2909"
+          }
+        ]
+      },
+      {
+        "rank": 4,
+        "bioguide": "H000172",
+        "turns": 562,
+        "words": 192747,
+        "active_days": 58,
+        "profanity_hits": 1,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 23,
+        "bills_passed": 11,
+        "bills_enacted": 8,
+        "passage_share": 0.4782608696,
+        "enactment_share": 0.347826087,
+        "speaker_name": "Mr. HANSEN",
+        "party": "R",
+        "state": "UT",
+        "chamber": "house",
+        "profanity_per_100k": 0.5188148194,
+        "member_url": "https://bioguide.congress.gov/search/bio/H000172",
+        "examples": [
+          {
+            "bill_id": "106-hr-4583",
+            "label": "HR 4583",
+            "title": "To extend the authorization for the Air Force Memorial Foundation to establish a memorial in the District of Columbia or its environs.",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/4583"
+          },
+          {
+            "bill_id": "106-hr-4579",
+            "label": "HR 4579",
+            "title": "Utah West Desert Land Exchange Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/4579"
+          },
+          {
+            "bill_id": "106-hr-4404",
+            "label": "HR 4404",
+            "title": "To permit the payment of medical expenses incurred by the United States Park Police in the performance of duty to be made directly by the National Park Service, to allow for waiver and indemnification in mutual law enforcement agreements between the National Park Service and a State or political subdivision when required by State law, and for other purposes.",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/4404"
+          }
+        ]
+      },
+      {
+        "rank": 5,
+        "bioguide": "M001085",
+        "turns": 949,
+        "words": 479126,
+        "active_days": 174,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 70,
+        "bills_passed": 19,
+        "bills_enacted": 7,
+        "passage_share": 0.2714285714,
+        "enactment_share": 0.1,
+        "speaker_name": "Mr. MURKOWSKI",
+        "party": "R",
+        "state": "AK",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/M001085",
+        "examples": [
+          {
+            "bill_id": "106-s-1367",
+            "label": "S 1367",
+            "title": "A bill to amend the Act which established the Saint-Gaudens Historic Site, in the State of New Hampshire, by modifying the boundary and for other purposes.",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/1367"
+          },
+          {
+            "bill_id": "106-s-748",
+            "label": "S 748",
+            "title": "A bill to improve Native hiring and contracting by the Federal Government within the State of Alaska, and for other purposes.",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/748"
+          },
+          {
+            "bill_id": "106-s-698",
+            "label": "S 698",
+            "title": "A bill to review the suitability and feasibility of recovering costs of high altitude rescues at Denali National Park and Preserve in the State of Alaska, and for other purposes.",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/698"
+          }
+        ]
+      },
+      {
+        "rank": 6,
+        "bioguide": "Y000033",
+        "turns": 405,
+        "words": 124315,
+        "active_days": 37,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 50,
+        "bills_passed": 14,
+        "bills_enacted": 7,
+        "passage_share": 0.28,
+        "enactment_share": 0.14,
+        "speaker_name": "Mr. YOUNG",
+        "party": "R",
+        "state": "AK",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/Y000033",
+        "examples": [
+          {
+            "bill_id": "106-hr-5388",
+            "label": "HR 5388",
+            "title": "To designate a building proposed to be located within the boundaries of the Chincoteague National Wildlife Refuge, as the \"Herbert H. Bateman Educational and Administrative Center\".",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/5388"
+          },
+          {
+            "bill_id": "106-hr-3903",
+            "label": "HR 3903",
+            "title": "To deem the vessel M/V MIST COVE to be less than 100 gross tons, as measured under chapter 145 of title 46, United States Code.",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/3903"
+          },
+          {
+            "bill_id": "106-hr-3671",
+            "label": "HR 3671",
+            "title": "Fish and Wildlife Programs Improvement and National Wildlife Refuge System Centennial Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/3671"
+          }
+        ]
+      },
+      {
+        "rank": 7,
+        "bioguide": "C000984",
+        "turns": 228,
+        "words": 63810,
+        "active_days": 82,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 14,
+        "bills_passed": 7,
+        "bills_enacted": 7,
+        "passage_share": 0.5,
+        "enactment_share": 0.5,
+        "speaker_name": "Mr. CUMMINGS",
+        "party": "D",
+        "state": "MD",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/C000984",
+        "examples": [
+          {
+            "bill_id": "106-hr-4451",
+            "label": "HR 4451",
+            "title": "To designate the facility of the United States Postal Service located at 1001 Frederick Road in Baltimore, Maryland, as the \"Frederick L. Dewberry, Jr. Post Office Building\".",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/4451"
+          },
+          {
+            "bill_id": "106-hr-4450",
+            "label": "HR 4450",
+            "title": "To designate the facility of the United States Postal Service located at 900 East Fayette Street in Baltimore, Maryland, as the \"Judge Harry Augustus Cole Post Office Building\".",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/4450"
+          },
+          {
+            "bill_id": "106-hr-4449",
+            "label": "HR 4449",
+            "title": "To designate the facility of the United States Postal Service located at 1908 North Ellamont Street in Baltimore, Maryland, as the \"Dr. Flossie McClain Dedmond Post Office Building\".",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/4449"
+          }
+        ]
+      },
+      {
+        "rank": 8,
+        "bioguide": "B001126",
+        "turns": 389,
+        "words": 122907,
+        "active_days": 136,
+        "profanity_hits": 1,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 29,
+        "bills_passed": 9,
+        "bills_enacted": 6,
+        "passage_share": 0.3103448276,
+        "enactment_share": 0.2068965517,
+        "speaker_name": "Mr. BURNS",
+        "party": "R",
+        "state": "MT",
+        "chamber": "senate",
+        "profanity_per_100k": 0.8136233087,
+        "member_url": "https://bioguide.congress.gov/search/bio/B001126",
+        "examples": [
+          {
+            "bill_id": "106-s-1218",
+            "label": "S 1218",
+            "title": "A bill to direct the Secretary of the Interior to issue to the Landusky School District, without consideration, a patent for the surface and mineral estates of certain lots, and for other purposes.",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/1218"
+          },
+          {
+            "bill_id": "106-s-800",
+            "label": "S 800",
+            "title": "Wireless Communications and Public Safety Act of 1999",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/800"
+          },
+          {
+            "bill_id": "106-s-624",
+            "label": "S 624",
+            "title": "Fort Peck Reservation Rural Water System Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/624"
+          }
+        ]
+      },
+      {
+        "rank": 9,
+        "bioguide": "C000858",
+        "turns": 949,
+        "words": 407588,
+        "active_days": 176,
+        "profanity_hits": 1,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 29,
+        "bills_passed": 6,
+        "bills_enacted": 6,
+        "passage_share": 0.2068965517,
+        "enactment_share": 0.2068965517,
+        "speaker_name": "Mr. CRAIG",
+        "party": "R",
+        "state": "ID",
+        "chamber": "senate",
+        "profanity_per_100k": 0.2453457904,
+        "member_url": "https://bioguide.congress.gov/search/bio/C000858",
+        "examples": [
+          {
+            "bill_id": "106-s-3022",
+            "label": "S 3022",
+            "title": "Nampa and Meridian Conveyance Act",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/3022"
+          },
+          {
+            "bill_id": "106-s-1937",
+            "label": "S 1937",
+            "title": "A bill to amend the Pacific Northwest Electric Power Planning and Conservation Act to provide for sales of electricity by the Bonneville Power Administration to joint operating entities.",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/1937"
+          },
+          {
+            "bill_id": "106-s-1778",
+            "label": "S 1778",
+            "title": "A bill to provide for equal exchanges of land around the Cascade Reservoir.",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/1778"
+          }
+        ]
+      },
+      {
+        "rank": 10,
+        "bioguide": "K000352",
+        "turns": 447,
+        "words": 288383,
+        "active_days": 91,
+        "profanity_hits": 2,
+        "profanity_quoted_hits": 1,
+        "bills_sponsored": 27,
+        "bills_passed": 8,
+        "bills_enacted": 6,
+        "passage_share": 0.2962962963,
+        "enactment_share": 0.2222222222,
+        "speaker_name": "Mr. KYL",
+        "party": "R",
+        "state": "AZ",
+        "chamber": "senate",
+        "profanity_per_100k": 0.6935221563,
+        "member_url": "https://bioguide.congress.gov/search/bio/K000352",
+        "examples": [
+          {
+            "bill_id": "106-s-2019",
+            "label": "S 2019",
+            "title": "A bill for the relief of Malia Miller.",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/2019"
+          },
+          {
+            "bill_id": "106-s-1595",
+            "label": "S 1595",
+            "title": "A bill to designate the United States courthouse at 401 West Washington Street in Phoenix, Arizona, as the \"Sandra Day O'Connor United States Courthouse\".",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/1595"
+          },
+          {
+            "bill_id": "106-s-1275",
+            "label": "S 1275",
+            "title": "Hoover Dam Miscellaneous Sales Act",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/1275"
+          }
+        ]
+      },
+      {
+        "rank": 11,
+        "bioguide": "G000152",
+        "turns": 402,
+        "words": 95878,
+        "active_days": 212,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 25,
+        "bills_passed": 6,
+        "bills_enacted": 6,
+        "passage_share": 0.24,
+        "enactment_share": 0.24,
+        "speaker_name": "Mr. GIBBONS",
+        "party": "R",
+        "state": "NV",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/G000152",
+        "examples": [
+          {
+            "bill_id": "106-hr-4656",
+            "label": "HR 4656",
+            "title": "To authorize the Forest Service to convey certain lands in the Lake Tahoe Basin to the Washoe County School District for use as an elementary school site.",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/4656"
+          },
+          {
+            "bill_id": "106-hr-4169",
+            "label": "HR 4169",
+            "title": "To designate the facility of the United States Postal Service located at 2000 Vassar Street in Reno, Nevada, as the \"Barbara F. Vucanovich Post Office Building\".",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/4169"
+          },
+          {
+            "bill_id": "106-hr-3591",
+            "label": "HR 3591",
+            "title": "To provide for the award of a gold medal on behalf of the Congress to former President Ronald Reagan and his wife Nancy Reagan in recognition of their service to the Nation.",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/3591"
+          }
+        ]
+      },
+      {
+        "rank": 12,
+        "bioguide": "L000169",
+        "turns": 204,
+        "words": 185173,
+        "active_days": 41,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 24,
+        "bills_passed": 10,
+        "bills_enacted": 6,
+        "passage_share": 0.4166666667,
+        "enactment_share": 0.25,
+        "speaker_name": "Mr. LEACH",
+        "party": "R",
+        "state": "IA",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/L000169",
+        "examples": [
+          {
+            "bill_id": "106-hr-5640",
+            "label": "HR 5640",
+            "title": "American Homeownership and Economic Opportunity Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/5640"
+          },
+          {
+            "bill_id": "106-hr-3544",
+            "label": "HR 3544",
+            "title": "Pope John Paul II Congressional Gold Medal Act",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/3544"
+          },
+          {
+            "bill_id": "106-hr-3519",
+            "label": "HR 3519",
+            "title": "Global AIDS and Tuberculosis Relief Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/3519"
+          }
+        ]
+      },
+      {
+        "rank": 13,
+        "bioguide": "F000062",
+        "turns": 591,
+        "words": 411570,
+        "active_days": 154,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 74,
+        "bills_passed": 11,
+        "bills_enacted": 5,
+        "passage_share": 0.1486486486,
+        "enactment_share": 0.0675675676,
+        "speaker_name": "Mrs. FEINSTEIN",
+        "party": "D",
+        "state": "CA",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/F000062",
+        "examples": [
+          {
+            "bill_id": "106-s-2977",
+            "label": "S 2977",
+            "title": "A bill to assist in the establishment of an interpretive center and museum in the vicinity of the Diamond Valley Lake in southern California to ensure the protection and interpretation of the paleontology discoveries made at the lake and to develop a trail system for the lake for use by pedestrians and nonmotorized vehicles.",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/2977"
+          },
+          {
+            "bill_id": "106-s-2002",
+            "label": "S 2002",
+            "title": "A bill for the relief of Tony Lara.",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/2002"
+          },
+          {
+            "bill_id": "106-s-2000",
+            "label": "S 2000",
+            "title": "A bill for the relief of Guy Taylor.",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/2000"
+          }
+        ]
+      },
+      {
+        "rank": 14,
+        "bioguide": "A000355",
+        "turns": 667,
+        "words": 371607,
+        "active_days": 169,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 52,
+        "bills_passed": 8,
+        "bills_enacted": 5,
+        "passage_share": 0.1538461538,
+        "enactment_share": 0.0961538462,
+        "speaker_name": "Mr. ABRAHAM",
+        "party": "R",
+        "state": "MI",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/A000355",
+        "examples": [
+          {
+            "bill_id": "106-s-1455",
+            "label": "S 1455",
+            "title": "College Scholarship Fraud Prevention Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/1455"
+          },
+          {
+            "bill_id": "106-s-761",
+            "label": "S 761",
+            "title": "Electronic Signatures in Global and National Commerce Act\r\n",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/761"
+          },
+          {
+            "bill_id": "106-s-531",
+            "label": "S 531",
+            "title": "A bill to authorize the President to award a gold medal on behalf of the Congress to Rosa Parks in recognition of her contributions to the Nation.",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/531"
+          }
+        ]
+      },
+      {
+        "rank": 15,
+        "bioguide": "D000294",
+        "turns": 358,
+        "words": 275725,
+        "active_days": 101,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 43,
+        "bills_passed": 5,
+        "bills_enacted": 5,
+        "passage_share": 0.1162790698,
+        "enactment_share": 0.1162790698,
+        "speaker_name": "Mr. DeWINE",
+        "party": "R",
+        "state": "OH",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/D000294",
+        "examples": [
+          {
+            "bill_id": "106-s-2272",
+            "label": "S 2272",
+            "title": "Strengthening Abuse and Neglect Courts Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/2272"
+          },
+          {
+            "bill_id": "106-s-1865",
+            "label": "S 1865",
+            "title": "America's Law Enforcement and Mental Health Project",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/1865"
+          },
+          {
+            "bill_id": "106-s-1072",
+            "label": "S 1072",
+            "title": "A bill to make certain technical and other corrections relating to the Centennial of Flight Commemoration Act (36 U.S.C. 143 note; 112 Stat. 3486 et seq.).",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/1072"
+          }
+        ]
+      },
+      {
+        "rank": 16,
+        "bioguide": "D000407",
+        "turns": 1976,
+        "words": 566262,
+        "active_days": 172,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 39,
+        "bills_passed": 9,
+        "bills_enacted": 5,
+        "passage_share": 0.2307692308,
+        "enactment_share": 0.1282051282,
+        "speaker_name": "Mr. DOMENICI",
+        "party": "R",
+        "state": "NM",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/D000407",
+        "examples": [
+          {
+            "bill_id": "106-s-2917",
+            "label": "S 2917",
+            "title": "Santo Domingo Pueblo Claims Settlement Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/2917"
+          },
+          {
+            "bill_id": "106-s-1892",
+            "label": "S 1892",
+            "title": "A bill to authorize the acquisition of the Valles Caldera, to provide for an effective land and wildlife management program for this resource within the Department of Agriculture, and for other purposes.",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/1892"
+          },
+          {
+            "bill_id": "106-s-293",
+            "label": "S 293",
+            "title": "A bill to direct the Secretaries of Agriculture and Interior and to convey certain lands in San Juan County, New Mexico, to San Juan College.",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/293"
+          }
+        ]
+      },
+      {
+        "rank": 17,
+        "bioguide": "L000155",
+        "turns": 254,
+        "words": 102143,
+        "active_days": 47,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 28,
+        "bills_passed": 11,
+        "bills_enacted": 5,
+        "passage_share": 0.3928571429,
+        "enactment_share": 0.1785714286,
+        "speaker_name": "Mr. LAZIO",
+        "party": "R",
+        "state": "NY",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/L000155",
+        "examples": [
+          {
+            "bill_id": "106-hr-5193",
+            "label": "HR 5193",
+            "title": "FHA Downpayment Simplification Extension Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/5193"
+          },
+          {
+            "bill_id": "106-hr-4681",
+            "label": "HR 4681",
+            "title": "To provide for the adjustment of status of certain Syrian nationals.",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/4681"
+          },
+          {
+            "bill_id": "106-hr-2442",
+            "label": "HR 2442",
+            "title": "Wartime Violation of Italian American Civil Liberties Act",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/2442"
+          }
+        ]
+      },
+      {
+        "rank": 18,
+        "bioguide": "M000725",
+        "turns": 317,
+        "words": 73284,
+        "active_days": 58,
+        "profanity_hits": 1,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 28,
+        "bills_passed": 6,
+        "bills_enacted": 5,
+        "passage_share": 0.2142857143,
+        "enactment_share": 0.1785714286,
+        "speaker_name": "Mr. GEORGE MILLER of California",
+        "party": "D",
+        "state": "CA",
+        "chamber": "house",
+        "profanity_per_100k": 1.3645543366,
+        "member_url": "https://bioguide.congress.gov/search/bio/M000725",
+        "examples": [
+          {
+            "bill_id": "106-hr-4320",
+            "label": "HR 4320",
+            "title": "Great Ape Conservation Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/4320"
+          },
+          {
+            "bill_id": "106-hr-4063",
+            "label": "HR 4063",
+            "title": "Rosie the Riveter-World War II Home Front National Historical Park Establishment Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/4063"
+          },
+          {
+            "bill_id": "106-hr-1235",
+            "label": "HR 1235",
+            "title": "To authorize the Secretary of the Interior to enter into contracts with the Solano County Water Agency, California, to use Solano Project facilities for impounding, storage, and carriage of nonproject water for domestic, municipal, industrial, and other beneficial purposes.",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/1235"
+          }
+        ]
+      },
+      {
+        "rank": 19,
+        "bioguide": "C000567",
+        "turns": 618,
+        "words": 145090,
+        "active_days": 82,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 27,
+        "bills_passed": 9,
+        "bills_enacted": 5,
+        "passage_share": 0.3333333333,
+        "enactment_share": 0.1851851852,
+        "speaker_name": "Mr. COCHRAN",
+        "party": "R",
+        "state": "MS",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/C000567",
+        "examples": [
+          {
+            "bill_id": "106-s-2789",
+            "label": "S 2789",
+            "title": "Congressional Recognition for Excellence in Arts Education Act",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/2789"
+          },
+          {
+            "bill_id": "106-s-2686",
+            "label": "S 2686",
+            "title": "A bill to amend chapter 36 of title 39, United States Code, to modify rates relating to reduced rate mail matter, and for other purposes.",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/2686"
+          },
+          {
+            "bill_id": "106-s-2020",
+            "label": "S 2020",
+            "title": "A bill to adjust the boundary of the Natchez Trace Parkway, Mississippi, and for other purposes.",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/2020"
+          }
+        ]
+      },
+      {
+        "rank": 20,
+        "bioguide": "T000162",
+        "turns": 502,
+        "words": 197127,
+        "active_days": 129,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 22,
+        "bills_passed": 6,
+        "bills_enacted": 5,
+        "passage_share": 0.2727272727,
+        "enactment_share": 0.2272727273,
+        "speaker_name": "Mr. THOMAS",
+        "party": "R",
+        "state": "WY",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/T000162",
+        "examples": [
+          {
+            "bill_id": "106-s-2300",
+            "label": "S 2300",
+            "title": "Coal Market Competition Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/2300"
+          },
+          {
+            "bill_id": "106-s-1894",
+            "label": "S 1894",
+            "title": "A bill to provide for the conveyance of certain land to Park County, Wyoming.",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/1894"
+          },
+          {
+            "bill_id": "106-s-1794",
+            "label": "S 1794",
+            "title": "A bill to designate the Federal courthouse at 145 East Simpson Avenue in Jackson, Wyoming, as the \"Clifford P. Hansen Federal Courthouse\".",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/1794"
+          }
+        ]
+      },
+      {
+        "rank": 21,
+        "bioguide": "S001142",
+        "turns": 220,
+        "words": 112915,
+        "active_days": 77,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 19,
+        "bills_passed": 9,
+        "bills_enacted": 5,
+        "passage_share": 0.4736842105,
+        "enactment_share": 0.2631578947,
+        "speaker_name": "Mr. SMITH",
+        "party": "R",
+        "state": "OR",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/S001142",
+        "examples": [
+          {
+            "bill_id": "106-s-2882",
+            "label": "S 2882",
+            "title": "Klamath Basin Water Supply Enhancement Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/2882"
+          },
+          {
+            "bill_id": "106-s-2425",
+            "label": "S 2425",
+            "title": "Bend Feed Canal Pipeline Project Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/2425"
+          },
+          {
+            "bill_id": "106-s-1629",
+            "label": "S 1629",
+            "title": "Oregon Land Exchange Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/1629"
+          }
+        ]
+      },
+      {
+        "rank": 22,
+        "bioguide": "C000116",
+        "turns": 105,
+        "words": 26382,
+        "active_days": 32,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 15,
+        "bills_passed": 5,
+        "bills_enacted": 5,
+        "passage_share": 0.3333333333,
+        "enactment_share": 0.3333333333,
+        "speaker_name": "Mr. CANNON",
+        "party": "R",
+        "state": "UT",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/C000116",
+        "examples": [
+          {
+            "bill_id": "106-hr-5266",
+            "label": "HR 5266",
+            "title": "For the relief of Saeed Rezai.",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/5266"
+          },
+          {
+            "bill_id": "106-hr-4115",
+            "label": "HR 4115",
+            "title": "To authorize appropriations for the United States Holocaust Memorial Museum, and for other purposes.",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/4115"
+          },
+          {
+            "bill_id": "106-hr-3468",
+            "label": "HR 3468",
+            "title": "Duchesne City Water Rights Conveyance Act",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/3468"
+          }
+        ]
+      },
+      {
+        "rank": 23,
+        "bioguide": "H000463",
+        "turns": 621,
+        "words": 172440,
+        "active_days": 230,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 2,
+        "bills_sponsored": 43,
+        "bills_passed": 7,
+        "bills_enacted": 4,
+        "passage_share": 0.1627906977,
+        "enactment_share": 0.0930232558,
+        "speaker_name": "Mr. HELMS",
+        "party": "R",
+        "state": "NC",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/H000463",
+        "examples": [
+          {
+            "bill_id": "106-s-3239",
+            "label": "S 3239",
+            "title": "A bill to amend the Immigration and Nationality Act to provide special immigrant status for certain United States international broadcasting employees.",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/3239"
+          },
+          {
+            "bill_id": "106-s-2943",
+            "label": "S 2943",
+            "title": "Assistance for International Malaria Control Act",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/2943"
+          },
+          {
+            "bill_id": "106-s-1398",
+            "label": "S 1398",
+            "title": "A bill to clarify certain boundaries on maps relating to the Coastal Barrier Resources System.",
+            "url": "https://www.congress.gov/bill/106th-congress/senate-bill/1398"
+          }
+        ]
+      },
+      {
+        "rank": 24,
+        "bioguide": "M000941",
+        "turns": 299,
+        "words": 95048,
+        "active_days": 109,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 31,
+        "bills_passed": 6,
+        "bills_enacted": 4,
+        "passage_share": 0.1935483871,
+        "enactment_share": 0.1290322581,
+        "speaker_name": "Mrs. MORELLA",
+        "party": "R",
+        "state": "MD",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/M000941",
+        "examples": [
+          {
+            "bill_id": "106-hr-4484",
+            "label": "HR 4484",
+            "title": "To designate the facility of the United States Postal Service located at 500 North Washington Street in Rockville, Maryland, as the \"Everett Alvarez, Jr. Post Office Building\".",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/4484"
+          },
+          {
+            "bill_id": "106-hr-209",
+            "label": "HR 209",
+            "title": "Technology Transfer Commercialization Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/209"
+          },
+          {
+            "bill_id": "106-hr-208",
+            "label": "HR 208",
+            "title": "To amend title 5, United States Code, to allow for the contribution of certain rollover distributions to accounts in the Thrift Savings Plan, to eliminate certain waiting-period requirements for participating in the Thrift Savings Plan, and for other purposes.",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/208"
+          }
+        ]
+      },
+      {
+        "rank": 25,
+        "bioguide": "T000188",
+        "turns": 348,
+        "words": 60857,
+        "active_days": 66,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 31,
+        "bills_passed": 8,
+        "bills_enacted": 4,
+        "passage_share": 0.2580645161,
+        "enactment_share": 0.1290322581,
+        "speaker_name": "Mr. THOMAS",
+        "party": "R",
+        "state": "CA",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/T000188",
+        "examples": [
+          {
+            "bill_id": "106-hr-5410",
+            "label": "HR 5410",
+            "title": "Library of Congress Fiscal Operations Improvement Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/5410"
+          },
+          {
+            "bill_id": "106-hr-4846",
+            "label": "HR 4846",
+            "title": "National Recording Preservation Act of 2000",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/4846"
+          },
+          {
+            "bill_id": "106-hr-3122",
+            "label": "HR 3122",
+            "title": "To permit the enrollment in the House of Representatives Child Care Center of children of Federal employees who are not employees of the legislative branch.",
+            "url": "https://www.congress.gov/bill/106th-congress/house-bill/3122"
+          }
+        ]
+      }
+    ],
     "profanity": [
       {
         "rank": 1,
@@ -544,11 +3549,11 @@
         "active_days": 55,
         "profanity_hits": 37,
         "profanity_quoted_hits": 1,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 14,
+        "bills_passed": 3,
+        "bills_enacted": 1,
+        "passage_share": 0.2142857143,
+        "enactment_share": 0.0714285714,
         "speaker_name": "Mr. McINNIS",
         "party": "R",
         "state": "CO",
@@ -564,7 +3569,7 @@
         "active_days": 32,
         "profanity_hits": 1,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
+        "bills_sponsored": 7,
         "bills_passed": 0,
         "bills_enacted": 0,
         "passage_share": 0.0,
@@ -584,7 +3589,7 @@
         "active_days": 34,
         "profanity_hits": 1,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
+        "bills_sponsored": 13,
         "bills_passed": 0,
         "bills_enacted": 0,
         "passage_share": 0.0,
@@ -604,11 +3609,11 @@
         "active_days": 97,
         "profanity_hits": 3,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 29,
+        "bills_passed": 3,
+        "bills_enacted": 3,
+        "passage_share": 0.1034482759,
+        "enactment_share": 0.1034482759,
         "speaker_name": "Mr. NORTON",
         "party": "D",
         "state": "DC",
@@ -624,7 +3629,7 @@
         "active_days": 68,
         "profanity_hits": 1,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
+        "bills_sponsored": 12,
         "bills_passed": 0,
         "bills_enacted": 0,
         "passage_share": 0.0,
@@ -644,7 +3649,7 @@
         "active_days": 36,
         "profanity_hits": 1,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
+        "bills_sponsored": 7,
         "bills_passed": 0,
         "bills_enacted": 0,
         "passage_share": 0.0,
@@ -664,10 +3669,10 @@
         "active_days": 59,
         "profanity_hits": 1,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
+        "bills_sponsored": 5,
+        "bills_passed": 1,
         "bills_enacted": 0,
-        "passage_share": 0.0,
+        "passage_share": 0.2,
         "enactment_share": 0.0,
         "speaker_name": "Mr. DeLAY",
         "party": "R",
@@ -684,11 +3689,11 @@
         "active_days": 88,
         "profanity_hits": 2,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 8,
+        "bills_passed": 3,
+        "bills_enacted": 2,
+        "passage_share": 0.375,
+        "enactment_share": 0.25,
         "speaker_name": "Mr. UNDERWOOD",
         "party": "D",
         "state": "GU",
@@ -704,11 +3709,11 @@
         "active_days": 60,
         "profanity_hits": 1,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 16,
+        "bills_passed": 2,
+        "bills_enacted": 2,
+        "passage_share": 0.125,
+        "enactment_share": 0.125,
         "speaker_name": "Mr. LANTOS",
         "party": "D",
         "state": "CA",
@@ -724,11 +3729,11 @@
         "active_days": 53,
         "profanity_hits": 1,
         "profanity_quoted_hits": 1,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 25,
+        "bills_passed": 3,
+        "bills_enacted": 2,
+        "passage_share": 0.12,
+        "enactment_share": 0.08,
         "speaker_name": "Mr. BILBRAY",
         "party": "R",
         "state": "CA",
@@ -744,7 +3749,7 @@
         "active_days": 109,
         "profanity_hits": 4,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
+        "bills_sponsored": 7,
         "bills_passed": 0,
         "bills_enacted": 0,
         "passage_share": 0.0,
@@ -764,11 +3769,11 @@
         "active_days": 97,
         "profanity_hits": 2,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 14,
+        "bills_passed": 2,
+        "bills_enacted": 1,
+        "passage_share": 0.1428571429,
+        "enactment_share": 0.0714285714,
         "speaker_name": "Mr. CUNNINGHAM",
         "party": "R",
         "state": "CA",
@@ -784,11 +3789,11 @@
         "active_days": 60,
         "profanity_hits": 1,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 14,
+        "bills_passed": 2,
+        "bills_enacted": 1,
+        "passage_share": 0.1428571429,
+        "enactment_share": 0.0714285714,
         "speaker_name": "Mr. BURTON of Indiana",
         "party": "R",
         "state": "IN",
@@ -804,10 +3809,10 @@
         "active_days": 77,
         "profanity_hits": 1,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
+        "bills_sponsored": 18,
+        "bills_passed": 1,
         "bills_enacted": 0,
-        "passage_share": 0.0,
+        "passage_share": 0.0555555556,
         "enactment_share": 0.0,
         "speaker_name": "Mr. DUNCAN of Tennessee",
         "party": "R",
@@ -824,11 +3829,11 @@
         "active_days": 58,
         "profanity_hits": 1,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 28,
+        "bills_passed": 6,
+        "bills_enacted": 5,
+        "passage_share": 0.2142857143,
+        "enactment_share": 0.1785714286,
         "speaker_name": "Mr. GEORGE MILLER of California",
         "party": "D",
         "state": "CA",
@@ -844,7 +3849,7 @@
         "active_days": 69,
         "profanity_hits": 1,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
+        "bills_sponsored": 28,
         "bills_passed": 0,
         "bills_enacted": 0,
         "passage_share": 0.0,
@@ -864,11 +3869,11 @@
         "active_days": 67,
         "profanity_hits": 1,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 12,
+        "bills_passed": 1,
+        "bills_enacted": 1,
+        "passage_share": 0.0833333333,
+        "enactment_share": 0.0833333333,
         "speaker_name": "Mr. HAGEL",
         "party": "R",
         "state": "NE",
@@ -884,10 +3889,10 @@
         "active_days": 25,
         "profanity_hits": 1,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
+        "bills_sponsored": 5,
+        "bills_passed": 2,
         "bills_enacted": 0,
-        "passage_share": 0.0,
+        "passage_share": 0.4,
         "enactment_share": 0.0,
         "speaker_name": "Mr. ROGERS of Kentucky",
         "party": "R",
@@ -904,11 +3909,11 @@
         "active_days": 129,
         "profanity_hits": 3,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 44,
+        "bills_passed": 3,
+        "bills_enacted": 1,
+        "passage_share": 0.0681818182,
+        "enactment_share": 0.0227272727,
         "speaker_name": "Mr. GRAHAM of Florida",
         "party": "D",
         "state": "FL",
@@ -924,11 +3929,11 @@
         "active_days": 136,
         "profanity_hits": 1,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 29,
+        "bills_passed": 9,
+        "bills_enacted": 6,
+        "passage_share": 0.3103448276,
+        "enactment_share": 0.2068965517,
         "speaker_name": "Mr. BURNS",
         "party": "R",
         "state": "MT",
@@ -944,11 +3949,11 @@
         "active_days": 91,
         "profanity_hits": 2,
         "profanity_quoted_hits": 1,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 27,
+        "bills_passed": 8,
+        "bills_enacted": 6,
+        "passage_share": 0.2962962963,
+        "enactment_share": 0.2222222222,
         "speaker_name": "Mr. KYL",
         "party": "R",
         "state": "AZ",
@@ -964,11 +3969,11 @@
         "active_days": 111,
         "profanity_hits": 1,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 48,
+        "bills_passed": 1,
+        "bills_enacted": 1,
+        "passage_share": 0.0208333333,
+        "enactment_share": 0.0208333333,
         "speaker_name": "Mr. SEAN PATRICK MALONEY of New York",
         "party": "D",
         "state": "NY",
@@ -984,7 +3989,7 @@
         "active_days": 65,
         "profanity_hits": 1,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
+        "bills_sponsored": 3,
         "bills_passed": 0,
         "bills_enacted": 0,
         "passage_share": 0.0,
@@ -1004,11 +4009,11 @@
         "active_days": 63,
         "profanity_hits": 1,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
+        "bills_sponsored": 43,
+        "bills_passed": 7,
+        "bills_enacted": 3,
+        "passage_share": 0.1627906977,
+        "enactment_share": 0.0697674419,
         "speaker_name": "Mr. THOMPSON",
         "party": "R",
         "state": "TN",
@@ -1024,10 +4029,10 @@
         "active_days": 97,
         "profanity_hits": 1,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 0,
-        "bills_passed": 0,
+        "bills_sponsored": 28,
+        "bills_passed": 1,
         "bills_enacted": 0,
-        "passage_share": 0.0,
+        "passage_share": 0.0357142857,
         "enactment_share": 0.0,
         "speaker_name": "Mr. THURMOND",
         "party": "R",

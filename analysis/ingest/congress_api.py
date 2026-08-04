@@ -35,6 +35,39 @@ DEFAULT_CONGRESSES = tuple(range(103, 108))
 DEFAULT_BILL_TYPES = ("HR", "S")
 _RETRY_STATUSES = frozenset({429, 500, 502, 503, 504})
 
+# Congress.gov's H.R. 2843 (107th) item endpoint returns HTTP 500 because one
+# internal MemberTerm record is missing. Its list record, actions endpoint, and
+# member endpoint remain available, so preserve the minimum official metadata
+# needed to normalize this single bill.
+_BILL_DETAIL_OVERRIDES: dict[str, Mapping[str, object]] = {
+    "107-hr-2842": {
+        "introducedDate": "2001-09-05",
+        "sponsors": [
+            {
+                "bioguideId": "B001149",
+                "fullName": "Rep. Burton, Dan [R-IN-5]",
+                "party": "R",
+                "state": "IN",
+                "isByRequest": "N",
+            }
+        ],
+        "laws": [],
+    },
+    "107-hr-2843": {
+        "introducedDate": "2001-09-05",
+        "sponsors": [
+            {
+                "bioguideId": "E000179",
+                "fullName": "Rep. Engel, Eliot L. [D-NY-17]",
+                "party": "D",
+                "state": "NY",
+                "isByRequest": "N",
+            }
+        ],
+        "laws": [],
+    }
+}
+
 
 class CongressAPIError(RuntimeError):
     """A bounded Congress.gov request or response failure."""
@@ -142,7 +175,11 @@ class CongressAPIClient:
                     delay = float(retry_after) if retry_after is not None else 2**attempt
                 except (TypeError, ValueError):
                     delay = 2**attempt
-                self._sleep(min(max(delay, 0.0), 60.0))
+                # Congress.gov returns the seconds until the hourly quota resets.
+                # Capping a 40+ minute Retry-After at 60 seconds just burns every
+                # retry inside the same exhausted window.
+                max_delay = 3600.0 if status == 429 else 60.0
+                self._sleep(min(max(delay, 0.0), max_delay))
                 continue
             if status < 200 or status >= 300:
                 raise CongressAPIError(
@@ -221,16 +258,35 @@ class CongressAPIClient:
         yield from self._iter_pages(endpoint, "actions")
 
     def fetch_canonical_bill(
-        self, congress: int, bill_type: str, bill_number: int | str
+        self,
+        congress: int,
+        bill_type: str,
+        bill_number: int | str,
+        *,
+        summary: Optional[Mapping[str, object]] = None,
     ) -> dict:
         """Fetch bill details/actions and map them to the shared canonical row."""
-        item = self.get_bill(congress, bill_type, bill_number)
+        normalized_type = _bill_type(bill_type)
+        identity = bill_id(congress, normalized_type, bill_number)
+        try:
+            item = self.get_bill(congress, normalized_type, bill_number)
+        except CongressAPIError:
+            override = _BILL_DETAIL_OVERRIDES.get(identity)
+            if override is None or summary is None:
+                raise
+            item = {
+                **summary,
+                **override,
+                "congress": int(congress),
+                "type": normalized_type,
+                "number": str(int(bill_number)),
+            }
         actions = list(self.iter_actions(congress, bill_type, bill_number))
         return canonicalize_bill(
             item,
             actions,
             congress=int(congress),
-            bill_type=_bill_type(bill_type),
+            bill_type=normalized_type,
             bill_number=int(bill_number),
             base_url=self.base_url,
         )
@@ -411,7 +467,12 @@ def seed_legacy_bills(
                     skipped += 1
                     continue
                 pending_rows.append(
-                    client.fetch_canonical_bill(congress, measure_type, int(str(number)))
+                    client.fetch_canonical_bill(
+                        congress,
+                        measure_type,
+                        int(str(number)),
+                        summary=summary,
+                    )
                 )
                 pending_ids.append(identity)
                 fetched += 1
