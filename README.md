@@ -434,8 +434,9 @@ python scripts/build_site.py         # render site/ from both committed tables
 `build_site.py` ranks the **sitting Congress** by default (`--congress latest`); pass a number
 for a specific one or `--congress all` for an all-time board. The default is deliberate: it keeps
 the scheduled build showing the current Congress and producing the same output as a local run.
-Set `SOURCE_DATE_EPOCH` (or pass `--generated-utc`) to reproduce the complete site byte-for-byte,
-including its build timestamp.
+The default snapshot timestamp is derived from the newest speech or bill input, so unchanged
+inputs produce byte-identical output and no timestamp-only commit. `SOURCE_DATE_EPOCH` and
+`--generated-utc` remain available for an explicit reproducible-build timestamp.
 
 `.github/workflows/update-site.yml` runs the refreshes daily at 07:20 UTC, commits the refreshed
 tables and site, and publishes to GitHub Pages.

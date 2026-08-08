@@ -102,8 +102,12 @@ def resolve_congress(value, daily: pd.DataFrame) -> Optional[int]:
         )
 
 
-def resolve_generated_utc(value: Optional[str]) -> str:
-    """Return one normalized build timestamp, with reproducible-build support."""
+def resolve_generated_utc(
+    value: Optional[str],
+    daily: pd.DataFrame,
+    bills: pd.DataFrame,
+) -> str:
+    """Return a deterministic timestamp for the newest input in the snapshot."""
     if value:
         try:
             parsed = dt.datetime.fromisoformat(value.replace("Z", "+00:00"))
@@ -120,7 +124,20 @@ def resolve_generated_utc(value: Optional[str]) -> str:
             ).isoformat(timespec="seconds")
         except (ValueError, OverflowError) as exc:
             raise SystemExit("error: SOURCE_DATE_EPOCH must be an integer timestamp") from exc
-    return dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds")
+    candidates = []
+    speech_dates = pd.to_datetime(
+        daily.get("date"), format="mixed", utc=True, errors="coerce"
+    )
+    if speech_dates is not None and speech_dates.notna().any():
+        candidates.append(speech_dates.max().to_pydatetime())
+    bill_updates = pd.to_datetime(
+        bills.get("source_updated_at"), format="mixed", utc=True, errors="coerce"
+    )
+    if bill_updates is not None and bill_updates.notna().any():
+        candidates.append(bill_updates.max().to_pydatetime())
+    if not candidates:
+        raise SystemExit("error: cannot derive a snapshot timestamp from empty inputs")
+    return max(candidates).astimezone(dt.timezone.utc).isoformat(timespec="seconds")
 
 
 def _chart_leaderboard(board: pd.DataFrame, figs: Path, min_words: int) -> Path:
@@ -492,7 +509,7 @@ on the floor. Rankings are descriptive and use official Congressional Record and
 <section><h2>How to read these rankings</h2><ul>{caveats}</ul></section>
 <footer id="coverage">Speech coverage {html.escape(payload['coverage']['speech_first_date'])}
 to {html.escape(payload['coverage']['speech_last_date'])}; {_fmt_int(payload['coverage']['bills'])}
-H.R./S. bill records in this view. Generated {html.escape(payload['generated_utc'])}.</footer>
+H.R./S. bill records in this view. Data snapshot {html.escape(payload['generated_utc'])}.</footer>
 <script>
 const definitions = {json.dumps(METRIC_DEFINITIONS)};
 const titles = {json.dumps(dict(sections))};
@@ -550,7 +567,7 @@ async function loadCongress(value) {{
   document.getElementById('coverage').textContent =
     `Speech coverage ${{payload.coverage.speech_first_date}} to ${{payload.coverage.speech_last_date}}; ` +
     `${{Number(payload.coverage.bills).toLocaleString()}} H.R./S. bill records in this view. ` +
-    `Generated ${{payload.generated_utc}}.`;
+    `Data snapshot ${{payload.generated_utc}}.`;
   history.replaceState(null, '', `#congress=${{value}}`);
 }}
 select.addEventListener('change', () => loadCongress(select.value).catch(error => alert(error.message)));
@@ -580,7 +597,7 @@ def main(argv: Optional[List[str]] = None) -> int:
         return 1
 
     congress = resolve_congress(args.congress, daily)
-    generated_utc = resolve_generated_utc(args.generated_utc)
+    generated_utc = resolve_generated_utc(args.generated_utc, daily, bills)
     available = sorted(set(int(value) for value in daily["congress"].unique()))
     if congress is not None and congress not in available:
         LOG.error("no speaker rows for Congress %s", congress)

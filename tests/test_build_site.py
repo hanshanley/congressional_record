@@ -10,6 +10,7 @@ from __future__ import annotations
 import importlib.util
 import json
 import sys
+import zipfile
 from pathlib import Path
 
 import pandas as pd
@@ -19,7 +20,8 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
 from analysis.bills import canonical_bill, save_bills  # noqa: E402
-from analysis.speakers import save_daily  # noqa: E402
+from analysis.ingest.govinfo_bulk import run_bulk  # noqa: E402
+from analysis.speakers import save_daily, speaker_counts  # noqa: E402
 
 
 def _load_build_site():
@@ -297,12 +299,9 @@ def test_unseeded_congress_is_labeled_unavailable_not_zero(store, tmp_path):
     assert "partial" in payload["coverage"]["warning"]
 
 
-def test_source_date_epoch_makes_full_site_build_reproducible(
-    store, tmp_path, monkeypatch
-):
+def test_default_full_site_build_is_reproducible(store, tmp_path):
     path, _, bills = store
     module = _load_build_site()
-    monkeypatch.setenv("SOURCE_DATE_EPOCH", "1786147200")
     outputs = [tmp_path / "site-a", tmp_path / "site-b"]
     for out in outputs:
         assert module.main([
@@ -317,6 +316,134 @@ def test_source_date_epoch_makes_full_site_build_reproducible(
     second = {
         path.relative_to(outputs[1]): path.read_bytes()
         for path in outputs[1].rglob("*")
+        if path.is_file()
+    }
+    assert first == second
+    meta = json.loads((outputs[0] / "data" / "meta.json").read_text())
+    assert meta["generated_utc"] == "2025-03-01T00:00:00+00:00"
+
+
+def test_source_date_epoch_overrides_input_snapshot(monkeypatch):
+    module = _load_build_site()
+    monkeypatch.setenv("SOURCE_DATE_EPOCH", "1786147200")
+    daily = pd.DataFrame({"date": ["2025-03-01"]})
+    bills = pd.DataFrame({"source_updated_at": ["2025-03-02T12:00:00"]})
+    expected = pd.Timestamp(1786147200, unit="s", tz="UTC").isoformat()
+    assert module.resolve_generated_utc(None, daily, bills) == expected
+
+
+def test_default_snapshot_uses_newest_mixed_format_input():
+    module = _load_build_site()
+    daily = pd.DataFrame({"date": ["2026-08-06"]})
+    bills = pd.DataFrame({
+        "source_updated_at": ["2026-08-05", "2026-08-08T18:50:00"],
+    })
+    assert module.resolve_generated_utc(
+        None, daily, bills
+    ) == "2026-08-08T18:50:00+00:00"
+
+
+def test_govinfo_to_site_pipeline_is_reproducible(tmp_path):
+    pkg = "CREC-2025-07-23"
+    parent = f"{pkg}-pt1-PgH3572"
+    child = f"{parent}-2"
+    long_speech = " ".join(["substantive remarks"] * 120)
+    inserted = " ".join(["legislative text"] * 1_000)
+
+    def build_package(bulk: Path) -> None:
+        bulk.mkdir(parents=True)
+        related = "".join(
+            f"""
+            <relatedItem type="constituent" ID="id-{gid}"><extension>
+              <granuleClass>HOUSE</granuleClass>
+              <congMember bioGuideId="R000575" party="R" state="AL">
+                <name type="authority-fnf">Mike Rogers</name>
+              </congMember>
+            </extension></relatedItem>
+            """
+            for gid in (parent, child)
+        )
+        mods = (
+            '<mods xmlns="http://www.loc.gov/mods/v3">'
+            "<extension><congress>119</congress></extension>"
+            f"{related}</mods>"
+        )
+        texts = {
+            parent: (
+                f"Mr. ROGERS of Alabama. {long_speech} [[Page H3573]]\n"
+                "The SPEAKER pro tempore (Mr. Simpson). "
+                f"The text of the bill is as follows: {inserted}"
+            ),
+            child: (
+                f"Mr. ROGERS of Alabama. {long_speech}\n"
+                "The SPEAKER pro tempore (Mr. Simpson). "
+                f"The text of the bill is as follows: {inserted}"
+            ),
+        }
+        with zipfile.ZipFile(bulk / f"{pkg}.zip", "w") as archive:
+            archive.writestr(f"{pkg}/mods.xml", mods)
+            for gid, text in texts.items():
+                archive.writestr(
+                    f"{pkg}/{gid}.htm",
+                    f"<html><body><pre>{text}</pre></body></html>",
+                )
+
+    daily_paths = []
+    for name in ("first", "second"):
+        bulk = tmp_path / name / "bulk"
+        out = tmp_path / name / "out"
+        build_package(bulk)
+        assert run_bulk([pkg], bulk, out, workers=1) == 2
+        turns = out / "turns" / "govinfo_bulk_119.parquet"
+        daily = speaker_counts([turns])
+        assert len(daily) == 1
+        assert daily.iloc[0]["turns"] == 1
+        assert daily.iloc[0]["words"] < 500
+        daily_path = tmp_path / name / "daily"
+        save_daily(daily, daily_path)
+        daily_paths.append(daily_path)
+
+    bills = pd.DataFrame([
+        canonical_bill(
+            source="test",
+            source_url="https://example.test/bill",
+            source_updated_at="2025-07-23T12:00:00",
+            congress=119,
+            bill_type="HR",
+            bill_number=1,
+            title="Fixture bill",
+            origin_chamber="House",
+            introduced_date="2025-07-23",
+            sponsors=[{
+                "bioguideId": "R000575",
+                "fullName": "Mr. ROGERS of Alabama",
+                "party": "R",
+                "state": "AL",
+            }],
+            actions=[],
+            laws=[],
+        )
+    ])
+    bill_path = tmp_path / "bills"
+    save_bills(bills, bill_path)
+
+    module = _load_build_site()
+    sites = [tmp_path / "site-first", tmp_path / "site-second"]
+    for daily_path, site in zip(daily_paths, sites):
+        assert module.main([
+            "--daily", str(daily_path),
+            "--bills", str(bill_path),
+            "--out", str(site),
+            "--min-words", "1",
+        ]) == 0
+    first = {
+        path.relative_to(sites[0]): path.read_bytes()
+        for path in sites[0].rglob("*")
+        if path.is_file()
+    }
+    second = {
+        path.relative_to(sites[1]): path.read_bytes()
+        for path in sites[1].rglob("*")
         if path.is_file()
     }
     assert first == second
