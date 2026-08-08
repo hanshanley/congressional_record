@@ -63,6 +63,10 @@ jobs:
             ${{ inputs.since && format('--since {0}', inputs.since) || '' }} \
             ${{ inputs.until && format('--until {0}', inputs.until) || '' }}
 
+      - name: Refresh current-Congress bill statuses
+        # Official GovInfo Bill Status bulk data is public and requires no key.
+        run: python scripts/update_bills.py
+
       - name: Rebuild the site
         run: python scripts/build_site.py
 

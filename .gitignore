@@ -17,6 +17,8 @@ cache/
 # ...except the compact committed site state, which CI needs in order to update
 # incrementally without a copy of the 6 GB turn corpus.
 !data/site/**/*.parquet
+# Local Congress.gov seed checkpoint; normalized Parquet output is the committed state.
+data/site/bills_seed_state.json
 
 # ---- Logs ----
 logs/
