@@ -1,7 +1,7 @@
 {
   "congress": 119,
   "label": "Congress 119",
-  "generated_utc": "2026-08-08T08:03:22+00:00",
+  "generated_utc": "2026-08-08T18:50:23+00:00",
   "min_words": 25000,
   "top": 25,
   "coverage": {
@@ -262,9 +262,9 @@
         "profanity_hits": 0,
         "profanity_quoted_hits": 0,
         "bills_sponsored": 64,
-        "bills_passed": 7,
+        "bills_passed": 8,
         "bills_enacted": 0,
-        "passage_share": 0.109375,
+        "passage_share": 0.125,
         "enactment_share": 0.0,
         "speaker_name": "Mr. GRASSLEY",
         "party": "R",
@@ -1819,6 +1819,46 @@
       },
       {
         "rank": 8,
+        "bioguide": "G000386",
+        "turns": 373,
+        "words": 151058,
+        "active_days": 212,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "bills_sponsored": 64,
+        "bills_passed": 8,
+        "bills_enacted": 0,
+        "passage_share": 0.125,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. GRASSLEY",
+        "party": "R",
+        "state": "IA",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/G000386",
+        "examples": [
+          {
+            "bill_id": "119-s-4460",
+            "label": "S 4460",
+            "title": "Rural Community Hospital Demonstration Program Reauthorization",
+            "url": "https://www.congress.gov/bill/119th-congress/senate-bill/4460"
+          },
+          {
+            "bill_id": "119-s-3977",
+            "label": "S 3977",
+            "title": "Bankruptcy Threshold Adjustment Act of 2026",
+            "url": "https://www.congress.gov/bill/119th-congress/senate-bill/3977"
+          },
+          {
+            "bill_id": "119-s-2677",
+            "label": "S 2677",
+            "title": "A bill to expand the sharing of information with respect to suspected violations of intellectual property rights in trade.",
+            "url": "https://www.congress.gov/bill/119th-congress/senate-bill/2677"
+          }
+        ]
+      },
+      {
+        "rank": 9,
         "bioguide": "W000816",
         "turns": 267,
         "words": 20254,
@@ -1858,7 +1898,7 @@
         ]
       },
       {
-        "rank": 9,
+        "rank": 10,
         "bioguide": "W000812",
         "turns": 90,
         "words": 11269,
@@ -1898,7 +1938,7 @@
         ]
       },
       {
-        "rank": 10,
+        "rank": 11,
         "bioguide": "C001053",
         "turns": 170,
         "words": 25491,
@@ -1934,46 +1974,6 @@
             "label": "HR 7148",
             "title": "Consolidated Appropriations Act, 2026",
             "url": "https://www.congress.gov/bill/119th-congress/house-bill/7148"
-          }
-        ]
-      },
-      {
-        "rank": 11,
-        "bioguide": "G000386",
-        "turns": 373,
-        "words": 151058,
-        "active_days": 212,
-        "profanity_hits": 0,
-        "profanity_quoted_hits": 0,
-        "bills_sponsored": 64,
-        "bills_passed": 7,
-        "bills_enacted": 0,
-        "passage_share": 0.109375,
-        "enactment_share": 0.0,
-        "speaker_name": "Mr. GRASSLEY",
-        "party": "R",
-        "state": "IA",
-        "chamber": "senate",
-        "profanity_per_100k": 0.0,
-        "member_url": "https://bioguide.congress.gov/search/bio/G000386",
-        "examples": [
-          {
-            "bill_id": "119-s-4460",
-            "label": "S 4460",
-            "title": "Rural Community Hospital Demonstration Program Reauthorization",
-            "url": "https://www.congress.gov/bill/119th-congress/senate-bill/4460"
-          },
-          {
-            "bill_id": "119-s-3977",
-            "label": "S 3977",
-            "title": "Bankruptcy Threshold Adjustment Act of 2026",
-            "url": "https://www.congress.gov/bill/119th-congress/senate-bill/3977"
-          },
-          {
-            "bill_id": "119-s-960",
-            "label": "S 960",
-            "title": "Justice for Murder Victims Act",
-            "url": "https://www.congress.gov/bill/119th-congress/senate-bill/960"
           }
         ]
       },
