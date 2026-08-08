@@ -8,6 +8,7 @@ import datetime as dt
 import html
 import json
 import logging
+import os
 import sys
 from pathlib import Path
 from typing import List, Optional
@@ -38,7 +39,8 @@ SITE_DIR = ROOT / "site"
 
 CAVEATS = [
     "Speech counts include only remarks attributable to a specific member by Bioguide ID; "
-    "procedural speech and submitted Extensions of Remarks are excluded.",
+    "procedural speech, submitted Extensions of Remarks, and material printed into the "
+    "Record are excluded.",
     "Profanity uses a narrow, hand-curated list. Passages marked as quotations are excluded "
     "from a member's rate and retained as a separate audit count.",
     "Members below the word threshold are omitted from the profanity ranking because rates "
@@ -78,6 +80,10 @@ def parse_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
     )
     parser.add_argument("--top", type=int, default=25)
     parser.add_argument("--min-words", type=int, default=25_000)
+    parser.add_argument(
+        "--generated-utc",
+        help="Fixed ISO-8601 build timestamp. SOURCE_DATE_EPOCH is also supported.",
+    )
     return parser.parse_args(argv)
 
 
@@ -94,6 +100,27 @@ def resolve_congress(value, daily: pd.DataFrame) -> Optional[int]:
         raise SystemExit(
             f"error: --congress must be a number, 'latest' or 'all' (got {value!r})"
         )
+
+
+def resolve_generated_utc(value: Optional[str]) -> str:
+    """Return one normalized build timestamp, with reproducible-build support."""
+    if value:
+        try:
+            parsed = dt.datetime.fromisoformat(value.replace("Z", "+00:00"))
+        except ValueError as exc:
+            raise SystemExit(f"error: invalid --generated-utc value {value!r}") from exc
+        if parsed.tzinfo is None:
+            raise SystemExit("error: --generated-utc must include a timezone")
+        return parsed.astimezone(dt.timezone.utc).isoformat(timespec="seconds")
+    epoch = os.environ.get("SOURCE_DATE_EPOCH")
+    if epoch is not None:
+        try:
+            return dt.datetime.fromtimestamp(
+                int(epoch), tz=dt.timezone.utc
+            ).isoformat(timespec="seconds")
+        except (ValueError, OverflowError) as exc:
+            raise SystemExit("error: SOURCE_DATE_EPOCH must be an integer timestamp") from exc
+    return dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds")
 
 
 def _chart_leaderboard(board: pd.DataFrame, figs: Path, min_words: int) -> Path:
@@ -262,6 +289,7 @@ def build_payload(
     *,
     top: int,
     min_words: int,
+    generated_utc: str,
 ) -> dict:
     """Build one Congress payload consumed by the static dashboard."""
     activity = member_activity(daily, bills, congress)
@@ -271,7 +299,7 @@ def build_payload(
     return {
         "congress": congress,
         "label": "All Congresses" if congress is None else f"Congress {congress}",
-        "generated_utc": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
+        "generated_utc": generated_utc,
         "min_words": min_words,
         "top": top,
         "coverage": {
@@ -552,6 +580,7 @@ def main(argv: Optional[List[str]] = None) -> int:
         return 1
 
     congress = resolve_congress(args.congress, daily)
+    generated_utc = resolve_generated_utc(args.generated_utc)
     available = sorted(set(int(value) for value in daily["congress"].unique()))
     if congress is not None and congress not in available:
         LOG.error("no speaker rows for Congress %s", congress)
@@ -565,12 +594,22 @@ def main(argv: Optional[List[str]] = None) -> int:
 
     payloads = {
         value: build_payload(
-            daily, bills, value, top=args.top, min_words=args.min_words
+            daily,
+            bills,
+            value,
+            top=args.top,
+            min_words=args.min_words,
+            generated_utc=generated_utc,
         )
         for value in available
     }
     payloads[None] = build_payload(
-        daily, bills, None, top=args.top, min_words=args.min_words
+        daily,
+        bills,
+        None,
+        top=args.top,
+        min_words=args.min_words,
+        generated_utc=generated_utc,
     )
     for value, payload in payloads.items():
         suffix = "all" if value is None else str(value)

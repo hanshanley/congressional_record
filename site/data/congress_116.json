@@ -1,7 +1,7 @@
 {
   "congress": 116,
   "label": "Congress 116",
-  "generated_utc": "2026-08-08T00:56:09+00:00",
+  "generated_utc": "2026-08-08T18:45:15+00:00",
   "min_words": 25000,
   "top": 25,
   "coverage": {
@@ -24,7 +24,7 @@
     "profanity": "Unquoted curated profanity hits per 100,000 attributed words."
   },
   "caveats": [
-    "Speech counts include only remarks attributable to a specific member by Bioguide ID; procedural speech and submitted Extensions of Remarks are excluded.",
+    "Speech counts include only remarks attributable to a specific member by Bioguide ID; procedural speech, submitted Extensions of Remarks, and material printed into the Record are excluded.",
     "Profanity uses a narrow, hand-curated list. Passages marked as quotations are excluded from a member's rate and retained as a separate audit count.",
     "Members below the word threshold are omitted from the profanity ranking because rates computed from small samples are unstable.",
     "Legislative counts cover sponsored House and Senate bills (H.R. and S.) only; cosponsorships, resolutions, and amendments are outside this version.",

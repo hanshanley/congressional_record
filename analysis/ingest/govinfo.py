@@ -37,16 +37,34 @@ LOG = logging.getLogger("analysis.ingest.govinfo")
 # like "VAN HOLLEN" or "WASSERMAN SCHULTZ". No '.' so a token can't absorb the
 # sentence-ending period and spill into the next word.
 _SURNAME = r"[A-Z][A-Za-z'\u2019-]+(?:\s+[A-Z][A-Za-z'\u2019-]+){0,2}"
+_STATE_NAME = r"[A-Z][a-zA-Z]+(?:\s+[A-Z][a-zA-Z]+){0,2}"
+_MEMBER_MARKER = (
+    rf"(?:Mr|Mrs|Ms|Miss)\.\s+{_SURNAME}(?:\s+of\s+{_STATE_NAME})?"
+)
+_PROCEDURAL_MARKER = (
+    r"The\s+(?:SPEAKER(?:\s+pro\s+tempore)?|PRESIDING\s+OFFICER|"
+    r"(?:VICE\s+)?PRESIDENT(?:\s+pro\s+tempore)?|"
+    r"ACTING\s+PRESIDENT(?:\s+pro\s+tempore)?|CHIEF\s+JUSTICE|CLERK|"
+    r"Acting\s+CHAIR|CHAIR(?:MAN|WOMAN)?)"
+    rf"(?:\s+\({_MEMBER_MARKER}\))?"
+)
 
 # Start-of-turn speaker markers at the beginning of a line.
 _SPEAKER_RE = re.compile(
-    r"(?m)^\s{0,4}("
-    rf"(?:Mr|Mrs|Ms|Miss)\.\s+{_SURNAME}(?:\s+of\s+[A-Z][a-zA-Z]+(?:\s+[A-Z][a-zA-Z]+){{0,2}})?"
-    r"|The\s+(?:SPEAKER(?:\s+pro\s+tempore)?|PRESIDING\s+OFFICER|(?:VICE\s+)?PRESIDENT(?:\s+pro\s+tempore)?"
-    r"|ACTING\s+PRESIDENT(?:\s+pro\s+tempore)?|CHIEF\s+JUSTICE|CLERK|Acting\s+CHAIR|CHAIR(?:MAN|WOMAN)?)"
-    r")\.\s",
+    rf"(?m)^[ \t]*({_MEMBER_MARKER}|{_PROCEDURAL_MARKER})\.\s",
 )
 _PROCEDURAL_SPEAKER = re.compile(r"^(the\s+)?(speaker|presiding|president|acting|chief|clerk|chair)", re.IGNORECASE)
+
+# Standard Record formulas that introduce printed bills, amendments, exhibits, or
+# other material that was inserted into the Record rather than spoken on the floor.
+_INSERTED_MATERIAL_RE = re.compile(
+    r"(?im)^[ \t]*(?:"
+    r"The Clerk (?:read|reported)\b"
+    r"|There being no objection,[\s\S]{0,300}?\bordered\s+to\s+be\s+printed\s+in\s+the\s+Record\b"
+    r"|Pursuant to the adoption of House Resolution\b"
+    r"|The text of\b[\s\S]{0,300}?\bis as follows:"
+    r")"
+)
 
 # Standard CREC transcript header lines to drop before segmenting.
 _HEADER_LINE = re.compile(
@@ -169,6 +187,14 @@ def _match_member(marker: str, index: Dict[str, List[Dict[str, str]]]) -> Dict[s
     return next(iter(unique.values())) if len(unique) == 1 else {}
 
 
+def _split_inserted_material(body: str) -> Tuple[str, str]:
+    """Split spoken remarks from standardized material printed into the Record."""
+    match = _INSERTED_MATERIAL_RE.search(body)
+    if not match:
+        return body, ""
+    return body[:match.start()].rstrip(), body[match.start():].lstrip()
+
+
 def build_turns(
     text: str,
     members: List[Dict[str, str]],
@@ -188,25 +214,45 @@ def build_turns(
         if not body:
             continue
         procedural = bool(marker) and bool(_PROCEDURAL_SPEAKER.match(marker))
+        inserted = ""
+        if not procedural:
+            body, inserted = _split_inserted_material(body)
         info: Dict[str, str] = {}
         if marker and not procedural:
             info = _match_member(marker, index)
-        party = normalize_party(info.get("party")) if info else "other"
-        yield {
-            "turn_id": f"crec:{gid}#{i}",
-            "source": "govinfo",
-            "date": date,
-            "congress": congress,
-            "chamber": chamber,
-            "speaker_name": marker or info.get("name", ""),
-            "speaker_id": "",
-            "bioguide": info.get("bioguide", ""),
-            "party": party,
-            "state": info.get("state", ""),
-            "word_count": len(body.split()),
-            "is_procedural": procedural,
-            "text": body,
-        }
+        if body:
+            party = normalize_party(info.get("party")) if info else "other"
+            yield {
+                "turn_id": f"crec:{gid}#{i}",
+                "source": "govinfo",
+                "date": date,
+                "congress": congress,
+                "chamber": chamber,
+                "speaker_name": marker or info.get("name", ""),
+                "speaker_id": "",
+                "bioguide": info.get("bioguide", ""),
+                "party": party,
+                "state": info.get("state", ""),
+                "word_count": len(body.split()),
+                "is_procedural": procedural,
+                "text": body,
+            }
+        if inserted:
+            yield {
+                "turn_id": f"crec:{gid}#{i}-inserted",
+                "source": "govinfo",
+                "date": date,
+                "congress": congress,
+                "chamber": chamber,
+                "speaker_name": "Inserted material",
+                "speaker_id": "",
+                "bioguide": "",
+                "party": "other",
+                "state": "",
+                "word_count": len(inserted.split()),
+                "is_procedural": True,
+                "text": inserted,
+            }
 
 
 def normalize_members(raw_members: List[Dict[str, str]]) -> List[Dict[str, str]]:

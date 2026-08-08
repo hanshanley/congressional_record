@@ -434,6 +434,8 @@ python scripts/build_site.py         # render site/ from both committed tables
 `build_site.py` ranks the **sitting Congress** by default (`--congress latest`); pass a number
 for a specific one or `--congress all` for an all-time board. The default is deliberate: it keeps
 the scheduled build showing the current Congress and producing the same output as a local run.
+Set `SOURCE_DATE_EPOCH` (or pass `--generated-utc`) to reproduce the complete site byte-for-byte,
+including its build timestamp.
 
 `.github/workflows/update-site.yml` runs the refreshes daily at 07:20 UTC, commits the refreshed
 tables and site, and publishes to GitHub Pages.
@@ -485,6 +487,9 @@ Naming individuals is a reputational claim, so the counts are deliberately conse
   collide (`Mr. SMITH`) and drift between Congresses.
 * **Procedural speech is excluded.** The Chair and presiding officers dominate the Record by
   volume but are not making personal remarks.
+* **Printed material is excluded.** Bills, amendments, exhibits, and other material inserted into
+  the Record are retained as procedural source turns rather than attributed as spoken words.
+  Long turns duplicated by overlapping GovInfo granules are content-deduplicated.
 * **Rate, not raw count**, so prolific speakers are not penalised — with a minimum word threshold
   (default 25,000 attributed words), because one profanity in 300 words of floor time is noise,
   not a ranking. Members below the threshold are omitted rather than shown with an unstable rate.

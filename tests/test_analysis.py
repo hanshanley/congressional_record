@@ -124,6 +124,88 @@ def test_president_pro_tempore_marker_is_procedural() -> None:
     assert turns[0]["is_procedural"] is True
 
 
+def test_parenthetical_presiding_marker_ends_member_turn() -> None:
+    members = normalize_members([
+        {
+            "party": "R",
+            "bioGuideId": "R000575",
+            "state": "AL",
+            "name": "Mike Rogers",
+        },
+    ])
+    for marker in (
+        "The SPEAKER pro tempore (Mr. Simpson)",
+        "The Acting CHAIR (Mr. McDowell)",
+        "The Acting CHAIR (Mr. Goldman of Texas)",
+    ):
+        text = (
+            "Mr. ROGERS of Alabama. I yield back the balance of my time.\n"
+            f"  {marker}. The text of the bill is as follows: "
+            + ("legislative text " * 1_000)
+        )
+        turns = list(build_turns(
+            text, members, "CREC-2025-12-10-pt1-PgH1", "2025-12-10", 119, "house",
+        ))
+        assert len(turns) == 2
+        assert turns[0]["bioguide"] == "R000575"
+        assert turns[0]["word_count"] == 8
+        assert turns[1]["speaker_name"] == marker
+        assert turns[1]["is_procedural"] is True
+        assert not turns[1]["bioguide"]
+
+
+def test_inserted_legislative_material_is_not_attributed_to_member() -> None:
+    members = normalize_members([
+        {
+            "party": "R",
+            "bioGuideId": "G000546",
+            "state": "LA",
+            "name": "Sam Graves",
+        },
+    ])
+    text = (
+        "Mr. GRAVES. Madam Speaker, I move to suspend the rules and pass the bill.\n"
+        "  The Clerk read the title of the bill.\n"
+        "  The text of the bill is as follows: "
+        + ("legislative text " * 1_000)
+    )
+    turns = list(build_turns(
+        text, members, "CREC-2025-07-23-pt1-PgH1", "2025-07-23", 119, "house",
+    ))
+    assert len(turns) == 2
+    assert turns[0]["bioguide"] == "G000546"
+    assert turns[0]["word_count"] == 12
+    assert turns[1]["speaker_name"] == "Inserted material"
+    assert turns[1]["is_procedural"] is True
+    assert not turns[1]["bioguide"]
+
+
+def test_material_printed_by_unanimous_consent_is_not_attributed() -> None:
+    members = normalize_members([
+        {
+            "party": "D",
+            "bioGuideId": "S000148",
+            "state": "NY",
+            "name": "Charles Schumer",
+        },
+    ])
+    text = (
+        "Mr. SCHUMER. Mr. President, I ask unanimous consent that the text of the "
+        "bill be printed in the Record.\n"
+        "  There being no objection, the text of the bill was ordered to be printed "
+        "in the Record, as follows: "
+        + ("legislative text " * 1_000)
+    )
+    turns = list(build_turns(
+        text, members, "CREC-2026-07-30-pt1-PgS1", "2026-07-30", 119, "senate",
+    ))
+    assert len(turns) == 2
+    assert turns[0]["bioguide"] == "S000148"
+    assert turns[0]["word_count"] == 17
+    assert turns[1]["is_procedural"] is True
+    assert not turns[1]["bioguide"]
+
+
 def test_fuzzy_keyword_matching() -> None:
     from analysis.score.scorers import morph_variants, plural_variants
     # morphological variants for single words

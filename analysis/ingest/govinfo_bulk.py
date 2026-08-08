@@ -52,6 +52,8 @@ CONTENT_URL = "https://www.govinfo.gov/content/pkg/{pkg}.zip"
 # GovInfo CREC package ids are exactly CREC-YYYY-MM-DD; validate before building
 # URLs / filesystem paths from them (defense-in-depth).
 _PKG_RE = re.compile(r"^CREC-\d{4}-\d{2}-\d{2}$")
+_PAGE_MARKER_RE = re.compile(r"\[\[Page [^\]]+\]\]")
+_MIN_DEDUPE_CHARS = 500
 
 
 def _localname(tag: str) -> str:
@@ -117,6 +119,22 @@ def _package_congress(mods_bytes: bytes) -> int:
     return 0
 
 
+def _turn_fingerprint(turn: Dict[str, Any]) -> str:
+    """Stable fingerprint for long turns duplicated across overlapping granules."""
+    text = _PAGE_MARKER_RE.sub(" ", turn.get("text") or "")
+    normalized = " ".join(text.split())
+    if len(normalized) < _MIN_DEDUPE_CHARS:
+        return ""
+    identity = "\0".join([
+        turn.get("bioguide") or "",
+        turn.get("speaker_name") or "",
+        turn.get("chamber") or "",
+        "1" if turn.get("is_procedural") else "0",
+        normalized,
+    ])
+    return hashlib.sha256(identity.encode("utf-8")).hexdigest()
+
+
 def _turns_from_zip(zip_bytes: bytes, pkg: str) -> Iterator[Dict[str, Any]]:
     z = zipfile.ZipFile(io.BytesIO(zip_bytes))
     names = z.namelist()
@@ -132,6 +150,7 @@ def _turns_from_zip(zip_bytes: bytes, pkg: str) -> Iterator[Dict[str, Any]]:
     if not congress:
         return
     htm_names = {n.rsplit("/", 1)[-1][:-4]: n for n in names if n.endswith(".htm")}
+    seen_fingerprints: set[str] = set()
 
     for gid, info in gmap.items():
         htm = htm_names.get(gid)
@@ -146,7 +165,15 @@ def _turns_from_zip(zip_bytes: bytes, pkg: str) -> Iterator[Dict[str, Any]]:
             continue
         chamber = normalize_chamber(info.get("granuleClass") or info.get("chamber"))
         # Same segmentation + attribution as the manifest-based path.
-        yield from build_turns(text, info.get("members", []), gid, date, congress, chamber)
+        for turn in build_turns(
+            text, info.get("members", []), gid, date, congress, chamber
+        ):
+            fingerprint = _turn_fingerprint(turn)
+            if fingerprint:
+                if fingerprint in seen_fingerprints:
+                    continue
+                seen_fingerprints.add(fingerprint)
+            yield turn
 
 
 def probe_packages(

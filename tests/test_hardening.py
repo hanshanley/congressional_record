@@ -20,7 +20,11 @@ import zipfile  # noqa: E402
 
 import pyarrow.parquet as pq  # noqa: E402
 
-from analysis.ingest.govinfo_bulk import _package_congress, run_bulk  # noqa: E402
+from analysis.ingest.govinfo_bulk import (  # noqa: E402
+    _package_congress,
+    _turn_fingerprint,
+    run_bulk,
+)
 from analysis.ingest.govinfo import ingest_govinfo  # noqa: E402
 from analysis.validate import (  # noqa: E402
     ANNOTATION_FIELDS,
@@ -183,6 +187,25 @@ def test_validation_sample_is_blinded_and_real_text_preserved() -> None:
         assert blinded[blinded["sample_id"].isin(attack_ids)]["passage"].str.contains("liar").all()
     finally:
         shutil.rmtree(root, ignore_errors=True)
+
+
+def test_long_duplicate_turn_fingerprint_ignores_page_markers() -> None:
+    base = {
+        "bioguide": "S000148",
+        "speaker_name": "Mr. SCHUMER",
+        "chamber": "senate",
+        "is_procedural": False,
+    }
+    first = {
+        **base,
+        "text": "opening " + ("substantive remarks " * 100) + "[[Page S4372]] closing",
+    }
+    second = {
+        **base,
+        "text": "opening " + ("substantive remarks " * 100) + "closing",
+    }
+    assert _turn_fingerprint(first) == _turn_fingerprint(second)
+    assert _turn_fingerprint({**base, "text": "I yield back."}) == ""
 
 
 def test_manifest_ingest_rejects_malformed_rows() -> None:

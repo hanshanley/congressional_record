@@ -297,6 +297,31 @@ def test_unseeded_congress_is_labeled_unavailable_not_zero(store, tmp_path):
     assert "partial" in payload["coverage"]["warning"]
 
 
+def test_source_date_epoch_makes_full_site_build_reproducible(
+    store, tmp_path, monkeypatch
+):
+    path, _, bills = store
+    module = _load_build_site()
+    monkeypatch.setenv("SOURCE_DATE_EPOCH", "1786147200")
+    outputs = [tmp_path / "site-a", tmp_path / "site-b"]
+    for out in outputs:
+        assert module.main([
+            "--daily", str(path), "--bills", str(bills), "--out", str(out),
+            "--min-words", "1000",
+        ]) == 0
+    first = {
+        path.relative_to(outputs[0]): path.read_bytes()
+        for path in outputs[0].rglob("*")
+        if path.is_file()
+    }
+    second = {
+        path.relative_to(outputs[1]): path.read_bytes()
+        for path in outputs[1].rglob("*")
+        if path.is_file()
+    }
+    assert first == second
+
+
 # ----------------------------------------------------------------------- workflow
 
 
