@@ -642,13 +642,17 @@ function renderSelectedHighlight(language) {
   comparisonText.className = 'comparison';
   comparisonText.textContent = `${comparison} per 100,000 words`;
   const leader = document.createElement('p');
-  leader.className = 'leader';
-  if (highlight.leader_name) {
-    leader.append(
-      document.createTextNode('Highest member rate: '),
-      Object.assign(document.createElement('strong'), {textContent: highlight.leader_name}),
-      document.createTextNode(` (${formatRate(highlight.leader_rate)})`),
-    );
+  leader.className = 'leader top-members';
+  if (highlight.top_members.length) {
+    const label = document.createElement('strong');
+    label.textContent = 'Top member rates';
+    const list = document.createElement('ol');
+    highlight.top_members.forEach(member => {
+      const item = document.createElement('li');
+      item.textContent = `${member.name} (${member.party}) — ${formatRate(member.rate)}`;
+      list.appendChild(item);
+    });
+    leader.append(label, list);
   } else {
     leader.textContent = 'No nonzero member rate in this view';
   }
@@ -1217,6 +1221,15 @@ def _language_payload(
             ),
             "leader_name": "" if leader is None else str(leader["speaker_name"]),
             "leader_rate": 0.0 if leader is None else float(leader[metric["rate"]]),
+            "top_members": [
+                {
+                    "rank": int(row["rank"]),
+                    "name": str(row["speaker_name"]),
+                    "party": str(row["party"]),
+                    "rate": float(row[metric["rate"]]),
+                }
+                for _, row in frame.head(3).iterrows()
+            ],
         })
         if frame.empty:
             findings.append(party_finding)
@@ -1619,6 +1632,8 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
   .party-rate.republican {{ color:{theme.ACCENT}; background:{theme.tint(theme.ACCENT, 0.88)}; }}
   .context-panel .comparison {{ font-weight:750; margin:.8rem 0 .35rem; }}
   .context-panel .leader {{ color:#CBC7BE; margin:.25rem 0 0; font-size:.86rem; }}
+  .top-members ol {{ margin:.4rem 0 0; padding-left:1.3rem; }}
+  .top-members li {{ margin:.25rem 0; }}
   .eyebrow {{ text-transform:uppercase; letter-spacing:.12em; font-size:.7rem; font-weight:800;
               color:var(--muted); margin:0 0 .35rem; }}
   .methodology {{ background:var(--paper); border:1px solid var(--grid); margin:1rem 0;

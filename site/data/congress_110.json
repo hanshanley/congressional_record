@@ -1005,7 +1005,27 @@
         "difference": 0.0005598627721821736,
         "higher_party": "Tie",
         "leader_name": "Mr. FARR",
-        "leader_rate": 3.6956280719908348
+        "leader_rate": 3.6956280719908348,
+        "top_members": [
+          {
+            "rank": 1,
+            "name": "Mr. FARR",
+            "party": "D",
+            "rate": 3.6956280719908348
+          },
+          {
+            "rank": 2,
+            "name": "Ms. WASSERMAN SCHULTZ",
+            "party": "D",
+            "rate": 3.3759832551230544
+          },
+          {
+            "rank": 3,
+            "name": "Mr. DAVIS of Virginia",
+            "party": "R",
+            "rate": 3.030119386703836
+          }
+        ]
       },
       {
         "key": "hostility",
@@ -1015,7 +1035,27 @@
         "difference": -0.2581271956080996,
         "higher_party": "Republicans",
         "leader_name": "Mr. YOUNG",
-        "leader_rate": 13.375540594765704
+        "leader_rate": 13.375540594765704,
+        "top_members": [
+          {
+            "rank": 1,
+            "name": "Mr. YOUNG",
+            "party": "R",
+            "rate": 13.375540594765704
+          },
+          {
+            "rank": 2,
+            "name": "Mr. BENNETT",
+            "party": "R",
+            "rate": 11.831519167061051
+          },
+          {
+            "rank": 3,
+            "name": "Mr. SHERMAN",
+            "party": "D",
+            "rate": 11.146035355224146
+          }
+        ]
       },
       {
         "key": "misconduct",
@@ -1025,7 +1065,27 @@
         "difference": 1.068014591012549,
         "higher_party": "Democrats",
         "leader_name": "Mr. DAVIS of Virginia",
-        "leader_rate": 118.17465608144961
+        "leader_rate": 118.17465608144961,
+        "top_members": [
+          {
+            "rank": 1,
+            "name": "Mr. DAVIS of Virginia",
+            "party": "R",
+            "rate": 118.17465608144961
+          },
+          {
+            "rank": 2,
+            "name": "Mr. LEAHY",
+            "party": "D",
+            "rate": 53.71259853413436
+          },
+          {
+            "rank": 3,
+            "name": "Mr. WAXMAN",
+            "party": "D",
+            "rate": 45.27024367200724
+          }
+        ]
       }
     ],
     "trend_alt": "Monthly Democratic and Republican rates for profanity, personal hostility or disrespect, and misconduct allegations in Congress 110.",

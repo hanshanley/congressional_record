@@ -1005,7 +1005,27 @@
         "difference": -0.04276970752117021,
         "higher_party": "Tie",
         "leader_name": "Mr. SIMPSON",
-        "leader_rate": 7.032101543546289
+        "leader_rate": 7.032101543546289,
+        "top_members": [
+          {
+            "rank": 1,
+            "name": "Mr. SIMPSON",
+            "party": "R",
+            "rate": 7.032101543546289
+          },
+          {
+            "rank": 2,
+            "name": "Mr. BURR",
+            "party": "R",
+            "rate": 4.416570974295557
+          },
+          {
+            "rank": 3,
+            "name": "Mr. ENGEL",
+            "party": "D",
+            "rate": 3.4787448688513183
+          }
+        ]
       },
       {
         "key": "hostility",
@@ -1015,7 +1035,27 @@
         "difference": 0.0676848212506822,
         "higher_party": "Democrats",
         "leader_name": "Ms. SPEIER",
-        "leader_rate": 24.19875241987524
+        "leader_rate": 24.19875241987524,
+        "top_members": [
+          {
+            "rank": 1,
+            "name": "Ms. SPEIER",
+            "party": "D",
+            "rate": 24.19875241987524
+          },
+          {
+            "rank": 2,
+            "name": "Mr. YOUNG",
+            "party": "R",
+            "rate": 19.068806610519626
+          },
+          {
+            "rank": 3,
+            "name": "Mr. WHITEHOUSE",
+            "party": "D",
+            "rate": 17.2499982397961
+          }
+        ]
       },
       {
         "key": "misconduct",
@@ -1025,7 +1065,27 @@
         "difference": 1.5165434833326117,
         "higher_party": "Democrats",
         "leader_name": "Mr. JONES",
-        "leader_rate": 110.40138790316222
+        "leader_rate": 110.40138790316222,
+        "top_members": [
+          {
+            "rank": 1,
+            "name": "Mr. JONES",
+            "party": "R",
+            "rate": 110.40138790316222
+          },
+          {
+            "rank": 2,
+            "name": "Mr. KIRK",
+            "party": "R",
+            "rate": 45.93924882367681
+          },
+          {
+            "rank": 3,
+            "name": "Mr. McGOVERN",
+            "party": "D",
+            "rate": 42.3432171811838
+          }
+        ]
       }
     ],
     "trend_alt": "Monthly Democratic and Republican rates for profanity, personal hostility or disrespect, and misconduct allegations in Congress 112.",

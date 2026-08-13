@@ -298,6 +298,7 @@ def test_payload_and_html_expose_selector_aware_language_graphs(store, tmp_path)
     assert {row["party"] for row in language["series"]} <= {"D", "R"}
     assert set(language["members"]) == {"profanity", "hostility", "misconduct"}
     assert language["series"]
+    assert len(language["highlights"][0]["top_members"]) <= 3
     assert "per 100,000 attributed spoken words" in language["explanation"]["shown"]
     assert "does not prove misconduct" in language["explanation"]["limitation"]
 
