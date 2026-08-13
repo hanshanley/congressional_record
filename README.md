@@ -354,24 +354,28 @@ Charts use a shared **Substack-style** plotting toolkit (`analysis/plotting/`, m
 `uk_decline` portfolio look) — see [`docs/PLOTTING.md`](docs/PLOTTING.md) for the palette,
 helpers, and how to reuse it.
 
-## The website: congressional activity and language
+## The website: congressional language first
 
-The GitHub Pages site combines the existing speaker summaries with official bill-status records
-to publish five separate, auditable rankings for each Congress:
+The GitHub Pages homepage leads with the long-run six-panel overview of congressional comity and
+conflict: courtesy, gratitude, bipartisan cooperation, personal disrespect, misconduct
+allegations, and profanity. The figure compares Democrats with Republicans from 1873 to the
+present, with separate House and Senate detail figures linked directly below it.
+
+Recent-Congress detail then presents three separate negative-language indicators: profanity,
+personal hostility/disrespect, and misconduct allegations. Monthly Democratic/Republican trends
+are shown within a selected Congress, while the all-Congresses view uses yearly periods. Member
+comparisons apply a minimum-word threshold and omit zero-rate members entirely. The charts are
+responsive inline SVGs in the shared cream/serif house style; hovering or keyboard-focusing a
+point or bar reveals its raw hits and word denominator, and hidden data tables expose every value
+to screen readers. Generated PNGs provide a no-JavaScript fallback for the initial view.
+
+`site/activity.html` holds the secondary exact-value tables:
 
 1. attributed spoken words;
 2. sponsored House and Senate bills;
 3. sponsored bills that passed at least one chamber;
 4. sponsored bills that became law; and
-5. profanity per 100,000 attributed words.
-
-Above the exact-value tables, the site also presents three separate language indicators:
-profanity, personal hostility/disrespect, and misconduct allegations. Monthly House/Senate
-trends are shown within a selected Congress, while the all-Congresses view uses yearly periods.
-Member comparisons apply the same minimum-word threshold as the profanity table. The charts are
-responsive inline SVGs in the shared cream/serif house style; hovering or keyboard-focusing a
-point or bar reveals its raw hits and word denominator. Generated PNGs provide a no-JavaScript
-fallback for the initial view.
+5. nonzero profanity rates per 100,000 attributed words.
 
 It deliberately does **not** collapse these into an “effectiveness” score. Sponsoring a bill that
 passes or becomes law is a descriptive milestone, not proof that one member personally caused the
@@ -475,11 +479,14 @@ The build writes machine-readable output alongside the HTML, so a blog can pull 
 directly rather than screen-scraping:
 
 ```
+site/index.html                 primary language-analysis page
+site/activity.html              secondary member-activity and bill tables
 site/data/congresses.json      available Congress selectors
 site/data/congress_NNN.json    leaderboards, interactive chart data, definitions, and coverage
 site/data/leaderboard.json     compatibility profanity leaderboard for the initial view
 site/data/timeseries.json      chamber-level profanity rate per year
 site/data/meta.json            build stamp, thresholds, coverage, caveat text
+site/figures/overview*.png     long-run party comparison and chamber detail
 site/figures/*.png             no-JavaScript/compatibility charts in the project's house style
 ```
 

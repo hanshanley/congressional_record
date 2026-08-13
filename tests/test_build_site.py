@@ -144,10 +144,12 @@ def test_build_writes_html_json_and_figures(store, tmp_path):
         "--daily", str(path), "--bills", str(bills), "--out", str(out),
         "--min-words", "1000",
     ]) == 0
-    for rel in ("index.html", "data/leaderboard.json", "data/timeseries.json",
+    for rel in ("index.html", "activity.html", "data/leaderboard.json", "data/timeseries.json",
                 "data/meta.json", "data/congresses.json", "data/congress_119.json",
                 "figures/leaderboard.png", "figures/trend.png",
-                "figures/language_trends.png", "figures/language_members.png"):
+                "figures/language_trends.png", "figures/language_members.png",
+                "figures/overview.png", "figures/overview_house.png",
+                "figures/overview_senate.png"):
         assert (out / rel).exists(), rel
 
 
@@ -261,7 +263,7 @@ def test_quoted_hits_are_shown_so_the_exclusion_is_auditable(store, tmp_path):
     ])
     board = json.loads((out / "data" / "leaderboard.json").read_text())
     assert board[0]["profanity_quoted_hits"] == 1
-    assert "Quoted" in (out / "index.html").read_text()
+    assert "Quoted" in (out / "activity.html").read_text()
 
 
 def test_payload_contains_all_five_transparent_leaderboards(store, tmp_path):
@@ -294,6 +296,7 @@ def test_payload_and_html_expose_selector_aware_language_graphs(store, tmp_path)
     language = payload["language"]
     assert set(language["metrics"]) == {"profanity", "hostility", "misconduct"}
     assert language["granularity"] == "month"
+    assert {row["party"] for row in language["series"]} <= {"D", "R"}
     assert set(language["members"]) == {"profanity", "hostility", "misconduct"}
     assert language["series"]
     assert "per 100,000 attributed spoken words" in language["explanation"]["shown"]
@@ -304,15 +307,21 @@ def test_payload_and_html_expose_selector_aware_language_graphs(store, tmp_path)
 
     page = (out / "index.html").read_text()
     for text in (
-        "Language on the floor", "What is shown", "What is being examined",
+        "Congressional comity and conflict language", "The long-run picture",
+        "Recent language on the floor", "What is shown", "What is being examined",
         "What the data says", "What cannot be concluded",
         'id="language-trends"', 'id="language-members"',
         "renderLanguage(payload.language)", "renderTrendPanel",
         "renderMemberPanel", "bindTooltip", "chart-toggle",
         "URLSearchParams", "loadSequence", "addAccessibleTable",
-        'className = \'sr-only\'', 'role="alert"',
+        'className = \'sr-only\'', 'role="alert"', "activity.html",
+        'figures/overview.png', 'data-language-metric="profanity"',
     ):
         assert text in page
+    activity_page = (out / "activity.html").read_text()
+    assert "Congressional member activity and bills" in activity_page
+    assert "Who sponsors the most bills" in activity_page
+    assert "Language analysis" in activity_page
 
 
 def test_nonselected_extension_only_congress_does_not_break_charts(store, tmp_path):

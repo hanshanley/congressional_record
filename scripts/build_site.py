@@ -430,6 +430,121 @@ function renderLanguage(language) {
 }
 """
 
+ACTIVITY_JS = r"""
+const select = document.getElementById('congress');
+let loadedCongress = select.value;
+let loadSequence = 0;
+
+function activityCell(text, link) {
+  const cell = document.createElement('td');
+  if (link) {
+    const anchor = document.createElement('a');
+    anchor.href = link;
+    anchor.textContent = text;
+    cell.appendChild(anchor);
+  } else {
+    cell.textContent = text;
+  }
+  return cell;
+}
+
+function renderActivityTable(metric, rows) {
+  const table = document.querySelector(`table[data-metric="${metric}"]`);
+  if (!table) return;
+  const tbody = table.querySelector('tbody');
+  tbody.replaceChildren();
+  rows.forEach(item => {
+    const row = document.createElement('tr');
+    let values;
+    if (metric === 'speech') {
+      values = [
+        item.rank, item.speaker_name, item.party, item.state,
+        String(item.chamber || '').replace(/^./, character => character.toUpperCase()),
+        Number(item.words).toLocaleString(), Number(item.turns).toLocaleString(),
+        Number(item.active_days).toLocaleString(),
+      ];
+    } else if (metric === 'profanity') {
+      values = [
+        item.rank, item.speaker_name, item.party, item.state,
+        Number(item.profanity_per_100k).toFixed(1),
+        Number(item.profanity_hits).toLocaleString(),
+        Number(item.profanity_quoted_hits).toLocaleString(),
+        Number(item.words).toLocaleString(),
+      ];
+    } else {
+      const primary = metric === 'sponsored' ? item.bills_sponsored
+        : metric === 'passed' ? item.bills_passed : item.bills_enacted;
+      const secondary = metric === 'sponsored' ? item.bills_passed : item.bills_sponsored;
+      const third = metric === 'sponsored' ? item.bills_enacted
+        : `${(100 * (metric === 'passed' ? item.passage_share : item.enactment_share)).toFixed(1)}%`;
+      values = [
+        item.rank, item.speaker_name, item.party, item.state,
+        Number(primary).toLocaleString(), Number(secondary).toLocaleString(),
+        typeof third === 'number' ? Number(third).toLocaleString() : third, '',
+      ];
+    }
+    values.forEach((value, index) => row.appendChild(activityCell(
+      value, index === 1 ? item.member_url : '',
+    )));
+    if (['sponsored', 'passed', 'enacted'].includes(metric)) {
+      const target = row.lastChild;
+      target.replaceChildren();
+      (item.examples || []).forEach((example, index) => {
+        if (index) target.appendChild(document.createTextNode(', '));
+        const anchor = document.createElement('a');
+        anchor.href = example.url;
+        anchor.textContent = example.label;
+        anchor.title = example.title;
+        target.appendChild(anchor);
+      });
+    }
+    tbody.appendChild(row);
+  });
+}
+
+async function loadActivityCongress(value) {
+  const sequence = ++loadSequence;
+  const error = document.getElementById('dashboard-error');
+  error.hidden = true;
+  select.disabled = true;
+  try {
+    const response = await fetch(`data/congress_${value}.json`);
+    if (!response.ok) throw new Error(`Unable to load Congress ${value}`);
+    const payload = await response.json();
+    if (sequence !== loadSequence) return;
+    Object.entries(payload.leaderboards)
+      .forEach(([metric, rows]) => renderActivityTable(metric, rows));
+    const warning = document.getElementById('coverage-warning');
+    warning.textContent = payload.coverage.warning || '';
+    warning.hidden = !payload.coverage.warning;
+    document.getElementById('coverage').textContent =
+      `Speech coverage ${payload.coverage.speech_first_date} to ` +
+      `${payload.coverage.speech_last_date}; ` +
+      `${Number(payload.coverage.bills).toLocaleString()} H.R./S. bill records. ` +
+      `Site data snapshot: ${payload.generated_utc}.`;
+    loadedCongress = value;
+    history.replaceState(null, '', `#congress=${value}`);
+  } catch (caught) {
+    if (sequence !== loadSequence) return;
+    select.value = loadedCongress;
+    error.textContent = caught instanceof Error
+      ? caught.message : 'Unable to update the activity tables.';
+    error.hidden = false;
+    throw caught;
+  } finally {
+    if (sequence === loadSequence) select.disabled = false;
+  }
+}
+
+select.addEventListener('change', () => loadActivityCongress(select.value).catch(() => {}));
+const requestedCongress = new URLSearchParams(location.hash.slice(1)).get('congress');
+if (requestedCongress && [...select.options].some(option => option.value === requestedCongress)
+    && requestedCongress !== select.value) {
+  select.value = requestedCongress;
+  loadActivityCongress(requestedCongress).catch(() => {});
+}
+"""
+
 
 class _TrustedHTML(str):
     """HTML assembled exclusively from escaped text and fixed markup."""
@@ -511,6 +626,25 @@ def resolve_generated_utc(
 
 def _chart_leaderboard(board: pd.DataFrame, figs: Path, min_words: int) -> Path:
     fig, ax = charts.new_figure(figsize=(11, max(4.0, 0.42 * len(board) + 2)))
+    if board.empty:
+        charts.style_axes(
+            ax,
+            "Highest profanity rates in Congress",
+            "Profanity per 100,000 spoken words",
+            "",
+            subtitle=f"No nonzero rate among members with at least {min_words:,} words",
+        )
+        ax.text(
+            0.5, 0.5, "No eligible nonzero rates", transform=ax.transAxes,
+            ha="center", va="center", color=theme.MUTED,
+        )
+        return charts.finish(
+            fig,
+            ax,
+            figs / "leaderboard.png",
+            source="Source: Congressional Record via GovInfo CREC / Stanford Hein.",
+            legend=False,
+        )
     ordered = board.iloc[::-1]
     colors = [theme.PARTY_COLORS.get(p, theme.MUTED) for p in ordered["party"]]
     ax.barh(
@@ -1140,59 +1274,15 @@ profanity values remain available in the table below. Hover or focus a bar for i
 <main id="language-tables">{language_cards}</main>
 <section><h2>How to read this language analysis</h2><ul>{caveats}</ul></section>
 <footer id="coverage">Speech coverage {html.escape(payload['coverage']['speech_first_date'])}
-to {html.escape(payload['coverage']['speech_last_date'])}; {_fmt_int(payload['coverage']['bills'])}
-H.R./S. bill records in this view. Newest Congressional Record date:
+to {html.escape(payload['coverage']['speech_last_date'])}. Newest Congressional Record date:
 {html.escape(payload['coverage']['speech_last_date'])}. Site data snapshot:
-{html.escape(payload['generated_utc'])}.</footer>
+{html.escape(payload['generated_utc'])}. <a href="activity.html">Open member activity and bill tables.</a></footer>
 <script>
 const initialLanguage = {_script_json(language)};
 {INTERACTIVE_CHART_JS}
 const select = document.getElementById('congress');
 let loadedCongress = select.value;
 let loadSequence = 0;
-function cell(text, link) {{
-  const td = document.createElement('td');
-  if (link) {{
-    const a = document.createElement('a'); a.href = link; a.textContent = text; td.appendChild(a);
-  }} else td.textContent = text;
-  return td;
-}}
-function renderTable(metric, rows) {{
-  const existing = document.querySelector(`table[data-metric="${{metric}}"]`);
-  const tbody = existing.querySelector('tbody'); tbody.replaceChildren();
-  for (const row of rows) {{
-    const tr = document.createElement('tr');
-    let values;
-    if (metric === 'speech') values = [row.rank, row.speaker_name, row.party, row.state,
-      String(row.chamber || '').replace(/^./, c => c.toUpperCase()),
-      Number(row.words).toLocaleString(), Number(row.turns).toLocaleString(),
-      Number(row.active_days).toLocaleString()];
-    else if (metric === 'profanity') values = [row.rank, row.speaker_name, row.party, row.state,
-      Number(row.profanity_per_100k).toFixed(1), Number(row.profanity_hits).toLocaleString(),
-      Number(row.profanity_quoted_hits).toLocaleString(), Number(row.words).toLocaleString()];
-    else {{
-      const primary = metric === 'sponsored' ? row.bills_sponsored :
-        metric === 'passed' ? row.bills_passed : row.bills_enacted;
-      const secondary = metric === 'sponsored' ? row.bills_passed : row.bills_sponsored;
-      const third = metric === 'sponsored' ? row.bills_enacted :
-        `${{(100 * (metric === 'passed' ? row.passage_share : row.enactment_share)).toFixed(1)}}%`;
-      values = [row.rank, row.speaker_name, row.party, row.state,
-        Number(primary).toLocaleString(), Number(secondary).toLocaleString(),
-        typeof third === 'number' ? Number(third).toLocaleString() : third, ''];
-    }}
-    values.forEach((value, index) => tr.appendChild(cell(value,
-      index === 1 ? row.member_url : '')));
-    if (['sponsored','passed','enacted'].includes(metric)) {{
-      const target = tr.lastChild; target.replaceChildren();
-      (row.examples || []).forEach((example, index) => {{
-        if (index) target.appendChild(document.createTextNode(', '));
-        const a = document.createElement('a'); a.href = example.url;
-        a.textContent = example.label; a.title = example.title; target.appendChild(a);
-      }});
-    }}
-    tbody.appendChild(tr);
-  }}
-}}
 async function loadCongress(value) {{
   const sequence = ++loadSequence;
   const error = document.getElementById('dashboard-error');
@@ -1202,13 +1292,11 @@ async function loadCongress(value) {{
     if (!response.ok) throw new Error(`Unable to load Congress ${{value}}`);
     const payload = await response.json();
     if (sequence !== loadSequence) return;
-    Object.entries(payload.leaderboards).forEach(([metric, rows]) => renderTable(metric, rows));
     renderLanguage(payload.language);
     const warning = document.getElementById('coverage-warning');
     warning.textContent = payload.coverage.warning || ''; warning.hidden = !payload.coverage.warning;
     document.getElementById('coverage').textContent =
-      `Speech coverage ${{payload.coverage.speech_first_date}} to ${{payload.coverage.speech_last_date}}; ` +
-      `${{Number(payload.coverage.bills).toLocaleString()}} H.R./S. bill records in this view. ` +
+      `Speech coverage ${{payload.coverage.speech_first_date}} to ${{payload.coverage.speech_last_date}}. ` +
       `Newest Congressional Record date: ${{payload.coverage.speech_last_date}}. ` +
       `Site data snapshot: ${{payload.generated_utc}}.`;
     loadedCongress = value;
@@ -1232,6 +1320,87 @@ if (requestedCongress && [...select.options].some(option => option.value === req
   loadCongress(requestedCongress).catch(() => {{}});
 }}
 </script>
+</body>
+</html>
+"""
+
+
+def _render_activity_html(payload: dict, congresses: list[int]) -> str:
+    all_selected = " selected" if payload["congress"] is None else ""
+    options = [f'<option value="all"{all_selected}>All Congresses</option>']
+    for congress in sorted(congresses, reverse=True):
+        selected = " selected" if congress == payload["congress"] else ""
+        options.append(f'<option value="{congress}"{selected}>Congress {congress}</option>')
+    sections = [
+        ("speech", "Who talks the most"),
+        ("sponsored", "Who sponsors the most bills"),
+        ("passed", "Whose sponsored bills pass a chamber"),
+        ("enacted", "Whose sponsored bills become law"),
+        ("profanity", "Who uses profanity at the highest rate"),
+    ]
+    cards = "".join(
+        f'<section class="card" id="{metric}"><h2>{html.escape(title)}</h2>'
+        f'<p class="definition">{html.escape(METRIC_DEFINITIONS[metric])}</p>'
+        f'<div class="table-wrap">{_table(metric, payload["leaderboards"][metric])}</div></section>'
+        for metric, title in sections
+    )
+    caveats = "".join(f"<li>{html.escape(item)}</li>" for item in CAVEATS)
+    warning = payload["coverage"]["warning"]
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Congressional member activity and bills</title>
+<meta name="description" content="Exact-value congressional speech, bill sponsorship,
+passage, enactment, and profanity tables by Congress.">
+<style>
+  :root {{ --bg:{theme.BG}; --text:{theme.TEXT}; --muted:{theme.MUTED};
+           --grid:{theme.GRID}; --blue:{theme.BLUE}; --paper:#fff; }}
+  * {{ box-sizing:border-box; }}
+  body {{ background:var(--bg); color:var(--text); font-family:Georgia,'Times New Roman',serif;
+          margin:0 auto; padding:2.5rem 1.25rem 4rem; max-width:76rem; line-height:1.5; }}
+  h1 {{ font-size:2.2rem; margin:0 0 .35rem; }}
+  h2 {{ font-size:1.3rem; margin:.1rem 0 .3rem; }}
+  a {{ color:var(--blue); }}
+  nav {{ display:flex; gap:1rem; border-bottom:1px solid var(--grid); padding-bottom:.75rem;
+         margin-bottom:1.4rem; }}
+  nav a[aria-current="page"] {{ color:var(--text); font-weight:bold; text-decoration:none; }}
+  .sub,.definition,.muted {{ color:var(--muted); }}
+  .toolbar {{ display:flex; gap:1rem; align-items:center; margin:1.5rem 0; }}
+  select {{ font:inherit; padding:.45rem .6rem; background:var(--paper); border:1px solid var(--grid); }}
+  .warning {{ background:#FFF3CD; border-left:4px solid #C7922B; padding:.8rem 1rem; margin:1rem 0; }}
+  .error {{ color:#8A1C1C; font-weight:bold; }}
+  .card {{ background:var(--paper); border:1px solid var(--grid); padding:1rem;
+           margin:1.25rem 0 2rem; }}
+  .table-wrap {{ overflow-x:auto; }}
+  table {{ border-collapse:collapse; width:100%; font-size:.92rem; }}
+  th,td {{ padding:.48rem .55rem; border-bottom:1px solid var(--grid); text-align:left; }}
+  th {{ border-bottom:2px solid var(--grid); white-space:nowrap; }}
+  td.num {{ font-variant-numeric:tabular-nums; }}
+  li {{ margin:.4rem 0; }}
+  footer {{ margin-top:3rem; color:var(--muted); font-size:.86rem; }}
+  @media (max-width:44rem) {{
+    body {{ padding:1.5rem .75rem 3rem; }}
+    h1 {{ font-size:1.8rem; }}
+  }}
+</style>
+</head>
+<body>
+<nav aria-label="Primary"><a href="index.html">Language analysis</a>
+<a href="activity.html" aria-current="page">Member activity and bills</a></nav>
+<h1>Congressional member activity and bills</h1>
+<p class="sub">Exact-value tables for attributed speech, sponsored bills, passage,
+enactment, and nonzero profanity rates. The language-analysis homepage remains the primary view.</p>
+<div class="toolbar"><label for="congress">View</label><select id="congress">{''.join(options)}</select></div>
+<div id="coverage-warning" class="warning" {'hidden' if not warning else ''}>{html.escape(warning)}</div>
+<p id="dashboard-error" class="error" role="alert" hidden></p>
+<main id="leaderboards">{cards}</main>
+<section><h2>How to read these tables</h2><ul>{caveats}</ul></section>
+<footer id="coverage">Speech coverage {html.escape(payload['coverage']['speech_first_date'])}
+to {html.escape(payload['coverage']['speech_last_date'])}; {_fmt_int(payload['coverage']['bills'])}
+H.R./S. bill records. Site data snapshot: {html.escape(payload['generated_utc'])}.</footer>
+<script>{ACTIVITY_JS}</script>
 </body>
 </html>
 """
@@ -1268,6 +1437,11 @@ def main(argv: Optional[List[str]] = None) -> int:
     data = out / "data"
     figs.mkdir(parents=True, exist_ok=True)
     data.mkdir(parents=True, exist_ok=True)
+    for name, source in LONG_RUN_FIGURES.items():
+        if not source.exists():
+            LOG.error("missing long-run figure %s; run scripts/update.py first", source)
+            return 1
+        shutil.copyfile(source, figs / name)
 
     payloads = {
         value: build_payload(
@@ -1315,9 +1489,6 @@ def main(argv: Optional[List[str]] = None) -> int:
         min_words=args.min_words,
     )
     profanity = pd.DataFrame(selected["leaderboards"]["profanity"])
-    if profanity.empty:
-        LOG.error("no member cleared the %d-word threshold", args.min_words)
-        return 1
     series = timeseries(daily)
     _chart_leaderboard(profanity, figs, args.min_words)
     _chart_trend(series, figs)
@@ -1351,6 +1522,9 @@ def main(argv: Optional[List[str]] = None) -> int:
     )
     (out / "index.html").write_text(
         _render_html(selected, available), encoding="utf-8"
+    )
+    (out / "activity.html").write_text(
+        _render_activity_html(selected, available), encoding="utf-8"
     )
     LOG.info("site written to %s (%s)", out, selected["label"])
     return 0

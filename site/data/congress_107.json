@@ -57,549 +57,573 @@
     "series": [
       {
         "period": "2001-01",
-        "chamber": "house",
-        "words": 107730,
-        "turns": 381,
+        "party": "D",
+        "words": 932114,
+        "turns": 869,
+        "profanity_hits": 0,
+        "hostility_hits": 10,
+        "misconduct_hits": 169,
+        "profanity_per_100k": 0.0,
+        "hostility_per_100k": 1.0728301474,
+        "misconduct_per_100k": 18.1308294908
+      },
+      {
+        "period": "2001-01",
+        "party": "R",
+        "words": 693678,
+        "turns": 653,
+        "profanity_hits": 2,
+        "hostility_hits": 9,
+        "misconduct_hits": 21,
+        "profanity_per_100k": 0.288318211,
+        "hostility_per_100k": 1.2974319497,
+        "misconduct_per_100k": 3.027341216
+      },
+      {
+        "period": "2001-02",
+        "party": "D",
+        "words": 644542,
+        "turns": 986,
+        "profanity_hits": 0,
+        "hostility_hits": 3,
+        "misconduct_hits": 100,
+        "profanity_per_100k": 0.0,
+        "hostility_per_100k": 0.4654467824,
+        "misconduct_per_100k": 15.5148927455
+      },
+      {
+        "period": "2001-02",
+        "party": "R",
+        "words": 747380,
+        "turns": 1040,
+        "profanity_hits": 0,
+        "hostility_hits": 10,
+        "misconduct_hits": 29,
+        "profanity_per_100k": 0.0,
+        "hostility_per_100k": 1.3380074393,
+        "misconduct_per_100k": 3.880221574
+      },
+      {
+        "period": "2001-03",
+        "party": "D",
+        "words": 1501565,
+        "turns": 3894,
+        "profanity_hits": 0,
+        "hostility_hits": 24,
+        "misconduct_hits": 171,
+        "profanity_per_100k": 0.0,
+        "hostility_per_100k": 1.5983324065,
+        "misconduct_per_100k": 11.3881183965
+      },
+      {
+        "period": "2001-03",
+        "party": "R",
+        "words": 1187248,
+        "turns": 3467,
+        "profanity_hits": 1,
+        "hostility_hits": 6,
+        "misconduct_hits": 210,
+        "profanity_per_100k": 0.0842284005,
+        "hostility_per_100k": 0.5053704028,
+        "misconduct_per_100k": 17.6879640985
+      },
+      {
+        "period": "2001-04",
+        "party": "D",
+        "words": 640697,
+        "turns": 1739,
+        "profanity_hits": 2,
+        "hostility_hits": 10,
+        "misconduct_hits": 30,
+        "profanity_per_100k": 0.3121600382,
+        "hostility_per_100k": 1.560800191,
+        "misconduct_per_100k": 4.6824005731
+      },
+      {
+        "period": "2001-04",
+        "party": "R",
+        "words": 550521,
+        "turns": 1764,
+        "profanity_hits": 1,
+        "hostility_hits": 4,
+        "misconduct_hits": 36,
+        "profanity_per_100k": 0.1816461134,
+        "hostility_per_100k": 0.7265844536,
+        "misconduct_per_100k": 6.5392600827
+      },
+      {
+        "period": "2001-05",
+        "party": "D",
+        "words": 1286733,
+        "turns": 3798,
+        "profanity_hits": 3,
+        "hostility_hits": 7,
+        "misconduct_hits": 32,
+        "profanity_per_100k": 0.2331486019,
+        "hostility_per_100k": 0.5440134045,
+        "misconduct_per_100k": 2.4869184205
+      },
+      {
+        "period": "2001-05",
+        "party": "R",
+        "words": 1069778,
+        "turns": 3166,
+        "profanity_hits": 0,
+        "hostility_hits": 5,
+        "misconduct_hits": 20,
+        "profanity_per_100k": 0.0,
+        "hostility_per_100k": 0.4673866914,
+        "misconduct_per_100k": 1.8695467658
+      },
+      {
+        "period": "2001-06",
+        "party": "D",
+        "words": 1412279,
+        "turns": 4362,
+        "profanity_hits": 1,
+        "hostility_hits": 9,
+        "misconduct_hits": 17,
+        "profanity_per_100k": 0.0708075387,
+        "hostility_per_100k": 0.6372678486,
+        "misconduct_per_100k": 1.2037281585
+      },
+      {
+        "period": "2001-06",
+        "party": "R",
+        "words": 1188424,
+        "turns": 3592,
+        "profanity_hits": 1,
+        "hostility_hits": 7,
+        "misconduct_hits": 70,
+        "profanity_per_100k": 0.0841450526,
+        "hostility_per_100k": 0.5890153683,
+        "misconduct_per_100k": 5.8901536825
+      },
+      {
+        "period": "2001-07",
+        "party": "D",
+        "words": 1244247,
+        "turns": 4441,
+        "profanity_hits": 2,
+        "hostility_hits": 6,
+        "misconduct_hits": 42,
+        "profanity_per_100k": 0.1607397888,
+        "hostility_per_100k": 0.4822193664,
+        "misconduct_per_100k": 3.3755355649
+      },
+      {
+        "period": "2001-07",
+        "party": "R",
+        "words": 1018215,
+        "turns": 3284,
+        "profanity_hits": 1,
+        "hostility_hits": 9,
+        "misconduct_hits": 36,
+        "profanity_per_100k": 0.0982110851,
+        "hostility_per_100k": 0.8838997658,
+        "misconduct_per_100k": 3.5355990631
+      },
+      {
+        "period": "2001-08",
+        "party": "D",
+        "words": 399299,
+        "turns": 1209,
+        "profanity_hits": 0,
+        "hostility_hits": 8,
+        "misconduct_hits": 227,
+        "profanity_per_100k": 0.0,
+        "hostility_per_100k": 2.0035111533,
+        "misconduct_per_100k": 56.8496289748
+      },
+      {
+        "period": "2001-08",
+        "party": "R",
+        "words": 386770,
+        "turns": 1041,
+        "profanity_hits": 0,
+        "hostility_hits": 9,
+        "misconduct_hits": 9,
+        "profanity_per_100k": 0.0,
+        "hostility_per_100k": 2.3269643457,
+        "misconduct_per_100k": 2.3269643457
+      },
+      {
+        "period": "2001-09",
+        "party": "D",
+        "words": 742308,
+        "turns": 2703,
+        "profanity_hits": 1,
+        "hostility_hits": 153,
+        "misconduct_hits": 27,
+        "profanity_per_100k": 0.1347149701,
+        "hostility_per_100k": 20.6113904201,
+        "misconduct_per_100k": 3.6373041918
+      },
+      {
+        "period": "2001-09",
+        "party": "R",
+        "words": 704654,
+        "turns": 2245,
+        "profanity_hits": 1,
+        "hostility_hits": 151,
+        "misconduct_hits": 26,
+        "profanity_per_100k": 0.14191362,
+        "hostility_per_100k": 21.4289566227,
+        "misconduct_per_100k": 3.6897541205
+      },
+      {
+        "period": "2001-10",
+        "party": "D",
+        "words": 1258593,
+        "turns": 3766,
+        "profanity_hits": 4,
+        "hostility_hits": 17,
+        "misconduct_hits": 535,
+        "profanity_per_100k": 0.3178152111,
+        "hostility_per_100k": 1.3507146472,
+        "misconduct_per_100k": 42.5077844863
+      },
+      {
+        "period": "2001-10",
+        "party": "R",
+        "words": 1088798,
+        "turns": 2635,
+        "profanity_hits": 3,
+        "hostility_hits": 29,
+        "misconduct_hits": 209,
+        "profanity_per_100k": 0.2755332027,
+        "hostility_per_100k": 2.6634876258,
+        "misconduct_per_100k": 19.195479786
+      },
+      {
+        "period": "2001-11",
+        "party": "D",
+        "words": 1020563,
+        "turns": 3072,
+        "profanity_hits": 0,
+        "hostility_hits": 13,
+        "misconduct_hits": 24,
+        "profanity_per_100k": 0.0,
+        "hostility_per_100k": 1.2738067126,
+        "misconduct_per_100k": 2.3516431617
+      },
+      {
+        "period": "2001-11",
+        "party": "R",
+        "words": 836583,
+        "turns": 2232,
+        "profanity_hits": 3,
+        "hostility_hits": 12,
+        "misconduct_hits": 28,
+        "profanity_per_100k": 0.3586015972,
+        "hostility_per_100k": 1.4344063888,
+        "misconduct_per_100k": 3.3469482406
+      },
+      {
+        "period": "2001-12",
+        "party": "D",
+        "words": 1202096,
+        "turns": 3918,
+        "profanity_hits": 0,
+        "hostility_hits": 16,
+        "misconduct_hits": 22,
+        "profanity_per_100k": 0.0,
+        "hostility_per_100k": 1.3310085051,
+        "misconduct_per_100k": 1.8301366946
+      },
+      {
+        "period": "2001-12",
+        "party": "R",
+        "words": 1169462,
+        "turns": 3017,
+        "profanity_hits": 0,
+        "hostility_hits": 17,
+        "misconduct_hits": 52,
+        "profanity_per_100k": 0.0,
+        "hostility_per_100k": 1.4536598881,
+        "misconduct_per_100k": 4.4464890693
+      },
+      {
+        "period": "2002-01",
+        "party": "D",
+        "words": 158090,
+        "turns": 474,
+        "profanity_hits": 0,
+        "hostility_hits": 1,
+        "misconduct_hits": 7,
+        "profanity_per_100k": 0.0,
+        "hostility_per_100k": 0.6325510785,
+        "misconduct_per_100k": 4.4278575495
+      },
+      {
+        "period": "2002-01",
+        "party": "R",
+        "words": 169740,
+        "turns": 438,
         "profanity_hits": 0,
         "hostility_hits": 1,
         "misconduct_hits": 4,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 0.9282465423,
-        "misconduct_per_100k": 3.7129861691
+        "hostility_per_100k": 0.5891363261,
+        "misconduct_per_100k": 2.3565453046
       },
       {
-        "period": "2001-01",
-        "chamber": "senate",
-        "words": 1524507,
-        "turns": 1149,
-        "profanity_hits": 2,
-        "hostility_hits": 18,
-        "misconduct_hits": 192,
-        "profanity_per_100k": 0.1311899519,
-        "hostility_per_100k": 1.1807095671,
-        "misconduct_per_100k": 12.5942353823
-      },
-      {
-        "period": "2001-02",
-        "chamber": "house",
-        "words": 333864,
-        "turns": 665,
+        "period": "2002-02",
+        "party": "D",
+        "words": 724800,
+        "turns": 2626,
         "profanity_hits": 0,
-        "hostility_hits": 4,
-        "misconduct_hits": 0,
+        "hostility_hits": 22,
+        "misconduct_hits": 64,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 1.1980926365,
-        "misconduct_per_100k": 0.0
+        "hostility_per_100k": 3.0353200883,
+        "misconduct_per_100k": 8.8300220751
       },
       {
-        "period": "2001-02",
-        "chamber": "senate",
-        "words": 1164232,
-        "turns": 1375,
+        "period": "2002-02",
+        "party": "R",
+        "words": 563249,
+        "turns": 1843,
         "profanity_hits": 0,
-        "hostility_hits": 9,
-        "misconduct_hits": 129,
+        "hostility_hits": 20,
+        "misconduct_hits": 50,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 0.7730417992,
-        "misconduct_per_100k": 11.0802657889
+        "hostility_per_100k": 3.5508274316,
+        "misconduct_per_100k": 8.8770685789
       },
       {
-        "period": "2001-03",
-        "chamber": "house",
-        "words": 842890,
-        "turns": 2536,
+        "period": "2002-03",
+        "party": "D",
+        "words": 743680,
+        "turns": 2314,
         "profanity_hits": 0,
-        "hostility_hits": 7,
-        "misconduct_hits": 21,
+        "hostility_hits": 22,
+        "misconduct_hits": 79,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 0.8304761001,
-        "misconduct_per_100k": 2.4914283003
+        "hostility_per_100k": 2.9582616179,
+        "misconduct_per_100k": 10.622848537
       },
       {
-        "period": "2001-03",
-        "chamber": "senate",
-        "words": 1872729,
-        "turns": 4866,
+        "period": "2002-03",
+        "party": "R",
+        "words": 664056,
+        "turns": 1531,
+        "profanity_hits": 0,
+        "hostility_hits": 11,
+        "misconduct_hits": 88,
+        "profanity_per_100k": 0.0,
+        "hostility_per_100k": 1.6564868023,
+        "misconduct_per_100k": 13.2518944185
+      },
+      {
+        "period": "2002-04",
+        "party": "D",
+        "words": 1045990,
+        "turns": 3039,
         "profanity_hits": 1,
-        "hostility_hits": 23,
-        "misconduct_hits": 364,
-        "profanity_per_100k": 0.053398009,
-        "hostility_per_100k": 1.228154207,
-        "misconduct_per_100k": 19.4368752767
-      },
-      {
-        "period": "2001-04",
-        "chamber": "house",
-        "words": 309511,
-        "turns": 934,
-        "profanity_hits": 1,
-        "hostility_hits": 7,
-        "misconduct_hits": 8,
-        "profanity_per_100k": 0.323090294,
-        "hostility_per_100k": 2.2616320583,
-        "misconduct_per_100k": 2.5847223524
-      },
-      {
-        "period": "2001-04",
-        "chamber": "senate",
-        "words": 904333,
-        "turns": 2606,
-        "profanity_hits": 2,
-        "hostility_hits": 7,
-        "misconduct_hits": 58,
-        "profanity_per_100k": 0.2211574719,
-        "hostility_per_100k": 0.7740511515,
-        "misconduct_per_100k": 6.413566684
-      },
-      {
-        "period": "2001-05",
-        "chamber": "house",
-        "words": 881290,
-        "turns": 3030,
-        "profanity_hits": 0,
-        "hostility_hits": 4,
-        "misconduct_hits": 34,
-        "profanity_per_100k": 0.0,
-        "hostility_per_100k": 0.4538801076,
-        "misconduct_per_100k": 3.8579809143
-      },
-      {
-        "period": "2001-05",
-        "chamber": "senate",
-        "words": 1572193,
-        "turns": 4259,
-        "profanity_hits": 3,
-        "hostility_hits": 8,
-        "misconduct_hits": 18,
-        "profanity_per_100k": 0.1908162675,
-        "hostility_per_100k": 0.5088433799,
-        "misconduct_per_100k": 1.1448976048
-      },
-      {
-        "period": "2001-06",
-        "chamber": "house",
-        "words": 975006,
-        "turns": 3518,
-        "profanity_hits": 1,
-        "hostility_hits": 10,
-        "misconduct_hits": 16,
-        "profanity_per_100k": 0.1025634714,
-        "hostility_per_100k": 1.025634714,
-        "misconduct_per_100k": 1.6410155425
-      },
-      {
-        "period": "2001-06",
-        "chamber": "senate",
-        "words": 1666074,
-        "turns": 4496,
-        "profanity_hits": 1,
-        "hostility_hits": 6,
-        "misconduct_hits": 71,
-        "profanity_per_100k": 0.0600213436,
-        "hostility_per_100k": 0.3601280615,
-        "misconduct_per_100k": 4.2615153949
-      },
-      {
-        "period": "2001-07",
-        "chamber": "house",
-        "words": 1128531,
-        "turns": 4575,
-        "profanity_hits": 3,
-        "hostility_hits": 10,
-        "misconduct_hits": 45,
-        "profanity_per_100k": 0.2658323077,
-        "hostility_per_100k": 0.8861076922,
-        "misconduct_per_100k": 3.987484615
-      },
-      {
-        "period": "2001-07",
-        "chamber": "senate",
-        "words": 1151507,
-        "turns": 3208,
-        "profanity_hits": 0,
-        "hostility_hits": 5,
-        "misconduct_hits": 34,
-        "profanity_per_100k": 0.0,
-        "hostility_per_100k": 0.4342136001,
-        "misconduct_per_100k": 2.9526524806
-      },
-      {
-        "period": "2001-08",
-        "chamber": "house",
-        "words": 300948,
-        "turns": 1180,
-        "profanity_hits": 0,
-        "hostility_hits": 10,
-        "misconduct_hits": 2,
-        "profanity_per_100k": 0.0,
-        "hostility_per_100k": 3.3228331805,
-        "misconduct_per_100k": 0.6645666361
-      },
-      {
-        "period": "2001-08",
-        "chamber": "senate",
-        "words": 498714,
-        "turns": 1087,
-        "profanity_hits": 0,
-        "hostility_hits": 7,
-        "misconduct_hits": 234,
-        "profanity_per_100k": 0.0,
-        "hostility_per_100k": 1.4036100851,
-        "misconduct_per_100k": 46.9206799889
-      },
-      {
-        "period": "2001-09",
-        "chamber": "house",
-        "words": 657743,
-        "turns": 2728,
-        "profanity_hits": 1,
-        "hostility_hits": 246,
-        "misconduct_hits": 29,
-        "profanity_per_100k": 0.1520350654,
-        "hostility_per_100k": 37.4006260804,
-        "misconduct_per_100k": 4.4090168957
-      },
-      {
-        "period": "2001-09",
-        "chamber": "senate",
-        "words": 793452,
-        "turns": 2232,
-        "profanity_hits": 1,
-        "hostility_hits": 59,
-        "misconduct_hits": 24,
-        "profanity_per_100k": 0.1260315684,
-        "hostility_per_100k": 7.4358625348,
-        "misconduct_per_100k": 3.0247576413
-      },
-      {
-        "period": "2001-10",
-        "chamber": "house",
-        "words": 1163604,
-        "turns": 3275,
-        "profanity_hits": 5,
-        "hostility_hits": 28,
-        "misconduct_hits": 203,
-        "profanity_per_100k": 0.429699451,
-        "hostility_per_100k": 2.4063169257,
-        "misconduct_per_100k": 17.4457977112
-      },
-      {
-        "period": "2001-10",
-        "chamber": "senate",
-        "words": 1219753,
-        "turns": 3182,
-        "profanity_hits": 2,
-        "hostility_hits": 18,
-        "misconduct_hits": 541,
-        "profanity_per_100k": 0.163967623,
-        "hostility_per_100k": 1.4757086066,
-        "misconduct_per_100k": 44.3532420088
-      },
-      {
-        "period": "2001-11",
-        "chamber": "house",
-        "words": 890633,
-        "turns": 3013,
-        "profanity_hits": 1,
-        "hostility_hits": 19,
-        "misconduct_hits": 33,
-        "profanity_per_100k": 0.1122796932,
-        "hostility_per_100k": 2.1333141709,
-        "misconduct_per_100k": 3.7052298758
-      },
-      {
-        "period": "2001-11",
-        "chamber": "senate",
-        "words": 976765,
-        "turns": 2312,
-        "profanity_hits": 2,
-        "hostility_hits": 6,
-        "misconduct_hits": 19,
-        "profanity_per_100k": 0.2047575415,
-        "hostility_per_100k": 0.6142726244,
-        "misconduct_per_100k": 1.945196644
-      },
-      {
-        "period": "2001-12",
-        "chamber": "house",
-        "words": 1023323,
-        "turns": 3000,
-        "profanity_hits": 0,
-        "hostility_hits": 18,
-        "misconduct_hits": 32,
-        "profanity_per_100k": 0.0,
-        "hostility_per_100k": 1.7589754164,
-        "misconduct_per_100k": 3.1270674069
-      },
-      {
-        "period": "2001-12",
-        "chamber": "senate",
-        "words": 1414773,
-        "turns": 3972,
-        "profanity_hits": 0,
         "hostility_hits": 15,
+        "misconduct_hits": 61,
+        "profanity_per_100k": 0.0956032084,
+        "hostility_per_100k": 1.4340481267,
+        "misconduct_per_100k": 5.8317957151
+      },
+      {
+        "period": "2002-04",
+        "party": "R",
+        "words": 705814,
+        "turns": 1905,
+        "profanity_hits": 0,
+        "hostility_hits": 7,
+        "misconduct_hits": 20,
+        "profanity_per_100k": 0.0,
+        "hostility_per_100k": 0.9917627024,
+        "misconduct_per_100k": 2.833607721
+      },
+      {
+        "period": "2002-05",
+        "party": "D",
+        "words": 1354075,
+        "turns": 3929,
+        "profanity_hits": 0,
+        "hostility_hits": 16,
         "misconduct_hits": 42,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 1.0602407595,
-        "misconduct_per_100k": 2.9686741265
-      },
-      {
-        "period": "2002-01",
-        "chamber": "house",
-        "words": 93103,
-        "turns": 258,
-        "profanity_hits": 0,
-        "hostility_hits": 1,
-        "misconduct_hits": 3,
-        "profanity_per_100k": 0.0,
-        "hostility_per_100k": 1.0740792456,
-        "misconduct_per_100k": 3.2222377367
-      },
-      {
-        "period": "2002-01",
-        "chamber": "senate",
-        "words": 236230,
-        "turns": 656,
-        "profanity_hits": 0,
-        "hostility_hits": 1,
-        "misconduct_hits": 8,
-        "profanity_per_100k": 0.0,
-        "hostility_per_100k": 0.4233162596,
-        "misconduct_per_100k": 3.3865300766
-      },
-      {
-        "period": "2002-02",
-        "chamber": "house",
-        "words": 488244,
-        "turns": 1896,
-        "profanity_hits": 0,
-        "hostility_hits": 21,
-        "misconduct_hits": 55,
-        "profanity_per_100k": 0.0,
-        "hostility_per_100k": 4.3011281245,
-        "misconduct_per_100k": 11.2648593736
-      },
-      {
-        "period": "2002-02",
-        "chamber": "senate",
-        "words": 840858,
-        "turns": 2610,
-        "profanity_hits": 0,
-        "hostility_hits": 21,
-        "misconduct_hits": 59,
-        "profanity_per_100k": 0.0,
-        "hostility_per_100k": 2.4974490342,
-        "misconduct_per_100k": 7.0166425247
-      },
-      {
-        "period": "2002-03",
-        "chamber": "house",
-        "words": 451308,
-        "turns": 1511,
-        "profanity_hits": 0,
-        "hostility_hits": 7,
-        "misconduct_hits": 27,
-        "profanity_per_100k": 0.0,
-        "hostility_per_100k": 1.5510471784,
-        "misconduct_per_100k": 5.9826105453
-      },
-      {
-        "period": "2002-03",
-        "chamber": "senate",
-        "words": 981996,
-        "turns": 2386,
-        "profanity_hits": 0,
-        "hostility_hits": 26,
-        "misconduct_hits": 140,
-        "profanity_per_100k": 0.0,
-        "hostility_per_100k": 2.6476686259,
-        "misconduct_per_100k": 14.2566772166
-      },
-      {
-        "period": "2002-04",
-        "chamber": "house",
-        "words": 646241,
-        "turns": 2166,
-        "profanity_hits": 0,
-        "hostility_hits": 7,
-        "misconduct_hits": 32,
-        "profanity_per_100k": 0.0,
-        "hostility_per_100k": 1.083187232,
-        "misconduct_per_100k": 4.9517130606
-      },
-      {
-        "period": "2002-04",
-        "chamber": "senate",
-        "words": 1128136,
-        "turns": 2829,
-        "profanity_hits": 1,
-        "hostility_hits": 15,
-        "misconduct_hits": 49,
-        "profanity_per_100k": 0.088641795,
-        "hostility_per_100k": 1.3296269244,
-        "misconduct_per_100k": 4.3434479531
+        "hostility_per_100k": 1.181618448,
+        "misconduct_per_100k": 3.101748426
       },
       {
         "period": "2002-05",
-        "chamber": "house",
-        "words": 1033845,
-        "turns": 3550,
+        "party": "R",
+        "words": 952530,
+        "turns": 2496,
         "profanity_hits": 0,
-        "hostility_hits": 18,
-        "misconduct_hits": 49,
+        "hostility_hits": 13,
+        "misconduct_hits": 46,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 1.7410733717,
-        "misconduct_per_100k": 4.7395886231
-      },
-      {
-        "period": "2002-05",
-        "chamber": "senate",
-        "words": 1314537,
-        "turns": 2928,
-        "profanity_hits": 0,
-        "hostility_hits": 12,
-        "misconduct_hits": 40,
-        "profanity_per_100k": 0.0,
-        "hostility_per_100k": 0.9128689417,
-        "misconduct_per_100k": 3.0428964723
+        "hostility_per_100k": 1.3647864109,
+        "misconduct_per_100k": 4.8292442233
       },
       {
         "period": "2002-06",
-        "chamber": "house",
-        "words": 1214309,
-        "turns": 3595,
+        "party": "D",
+        "words": 1368005,
+        "turns": 4622,
         "profanity_hits": 3,
-        "hostility_hits": 21,
-        "misconduct_hits": 35,
-        "profanity_per_100k": 0.2470540859,
-        "hostility_per_100k": 1.7293786013,
-        "misconduct_per_100k": 2.8822976689
+        "hostility_hits": 13,
+        "misconduct_hits": 32,
+        "profanity_per_100k": 0.2192974441,
+        "hostility_per_100k": 0.9502889244,
+        "misconduct_per_100k": 2.3391727369
       },
       {
         "period": "2002-06",
-        "chamber": "senate",
-        "words": 1402347,
-        "turns": 4366,
+        "party": "R",
+        "words": 1202144,
+        "turns": 3278,
         "profanity_hits": 0,
-        "hostility_hits": 10,
+        "hostility_hits": 17,
         "misconduct_hits": 32,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 0.7130902694,
-        "misconduct_per_100k": 2.281888862
+        "hostility_per_100k": 1.4141400697,
+        "misconduct_per_100k": 2.6619107195
       },
       {
         "period": "2002-07",
-        "chamber": "house",
-        "words": 1501742,
-        "turns": 4572,
+        "party": "D",
+        "words": 1488674,
+        "turns": 4771,
         "profanity_hits": 0,
-        "hostility_hits": 26,
-        "misconduct_hits": 132,
+        "hostility_hits": 30,
+        "misconduct_hits": 141,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 1.7313226906,
-        "misconduct_per_100k": 8.7897921214
+        "hostility_per_100k": 2.015216226,
+        "misconduct_per_100k": 9.4715162621
       },
       {
         "period": "2002-07",
-        "chamber": "senate",
-        "words": 1496535,
-        "turns": 3934,
+        "party": "R",
+        "words": 1494587,
+        "turns": 3700,
         "profanity_hits": 2,
-        "hostility_hits": 57,
-        "misconduct_hits": 151,
-        "profanity_per_100k": 0.1336420465,
-        "hostility_per_100k": 3.8087983241,
-        "misconduct_per_100k": 10.0899745078
+        "hostility_hits": 53,
+        "misconduct_hits": 142,
+        "profanity_per_100k": 0.1338162315,
+        "hostility_per_100k": 3.5461301349,
+        "misconduct_per_100k": 9.500952437
       },
       {
         "period": "2002-08",
-        "chamber": "senate",
-        "words": 295569,
-        "turns": 604,
-        "profanity_hits": 0,
-        "hostility_hits": 3,
-        "misconduct_hits": 14,
-        "profanity_per_100k": 0.0,
-        "hostility_per_100k": 1.0149914233,
-        "misconduct_per_100k": 4.7366266422
-      },
-      {
-        "period": "2002-09",
-        "chamber": "house",
-        "words": 682056,
-        "turns": 1946,
-        "profanity_hits": 0,
-        "hostility_hits": 29,
-        "misconduct_hits": 15,
-        "profanity_per_100k": 0.0,
-        "hostility_per_100k": 4.251850288,
-        "misconduct_per_100k": 2.1992329076
-      },
-      {
-        "period": "2002-09",
-        "chamber": "senate",
-        "words": 1291139,
-        "turns": 3179,
-        "profanity_hits": 2,
-        "hostility_hits": 18,
-        "misconduct_hits": 28,
-        "profanity_per_100k": 0.1549019896,
-        "hostility_per_100k": 1.3941179067,
-        "misconduct_per_100k": 2.1686278549
-      },
-      {
-        "period": "2002-10",
-        "chamber": "house",
-        "words": 1005252,
-        "turns": 2801,
-        "profanity_hits": 0,
-        "hostility_hits": 13,
-        "misconduct_hits": 60,
-        "profanity_per_100k": 0.0,
-        "hostility_per_100k": 1.2932080712,
-        "misconduct_per_100k": 5.9686526364
-      },
-      {
-        "period": "2002-10",
-        "chamber": "senate",
-        "words": 1342268,
-        "turns": 3082,
-        "profanity_hits": 0,
-        "hostility_hits": 31,
-        "misconduct_hits": 72,
-        "profanity_per_100k": 0.0,
-        "hostility_per_100k": 2.3095238805,
-        "misconduct_per_100k": 5.3640554643
-      },
-      {
-        "period": "2002-11",
-        "chamber": "house",
-        "words": 527952,
-        "turns": 822,
+        "party": "D",
+        "words": 181638,
+        "turns": 415,
         "profanity_hits": 0,
         "hostility_hits": 2,
-        "misconduct_hits": 10,
+        "misconduct_hits": 8,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 0.3788223172,
-        "misconduct_per_100k": 1.8941115859
+        "hostility_per_100k": 1.1010911814,
+        "misconduct_per_100k": 4.4043647254
+      },
+      {
+        "period": "2002-08",
+        "party": "R",
+        "words": 103070,
+        "turns": 187,
+        "profanity_hits": 0,
+        "hostility_hits": 1,
+        "misconduct_hits": 2,
+        "profanity_per_100k": 0.0,
+        "hostility_per_100k": 0.9702144174,
+        "misconduct_per_100k": 1.9404288348
+      },
+      {
+        "period": "2002-09",
+        "party": "D",
+        "words": 1068945,
+        "turns": 2889,
+        "profanity_hits": 2,
+        "hostility_hits": 16,
+        "misconduct_hits": 17,
+        "profanity_per_100k": 0.1871003653,
+        "hostility_per_100k": 1.4968029225,
+        "misconduct_per_100k": 1.5903531052
+      },
+      {
+        "period": "2002-09",
+        "party": "R",
+        "words": 802460,
+        "turns": 1990,
+        "profanity_hits": 0,
+        "hostility_hits": 30,
+        "misconduct_hits": 26,
+        "profanity_per_100k": 0.0,
+        "hostility_per_100k": 3.7385040999,
+        "misconduct_per_100k": 3.2400368866
+      },
+      {
+        "period": "2002-10",
+        "party": "D",
+        "words": 1248037,
+        "turns": 3361,
+        "profanity_hits": 0,
+        "hostility_hits": 12,
+        "misconduct_hits": 41,
+        "profanity_per_100k": 0.0,
+        "hostility_per_100k": 0.9615099552,
+        "misconduct_per_100k": 3.2851590137
+      },
+      {
+        "period": "2002-10",
+        "party": "R",
+        "words": 1033971,
+        "turns": 2399,
+        "profanity_hits": 0,
+        "hostility_hits": 32,
+        "misconduct_hits": 89,
+        "profanity_per_100k": 0.0,
+        "hostility_per_100k": 3.0948643627,
+        "misconduct_per_100k": 8.6075915089
       },
       {
         "period": "2002-11",
-        "chamber": "senate",
-        "words": 902542,
-        "turns": 1941,
-        "profanity_hits": 4,
-        "hostility_hits": 13,
-        "misconduct_hits": 45,
-        "profanity_per_100k": 0.4431926714,
-        "hostility_per_100k": 1.4403761819,
-        "misconduct_per_100k": 4.9859175529
+        "party": "D",
+        "words": 695862,
+        "turns": 1726,
+        "profanity_hits": 2,
+        "hostility_hits": 8,
+        "misconduct_hits": 20,
+        "profanity_per_100k": 0.287413309,
+        "hostility_per_100k": 1.1496532358,
+        "misconduct_per_100k": 2.8741330896
+      },
+      {
+        "period": "2002-11",
+        "party": "R",
+        "words": 687816,
+        "turns": 982,
+        "profanity_hits": 2,
+        "hostility_hits": 7,
+        "misconduct_hits": 31,
+        "profanity_per_100k": 0.2907754399,
+        "hostility_per_100k": 1.0177140398,
+        "misconduct_per_100k": 4.5070193191
       },
       {
         "period": "2002-12",
-        "chamber": "senate",
-        "words": 626,
-        "turns": 5,
+        "party": "D",
+        "words": 130,
+        "turns": 3,
+        "profanity_hits": 0,
+        "hostility_hits": 0,
+        "misconduct_hits": 0,
+        "profanity_per_100k": 0.0,
+        "hostility_per_100k": 0.0,
+        "misconduct_per_100k": 0.0
+      },
+      {
+        "period": "2002-12",
+        "party": "R",
+        "words": 496,
+        "turns": 2,
         "profanity_hits": 0,
         "hostility_hits": 0,
         "misconduct_hits": 0,
@@ -621,7 +645,8 @@
           "turns": 206,
           "active_days": 68,
           "profanity_hits": 2,
-          "profanity_per_100k": 4.3756973768
+          "profanity_per_100k": 4.3756973768,
+          "member_url": "https://bioguide.congress.gov/search/bio/F000116"
         },
         {
           "rank": 2,
@@ -634,7 +659,8 @@
           "turns": 235,
           "active_days": 52,
           "profanity_hits": 1,
-          "profanity_per_100k": 3.0928153898
+          "profanity_per_100k": 3.0928153898,
+          "member_url": "https://bioguide.congress.gov/search/bio/M001134"
         },
         {
           "rank": 3,
@@ -647,7 +673,8 @@
           "turns": 231,
           "active_days": 64,
           "profanity_hits": 1,
-          "profanity_per_100k": 2.1873222801
+          "profanity_per_100k": 2.1873222801,
+          "member_url": "https://bioguide.congress.gov/search/bio/B000619"
         },
         {
           "rank": 4,
@@ -660,7 +687,8 @@
           "turns": 254,
           "active_days": 89,
           "profanity_hits": 2,
-          "profanity_per_100k": 2.1155737965
+          "profanity_per_100k": 2.1155737965,
+          "member_url": "https://bioguide.congress.gov/search/bio/D000191"
         },
         {
           "rank": 5,
@@ -673,7 +701,8 @@
           "turns": 149,
           "active_days": 54,
           "profanity_hits": 1,
-          "profanity_per_100k": 1.8504468829
+          "profanity_per_100k": 1.8504468829,
+          "member_url": "https://bioguide.congress.gov/search/bio/G000536"
         },
         {
           "rank": 6,
@@ -686,7 +715,8 @@
           "turns": 187,
           "active_days": 63,
           "profanity_hits": 1,
-          "profanity_per_100k": 1.4360800758
+          "profanity_per_100k": 1.4360800758,
+          "member_url": "https://bioguide.congress.gov/search/bio/C000567"
         },
         {
           "rank": 7,
@@ -699,7 +729,8 @@
           "turns": 549,
           "active_days": 259,
           "profanity_hits": 2,
-          "profanity_per_100k": 1.1512514103
+          "profanity_per_100k": 1.1512514103,
+          "member_url": "https://bioguide.congress.gov/search/bio/S001142"
         },
         {
           "rank": 8,
@@ -712,7 +743,8 @@
           "turns": 348,
           "active_days": 78,
           "profanity_hits": 1,
-          "profanity_per_100k": 1.1262529564
+          "profanity_per_100k": 1.1262529564,
+          "member_url": "https://bioguide.congress.gov/search/bio/B000944"
         }
       ],
       "hostility": [
@@ -727,7 +759,8 @@
           "turns": 78,
           "active_days": 48,
           "hostility_hits": 6,
-          "hostility_per_100k": 23.4953205153
+          "hostility_per_100k": 23.4953205153,
+          "member_url": "https://bioguide.congress.gov/search/bio/M000309"
         },
         {
           "rank": 2,
@@ -740,7 +773,8 @@
           "turns": 216,
           "active_days": 51,
           "hostility_hits": 8,
-          "hostility_per_100k": 21.0106103582
+          "hostility_per_100k": 21.0106103582,
+          "member_url": "https://bioguide.congress.gov/search/bio/D000299"
         },
         {
           "rank": 3,
@@ -753,7 +787,8 @@
           "turns": 254,
           "active_days": 89,
           "hostility_hits": 13,
-          "hostility_per_100k": 13.7512296773
+          "hostility_per_100k": 13.7512296773,
+          "member_url": "https://bioguide.congress.gov/search/bio/D000191"
         },
         {
           "rank": 4,
@@ -766,7 +801,8 @@
           "turns": 127,
           "active_days": 46,
           "hostility_hits": 6,
-          "hostility_per_100k": 13.0599451482
+          "hostility_per_100k": 13.0599451482,
+          "member_url": "https://bioguide.congress.gov/search/bio/L000557"
         },
         {
           "rank": 5,
@@ -779,7 +815,8 @@
           "turns": 410,
           "active_days": 47,
           "hostility_hits": 7,
-          "hostility_per_100k": 12.5187781673
+          "hostility_per_100k": 12.5187781673,
+          "member_url": "https://bioguide.congress.gov/search/bio/R000569"
         },
         {
           "rank": 6,
@@ -792,7 +829,8 @@
           "turns": 70,
           "active_days": 24,
           "hostility_hits": 3,
-          "hostility_per_100k": 11.6722434052
+          "hostility_per_100k": 11.6722434052,
+          "member_url": "https://bioguide.congress.gov/search/bio/G000439"
         },
         {
           "rank": 7,
@@ -805,7 +843,8 @@
           "turns": 89,
           "active_days": 55,
           "hostility_hits": 3,
-          "hostility_per_100k": 11.3477323448
+          "hostility_per_100k": 11.3477323448,
+          "member_url": "https://bioguide.congress.gov/search/bio/B001234"
         },
         {
           "rank": 8,
@@ -818,7 +857,8 @@
           "turns": 94,
           "active_days": 41,
           "hostility_hits": 3,
-          "hostility_per_100k": 11.2170499159
+          "hostility_per_100k": 11.2170499159,
+          "member_url": "https://bioguide.congress.gov/search/bio/G000289"
         }
       ],
       "misconduct": [
@@ -833,7 +873,8 @@
           "turns": 1226,
           "active_days": 185,
           "misconduct_hits": 379,
-          "misconduct_per_100k": 84.7340156769
+          "misconduct_per_100k": 84.7340156769,
+          "member_url": "https://bioguide.congress.gov/search/bio/L000261"
         },
         {
           "rank": 2,
@@ -846,7 +887,8 @@
           "turns": 339,
           "active_days": 55,
           "misconduct_hits": 63,
-          "misconduct_per_100k": 74.0357722049
+          "misconduct_per_100k": 74.0357722049,
+          "member_url": "https://bioguide.congress.gov/search/bio/O000163"
         },
         {
           "rank": 3,
@@ -859,7 +901,8 @@
           "turns": 747,
           "active_days": 126,
           "misconduct_hits": 142,
-          "misconduct_per_100k": 57.3417649957
+          "misconduct_per_100k": 57.3417649957,
+          "member_url": "https://bioguide.congress.gov/search/bio/S000064"
         },
         {
           "rank": 4,
@@ -872,7 +915,8 @@
           "turns": 989,
           "active_days": 122,
           "misconduct_hits": 162,
-          "misconduct_per_100k": 56.4524840835
+          "misconduct_per_100k": 56.4524840835,
+          "member_url": "https://bioguide.congress.gov/search/bio/M000355"
         },
         {
           "rank": 5,
@@ -885,7 +929,8 @@
           "turns": 82,
           "active_days": 20,
           "misconduct_hits": 14,
-          "misconduct_per_100k": 46.0829493088
+          "misconduct_per_100k": 46.0829493088,
+          "member_url": "https://bioguide.congress.gov/search/bio/L000169"
         },
         {
           "rank": 6,
@@ -898,7 +943,8 @@
           "turns": 1865,
           "active_days": 216,
           "misconduct_hits": 302,
-          "misconduct_per_100k": 42.3301188607
+          "misconduct_per_100k": 42.3301188607,
+          "member_url": "https://bioguide.congress.gov/search/bio/D000064"
         },
         {
           "rank": 7,
@@ -911,7 +957,8 @@
           "turns": 63,
           "active_days": 42,
           "misconduct_hits": 12,
-          "misconduct_per_100k": 36.5586156471
+          "misconduct_per_100k": 36.5586156471,
+          "member_url": "https://bioguide.congress.gov/search/bio/R000465"
         },
         {
           "rank": 8,
@@ -924,36 +971,37 @@
           "turns": 528,
           "active_days": 148,
           "misconduct_hits": 128,
-          "misconduct_per_100k": 32.7848697826
+          "misconduct_per_100k": 32.7848697826,
+          "member_url": "https://bioguide.congress.gov/search/bio/K000148"
         }
       ]
     },
-    "chambers": {
-      "house": {
-        "words": 16259125,
-        "profanity_hits": 15,
-        "hostility_hits": 509,
-        "misconduct_hits": 845,
-        "profanity_per_100k": 0.09225588707879422,
-        "hostility_per_100k": 3.1305497682070835,
-        "misconduct_per_100k": 5.197081638772074
+    "parties": {
+      "D": {
+        "words": 22362962,
+        "profanity_hits": 21,
+        "hostility_hits": 433,
+        "misconduct_hits": 1908,
+        "profanity_per_100k": 0.0939052706882031,
+        "hostility_per_100k": 1.9362372479996166,
+        "misconduct_per_100k": 8.53196459395674
       },
-      "senate": {
-        "words": 25991815,
-        "profanity_hits": 23,
-        "hostility_hits": 388,
-        "misconduct_hits": 2364,
-        "profanity_per_100k": 0.08848939560396225,
-        "hostility_per_100k": 1.4927776301885805,
-        "misconduct_per_100k": 9.095170922076816
+      "R": {
+        "words": 19021444,
+        "profanity_hits": 17,
+        "hostility_hits": 460,
+        "misconduct_hits": 1276,
+        "profanity_per_100k": 0.08937281522895948,
+        "hostility_per_100k": 2.418323235607139,
+        "misconduct_per_100k": 6.708218366597194
       }
     },
-    "trend_alt": "Monthly House and Senate rates for profanity, personal hostility or disrespect, and misconduct allegations in Congress 107.",
+    "trend_alt": "Monthly Democratic and Republican rates for profanity, personal hostility or disrespect, and misconduct allegations in Congress 107.",
     "member_alt": "Highest eligible member rates for profanity, personal hostility or disrespect, and misconduct allegations in Congress 107.",
     "explanation": {
-      "shown": "The charts show monthly House and Senate rates for three separate lexical measures, plus the highest-rate members in Congress 107. Rates are hits per 100,000 attributed spoken words.",
+      "shown": "The charts show monthly Democratic and Republican rates for three separate lexical measures, plus the highest-rate members in Congress 107. Rates are hits per 100,000 attributed spoken words.",
       "examined": "The trend panels examine how the chamber-wide rates change over time. The member panels compare speakers with at least 25,000 words.",
-      "finding": "House and Senate aggregate profanity rates are approximately equal at 0.1 per 100,000 words. Mr. FILNER has the highest eligible profanity rate at 4.4 per 100,000 words. House has the higher aggregate personal hostility / disrespect rate (3.1 versus 1.5 per 100,000 words). Mrs. McCARTHY of New York has the highest eligible personal hostility / disrespect rate at 23.5 per 100,000 words. Senate has the higher aggregate misconduct allegations rate (9.1 versus 5.2 per 100,000 words). Mr. LEVIN has the highest eligible misconduct allegations rate at 84.7 per 100,000 words.",
+      "finding": "Democratic and Republican aggregate profanity rates are approximately equal at 0.1 per 100,000 words. Mr. FILNER has the highest eligible profanity rate at 4.4 per 100,000 words. Republicans has the higher aggregate personal hostility / disrespect rate (2.4 versus 1.9 per 100,000 words). Mrs. McCARTHY of New York has the highest eligible personal hostility / disrespect rate at 23.5 per 100,000 words. Democrats has the higher aggregate misconduct allegations rate (8.5 versus 6.7 per 100,000 words). Mr. LEVIN has the highest eligible misconduct allegations rate at 84.7 per 100,000 words.",
       "limitation": "These are descriptive word-pattern counts, not judgments about intent. Misconduct language does not prove misconduct, and quoted profanity is excluded from a speaker's rate."
     }
   },

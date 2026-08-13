@@ -16,7 +16,7 @@ from analysis.aggregate import (  # noqa: E402
 )
 from analysis.ingest.schema import ARROW_SCHEMA  # noqa: E402
 from analysis.inputs import select_turn_files  # noqa: E402
-from analysis.plotting import charts, theme  # noqa: E402
+from analysis.plotting import charts, site_charts, theme  # noqa: E402
 from analysis.calibrate import calibration_summary, paired_overlap  # noqa: E402
 from analysis.score.registry import METRICS  # noqa: E402
 
@@ -229,6 +229,42 @@ def test_marker_line_draws_no_caption() -> None:
     charts.marker_line(ax, 2017)
     assert not list(ax.texts)
     assert len(ax.lines) == 1
+    plt.close(fig)
+
+
+def test_site_language_trends_draws_both_party_series(monkeypatch, tmp_path) -> None:
+    import pandas as pd
+
+    series = pd.DataFrame([
+        {
+            "period": period, "party": party, "words": 10_000, "turns": 10,
+            "profanity_hits": hits, "hostility_hits": hits + 1,
+            "misconduct_hits": hits + 2, "profanity_per_100k": hits * 10,
+            "hostility_per_100k": (hits + 1) * 10,
+            "misconduct_per_100k": (hits + 2) * 10,
+        }
+        for period in ("2025-01", "2025-02")
+        for party, hits in (("D", 1), ("R", 2))
+    ])
+    captured = {}
+
+    def capture(fig, out_path, **kwargs):
+        captured["fig"] = fig
+        return out_path
+
+    monkeypatch.setattr(site_charts, "_save", capture)
+    site_charts.language_trends(
+        series,
+        tmp_path / "trend.png",
+        scope_label="Congress 119",
+        granularity="month",
+    )
+    fig = captured["fig"]
+    assert [axis.get_title() for axis in fig.axes] == [
+        "Profanity", "Personal hostility / disrespect", "Misconduct allegations",
+    ]
+    assert all(len(axis.lines) == 2 for axis in fig.axes)
+    import matplotlib.pyplot as plt
     plt.close(fig)
 
 

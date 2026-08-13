@@ -217,6 +217,18 @@ def test_leaderboards_use_transparent_metrics_and_stable_threshold():
     assert set(boards["profanity"]["bioguide"]) == {"A", "B"}
 
 
+def test_profanity_leaderboard_omits_zero_rate_members():
+    activity = member_activity(
+        _daily(),
+        pd.DataFrame([_bill(1, "A"), _bill(2, "B")]),
+        119,
+    )
+    activity.loc[activity["bioguide"] == "B", "profanity_hits"] = 0
+    activity.loc[activity["bioguide"] == "B", "profanity_per_100k"] = 0.0
+    board = activity_leaderboards(activity, min_words=1)["profanity"]
+    assert set(board["bioguide"]) == {"A"}
+
+
 def test_member_activity_preserves_all_language_measures_and_rates():
     daily = _daily()
     daily.loc[daily["bioguide"] == "A", "hostility_hits"] = [2, 4]

@@ -62,26 +62,26 @@ def language_trends(
                 ha="center", va="center", color=theme.MUTED,
             )
         axes[-1].set_xlabel("Period")
-        return _save(fig, out_path, top=0.955        )
-        parsed_periods = pd.to_datetime(
-            series["period"] + ("-01" if granularity == "month" else "-01-01")
-        )
-        plotted = series.assign(_date=parsed_periods)
-        for ax, metric in zip(axes, LANGUAGE_METRICS.values()):
-            for party, linestyle, marker in (("D", "-", "o"), ("R", "--", "s")):
-                sub = plotted[plotted["party"] == party].sort_values("_date")
-                if sub.empty:
-                    continue
-                charts.line(
-                    ax,
-                    sub["_date"],
-                    sub[metric["rate"]],
-                    color=theme.PARTY_COLORS[party],
-                    label=theme.PARTY_LABELS[party],
-                    linestyle=linestyle,
-                    marker=marker,
-                    linewidth=2.3,
-                    markersize=4,
+        return _save(fig, out_path, top=0.955)
+    parsed_periods = pd.to_datetime(
+        series["period"] + ("-01" if granularity == "month" else "-01-01")
+    )
+    plotted = series.assign(_date=parsed_periods)
+    for ax, metric in zip(axes, LANGUAGE_METRICS.values()):
+        for party, linestyle, marker in (("D", "-", "o"), ("R", "--", "s")):
+            sub = plotted[plotted["party"] == party].sort_values("_date")
+            if sub.empty:
+                continue
+            charts.line(
+                ax,
+                sub["_date"],
+                sub[metric["rate"]],
+                color=theme.PARTY_COLORS[party],
+                label=theme.PARTY_LABELS[party],
+                linestyle=linestyle,
+                marker=marker,
+                linewidth=2.3,
+                markersize=4,
             )
         charts.style_axes(
             ax,
@@ -155,11 +155,18 @@ def language_members(
         ax.grid(axis="x", linestyle="-", linewidth=0.5)
         ax.grid(axis="y", visible=False)
         ax.set_xlim(left=0)
+    present_parties = {
+        str(party)
+        for frame in rankings.values()
+        if not frame.empty
+        for party in frame["party"].dropna().unique()
+    }
     legend = [
-        Patch(facecolor=theme.PARTY_COLORS["D"], label="Democrats"),
-        Patch(facecolor=theme.PARTY_COLORS["R"], label="Republicans"),
-        Patch(facecolor=theme.PARTY_COLORS["I"], label="Independents"),
+        Patch(facecolor=theme.PARTY_COLORS[party], label=theme.PARTY_LABELS[party])
+        for party in ("D", "R", "I")
+        if party in present_parties
     ]
-    fig.legend(handles=legend, loc="upper center", bbox_to_anchor=(0.5, 0.963),
-               frameon=False, ncol=3)
+    if legend:
+        fig.legend(handles=legend, loc="upper center", bbox_to_anchor=(0.5, 0.963),
+                   frameon=False, ncol=len(legend))
     return _save(fig, out_path, top=0.94)

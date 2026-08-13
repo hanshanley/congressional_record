@@ -261,17 +261,17 @@ def test_timeseries_aggregates_by_year_and_chamber():
     assert series.loc[("2025", "senate"), "profanity_per_100k"] == pytest.approx(1.0)
 
 
-def test_language_timeseries_uses_months_for_one_congress_and_years_for_all():
+def test_language_timeseries_uses_months_and_compares_parties():
     daily = _daily([
         ["A", "2025-01-02", "house", "X", "D", "CA", 119, 1, 1_000, 10, 0, 5, 20],
-        ["B", "2025-01-20", "house", "Y", "R", "TX", 119, 1, 9_000, 0, 0, 5, 0],
-        ["C", "2025-02-02", "senate", "Z", "D", "NY", 119, 1, 10_000, 1, 0, 2, 3],
+        ["B", "2025-01-20", "house", "Y", "D", "TX", 119, 1, 9_000, 0, 0, 5, 0],
+        ["C", "2025-02-02", "senate", "Z", "R", "NY", 119, 1, 10_000, 1, 0, 2, 3],
         ["D", "2025-02-02", "extensions", "E", "D", "MA", 119, 1, 1, 100, 0, 100, 100],
         ["A", "2023-02-02", "house", "X", "D", "CA", 118, 1, 10_000, 2, 0, 4, 6],
     ])
-    scoped = language_timeseries(daily, 119).set_index(["period", "chamber"])
+    scoped = language_timeseries(daily, 119).set_index(["period", "party"])
     assert set(scoped.index.get_level_values("period")) == {"2025-01", "2025-02"}
-    january = scoped.loc[("2025-01", "house")]
+    january = scoped.loc[("2025-01", "D")]
     assert january["profanity_per_100k"] == pytest.approx(100.0)
     assert january["hostility_per_100k"] == pytest.approx(100.0)
     assert january["misconduct_per_100k"] == pytest.approx(200.0)
@@ -294,6 +294,8 @@ def test_language_member_rates_keep_measures_separate_and_apply_threshold():
          2, 50_000, 5, 0, 20, 100],
         ["C", "2025-01-02", "house", "Tiny", "D", "NY", 119,
          1, 1_000, 100, 0, 100, 100],
+        ["D", "2025-01-02", "house", "Zero", "R", "FL", 119,
+         1, 60_000, 0, 0, 0, 0],
     ])
     rankings = language_member_rates(daily, 119, min_words=25_000, top=5)
     assert set(rankings) == set(LANGUAGE_METRICS)
@@ -301,6 +303,9 @@ def test_language_member_rates_keep_measures_separate_and_apply_threshold():
     assert rankings["hostility"].iloc[0]["speaker_name"] == "Beta"
     assert rankings["misconduct"].iloc[0]["speaker_name"] == "Beta"
     assert "Tiny" not in set(rankings["profanity"]["speaker_name"])
+    assert "Zero" not in set(rankings["profanity"]["speaker_name"])
+    assert "Zero" not in set(rankings["hostility"]["speaker_name"])
+    assert "Zero" not in set(rankings["misconduct"]["speaker_name"])
     alpha = rankings["profanity"].set_index("bioguide").loc["A"]
     assert alpha["profanity_per_100k"] == pytest.approx(25.0)
 
