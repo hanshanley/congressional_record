@@ -83,6 +83,10 @@ const chartColors = {
   muted: '#6B6B6B',
   grid: '#D6D3CC',
 };
+let selectedLongRunMetric = 'formal_courtesy_per_1k';
+let selectedRecentMetric = 'profanity';
+let selectedRecentView = 'trend';
+let currentLanguage = null;
 
 function svgNode(tag, attributes = {}, text = '') {
   const node = document.createElementNS(SVG_NS, tag);
@@ -166,7 +170,7 @@ function addPanelHeading(wrapper, metric, detail) {
   title.textContent = metric.label;
   const subtitle = document.createElement('p');
   subtitle.className = 'definition';
-  subtitle.textContent = `${metric.definition} ${detail}`;
+  subtitle.textContent = [metric.definition, detail].filter(Boolean).join(' ');
   heading.append(title, subtitle);
   wrapper.appendChild(heading);
 }
@@ -224,6 +228,22 @@ function addAccessibleTable(wrapper, captionText, headers, rows) {
   table.append(caption, thead, tbody);
   accessible.appendChild(table);
   wrapper.appendChild(accessible);
+}
+
+function renderTabs(container, items, selected, onSelect, label) {
+  container.replaceChildren();
+  container.setAttribute('role', 'tablist');
+  container.setAttribute('aria-label', label);
+  items.forEach(item => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'tab-button';
+    button.setAttribute('role', 'tab');
+    button.setAttribute('aria-selected', String(item.key === selected));
+    button.textContent = item.label;
+    button.addEventListener('click', () => onSelect(item.key));
+    container.appendChild(button);
+  });
 }
 
 function renderTrendPanel(language, key) {
@@ -373,9 +393,14 @@ function renderLongRunPanel(longRun, key) {
       'stroke-dasharray': party === 'R' ? '8 4' : '',
       'vector-effect': 'non-scaling-stroke', 'data-party': party,
     }));
-    points.forEach(([px, py, row]) => {
+    points.forEach(([px, py, row], index) => {
+      if (index % 4 === 0 || index === points.length - 1) {
+        svg.appendChild(svgNode('circle', {
+          cx: px, cy: py, r: 2.2, fill: chartColors[party], 'data-party': party,
+        }));
+      }
       const mark = svgNode('circle', {
-        cx: px, cy: py, r: 3.5, fill: chartColors[party], 'data-party': party,
+        cx: px, cy: py, r: 7, fill: 'transparent', 'data-party': party,
       });
       bindTooltip(mark, wrapper, tooltip,
         `${row.year} ${label}: ${Number(row[metric.rate]).toFixed(3)} ${metric.units} ` +
@@ -398,10 +423,21 @@ function renderLongRunPanel(longRun, key) {
 }
 
 function renderLongRun(longRun) {
-  const container = document.getElementById('long-run-charts');
-  container.replaceChildren(
-    ...Object.keys(longRun.metrics).map(key => renderLongRunPanel(longRun, key))
+  if (!longRun.metrics[selectedLongRunMetric]) {
+    selectedLongRunMetric = Object.keys(longRun.metrics)[0];
+  }
+  renderTabs(
+    document.getElementById('long-run-tabs'),
+    Object.entries(longRun.metrics).map(([key, metric]) => ({key, label: metric.label})),
+    selectedLongRunMetric,
+    key => {
+      selectedLongRunMetric = key;
+      renderLongRun(longRun);
+    },
+    'Long-run language measure',
   );
+  const container = document.getElementById('long-run-chart');
+  container.replaceChildren(renderLongRunPanel(longRun, selectedLongRunMetric));
 }
 
 function renderMemberPanel(language, key) {
@@ -527,66 +563,104 @@ function renderLanguageTable(language, key) {
   });
 }
 
-function renderHighlights(language) {
-  const container = document.getElementById('language-highlights');
+function renderSelectedHighlight(language) {
+  const container = document.getElementById('language-highlight');
   container.replaceChildren();
-  language.highlights.forEach(highlight => {
-    const card = document.createElement('article');
-    card.className = 'summary-card';
-    const difference = Number(highlight.difference);
-    const comparison = highlight.higher_party === 'Tie'
-      ? 'Party rates are effectively tied'
-      : `${highlight.higher_party} +${formatRate(Math.abs(difference))}`;
-    const title = document.createElement('h3');
-    title.textContent = highlight.label;
-    const rates = document.createElement('div');
-    rates.className = 'party-rates';
-    [['democratic', highlight.democratic_rate, 'Democrats'],
-      ['republican', highlight.republican_rate, 'Republicans']].forEach(
-      ([className, rate, label]) => {
-        const item = document.createElement('span');
-        item.className = `party-rate ${className}`;
-        const value = document.createElement('b');
-        value.textContent = formatRate(rate);
-        item.append(value, document.createTextNode(` ${label}`));
-        rates.appendChild(item);
-      }
-    );
-    const comparisonText = document.createElement('p');
-    comparisonText.className = 'comparison';
-    comparisonText.textContent = `${comparison} per 100,000 words`;
-    const leader = document.createElement('p');
-    leader.className = 'leader';
-    if (highlight.leader_name) {
-      leader.append(
-        document.createTextNode('Highest member rate: '),
-        Object.assign(document.createElement('strong'), {textContent: highlight.leader_name}),
-        document.createTextNode(` (${formatRate(highlight.leader_rate)})`),
-      );
-    } else {
-      leader.textContent = 'No nonzero member rate in this view';
+  const highlight = language.highlights.find(item => item.key === selectedRecentMetric);
+  if (!highlight) return;
+  const difference = Number(highlight.difference);
+  const comparison = highlight.higher_party === 'Tie'
+    ? 'Party rates are effectively tied'
+    : `${highlight.higher_party} +${formatRate(Math.abs(difference))}`;
+  const eyebrow = document.createElement('p');
+  eyebrow.className = 'eyebrow';
+  eyebrow.textContent = 'Selected measure';
+  const title = document.createElement('h3');
+  title.textContent = highlight.label;
+  const rates = document.createElement('div');
+  rates.className = 'party-rates';
+  [['democratic', highlight.democratic_rate, 'Democrats'],
+    ['republican', highlight.republican_rate, 'Republicans']].forEach(
+    ([className, rate, label]) => {
+      const item = document.createElement('span');
+      item.className = `party-rate ${className}`;
+      const value = document.createElement('b');
+      value.textContent = formatRate(rate);
+      item.append(value, document.createTextNode(` ${label}`));
+      rates.appendChild(item);
     }
-    card.append(title, rates, comparisonText, leader);
-    container.appendChild(card);
-  });
+  );
+  const comparisonText = document.createElement('p');
+  comparisonText.className = 'comparison';
+  comparisonText.textContent = `${comparison} per 100,000 words`;
+  const leader = document.createElement('p');
+  leader.className = 'leader';
+  if (highlight.leader_name) {
+    leader.append(
+      document.createTextNode('Highest member rate: '),
+      Object.assign(document.createElement('strong'), {textContent: highlight.leader_name}),
+      document.createTextNode(` (${formatRate(highlight.leader_rate)})`),
+    );
+  } else {
+    leader.textContent = 'No nonzero member rate in this view';
+  }
+  container.append(eyebrow, title, rates, comparisonText, leader);
+}
+
+function renderRecentFocus() {
+  if (!currentLanguage) return;
+  renderTabs(
+    document.getElementById('recent-metric-tabs'),
+    Object.entries(currentLanguage.metrics).map(([key, metric]) => ({key, label: metric.label})),
+    selectedRecentMetric,
+    key => {
+      selectedRecentMetric = key;
+      renderRecentFocus();
+    },
+    'Recent language measure',
+  );
+  renderTabs(
+    document.getElementById('recent-view-tabs'),
+    [
+      {key: 'trend', label: 'Trend'},
+      {key: 'members', label: 'Member ranking'},
+      {key: 'table', label: 'Exact values'},
+    ],
+    selectedRecentView,
+    key => {
+      selectedRecentView = key;
+      renderRecentFocus();
+    },
+    'Recent language view',
+  );
+  const visual = document.getElementById('recent-visual');
+  const tables = document.getElementById('language-tables');
+  visual.replaceChildren();
+  if (selectedRecentView === 'trend') {
+    visual.hidden = false;
+    tables.hidden = true;
+    visual.appendChild(renderTrendPanel(currentLanguage, selectedRecentMetric));
+  } else if (selectedRecentView === 'members') {
+    visual.hidden = false;
+    tables.hidden = true;
+    visual.appendChild(renderMemberPanel(currentLanguage, selectedRecentMetric));
+  } else {
+    visual.hidden = true;
+    tables.hidden = false;
+    tables.querySelectorAll('.card').forEach(card => {
+      card.hidden = card.id !== `${selectedRecentMetric}-table`;
+    });
+  }
+  renderSelectedHighlight(currentLanguage);
 }
 
 function renderLanguage(language) {
-  const trendContainer = document.getElementById('language-trends');
-  trendContainer.replaceChildren(
-    ...Object.keys(language.metrics).map(key => renderTrendPanel(language, key))
-  );
-  trendContainer.setAttribute('aria-label', language.trend_alt);
-  const memberContainer = document.getElementById('language-members');
-  memberContainer.replaceChildren(
-    ...Object.keys(language.metrics).map(key => renderMemberPanel(language, key))
-  );
-  memberContainer.setAttribute('aria-label', language.member_alt);
-  renderHighlights(language);
+  currentLanguage = language;
   document.getElementById('language-shown').textContent = language.explanation.shown;
   document.getElementById('language-examined').textContent = language.explanation.examined;
   document.getElementById('language-limitation').textContent = language.explanation.limitation;
   Object.keys(language.metrics).forEach(key => renderLanguageTable(language, key));
+  renderRecentFocus();
 }
 """
 
@@ -594,6 +668,43 @@ ACTIVITY_JS = r"""
 const select = document.getElementById('congress');
 let loadedCongress = select.value;
 let loadSequence = 0;
+let selectedActivityMetric = 'speech';
+
+const activityMetrics = [
+  ['speech', 'Speech'],
+  ['sponsored', 'Sponsored bills'],
+  ['passed', 'Passed a chamber'],
+  ['enacted', 'Became law'],
+  ['profanity', 'Profanity'],
+];
+
+function selectActivityMetric(metric) {
+  selectedActivityMetric = metric;
+  document.querySelectorAll('#activity-tabs button').forEach(button => {
+    button.setAttribute('aria-selected', String(button.dataset.metric === metric));
+  });
+  document.querySelectorAll('#leaderboards .card').forEach(card => {
+    card.hidden = card.id !== metric;
+  });
+}
+
+function renderActivityTabs() {
+  const tabs = document.getElementById('activity-tabs');
+  tabs.replaceChildren();
+  tabs.setAttribute('role', 'tablist');
+  tabs.setAttribute('aria-label', 'Activity table');
+  activityMetrics.forEach(([metric, label]) => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'tab-button';
+    button.dataset.metric = metric;
+    button.setAttribute('role', 'tab');
+    button.textContent = label;
+    button.addEventListener('click', () => selectActivityMetric(metric));
+    tabs.appendChild(button);
+  });
+  selectActivityMetric(selectedActivityMetric);
+}
 
 function activityCell(text, link) {
   const cell = document.createElement('td');
@@ -697,6 +808,7 @@ async function loadActivityCongress(value) {
 }
 
 select.addEventListener('change', () => loadActivityCongress(select.value).catch(() => {}));
+renderActivityTabs();
 const requestedCongress = new URLSearchParams(location.hash.slice(1)).get('congress');
 if (requestedCongress && [...select.options].some(option => option.value === requestedCongress)
     && requestedCongress !== select.value) {
@@ -1292,7 +1404,7 @@ def _table(metric: str, rows: list[dict]) -> str:
         ),
     }
     headers, values = configs[metric]
-    head = "".join(f"<th>{html.escape(label)}</th>" for label in headers)
+    head = "".join(f'<th scope="col">{html.escape(label)}</th>' for label in headers)
     body = []
     for row in rows:
         cells = values(row)
@@ -1306,13 +1418,17 @@ def _table(metric: str, rows: list[dict]) -> str:
             )
             + "</tr>"
         )
-    return f"<table data-metric=\"{metric}\"><thead><tr>{head}</tr></thead><tbody>{''.join(body)}</tbody></table>"
+    return (
+        f'<table data-metric="{metric}"><caption class="sr-only">'
+        f'{html.escape(METRIC_DEFINITIONS[metric])}</caption>'
+        f"<thead><tr>{head}</tr></thead><tbody>{''.join(body)}</tbody></table>"
+    )
 
 
 def _language_table(metric: str, rows: list[dict]) -> str:
     metadata = LANGUAGE_METRICS[metric]
     headers = ["#", "Member", "Party", "Chamber", "Per 100k", "Hits", "Words"]
-    head = "".join(f"<th>{html.escape(label)}</th>" for label in headers)
+    head = "".join(f'<th scope="col">{html.escape(label)}</th>' for label in headers)
     body = []
     for row in rows:
         cells = [
@@ -1337,7 +1453,9 @@ def _language_table(metric: str, rows: list[dict]) -> str:
     if not body:
         body.append('<tr><td colspan="7" class="muted">No nonzero rates in this view.</td></tr>')
     return (
-        f'<table data-language-metric="{metric}"><thead><tr>{head}</tr></thead>'
+        f'<table data-language-metric="{metric}"><caption class="sr-only">'
+        f'{html.escape(metadata["label"])} member rates</caption>'
+        f"<thead><tr>{head}</tr></thead>"
         f"<tbody>{''.join(body)}</tbody></table>"
     )
 
@@ -1353,7 +1471,7 @@ def _render_html(payload: dict, congresses: list[int], long_run: dict) -> str:
     explanation = language["explanation"]
     caveats = "".join(
         f"<li>{html.escape(item)}</li>"
-        for item in (CAVEATS[0], CAVEATS[1], CAVEATS[2], CAVEATS[-1])
+        for item in (CAVEATS[0], CAVEATS[1], CAVEATS[-1])
     )
     language_cards = "".join(
         f'<section class="card" id="{metric}-table">'
@@ -1373,64 +1491,88 @@ def _render_html(payload: dict, congresses: list[int], long_run: dict) -> str:
 <meta name="description" content="Long-run Democratic and Republican trends in congressional
 courtesy, cooperation, personal disrespect, misconduct allegations, and profanity.">
 <style>
-  :root {{ --bg:{theme.BG}; --text:{theme.TEXT}; --muted:{theme.MUTED};
-           --grid:{theme.GRID}; --blue:{theme.BLUE}; --paper:#fff; }}
+  :root {{ --bg:#F3F0E8; --text:#171717; --muted:#68655F;
+           --grid:#D8D3C9; --blue:{theme.BLUE}; --red:{theme.ACCENT};
+           --paper:#FFFEFA; --soft:#EAE5DA; }}
   * {{ box-sizing:border-box; }}
-  body {{ background:var(--bg); color:var(--text); font-family:Georgia,'Times New Roman',serif;
-          margin:0 auto; padding:2.5rem 1.25rem 4rem; max-width:76rem; line-height:1.5; }}
-  h1 {{ font-size:2.2rem; margin:0 0 .35rem; }}
-  h2 {{ font-size:1.3rem; margin:.1rem 0 .3rem; }}
-  h3 {{ font-size:1rem; margin:0 0 .25rem; }}
+  body {{ background:var(--bg); color:var(--text);
+          font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+          margin:0 auto; padding:1.4rem 1.25rem 4rem; max-width:74rem; line-height:1.55; }}
+  h1,h2,h3 {{ font-family:'Iowan Old Style','Palatino Linotype',Georgia,serif; }}
+  h1 {{ font-size:clamp(2.4rem,5vw,4.5rem); line-height:.98; letter-spacing:-.045em;
+        max-width:58rem; margin:2.4rem 0 1rem; }}
+  h2 {{ font-size:clamp(1.8rem,3vw,2.7rem); line-height:1.05; letter-spacing:-.025em;
+        margin:.1rem 0 .5rem; }}
+  h3 {{ font-size:1.12rem; margin:0 0 .3rem; }}
   a {{ color:var(--blue); }}
-  nav {{ display:flex; gap:1rem; border-bottom:1px solid var(--grid); padding-bottom:.75rem;
-         margin-bottom:1.4rem; }}
-  nav a[aria-current="page"] {{ color:var(--text); font-weight:bold; text-decoration:none; }}
+  nav {{ display:flex; gap:.35rem; align-items:center; border-bottom:1px solid var(--grid);
+         padding-bottom:.9rem; }}
+  nav a {{ color:var(--muted); text-decoration:none; padding:.4rem .7rem; border-radius:999px;
+           font-size:.88rem; font-weight:650; }}
+  nav a:hover {{ background:var(--soft); color:var(--text); }}
+  nav a[aria-current="page"] {{ color:var(--paper); background:var(--text); }}
+  .skip-link {{ position:absolute; left:-9999px; top:.5rem; z-index:10;
+                background:var(--text); color:var(--paper); padding:.55rem .75rem; }}
+  .skip-link:focus {{ left:.5rem; }}
   .sub,.definition,.muted {{ color:var(--muted); }}
+  .hero-deck {{ font-size:1.12rem; max-width:50rem; margin-bottom:3rem; }}
   .section-header {{ display:flex; justify-content:space-between; gap:1rem; align-items:end;
-                     margin:1.8rem 0 1rem; }}
-  .section-header h2 {{ font-size:1.7rem; margin:0; }}
+                     margin:4rem 0 1.2rem; }}
+  .section-header h2 {{ margin:0; }}
   .section-header p {{ margin:.25rem 0 0; max-width:52rem; }}
   .congress-control {{ display:flex; align-items:center; gap:.55rem; white-space:nowrap;
-                       font-weight:bold; }}
-  select {{ font:inherit; padding:.45rem .6rem; background:var(--paper); border:1px solid var(--grid); }}
+                       font-weight:700; font-size:.88rem; }}
+  select {{ font:inherit; padding:.6rem 2.2rem .6rem .8rem; background:var(--paper);
+            border:1px solid var(--grid); border-radius:.45rem; }}
   .warning {{ background:#FFF3CD; border-left:4px solid #C7922B; padding:.8rem 1rem; margin:1rem 0; }}
   .card {{ background:var(--paper); border:1px solid var(--grid); padding:1rem;
            margin:1.25rem 0 2rem; min-width:0; }}
   .language {{ margin:1.5rem 0 2.5rem; }}
-  .overview {{ background:var(--paper); border:1px solid var(--grid); padding:1rem;
-               margin:1.25rem 0 2.5rem; }}
-  .overview h2 {{ font-size:1.5rem; }}
-  .long-run-charts {{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr));
-                      gap:1rem; margin-top:1rem; }}
-  .summary-grid {{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr));
-                   gap:.8rem; margin:1rem 0; }}
-  .summary-card {{ background:var(--paper); border:1px solid var(--grid);
-                   border-top:4px solid var(--blue); padding:.85rem 1rem; }}
-  .summary-card h3 {{ font-size:1.08rem; margin-bottom:.65rem; }}
+  .overview {{ margin:1.25rem 0 2.5rem; }}
+  .overview-intro {{ display:grid; grid-template-columns:minmax(0,1fr) minmax(20rem,.65fr);
+                     gap:2.5rem; align-items:end; margin-bottom:1.5rem; }}
+  .overview-intro p {{ color:var(--muted); margin:.35rem 0; }}
+  .tab-row {{ display:flex; gap:.4rem; flex-wrap:wrap; margin:.85rem 0; }}
+  .tab-button {{ appearance:none; border:1px solid var(--grid); background:transparent;
+                 color:var(--muted); border-radius:999px; padding:.52rem .8rem;
+                 font:inherit; font-size:.84rem; font-weight:700; cursor:pointer; }}
+  .tab-button:hover {{ color:var(--text); border-color:var(--muted); }}
+  .tab-button[aria-selected="true"] {{ color:var(--paper); background:var(--text);
+                                      border-color:var(--text); }}
+  .focus-panel {{ background:var(--paper); border:1px solid var(--grid); border-radius:.65rem;
+                  padding:1rem 1.2rem; box-shadow:0 12px 35px rgb(40 34 24 / 6%); }}
+  .recent-shell {{ display:grid; grid-template-columns:minmax(0,1fr) 18rem; gap:1rem;
+                   align-items:start; }}
+  .context-panel {{ background:var(--text); color:var(--paper); border-radius:.65rem;
+                    padding:1.1rem; position:sticky; top:1rem; }}
+  .context-panel .eyebrow {{ color:#B9B5AD; }}
+  .context-panel h3 {{ color:var(--paper); font-size:1.45rem; }}
   .party-rates {{ display:grid; grid-template-columns:1fr 1fr; gap:.5rem; }}
-  .party-rate {{ border-radius:.2rem; padding:.55rem .6rem; font-size:.84rem; }}
+  .party-rate {{ border-radius:.35rem; padding:.55rem .6rem; font-size:.78rem; }}
   .party-rate b {{ display:block; font-size:1.45rem; line-height:1; margin-bottom:.2rem; }}
   .party-rate.democratic {{ color:{theme.BLUE}; background:{theme.tint(theme.BLUE, 0.88)}; }}
   .party-rate.republican {{ color:{theme.ACCENT}; background:{theme.tint(theme.ACCENT, 0.88)}; }}
-  .summary-card .comparison {{ font-weight:bold; margin:.7rem 0 .25rem; }}
-  .summary-card .leader {{ color:var(--muted); margin:.25rem 0 0; font-size:.9rem; }}
+  .context-panel .comparison {{ font-weight:750; margin:.8rem 0 .35rem; }}
+  .context-panel .leader {{ color:#CBC7BE; margin:.25rem 0 0; font-size:.86rem; }}
+  .eyebrow {{ text-transform:uppercase; letter-spacing:.12em; font-size:.7rem; font-weight:800;
+              color:var(--muted); margin:0 0 .35rem; }}
   .methodology {{ background:var(--paper); border:1px solid var(--grid); margin:1rem 0;
-                  padding:.75rem 1rem; }}
+                  padding:.75rem 1rem; border-radius:.45rem; }}
   .methodology summary {{ cursor:pointer; font-weight:bold; }}
   .methodology-grid {{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr));
                        gap:1rem; margin-top:.8rem; }}
   .methodology-grid p {{ margin:.2rem 0; color:var(--muted); }}
   .chart-card {{ background:var(--paper); border:1px solid var(--grid); margin:1rem 0;
-                 padding:.75rem; }}
+                 padding:.75rem; border-radius:.65rem; }}
   .chart-card figcaption {{ color:var(--muted); font-size:.9rem; padding:.3rem .35rem 0; }}
   .interactive-chart {{ display:grid; gap:1rem; }}
   .mini-chart {{ position:relative; border-top:1px solid var(--grid); padding:.75rem .25rem 0;
                  min-width:0; }}
   .mini-chart:first-child {{ border-top:0; }}
-  .mini-chart-heading h3 {{ font-size:1.08rem; }}
+  .mini-chart-heading h3 {{ font-size:1.45rem; }}
   .mini-chart-heading p {{ margin:.15rem 0 .35rem; }}
   .mini-chart svg {{ display:block; width:100%; height:auto; overflow:visible; }}
-  .mini-chart svg text {{ font-family:Georgia,'Times New Roman',serif; }}
+  .mini-chart svg text {{ font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; }}
   .chart-legend {{ display:flex; gap:1rem; color:var(--muted); font-size:.86rem;
                    margin:.3rem 0 0; }}
   .chart-toggle {{ display:inline-flex; align-items:center; gap:.35rem; border:1px solid var(--grid);
@@ -1441,7 +1583,7 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
   .chart-legend i {{ width:1rem; height:.25rem; display:inline-block; }}
   .chart-tooltip {{ position:absolute; z-index:2; max-width:18rem; pointer-events:none;
                     background:var(--text); color:var(--paper); border-radius:.2rem;
-                    padding:.45rem .55rem; font: .82rem/1.35 Georgia,'Times New Roman',serif;
+                    padding:.45rem .55rem; font: .82rem/1.35 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
                     box-shadow:0 2px 8px rgb(0 0 0 / 20%); }}
   .data-mark {{ cursor:pointer; transition:opacity .12s ease, filter .12s ease; }}
   .data-mark:hover,.data-mark:focus {{ opacity:.72; filter:brightness(.88); outline:none; }}
@@ -1450,6 +1592,7 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
               clip:rect(0,0,0,0) !important; white-space:nowrap !important; border:0 !important; }}
   .error {{ color:#8A1C1C; font-weight:bold; }}
   .table-wrap {{ width:100%; max-width:100%; overflow-x:auto; }}
+  #language-tables .card {{ border:0; box-shadow:none; padding:0; margin:0; }}
   table {{ border-collapse:collapse; width:100%; font-size:.92rem; }}
   th,td {{ padding:.48rem .55rem; border-bottom:1px solid var(--grid); text-align:left; }}
   th {{ border-bottom:2px solid var(--grid); white-space:nowrap; }}
@@ -1459,11 +1602,10 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
   footer {{ margin-top:3rem; color:var(--muted); font-size:.86rem; }}
   @media (max-width:44rem) {{
     body {{ padding:1.5rem .75rem 3rem; }}
-    h1 {{ font-size:1.8rem; }}
     .section-header {{ display:block; }}
     .congress-control {{ margin-top:.75rem; }}
-    .summary-grid,.methodology-grid {{ grid-template-columns:1fr; }}
-    .long-run-charts {{ grid-template-columns:1fr; }}
+    .overview-intro,.methodology-grid,.recent-shell {{ grid-template-columns:1fr; }}
+    .context-panel {{ position:static; }}
     .chart-card {{ padding:.3rem; }}
     #language-tables table {{ font-size:.78rem; table-layout:fixed; }}
     #language-tables th,#language-tables td {{ padding:.32rem .25rem; overflow-wrap:anywhere; }}
@@ -1474,26 +1616,26 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
 </style>
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to content</a>
 <nav aria-label="Primary"><a href="index.html" aria-current="page">Language analysis</a>
 <a href="activity.html">Member activity and bills</a></nav>
+<main id="main-content">
 <h1>Congressional comity and conflict language</h1>
-<p class="sub">How Democratic and Republican language in the Congressional Record has changed,
+<p class="sub hero-deck">How Democratic and Republican language in the Congressional Record has changed,
 from courtesy and bipartisan cooperation to personal disrespect, misconduct allegations,
 and profanity.</p>
 <section class="overview" aria-labelledby="overview-heading">
-<h2 id="overview-heading">The long-run picture, 1873-present</h2>
-<p><strong>What is shown:</strong> Six separate lexical measures, reported as
-word-normalized rates for Democrats and Republicans. Positive and negative language remain
-separate rather than being collapsed into a single score.</p>
-<p><strong>What is being examined:</strong> Whether congressional courtesy, praise,
-cooperation, personal attacks, misconduct allegations, and profanity move differently over
-time and by party.</p>
-<p><strong>What the charts suggest:</strong> Formal courtesy has declined sharply in recent
-decades, while cooperation language rose from a low historical base. Conflict measures remain
-rare but show pronounced recent spikes, especially misconduct allegations and profanity.
-The source transition and changing coverage mean individual jumps should not be read as causal.</p>
-<div id="long-run-charts" class="long-run-charts"
- aria-label="Six interactive long-run Democratic and Republican language charts"></div>
+<div class="overview-intro">
+<div><p class="eyebrow">1873-present</p><h2 id="overview-heading">The long-run picture</h2>
+<p>Choose a measure to compare Democratic and Republican floor language across the full
+digital and historical record. Rates are word-normalized; positive and negative measures
+remain separate.</p></div>
+<p><strong>Read carefully:</strong> source coverage changes over time, including the 2017
+transition from Stanford Hein to GovInfo. A jump is not automatically a behavioral change.</p>
+</div>
+<div id="long-run-tabs" class="tab-row"></div>
+<div id="long-run-chart" class="focus-panel"
+ aria-label="Interactive long-run Democratic and Republican language chart"></div>
 <p class="definition">{html.escape(long_run['source_note'])}</p>
 </section>
 <div id="coverage-warning" class="warning" {'hidden' if not warning else ''}>{html.escape(warning)}</div>
@@ -1508,8 +1650,16 @@ or whether an allegation is true.</p></div>
 <label class="congress-control" for="congress"><span>Congress</span>
 <select id="congress">{''.join(options)}</select></label>
 </div>
-<div id="language-highlights" class="summary-grid"
- aria-label="Selected Congress language summary"></div>
+<div id="recent-metric-tabs" class="tab-row"></div>
+<div id="recent-view-tabs" class="tab-row"></div>
+<div class="recent-shell">
+<div>
+<div id="recent-visual" class="focus-panel"></div>
+<div id="language-tables" class="focus-panel" hidden>{language_cards}</div>
+</div>
+<aside id="language-highlight" class="context-panel"
+ aria-label="Selected Congress language summary"></aside>
+</div>
 <details class="methodology">
 <summary>Methodology and limitations</summary>
 <div class="methodology-grid">
@@ -1518,27 +1668,11 @@ or whether an allegation is true.</p></div>
 <div><h3>Limits</h3><p id="language-limitation">{html.escape(explanation['limitation'])}</p></div>
 </div>
 </details>
-<figure class="chart-card">
-<div id="language-trends" class="interactive-chart" role="group"
- aria-label="{html.escape(language['trend_alt'], quote=True)}">
 <noscript><img src="figures/language_trends.png"
  alt="{html.escape(language['trend_alt'], quote=True)}"></noscript>
-</div>
-<figcaption>Party rates use summed hits divided by summed spoken words, rather than
-averaging daily rates. Hover or focus a point for its hits and word count.</figcaption>
-</figure>
-<figure class="chart-card">
-<div id="language-members" class="interactive-chart" role="group"
- aria-label="{html.escape(language['member_alt'], quote=True)}">
-<noscript><img src="figures/language_members.png"
- alt="{html.escape(language['member_alt'], quote=True)}"></noscript>
-</div>
-<figcaption>Hover or focus a bar for its raw hits and word count. Exact values are also
-available in the table below.</figcaption>
-</figure>
 </section>
-<main id="language-tables">{language_cards}</main>
-<section><h2>How to read this language analysis</h2><ul>{caveats}</ul></section>
+<details class="methodology"><summary>Data notes and exclusions</summary><ul>{caveats}</ul></details>
+</main>
 <footer id="coverage">Speech coverage {html.escape(payload['coverage']['speech_first_date'])}
 to {html.escape(payload['coverage']['speech_last_date'])}. Newest Congressional Record date:
 {html.escape(payload['coverage']['speech_last_date'])}. Site data snapshot:
@@ -1612,7 +1746,11 @@ def _render_activity_html(payload: dict, congresses: list[int]) -> str:
         f'<div class="table-wrap">{_table(metric, payload["leaderboards"][metric])}</div></section>'
         for metric, title in sections
     )
-    caveats = "".join(f"<li>{html.escape(item)}</li>" for item in CAVEATS)
+    caveats = "".join(
+        f"<li>{html.escape(item)}</li>"
+        for index, item in enumerate(CAVEATS)
+        if index != 2
+    )
     warning = payload["coverage"]["warning"]
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -1623,24 +1761,48 @@ def _render_activity_html(payload: dict, congresses: list[int]) -> str:
 <meta name="description" content="Exact-value congressional speech, bill sponsorship,
 passage, enactment, and profanity tables by Congress.">
 <style>
-  :root {{ --bg:{theme.BG}; --text:{theme.TEXT}; --muted:{theme.MUTED};
-           --grid:{theme.GRID}; --blue:{theme.BLUE}; --paper:#fff; }}
+  :root {{ --bg:#F3F0E8; --text:#171717; --muted:#68655F;
+           --grid:#D8D3C9; --blue:{theme.BLUE}; --paper:#FFFEFA; --soft:#EAE5DA; }}
   * {{ box-sizing:border-box; }}
-  body {{ background:var(--bg); color:var(--text); font-family:Georgia,'Times New Roman',serif;
-          margin:0 auto; padding:2.5rem 1.25rem 4rem; max-width:76rem; line-height:1.5; }}
-  h1 {{ font-size:2.2rem; margin:0 0 .35rem; }}
-  h2 {{ font-size:1.3rem; margin:.1rem 0 .3rem; }}
+  body {{ background:var(--bg); color:var(--text);
+          font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+          margin:0 auto; padding:1.4rem 1.25rem 4rem; max-width:74rem; line-height:1.55; }}
+  h1,h2 {{ font-family:'Iowan Old Style','Palatino Linotype',Georgia,serif; }}
+  h1 {{ font-size:clamp(2.4rem,5vw,4.2rem); line-height:1; letter-spacing:-.04em;
+        margin:2.4rem 0 1rem; }}
+  h2 {{ font-size:1.7rem; margin:.1rem 0 .3rem; }}
   a {{ color:var(--blue); }}
-  nav {{ display:flex; gap:1rem; border-bottom:1px solid var(--grid); padding-bottom:.75rem;
-         margin-bottom:1.4rem; }}
-  nav a[aria-current="page"] {{ color:var(--text); font-weight:bold; text-decoration:none; }}
+  nav {{ display:flex; gap:.35rem; align-items:center; border-bottom:1px solid var(--grid);
+         padding-bottom:.9rem; }}
+  nav a {{ color:var(--muted); text-decoration:none; padding:.4rem .7rem; border-radius:999px;
+           font-size:.88rem; font-weight:650; }}
+  nav a:hover {{ background:var(--soft); color:var(--text); }}
+  nav a[aria-current="page"] {{ color:var(--paper); background:var(--text); }}
+  .skip-link {{ position:absolute; left:-9999px; top:.5rem; z-index:10;
+                background:var(--text); color:var(--paper); padding:.55rem .75rem; }}
+  .skip-link:focus {{ left:.5rem; }}
   .sub,.definition,.muted {{ color:var(--muted); }}
-  .toolbar {{ display:flex; gap:1rem; align-items:center; margin:1.5rem 0; }}
-  select {{ font:inherit; padding:.45rem .6rem; background:var(--paper); border:1px solid var(--grid); }}
+  .hero-deck {{ font-size:1.08rem; max-width:48rem; }}
+  .toolbar {{ display:flex; justify-content:space-between; gap:1rem; align-items:center;
+              margin:2rem 0 1rem; }}
+  select {{ font:inherit; padding:.6rem 2.2rem .6rem .8rem; background:var(--paper);
+            border:1px solid var(--grid); border-radius:.45rem; }}
+  .tab-row {{ display:flex; gap:.4rem; flex-wrap:wrap; margin:.9rem 0 1.2rem; }}
+  .tab-button {{ appearance:none; border:1px solid var(--grid); background:transparent;
+                 color:var(--muted); border-radius:999px; padding:.52rem .8rem;
+                 font:inherit; font-size:.84rem; font-weight:700; cursor:pointer; }}
+  .tab-button[aria-selected="true"] {{ color:var(--paper); background:var(--text);
+                                      border-color:var(--text); }}
   .warning {{ background:#FFF3CD; border-left:4px solid #C7922B; padding:.8rem 1rem; margin:1rem 0; }}
   .error {{ color:#8A1C1C; font-weight:bold; }}
-  .card {{ background:var(--paper); border:1px solid var(--grid); padding:1rem;
-           margin:1.25rem 0 2rem; }}
+  .card {{ background:var(--paper); border:1px solid var(--grid); border-radius:.65rem;
+           padding:1.2rem; margin:0 0 2rem; box-shadow:0 12px 35px rgb(40 34 24 / 6%); }}
+  .notes {{ background:var(--paper); border:1px solid var(--grid); border-radius:.45rem;
+            padding:.75rem 1rem; margin:1rem 0; }}
+  .notes summary {{ cursor:pointer; font-weight:750; }}
+  .sr-only {{ position:absolute !important; width:1px !important; height:1px !important;
+              padding:0 !important; margin:-1px !important; overflow:hidden !important;
+              clip:rect(0,0,0,0) !important; white-space:nowrap !important; border:0 !important; }}
   .table-wrap {{ overflow-x:auto; }}
   table {{ border-collapse:collapse; width:100%; font-size:.92rem; }}
   th,td {{ padding:.48rem .55rem; border-bottom:1px solid var(--grid); text-align:left; }}
@@ -1650,21 +1812,27 @@ passage, enactment, and profanity tables by Congress.">
   footer {{ margin-top:3rem; color:var(--muted); font-size:.86rem; }}
   @media (max-width:44rem) {{
     body {{ padding:1.5rem .75rem 3rem; }}
-    h1 {{ font-size:1.8rem; }}
+    .toolbar {{ display:block; }}
+    .toolbar label {{ display:block; margin-top:.75rem; }}
   }}
 </style>
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to content</a>
 <nav aria-label="Primary"><a href="index.html">Language analysis</a>
 <a href="activity.html" aria-current="page">Member activity and bills</a></nav>
+<main id="main-content">
 <h1>Congressional member activity and bills</h1>
-<p class="sub">Exact-value tables for attributed speech, sponsored bills, passage,
+<p class="sub hero-deck">Exact-value tables for attributed speech, sponsored bills, passage,
 enactment, and nonzero profanity rates. The language-analysis homepage remains the primary view.</p>
-<div class="toolbar"><label for="congress">View</label><select id="congress">{''.join(options)}</select></div>
+<div class="toolbar"><strong>Choose a table</strong><label for="congress">Congress
+<select id="congress">{''.join(options)}</select></label></div>
+<div id="activity-tabs" class="tab-row"></div>
 <div id="coverage-warning" class="warning" {'hidden' if not warning else ''}>{html.escape(warning)}</div>
 <p id="dashboard-error" class="error" role="alert" hidden></p>
-<main id="leaderboards">{cards}</main>
-<section><h2>How to read these tables</h2><ul>{caveats}</ul></section>
+<div id="leaderboards">{cards}</div>
+<details class="notes"><summary>Data notes and exclusions</summary><ul>{caveats}</ul></details>
+</main>
 <footer id="coverage">Speech coverage {html.escape(payload['coverage']['speech_first_date'])}
 to {html.escape(payload['coverage']['speech_last_date'])}; {_fmt_int(payload['coverage']['bills'])}
 H.R./S. bill records. Site data snapshot: {html.escape(payload['generated_utc'])}.</footer>

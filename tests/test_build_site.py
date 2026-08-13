@@ -307,15 +307,15 @@ def test_payload_and_html_expose_selector_aware_language_graphs(store, tmp_path)
     page = (out / "index.html").read_text()
     for text in (
         "Congressional comity and conflict language", "The long-run picture",
-        "Recent language on the floor", "What is shown", "What is being examined",
-        "Methodology and limitations", 'id="language-highlights"',
-        'id="language-trends"', 'id="language-members"',
+        "Recent language on the floor", "What is shown", "What is examined",
+        "Methodology and limitations", 'id="language-highlight"',
+        'id="recent-visual"', 'id="recent-metric-tabs"', 'id="recent-view-tabs"',
         "renderLanguage(payload.language)", "renderTrendPanel",
         "renderMemberPanel", "bindTooltip", "chart-toggle",
         "renderLongRun(longRunLanguage)", "renderLongRunPanel",
         "URLSearchParams", "loadSequence", "addAccessibleTable",
         'className = \'sr-only\'', 'role="alert"', "activity.html",
-        'id="long-run-charts"', 'data-language-metric="profanity"',
+        'id="long-run-chart"', 'id="long-run-tabs"', 'data-language-metric="profanity"',
     ):
         assert text in page
     assert "min-width:42rem" not in page
@@ -328,6 +328,8 @@ def test_payload_and_html_expose_selector_aware_language_graphs(store, tmp_path)
     assert "Congressional member activity and bills" in activity_page
     assert "Who sponsors the most bills" in activity_page
     assert "Language analysis" in activity_page
+    assert 'id="activity-tabs"' in activity_page
+    assert "selectActivityMetric" in activity_page
 
 
 def test_nonselected_extension_only_congress_does_not_break_charts(store, tmp_path):
