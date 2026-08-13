@@ -144,7 +144,8 @@ def test_build_writes_html_json_and_figures(store, tmp_path):
         "--daily", str(path), "--bills", str(bills), "--out", str(out),
         "--min-words", "1000",
     ]) == 0
-    for rel in ("index.html", "activity.html", "data/leaderboard.json", "data/timeseries.json",
+    for rel in ("index.html", "activity.html", "activity/index.html",
+                "data/leaderboard.json", "data/timeseries.json",
                 "data/meta.json", "data/congresses.json", "data/congress_119.json",
                 "data/long_run_language.json",
                 "figures/leaderboard.png", "figures/trend.png",
@@ -262,7 +263,7 @@ def test_quoted_hits_are_shown_so_the_exclusion_is_auditable(store, tmp_path):
     ])
     board = json.loads((out / "data" / "leaderboard.json").read_text())
     assert board[0]["profanity_quoted_hits"] == 1
-    assert "Quoted" in (out / "activity.html").read_text()
+    assert "Quoted" in (out / "activity" / "index.html").read_text()
 
 
 def test_payload_contains_all_five_transparent_leaderboards(store, tmp_path):
@@ -312,16 +313,16 @@ def test_payload_and_html_expose_selector_aware_language_graphs(store, tmp_path)
         "Congressional comity and conflict language", "The long-run picture",
         "Recent language on the floor", "What is shown", "What is examined",
         "Methodology and limitations", 'id="language-highlight"',
-        'id="recent-visual"', 'id="recent-metric-tabs"', 'id="recent-view-tabs"',
-        'id="recent-chambers"', 'id="long-run-chambers"',
+        'id="recent-visual"', 'id="recent-metric"', 'id="recent-view"',
+        'id="recent-chamber"', 'id="long-run-chamber"',
         "renderLanguage(payload.language)", "renderTrendPanel",
-        "renderMemberPanel", "renderRecentFocus", "renderChoices",
+        "renderMemberPanel", "renderRecentFocus", "syncSelect",
         "selectedRecentView", "bindTooltip", "chart-toggle",
         "renderLongRun(longRunLanguage)", "renderLongRunPanel",
         "selectedLongRunMetric = 'profanity_per_1k'",
         "URLSearchParams", "loadSequence", "addAccessibleTable",
-        'className = \'sr-only\'', 'role="alert"', "activity.html",
-        'id="long-run-chart"', 'id="long-run-tabs"', 'data-language-metric="profanity"',
+        'className = \'sr-only\'', 'role="alert"', "activity/",
+        'id="long-run-chart"', 'id="long-run-metric"', 'data-language-metric="profanity"',
     ):
         assert text in page
     assert "min-width:42rem" not in page
@@ -331,14 +332,15 @@ def test_payload_and_html_expose_selector_aware_language_graphs(store, tmp_path)
     assert len(long_run["metrics"]) == 6
     assert {row["party"] for row in long_run["series"]} == {"D", "R"}
     assert {row["chamber"] for row in long_run["chamber_series"]} == {"house", "senate"}
-    activity_page = (out / "activity.html").read_text()
+    activity_page = (out / "activity" / "index.html").read_text()
     assert "Congressional member activity and bills" in activity_page
     assert "Who sponsors the most bills" in activity_page
     assert "Language analysis" in activity_page
-    assert 'id="activity-tabs"' in activity_page
+    assert 'id="activity-metric"' in activity_page
     assert "selectActivityMetric" in activity_page
     assert "activityMetrics" in activity_page
     assert 'id="leaderboards"' in activity_page
+    assert "url=activity/" in (out / "activity.html").read_text()
 
 
 def test_nonselected_extension_only_congress_does_not_break_charts(store, tmp_path):

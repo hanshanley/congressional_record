@@ -268,44 +268,20 @@ function addAccessibleTable(wrapper, captionText, headers, rows) {
   wrapper.appendChild(accessible);
 }
 
-function renderChoices(container, items, selected, onSelect, label, asTabs = false) {
-  container.replaceChildren();
-  container.setAttribute('role', asTabs ? 'tablist' : 'group');
-  container.setAttribute('aria-label', label);
-  items.forEach((item, index) => {
-    const button = document.createElement('button');
-    button.type = 'button';
-    button.className = 'tab-button';
-    button.dataset.key = item.key;
-    if (asTabs) {
-      button.setAttribute('role', 'tab');
-      button.setAttribute('aria-selected', String(item.key === selected));
-      button.tabIndex = item.key === selected ? 0 : -1;
-      button.addEventListener('keydown', event => {
-        if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
-        event.preventDefault();
-        let target = index;
-        if (event.key === 'ArrowLeft') target = (index - 1 + items.length) % items.length;
-        if (event.key === 'ArrowRight') target = (index + 1) % items.length;
-        if (event.key === 'Home') target = 0;
-        if (event.key === 'End') target = items.length - 1;
-        onSelect(items[target].key);
-        requestAnimationFrame(() => {
-          container.querySelector(`[data-key="${items[target].key}"]`)?.focus();
-        });
-      });
-    } else {
-      button.setAttribute('aria-pressed', String(item.key === selected));
-    }
-    button.textContent = item.label;
-    button.addEventListener('click', () => {
-      onSelect(item.key);
-      requestAnimationFrame(() => {
-        container.querySelector(`[data-key="${item.key}"]`)?.focus();
-      });
+function syncSelect(select, items, selected, onSelect) {
+  const signature = items.map(item => `${item.key}:${item.label}`).join('|');
+  if (select.dataset.signature !== signature) {
+    select.replaceChildren();
+    items.forEach(item => {
+      const option = document.createElement('option');
+      option.value = item.key;
+      option.textContent = item.label;
+      select.appendChild(option);
     });
-    container.appendChild(button);
-  });
+    select.dataset.signature = signature;
+  }
+  select.value = selected;
+  select.onchange = () => onSelect(select.value);
 }
 
 function renderTrendPanel(language, key) {
@@ -498,8 +474,8 @@ function renderLongRun(longRun) {
   if (!longRun.metrics[selectedLongRunMetric]) {
     selectedLongRunMetric = Object.keys(longRun.metrics)[0];
   }
-  renderChoices(
-    document.getElementById('long-run-tabs'),
+  syncSelect(
+    document.getElementById('long-run-metric'),
     Object.entries(longRun.metrics).map(([key, metric]) => ({key, label: metric.label})),
     selectedLongRunMetric,
     key => {
@@ -507,10 +483,9 @@ function renderLongRun(longRun) {
       updateHash({longMetric: key});
       renderLongRun(longRun);
     },
-    'Long-run language measure',
   );
-  renderChoices(
-    document.getElementById('long-run-chambers'),
+  syncSelect(
+    document.getElementById('long-run-chamber'),
     [
       {key: 'all', label: 'All chambers'},
       {key: 'house', label: 'House'},
@@ -522,7 +497,6 @@ function renderLongRun(longRun) {
       updateHash({longChamber: key});
       renderLongRun(longRun);
     },
-    'Long-run chamber',
   );
   const container = document.getElementById('long-run-chart');
   container.replaceChildren(renderLongRunPanel(longRun, selectedLongRunMetric));
@@ -719,8 +693,8 @@ function renderRecentFocus() {
   Object.keys(currentLanguage.metrics).forEach(
     key => renderLanguageTable(currentLanguage, key)
   );
-  renderChoices(
-    document.getElementById('recent-metric-tabs'),
+  syncSelect(
+    document.getElementById('recent-metric'),
     Object.entries(currentLanguage.metrics).map(([key, metric]) => ({key, label: metric.label})),
     selectedRecentMetric,
     key => {
@@ -728,10 +702,9 @@ function renderRecentFocus() {
       updateHash({metric: key});
       renderRecentFocus();
     },
-    'Recent language measure',
   );
-  renderChoices(
-    document.getElementById('recent-chambers'),
+  syncSelect(
+    document.getElementById('recent-chamber'),
     [
       {key: 'all', label: 'All chambers'},
       {key: 'house', label: 'House'},
@@ -743,10 +716,9 @@ function renderRecentFocus() {
       updateHash({chamber: key});
       renderRecentFocus();
     },
-    'Recent chamber',
   );
-  renderChoices(
-    document.getElementById('recent-view-tabs'),
+  syncSelect(
+    document.getElementById('recent-view'),
     [
       {key: 'trend', label: 'Trend'},
       {key: 'members', label: 'Member ranking'},
@@ -758,8 +730,6 @@ function renderRecentFocus() {
       updateHash({view: key});
       renderRecentFocus();
     },
-    'Recent language view',
-    true,
   );
   const visual = document.getElementById('recent-visual');
   const tables = document.getElementById('language-tables');
@@ -792,6 +762,7 @@ function renderLanguage(language) {
 """
 
 ACTIVITY_JS = r"""
+const DATA_ROOT = '../data';
 const select = document.getElementById('congress');
 let loadedCongress = select.value;
 let loadSequence = 0;
@@ -807,37 +778,13 @@ const activityMetrics = [
 
 function selectActivityMetric(metric) {
   selectedActivityMetric = metric;
-  document.querySelectorAll('#activity-tabs button').forEach(button => {
-    button.setAttribute('aria-pressed', String(button.dataset.metric === metric));
-  });
+  document.getElementById('activity-metric').value = metric;
   document.querySelectorAll('#leaderboards .card').forEach(card => {
     card.hidden = card.id !== metric;
   });
   const params = new URLSearchParams(location.hash.slice(1));
   params.set('table', metric);
   history.replaceState(null, '', `#${params.toString()}`);
-}
-
-function renderActivityTabs() {
-  const tabs = document.getElementById('activity-tabs');
-  tabs.replaceChildren();
-  tabs.setAttribute('role', 'group');
-  tabs.setAttribute('aria-label', 'Activity table');
-  activityMetrics.forEach(([metric, label]) => {
-    const button = document.createElement('button');
-    button.type = 'button';
-    button.className = 'tab-button';
-    button.dataset.metric = metric;
-    button.textContent = label;
-    button.addEventListener('click', () => {
-      selectActivityMetric(metric);
-      requestAnimationFrame(() => {
-        tabs.querySelector(`[data-metric="${metric}"]`)?.focus();
-      });
-    });
-    tabs.appendChild(button);
-  });
-  selectActivityMetric(selectedActivityMetric);
 }
 
 function activityCell(text, link) {
@@ -913,7 +860,7 @@ async function loadActivityCongress(value) {
   error.hidden = true;
   select.disabled = true;
   try {
-    const response = await fetch(`data/congress_${value}.json`);
+    const response = await fetch(`${DATA_ROOT}/congress_${value}.json`);
     if (!response.ok) throw new Error(`Unable to load Congress ${value}`);
     const payload = await response.json();
     if (sequence !== loadSequence) return;
@@ -948,7 +895,10 @@ const activityState = new URLSearchParams(location.hash.slice(1));
 if (activityMetrics.some(([metric]) => metric === activityState.get('table'))) {
   selectedActivityMetric = activityState.get('table');
 }
-renderActivityTabs();
+document.getElementById('activity-metric').addEventListener(
+  'change', event => selectActivityMetric(event.target.value)
+);
+selectActivityMetric(selectedActivityMetric);
 const requestedCongress = activityState.get('congress');
 if (requestedCongress && [...select.options].some(option => option.value === requestedCongress)
     && requestedCongress !== select.value) {
@@ -1692,14 +1642,19 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
   .skip-link:focus {{ left:.5rem; }}
   .sub,.definition,.muted {{ color:var(--muted); }}
   .hero-deck {{ font-size:1.12rem; max-width:50rem; margin-bottom:3rem; }}
-  .section-header {{ display:flex; justify-content:space-between; gap:1rem; align-items:end;
-                     margin:4rem 0 1.2rem; }}
+  .section-header {{ margin:4rem 0 1.2rem; }}
   .section-header h2 {{ margin:0; }}
   .section-header p {{ margin:.25rem 0 0; max-width:52rem; }}
-  .congress-control {{ display:flex; align-items:center; gap:.55rem; white-space:nowrap;
-                       font-weight:700; font-size:.88rem; }}
   select {{ font:inherit; padding:.6rem 2.2rem .6rem .8rem; background:var(--paper);
             border:1px solid var(--grid); border-radius:.45rem; }}
+  .explorer-controls {{ display:grid; grid-template-columns:repeat(2,minmax(12rem,18rem));
+                        gap:.75rem; margin:1rem 0 1.2rem; }}
+  .recent-controls {{ grid-template-columns:2fr 1fr 1fr 1fr; }}
+  .explorer-controls label {{ display:grid; gap:.3rem; color:var(--muted);
+                              font-size:.72rem; font-weight:800; letter-spacing:.08em;
+                              text-transform:uppercase; }}
+  .explorer-controls select {{ width:100%; color:var(--text); text-transform:none;
+                               letter-spacing:normal; font-weight:650; }}
   .warning {{ background:#FFF3CD; border-left:4px solid #C7922B; padding:.8rem 1rem; margin:1rem 0; }}
   .card {{ background:var(--paper); border:1px solid var(--grid); padding:1rem;
            margin:1.25rem 0 2rem; min-width:0; }}
@@ -1715,8 +1670,6 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
   .tab-button[aria-selected="true"],.tab-button[aria-pressed="true"] {{
     color:var(--paper); background:var(--text); border-color:var(--text);
   }}
-  .chamber-row {{ margin-top:-.35rem; }}
-  .chamber-row .tab-button {{ font-size:.76rem; padding:.38rem .65rem; }}
   .focus-panel {{ background:var(--paper); border:1px solid var(--grid); border-radius:.65rem;
                   padding:1rem 1.2rem; box-shadow:0 12px 35px rgb(40 34 24 / 6%); }}
   .recent-shell {{ display:grid; grid-template-columns:minmax(0,1fr) 18rem; gap:1rem;
@@ -1782,8 +1735,7 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
   footer {{ margin-top:3rem; color:var(--muted); font-size:.86rem; }}
   @media (max-width:44rem) {{
     body {{ padding:1.5rem .75rem 3rem; }}
-    .section-header {{ display:block; }}
-    .congress-control {{ margin-top:.75rem; }}
+    .explorer-controls,.recent-controls {{ grid-template-columns:1fr 1fr; }}
     .overview-intro,.methodology-grid,.recent-shell {{ grid-template-columns:1fr; }}
     .context-panel {{ position:static; }}
     .chart-card {{ padding:.3rem; }}
@@ -1796,8 +1748,8 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
 </head>
 <body>
 <a class="skip-link" href="#main-content">Skip to content</a>
-<nav aria-label="Primary"><a href="index.html" aria-current="page">Language analysis</a>
-<a href="activity.html">Member activity and bills</a></nav>
+<nav aria-label="Primary"><a href="./" aria-current="page">Language analysis</a>
+<a href="activity/">Member activity and bills</a></nav>
 <main id="main-content">
 <h1>Congressional comity and conflict language</h1>
 <p class="sub hero-deck">How Democratic and Republican language in the Congressional Record has changed,
@@ -1810,8 +1762,10 @@ and profanity.</p>
 digital and historical record. Rates are word-normalized; positive and negative measures
 remain separate.</p></div>
 </div>
-<div id="long-run-tabs" class="tab-row"></div>
-<div id="long-run-chambers" class="tab-row chamber-row"></div>
+<div class="explorer-controls">
+<label>Measure<select id="long-run-metric"></select></label>
+<label>Chamber<select id="long-run-chamber"></select></label>
+</div>
 <div id="long-run-chart" class="focus-panel"
  aria-label="Interactive long-run Democratic and Republican language chart"></div>
 <p class="definition">{html.escape(long_run['source_note'])}</p>
@@ -1825,12 +1779,13 @@ remain separate.</p></div>
 personal hostility or disrespect, and misconduct allegations. They describe language in
 attributed floor remarks and compare Democrats with Republicans; they do not establish intent
 or whether an allegation is true.</p></div>
-<label class="congress-control" for="congress"><span>Congress</span>
-<select id="congress">{''.join(options)}</select></label>
 </div>
-<div id="recent-metric-tabs" class="tab-row"></div>
-<div id="recent-chambers" class="tab-row chamber-row"></div>
-<div id="recent-view-tabs" class="tab-row"></div>
+<div class="explorer-controls recent-controls">
+<label>Measure<select id="recent-metric"></select></label>
+<label>Chamber<select id="recent-chamber"></select></label>
+<label>View<select id="recent-view"></select></label>
+<label>Congress<select id="congress">{''.join(options)}</select></label>
+</div>
 <div class="recent-shell">
 <div>
 <div id="recent-visual" class="focus-panel"></div>
@@ -1855,7 +1810,7 @@ or whether an allegation is true.</p></div>
 <footer id="coverage">Speech coverage {html.escape(payload['coverage']['speech_first_date'])}
 to {html.escape(payload['coverage']['speech_last_date'])}. Newest Congressional Record date:
 {html.escape(payload['coverage']['speech_last_date'])}. Site data snapshot:
-{html.escape(payload['generated_utc'])}. <a href="activity.html">Open member activity and bill tables.</a></footer>
+{html.escape(payload['generated_utc'])}. <a href="activity/">Open member activity and bill tables.</a></footer>
 <script>
 const longRunLanguage = {_script_json(long_run)};
 const initialLanguage = {_script_json(language)};
@@ -1943,6 +1898,16 @@ def _render_activity_html(payload: dict, congresses: list[int]) -> str:
         ("enacted", "Whose sponsored bills become law"),
         ("profanity", "Who uses profanity at the highest rate"),
     ]
+    metric_options = "".join(
+        f'<option value="{metric}">{html.escape(label)}</option>'
+        for metric, label in (
+            ("speech", "Speech"),
+            ("sponsored", "Sponsored bills"),
+            ("passed", "Passed a chamber"),
+            ("enacted", "Became law"),
+            ("profanity", "Profanity"),
+        )
+    )
     cards = "".join(
         f'<section class="card" id="{metric}"><h2>{html.escape(title)}</h2>'
         f'<p class="definition">{html.escape(METRIC_DEFINITIONS[metric])}</p>'
@@ -1988,6 +1953,10 @@ passage, enactment, and profanity tables by Congress.">
   .hero-deck {{ font-size:1.08rem; max-width:48rem; }}
   .toolbar {{ display:flex; justify-content:space-between; gap:1rem; align-items:center;
               margin:2rem 0 1rem; }}
+  .toolbar label {{ display:grid; gap:.3rem; color:var(--muted); font-size:.72rem;
+                    font-weight:800; letter-spacing:.08em; text-transform:uppercase; }}
+  .toolbar select {{ color:var(--text); text-transform:none; letter-spacing:normal;
+                     font-weight:650; min-width:12rem; }}
   select {{ font:inherit; padding:.6rem 2.2rem .6rem .8rem; background:var(--paper);
             border:1px solid var(--grid); border-radius:.45rem; }}
   .tab-row {{ display:flex; gap:.4rem; flex-wrap:wrap; margin:.9rem 0 1.2rem; }}
@@ -2016,7 +1985,7 @@ passage, enactment, and profanity tables by Congress.">
   @media (max-width:44rem) {{
     body {{ padding:1.5rem .75rem 3rem; }}
     .toolbar {{ display:block; }}
-    .toolbar label {{ display:block; margin-top:.75rem; }}
+    .toolbar label {{ display:grid; margin-top:.75rem; }}
     table {{ table-layout:fixed; font-size:.78rem; }}
     th,td {{ padding:.36rem .28rem; overflow-wrap:normal; }}
     table[data-metric="speech"] th:nth-child(3),table[data-metric="speech"] td:nth-child(3),
@@ -2046,15 +2015,16 @@ passage, enactment, and profanity tables by Congress.">
 </head>
 <body>
 <a class="skip-link" href="#main-content">Skip to content</a>
-<nav aria-label="Primary"><a href="index.html">Language analysis</a>
-<a href="activity.html" aria-current="page">Member activity and bills</a></nav>
+<nav aria-label="Primary"><a href="../">Language analysis</a>
+<a href="./" aria-current="page">Member activity and bills</a></nav>
 <main id="main-content">
 <h1>Congressional member activity and bills</h1>
 <p class="sub hero-deck">Exact-value tables for attributed speech, sponsored bills, passage,
 enactment, and nonzero profanity rates. The language-analysis homepage remains the primary view.</p>
-<div class="toolbar"><strong>Choose a table</strong><label for="congress">Congress
-<select id="congress">{''.join(options)}</select></label></div>
-<div id="activity-tabs" class="tab-row"></div>
+<div class="toolbar">
+<label for="activity-metric">Table<select id="activity-metric">{metric_options}</select></label>
+<label for="congress">Congress<select id="congress">{''.join(options)}</select></label>
+</div>
 <div id="coverage-warning" class="warning" {'hidden' if not warning else ''}>{html.escape(warning)}</div>
 <p id="dashboard-error" class="error" role="alert" hidden></p>
 <div id="leaderboards">{cards}</div>
@@ -2186,8 +2156,17 @@ def main(argv: Optional[List[str]] = None) -> int:
     (out / "index.html").write_text(
         _render_html(selected, available, long_run), encoding="utf-8"
     )
-    (out / "activity.html").write_text(
+    activity_dir = out / "activity"
+    activity_dir.mkdir(parents=True, exist_ok=True)
+    (activity_dir / "index.html").write_text(
         _render_activity_html(selected, available), encoding="utf-8"
+    )
+    (out / "activity.html").write_text(
+        '<!doctype html><meta charset="utf-8">'
+        '<meta http-equiv="refresh" content="0; url=activity/">'
+        '<link rel="canonical" href="activity/">'
+        '<title>Redirecting…</title><a href="activity/">Open member activity and bills</a>',
+        encoding="utf-8",
     )
     LOG.info("site written to %s (%s)", out, selected["label"])
     return 0
