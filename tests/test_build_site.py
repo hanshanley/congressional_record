@@ -299,6 +299,8 @@ def test_payload_and_html_expose_selector_aware_language_graphs(store, tmp_path)
     assert set(language["members"]) == {"profanity", "hostility", "misconduct"}
     assert language["series"]
     assert len(language["highlights"][0]["top_members"]) <= 3
+    assert {row["chamber"] for row in language["chamber_series"]} == {"house", "senate"}
+    assert set(language["members_by_chamber"]) == {"house", "senate"}
     assert "per 100,000 attributed spoken words" in language["explanation"]["shown"]
     assert "does not prove misconduct" in language["explanation"]["limitation"]
 
@@ -311,6 +313,7 @@ def test_payload_and_html_expose_selector_aware_language_graphs(store, tmp_path)
         "Recent language on the floor", "What is shown", "What is examined",
         "Methodology and limitations", 'id="language-highlight"',
         'id="recent-visual"', 'id="recent-metric-tabs"', 'id="recent-view-tabs"',
+        'id="recent-chambers"', 'id="long-run-chambers"',
         "renderLanguage(payload.language)", "renderTrendPanel",
         "renderMemberPanel", "renderRecentFocus", "renderChoices",
         "selectedRecentView", "bindTooltip", "chart-toggle",
@@ -327,6 +330,7 @@ def test_payload_and_html_expose_selector_aware_language_graphs(store, tmp_path)
     long_run = json.loads((out / "data" / "long_run_language.json").read_text())
     assert len(long_run["metrics"]) == 6
     assert {row["party"] for row in long_run["series"]} == {"D", "R"}
+    assert {row["chamber"] for row in long_run["chamber_series"]} == {"house", "senate"}
     activity_page = (out / "activity.html").read_text()
     assert "Congressional member activity and bills" in activity_page
     assert "Who sponsors the most bills" in activity_page

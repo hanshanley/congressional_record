@@ -309,10 +309,13 @@ def timeseries(daily: pd.DataFrame, freq: str = "YE") -> pd.DataFrame:
 def language_timeseries(
     daily: pd.DataFrame,
     congress: Optional[int] = None,
+    *,
+    by_chamber: bool = False,
 ) -> pd.DataFrame:
     """Return Democratic/Republican floor-language rates by month/year."""
+    dimensions = ["period", "party", *(["chamber"] if by_chamber else [])]
     columns = [
-        "period", "party", "words", "turns",
+        *dimensions, "words", "turns",
         *[metric["hits"] for metric in LANGUAGE_METRICS.values()],
         *[metric["rate"] for metric in LANGUAGE_METRICS.values()],
     ]
@@ -330,7 +333,7 @@ def language_timeseries(
     dates = dates[dates.notna()]
     frame["period"] = dates.dt.to_period("Y" if congress is None else "M").astype(str)
     hit_columns = [metric["hits"] for metric in LANGUAGE_METRICS.values()]
-    grouped = frame.groupby(["period", "party"], as_index=False)[
+    grouped = frame.groupby(dimensions, as_index=False)[
         ["words", "turns", *hit_columns]
     ].sum()
     for metric in LANGUAGE_METRICS.values():
@@ -339,7 +342,7 @@ def language_timeseries(
             * grouped[metric["hits"]]
             / grouped["words"].where(grouped["words"] > 0)
         ).fillna(0.0)
-    return grouped[columns].sort_values(["period", "party"]).reset_index(drop=True)
+    return grouped[columns].sort_values(dimensions).reset_index(drop=True)
 
 
 def language_member_rates(
@@ -348,10 +351,13 @@ def language_member_rates(
     *,
     min_words: int = 25_000,
     top: int = 8,
+    chamber: Optional[str] = None,
 ) -> Dict[str, pd.DataFrame]:
     """Return deterministic top-member rate tables for each language measure."""
     frame = daily if congress is None else daily[daily["congress"] == int(congress)]
     frame = frame[frame["chamber"].isin(["house", "senate"])].copy()
+    if chamber is not None:
+        frame = frame[frame["chamber"] == chamber].copy()
     if frame.empty:
         return {key: pd.DataFrame() for key in LANGUAGE_METRICS}
     frame = frame.sort_values(["date", "bioguide", "chamber"])

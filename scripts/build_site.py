@@ -84,8 +84,10 @@ const chartColors = {
   grid: '#D6D3CC',
 };
 let selectedLongRunMetric = 'profanity_per_1k';
+let selectedLongRunChamber = 'all';
 let selectedRecentMetric = 'profanity';
 let selectedRecentView = 'trend';
+let selectedRecentChamber = 'all';
 let currentLanguage = null;
 let currentLongRun = null;
 
@@ -97,6 +99,29 @@ function updateHash(values) {
   const params = new URLSearchParams(location.hash.slice(1));
   Object.entries(values).forEach(([key, value]) => params.set(key, value));
   history.replaceState(null, '', `#${params.toString()}`);
+}
+
+function chamberLabel(chamber) {
+  return chamber === 'all' ? 'House + Senate' :
+    chamber[0].toUpperCase() + chamber.slice(1);
+}
+
+function longRunSeries(longRun) {
+  return selectedLongRunChamber === 'all'
+    ? longRun.series
+    : longRun.chamber_series.filter(row => row.chamber === selectedLongRunChamber);
+}
+
+function recentSeries(language) {
+  return selectedRecentChamber === 'all'
+    ? language.series
+    : language.chamber_series.filter(row => row.chamber === selectedRecentChamber);
+}
+
+function recentMembers(language, key) {
+  return selectedRecentChamber === 'all'
+    ? language.members[key]
+    : language.members_by_chamber[selectedRecentChamber][key];
 }
 
 function svgNode(tag, attributes = {}, text = '') {
@@ -302,10 +327,12 @@ function renderTrendPanel(language, key) {
   const svg = svgNode('svg', {
     viewBox: `0 0 ${width} ${height}`,
     role: 'img',
-    'aria-label': `${metric.label} rates over time in ${language.scope_label}`,
+    'aria-label': `${metric.label} rates over time in ${language.scope_label}, ` +
+      chamberLabel(selectedRecentChamber),
   });
-  const periods = [...new Set(language.series.map(row => row.period))].sort();
-  const values = language.series.map(row => Number(row[metric.rate]) || 0);
+  const sourceSeries = recentSeries(language);
+  const periods = [...new Set(sourceSeries.map(row => row.period))].sort();
+  const values = sourceSeries.map(row => Number(row[metric.rate]) || 0);
   const maxValue = Math.max(1, ...values) * 1.08;
   const x = index => margin.left + (
     periods.length <= 1 ? plotWidth / 2 : index * plotWidth / (periods.length - 1)
@@ -332,7 +359,7 @@ function renderTrendPanel(language, key) {
   });
   [['D', 'Democrats'], ['R', 'Republicans']].forEach(([party, label]) => {
     const rowsByPeriod = new Map(
-      language.series.filter(row => row.party === party)
+      sourceSeries.filter(row => row.party === party)
         .map(row => [row.period, row])
     );
     const points = periods.flatMap((period, index) => {
@@ -367,7 +394,7 @@ function renderTrendPanel(language, key) {
     wrapper,
     `${metric.label} rates over time in ${language.scope_label}`,
     ['Period', 'Party', 'Rate per 100,000 words', 'Hits', 'Words'],
-    language.series.map(row => [
+    sourceSeries.map(row => [
       formatPeriod(row.period),
       row.party === 'D' ? 'Democrats' : 'Republicans',
       formatRate(row[metric.rate]),
@@ -397,10 +424,11 @@ function renderLongRunPanel(longRun, key) {
     viewBox: `0 0 ${width} ${height}`,
     role: 'img',
     'aria-label': `${metric.label}, Democrats compared with Republicans, ` +
-      `${longRun.first_year} to ${longRun.last_year}`,
+      `${longRun.first_year} to ${longRun.last_year}, ${chamberLabel(selectedLongRunChamber)}`,
   });
-  const years = [...new Set(longRun.series.map(row => Number(row.year)))].sort((a, b) => a - b);
-  const values = longRun.series.map(row => Number(row[metric.rate]) || 0);
+  const sourceSeries = longRunSeries(longRun);
+  const years = [...new Set(sourceSeries.map(row => Number(row.year)))].sort((a, b) => a - b);
+  const values = sourceSeries.map(row => Number(row[metric.rate]) || 0);
   const maxValue = Math.max(0.01, ...values) * 1.08;
   const x = year => margin.left + (
     (year - years[0]) / Math.max(1, years[years.length - 1] - years[0])
@@ -425,7 +453,7 @@ function renderLongRunPanel(longRun, key) {
     });
   });
   [['D', 'Democrats'], ['R', 'Republicans']].forEach(([party, label]) => {
-    const rows = longRun.series.filter(row => row.party === party)
+    const rows = sourceSeries.filter(row => row.party === party)
       .sort((a, b) => Number(a.year) - Number(b.year));
     const points = rows.map(row => [
       x(Number(row.year)), y(Number(row[metric.rate]) || 0), row,
@@ -457,7 +485,7 @@ function renderLongRunPanel(longRun, key) {
     wrapper,
     `${metric.label}, ${longRun.first_year} to ${longRun.last_year}`,
     ['Year', 'Party', metric.units, 'Hits', 'Words'],
-    longRun.series.map(row => [
+    sourceSeries.map(row => [
       row.year, partyName(row.party), Number(row[metric.rate]).toFixed(3),
       Number(row[metric.hits]).toLocaleString(), Number(row.words).toLocaleString(),
     ]),
@@ -481,13 +509,28 @@ function renderLongRun(longRun) {
     },
     'Long-run language measure',
   );
+  renderChoices(
+    document.getElementById('long-run-chambers'),
+    [
+      {key: 'all', label: 'All chambers'},
+      {key: 'house', label: 'House'},
+      {key: 'senate', label: 'Senate'},
+    ],
+    selectedLongRunChamber,
+    key => {
+      selectedLongRunChamber = key;
+      updateHash({longChamber: key});
+      renderLongRun(longRun);
+    },
+    'Long-run chamber',
+  );
   const container = document.getElementById('long-run-chart');
   container.replaceChildren(renderLongRunPanel(longRun, selectedLongRunMetric));
 }
 
 function renderMemberPanel(language, key) {
   const metric = language.metrics[key];
-  const rows = language.members[key] || [];
+  const rows = recentMembers(language, key) || [];
   const wrapper = document.createElement('section');
   wrapper.className = 'mini-chart';
   addPanelHeading(wrapper, metric, '');
@@ -574,7 +617,7 @@ function renderLanguageTable(language, key) {
   if (!table) return;
   const tbody = table.querySelector('tbody');
   tbody.replaceChildren();
-  const rows = language.members[key] || [];
+  const rows = recentMembers(language, key) || [];
   if (!rows.length) {
     const row = document.createElement('tr');
     const cell = document.createElement('td');
@@ -614,21 +657,32 @@ function renderLanguageTable(language, key) {
 function renderSelectedHighlight(language) {
   const container = document.getElementById('language-highlight');
   container.replaceChildren();
-  const highlight = language.highlights.find(item => item.key === selectedRecentMetric);
-  if (!highlight) return;
-  const difference = Number(highlight.difference);
-  const comparison = highlight.higher_party === 'Tie'
+  const metric = language.metrics[selectedRecentMetric];
+  const sourceSeries = recentSeries(language);
+  const partyRate = party => {
+    const rows = sourceSeries.filter(row => row.party === party);
+    const words = rows.reduce((sum, row) => sum + Number(row.words), 0);
+    const hits = rows.reduce((sum, row) => sum + Number(row[metric.hits]), 0);
+    return words ? 100000 * hits / words : 0;
+  };
+  const topMembers = recentMembers(language, selectedRecentMetric).slice(0, 3);
+  const democraticRate = partyRate('D');
+  const republicanRate = partyRate('R');
+  const difference = democraticRate - republicanRate;
+  const higherParty = Math.abs(difference) < 0.05
+    ? 'Tie' : difference > 0 ? 'Democrats' : 'Republicans';
+  const comparison = higherParty === 'Tie'
     ? 'Party rates are effectively tied'
-    : `${highlight.higher_party} +${formatRate(Math.abs(difference))}`;
+    : `${higherParty} +${formatRate(Math.abs(difference))}`;
   const eyebrow = document.createElement('p');
   eyebrow.className = 'eyebrow';
-  eyebrow.textContent = 'Selected measure';
+  eyebrow.textContent = `Selected measure · ${chamberLabel(selectedRecentChamber)}`;
   const title = document.createElement('h3');
-  title.textContent = highlight.label;
+  title.textContent = metric.label;
   const rates = document.createElement('div');
   rates.className = 'party-rates';
-  [['democratic', highlight.democratic_rate, 'Democrats'],
-    ['republican', highlight.republican_rate, 'Republicans']].forEach(
+  [['democratic', democraticRate, 'Democrats'],
+    ['republican', republicanRate, 'Republicans']].forEach(
     ([className, rate, label]) => {
       const item = document.createElement('span');
       item.className = `party-rate ${className}`;
@@ -643,13 +697,14 @@ function renderSelectedHighlight(language) {
   comparisonText.textContent = `${comparison} per 100,000 words`;
   const leader = document.createElement('p');
   leader.className = 'leader top-members';
-  if (highlight.top_members.length) {
+  if (topMembers.length) {
     const label = document.createElement('strong');
     label.textContent = 'Top member rates';
     const list = document.createElement('ol');
-    highlight.top_members.forEach(member => {
+    topMembers.forEach(member => {
       const item = document.createElement('li');
-      item.textContent = `${member.name} (${member.party}) — ${formatRate(member.rate)}`;
+      item.textContent = `${member.speaker_name} (${member.party}) — ` +
+        `${formatRate(member[metric.rate])}`;
       list.appendChild(item);
     });
     leader.append(label, list);
@@ -661,6 +716,9 @@ function renderSelectedHighlight(language) {
 
 function renderRecentFocus() {
   if (!currentLanguage) return;
+  Object.keys(currentLanguage.metrics).forEach(
+    key => renderLanguageTable(currentLanguage, key)
+  );
   renderChoices(
     document.getElementById('recent-metric-tabs'),
     Object.entries(currentLanguage.metrics).map(([key, metric]) => ({key, label: metric.label})),
@@ -671,6 +729,21 @@ function renderRecentFocus() {
       renderRecentFocus();
     },
     'Recent language measure',
+  );
+  renderChoices(
+    document.getElementById('recent-chambers'),
+    [
+      {key: 'all', label: 'All chambers'},
+      {key: 'house', label: 'House'},
+      {key: 'senate', label: 'Senate'},
+    ],
+    selectedRecentChamber,
+    key => {
+      selectedRecentChamber = key;
+      updateHash({chamber: key});
+      renderRecentFocus();
+    },
+    'Recent chamber',
   );
   renderChoices(
     document.getElementById('recent-view-tabs'),
@@ -714,7 +787,6 @@ function renderLanguage(language) {
   document.getElementById('language-shown').textContent = language.explanation.shown;
   document.getElementById('language-examined').textContent = language.explanation.examined;
   document.getElementById('language-limitation').textContent = language.explanation.limitation;
-  Object.keys(language.metrics).forEach(key => renderLanguageTable(language, key));
   renderRecentFocus();
 }
 """
@@ -1156,12 +1228,23 @@ def _language_payload(
     scope_label = "All Congresses" if congress is None else f"Congress {congress}"
     granularity = "year" if congress is None else "month"
     series = language_timeseries(daily, congress)
+    chamber_series = language_timeseries(daily, congress, by_chamber=True)
     rankings = language_member_rates(
         daily,
         congress,
         min_words=min_words,
         top=LANGUAGE_MEMBER_TOP,
     )
+    chamber_rankings = {
+        chamber: language_member_rates(
+            daily,
+            congress,
+            min_words=min_words,
+            top=LANGUAGE_MEMBER_TOP,
+            chamber=chamber,
+        )
+        for chamber in ("house", "senate")
+    }
     party_summary = {}
     for party in ("D", "R"):
         rows = series[series["party"] == party]
@@ -1179,16 +1262,20 @@ def _language_payload(
                 100_000 * hits / words if words else 0.0
             )
 
-    member_records = {}
-    for key, frame in rankings.items():
-        records = _records(frame)
-        for row in records:
-            row["member_url"] = (
-                f"https://bioguide.congress.gov/search/bio/{row['bioguide']}"
-                if row.get("bioguide")
-                else ""
-            )
-        member_records[key] = records
+    def enrich_rankings(frames: dict[str, pd.DataFrame]) -> dict[str, list[dict]]:
+        enriched = {}
+        for key, frame in frames.items():
+            records = _records(frame)
+            for row in records:
+                row["member_url"] = (
+                    f"https://bioguide.congress.gov/search/bio/{row['bioguide']}"
+                    if row.get("bioguide")
+                    else ""
+                )
+            enriched[key] = records
+        return enriched
+
+    member_records = enrich_rankings(rankings)
 
     findings = []
     highlights = []
@@ -1245,7 +1332,12 @@ def _language_payload(
         "granularity": granularity,
         "metrics": LANGUAGE_METRICS,
         "series": _records(series),
+        "chamber_series": _records(chamber_series),
         "members": member_records,
+        "members_by_chamber": {
+            chamber: enrich_rankings(frames)
+            for chamber, frames in chamber_rankings.items()
+        },
         "parties": party_summary,
         "highlights": highlights,
         "trend_alt": (
@@ -1285,15 +1377,17 @@ def build_long_run_payload(metrics: pd.DataFrame) -> dict:
         & metrics["party"].isin(["D", "R"])
     ].copy()
     hit_columns = [metric.raw_count for metric in HEADLINE_METRICS]
-    grouped = frame.groupby(["year", "party"], as_index=False)[
-        ["words", *hit_columns]
-    ].sum()
-    for metric in HEADLINE_METRICS:
-        grouped[metric.rate] = (
-            metric.scale
-            * grouped[metric.raw_count]
-            / grouped["words"].where(grouped["words"] > 0)
-        ).fillna(0.0)
+    grouped = frame.groupby(["year", "party"], as_index=False)[["words", *hit_columns]].sum()
+    chamber_grouped = frame.groupby(
+        ["year", "party", "chamber"], as_index=False
+    )[["words", *hit_columns]].sum()
+    for target in (grouped, chamber_grouped):
+        for metric in HEADLINE_METRICS:
+            target[metric.rate] = (
+                metric.scale
+                * target[metric.raw_count]
+                / target["words"].where(target["words"] > 0)
+            ).fillna(0.0)
     return {
         "metrics": {
             metric.rate: {
@@ -1307,6 +1401,11 @@ def build_long_run_payload(metrics: pd.DataFrame) -> dict:
         },
         "series": _records(grouped[
             ["year", "party", "words", *hit_columns, *[
+                metric.rate for metric in HEADLINE_METRICS
+            ]]
+        ]),
+        "chamber_series": _records(chamber_grouped[
+            ["year", "party", "chamber", "words", *hit_columns, *[
                 metric.rate for metric in HEADLINE_METRICS
             ]]
         ]),
@@ -1616,6 +1715,8 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
   .tab-button[aria-selected="true"],.tab-button[aria-pressed="true"] {{
     color:var(--paper); background:var(--text); border-color:var(--text);
   }}
+  .chamber-row {{ margin-top:-.35rem; }}
+  .chamber-row .tab-button {{ font-size:.76rem; padding:.38rem .65rem; }}
   .focus-panel {{ background:var(--paper); border:1px solid var(--grid); border-radius:.65rem;
                   padding:1rem 1.2rem; box-shadow:0 12px 35px rgb(40 34 24 / 6%); }}
   .recent-shell {{ display:grid; grid-template-columns:minmax(0,1fr) 18rem; gap:1rem;
@@ -1710,6 +1811,7 @@ digital and historical record. Rates are word-normalized; positive and negative 
 remain separate.</p></div>
 </div>
 <div id="long-run-tabs" class="tab-row"></div>
+<div id="long-run-chambers" class="tab-row chamber-row"></div>
 <div id="long-run-chart" class="focus-panel"
  aria-label="Interactive long-run Democratic and Republican language chart"></div>
 <p class="definition">{html.escape(long_run['source_note'])}</p>
@@ -1727,6 +1829,7 @@ or whether an allegation is true.</p></div>
 <select id="congress">{''.join(options)}</select></label>
 </div>
 <div id="recent-metric-tabs" class="tab-row"></div>
+<div id="recent-chambers" class="tab-row chamber-row"></div>
 <div id="recent-view-tabs" class="tab-row"></div>
 <div class="recent-shell">
 <div>
@@ -1793,8 +1896,14 @@ const requestedState = new URLSearchParams(location.hash.slice(1));
 if (longRunLanguage.metrics[requestedState.get('longMetric')]) {{
   selectedLongRunMetric = requestedState.get('longMetric');
 }}
+if (['all', 'house', 'senate'].includes(requestedState.get('longChamber'))) {{
+  selectedLongRunChamber = requestedState.get('longChamber');
+}}
 if (initialLanguage.metrics[requestedState.get('metric')]) {{
   selectedRecentMetric = requestedState.get('metric');
+}}
+if (['all', 'house', 'senate'].includes(requestedState.get('chamber'))) {{
+  selectedRecentChamber = requestedState.get('chamber');
 }}
 if (['trend', 'members', 'table'].includes(requestedState.get('view'))) {{
   selectedRecentView = requestedState.get('view');

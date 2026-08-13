@@ -282,6 +282,8 @@ def test_language_timeseries_uses_months_and_compares_parties():
     for metric in LANGUAGE_METRICS.values():
         assert metric["hits"] in all_years
         assert metric["rate"] in all_years
+    chamber = language_timeseries(daily, 119, by_chamber=True)
+    assert set(chamber["chamber"]) == {"house", "senate"}
 
 
 def test_language_member_rates_keep_measures_separate_and_apply_threshold():
@@ -308,6 +310,10 @@ def test_language_member_rates_keep_measures_separate_and_apply_threshold():
     assert "Zero" not in set(rankings["misconduct"]["speaker_name"])
     alpha = rankings["profanity"].set_index("bioguide").loc["A"]
     assert alpha["profanity_per_100k"] == pytest.approx(25.0)
+    house_only = language_member_rates(
+        daily, 119, min_words=25_000, top=5, chamber="house"
+    )
+    assert set(house_only["profanity"]["speaker_name"]) == {"Alpha"}
 
 
 # ------------------------------------------------------------------- storage
