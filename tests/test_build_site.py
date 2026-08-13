@@ -314,6 +314,7 @@ def test_payload_and_html_expose_selector_aware_language_graphs(store, tmp_path)
         "renderMemberPanel", "renderRecentFocus", "renderChoices",
         "selectedRecentView", "bindTooltip", "chart-toggle",
         "renderLongRun(longRunLanguage)", "renderLongRunPanel",
+        "selectedLongRunMetric = 'profanity_per_1k'",
         "URLSearchParams", "loadSequence", "addAccessibleTable",
         'className = \'sr-only\'', 'role="alert"', "activity.html",
         'id="long-run-chart"', 'id="long-run-tabs"', 'data-language-metric="profanity"',
