@@ -215,3 +215,23 @@ def test_leaderboards_use_transparent_metrics_and_stable_threshold():
     assert "B" not in set(boards["passed"]["bioguide"])
     assert boards["enacted"].empty
     assert set(boards["profanity"]["bioguide"]) == {"A", "B"}
+
+
+def test_member_activity_preserves_all_language_measures_and_rates():
+    daily = _daily()
+    daily.loc[daily["bioguide"] == "A", "hostility_hits"] = [2, 4]
+    daily.loc[daily["bioguide"] == "A", "misconduct_hits"] = [3, 6]
+    activity = member_activity(
+        daily,
+        pd.DataFrame([_bill(1, "A")]),
+        119,
+    ).set_index("bioguide")
+    member = activity.loc["A"]
+    assert member["hostility_hits"] == 6
+    assert member["misconduct_hits"] == 9
+    assert member["profanity_per_100k"] == pytest.approx(8.0)
+    assert member["hostility_per_100k"] == pytest.approx(8.0)
+    assert member["misconduct_per_100k"] == pytest.approx(12.0)
+    assert set(activity_leaderboards(activity)) == {
+        "speech", "sponsored", "passed", "enacted", "profanity",
+    }

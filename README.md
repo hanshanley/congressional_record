@@ -365,6 +365,14 @@ to publish five separate, auditable rankings for each Congress:
 4. sponsored bills that became law; and
 5. profanity per 100,000 attributed words.
 
+Above the exact-value tables, the site also presents three separate language indicators:
+profanity, personal hostility/disrespect, and misconduct allegations. Monthly House/Senate
+trends are shown within a selected Congress, while the all-Congresses view uses yearly periods.
+Member comparisons apply the same minimum-word threshold as the profanity table. The charts are
+responsive inline SVGs in the shared cream/serif house style; hovering or keyboard-focusing a
+point or bar reveals its raw hits and word denominator. Generated PNGs provide a no-JavaScript
+fallback for the initial view.
+
 It deliberately does **not** collapse these into an “effectiveness” score. Sponsoring a bill that
 passes or becomes law is a descriptive milestone, not proof that one member personally caused the
 outcome. The legislative rankings currently cover `H.R.` and `S.` measures only; cosponsorships,
@@ -406,8 +414,8 @@ rankings are partial and are labeled accordingly.
 
 ## How the site runs unattended
 
-`site/` is a self-contained static dashboard with no application server or database. It is
-designed to update **unattended**.
+`site/` is a self-contained static dashboard with no application server, database, or external
+charting dependency. It is designed to update **unattended**.
 
 ### Why it can run unattended
 
@@ -468,11 +476,11 @@ directly rather than screen-scraping:
 
 ```
 site/data/congresses.json      available Congress selectors
-site/data/congress_NNN.json    all five leaderboards, definitions, and coverage
+site/data/congress_NNN.json    leaderboards, interactive chart data, definitions, and coverage
 site/data/leaderboard.json     compatibility profanity leaderboard for the initial view
 site/data/timeseries.json      chamber-level profanity rate per year
 site/data/meta.json            build stamp, thresholds, coverage, caveat text
-site/figures/*.png             charts in the project's house style
+site/figures/*.png             no-JavaScript/compatibility charts in the project's house style
 ```
 
 ### Attribution safeguards

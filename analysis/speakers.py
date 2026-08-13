@@ -39,6 +39,27 @@ from analysis.score.scorers import Scorers
 
 LOG = logging.getLogger("analysis.speakers")
 
+LANGUAGE_METRICS = {
+    "profanity": {
+        "hits": "profanity_hits",
+        "rate": "profanity_per_100k",
+        "label": "Profanity",
+        "definition": "Unquoted matches from a narrow, curated profanity list.",
+    },
+    "hostility": {
+        "hits": "hostility_hits",
+        "rate": "hostility_per_100k",
+        "label": "Personal hostility / disrespect",
+        "definition": "Curated personal attack and disrespect terms.",
+    },
+    "misconduct": {
+        "hits": "misconduct_hits",
+        "rate": "misconduct_per_100k",
+        "label": "Misconduct allegations",
+        "definition": "Curated language alleging corruption, abuse, or other misconduct.",
+    },
+}
+
 # The Record wraps quotations in TeX-style doubled backticks / apostrophes. The
 # length cap stops a stray unmatched opener from swallowing a whole speech.
 _QUOTE_RE = re.compile(r"``(.{0,4000}?)''", re.S)
@@ -283,6 +304,84 @@ def timeseries(daily: pd.DataFrame, freq: str = "YE") -> pd.DataFrame:
         100_000 * grouped["profanity_hits"] / grouped["words"].where(grouped["words"] > 0)
     ).fillna(0.0)
     return grouped
+
+
+def language_timeseries(
+    daily: pd.DataFrame,
+    congress: Optional[int] = None,
+) -> pd.DataFrame:
+    """Return floor-language rates by chamber and month/year for one dashboard scope."""
+    columns = [
+        "period", "chamber", "words", "turns",
+        *[metric["hits"] for metric in LANGUAGE_METRICS.values()],
+        *[metric["rate"] for metric in LANGUAGE_METRICS.values()],
+    ]
+    if daily.empty:
+        return pd.DataFrame(columns=columns)
+    frame = daily if congress is None else daily[daily["congress"] == int(congress)]
+    frame = frame[frame["chamber"].isin(["house", "senate"])].copy()
+    if frame.empty:
+        return pd.DataFrame(columns=columns)
+    dates = pd.to_datetime(frame["date"], errors="coerce")
+    frame = frame[dates.notna()].copy()
+    dates = dates[dates.notna()]
+    frame["period"] = dates.dt.to_period("Y" if congress is None else "M").astype(str)
+    hit_columns = [metric["hits"] for metric in LANGUAGE_METRICS.values()]
+    grouped = frame.groupby(["period", "chamber"], as_index=False)[
+        ["words", "turns", *hit_columns]
+    ].sum()
+    for metric in LANGUAGE_METRICS.values():
+        grouped[metric["rate"]] = (
+            100_000
+            * grouped[metric["hits"]]
+            / grouped["words"].where(grouped["words"] > 0)
+        ).fillna(0.0)
+    return grouped[columns].sort_values(["period", "chamber"]).reset_index(drop=True)
+
+
+def language_member_rates(
+    daily: pd.DataFrame,
+    congress: Optional[int] = None,
+    *,
+    min_words: int = 25_000,
+    top: int = 8,
+) -> Dict[str, pd.DataFrame]:
+    """Return deterministic top-member rate tables for each language measure."""
+    frame = daily if congress is None else daily[daily["congress"] == int(congress)]
+    frame = frame[frame["chamber"].isin(["house", "senate"])].copy()
+    if frame.empty:
+        return {key: pd.DataFrame() for key in LANGUAGE_METRICS}
+    frame = frame.sort_values(["date", "bioguide", "chamber"])
+    hit_columns = [metric["hits"] for metric in LANGUAGE_METRICS.values()]
+    grouped = frame.groupby("bioguide", as_index=False).agg(
+        speaker_name=("speaker_name", "last"),
+        party=("party", "last"),
+        state=("state", "last"),
+        chamber=("chamber", "last"),
+        words=("words", "sum"),
+        turns=("turns", "sum"),
+        active_days=("date", "nunique"),
+        **{column: (column, "sum") for column in hit_columns},
+    )
+    eligible = grouped[grouped["words"] >= int(min_words)].copy()
+    rankings: Dict[str, pd.DataFrame] = {}
+    for key, metric in LANGUAGE_METRICS.items():
+        ranked_frame = eligible.copy()
+        ranked_frame[metric["rate"]] = (
+            100_000
+            * ranked_frame[metric["hits"]]
+            / ranked_frame["words"].where(ranked_frame["words"] > 0)
+        ).fillna(0.0)
+        ordered = ranked_frame.sort_values(
+            [metric["rate"], metric["hits"], "bioguide"],
+            ascending=[False, False, True],
+        ).head(top).reset_index(drop=True)
+        ordered.insert(0, "rank", range(1, len(ordered) + 1))
+        rankings[key] = ordered[[
+            "rank", "bioguide", "speaker_name", "party", "state", "chamber",
+            "words", "turns", "active_days", metric["hits"], metric["rate"],
+        ]].copy()
+    return rankings
 
 
 def build_daily(

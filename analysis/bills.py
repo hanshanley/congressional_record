@@ -352,6 +352,7 @@ def speech_member_totals(
         return pd.DataFrame(columns=[
             "bioguide", "speaker_name", "party", "state", "chamber", "turns",
             "words", "active_days", "profanity_hits", "profanity_quoted_hits",
+            "hostility_hits", "misconduct_hits",
         ])
     return frame.groupby("bioguide", as_index=False).agg(
         speaker_name=("speaker_name", "last"),
@@ -363,6 +364,8 @@ def speech_member_totals(
         active_days=("date", "nunique"),
         profanity_hits=("profanity_hits", "sum"),
         profanity_quoted_hits=("profanity_quoted_hits", "sum"),
+        hostility_hits=("hostility_hits", "sum"),
+        misconduct_hits=("misconduct_hits", "sum"),
     )
 
 
@@ -391,7 +394,8 @@ def member_activity(
     ])
     count_columns = [
         "turns", "words", "active_days", "profanity_hits",
-        "profanity_quoted_hits", "bills_sponsored", "bills_passed", "bills_enacted",
+        "profanity_quoted_hits", "hostility_hits", "misconduct_hits",
+        "bills_sponsored", "bills_passed", "bills_enacted",
     ]
     for column in count_columns:
         if column not in joined:
@@ -405,11 +409,12 @@ def member_activity(
         joined[column] = pd.to_numeric(
             joined[column], errors="coerce"
         ).fillna(0.0)
-    joined["profanity_per_100k"] = (
-        100_000
-        * joined["profanity_hits"]
-        / joined["words"].where(joined["words"] > 0)
-    ).fillna(0.0)
+    for metric in ("profanity", "hostility", "misconduct"):
+        joined[f"{metric}_per_100k"] = (
+            100_000
+            * joined[f"{metric}_hits"]
+            / joined["words"].where(joined["words"] > 0)
+        ).fillna(0.0)
     return joined.sort_values("bioguide").reset_index(drop=True)
 
 

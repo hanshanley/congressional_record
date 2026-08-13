@@ -18,6 +18,9 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
 from analysis.speakers import (  # noqa: E402
+    LANGUAGE_METRICS,
+    language_member_rates,
+    language_timeseries,
     leaderboard,
     load_daily,
     mask_quotations,
@@ -256,6 +259,50 @@ def test_timeseries_aggregates_by_year_and_chamber():
     series = timeseries(daily).set_index(["period", "chamber"])
     assert series.loc[("2025", "house"), "profanity_per_100k"] == pytest.approx(10.0)
     assert series.loc[("2025", "senate"), "profanity_per_100k"] == pytest.approx(1.0)
+
+
+def test_language_timeseries_uses_months_for_one_congress_and_years_for_all():
+    daily = _daily([
+        ["A", "2025-01-02", "house", "X", "D", "CA", 119, 1, 1_000, 10, 0, 5, 20],
+        ["B", "2025-01-20", "house", "Y", "R", "TX", 119, 1, 9_000, 0, 0, 5, 0],
+        ["C", "2025-02-02", "senate", "Z", "D", "NY", 119, 1, 10_000, 1, 0, 2, 3],
+        ["D", "2025-02-02", "extensions", "E", "D", "MA", 119, 1, 1, 100, 0, 100, 100],
+        ["A", "2023-02-02", "house", "X", "D", "CA", 118, 1, 10_000, 2, 0, 4, 6],
+    ])
+    scoped = language_timeseries(daily, 119).set_index(["period", "chamber"])
+    assert set(scoped.index.get_level_values("period")) == {"2025-01", "2025-02"}
+    january = scoped.loc[("2025-01", "house")]
+    assert january["profanity_per_100k"] == pytest.approx(100.0)
+    assert january["hostility_per_100k"] == pytest.approx(100.0)
+    assert january["misconduct_per_100k"] == pytest.approx(200.0)
+    assert int(scoped["words"].sum()) == 20_000
+
+    all_years = language_timeseries(daily)
+    assert set(all_years["period"]) == {"2023", "2025"}
+    for metric in LANGUAGE_METRICS.values():
+        assert metric["hits"] in all_years
+        assert metric["rate"] in all_years
+
+
+def test_language_member_rates_keep_measures_separate_and_apply_threshold():
+    daily = _daily([
+        ["A", "2025-01-02", "house", "Alpha", "D", "CA", 119,
+         2, 20_000, 10, 0, 1, 2],
+        ["A", "2025-02-02", "house", "Alpha", "D", "CA", 119,
+         2, 20_000, 0, 0, 7, 2],
+        ["B", "2025-01-02", "senate", "Beta", "R", "TX", 119,
+         2, 50_000, 5, 0, 20, 100],
+        ["C", "2025-01-02", "house", "Tiny", "D", "NY", 119,
+         1, 1_000, 100, 0, 100, 100],
+    ])
+    rankings = language_member_rates(daily, 119, min_words=25_000, top=5)
+    assert set(rankings) == set(LANGUAGE_METRICS)
+    assert list(rankings["profanity"]["speaker_name"]) == ["Alpha", "Beta"]
+    assert rankings["hostility"].iloc[0]["speaker_name"] == "Beta"
+    assert rankings["misconduct"].iloc[0]["speaker_name"] == "Beta"
+    assert "Tiny" not in set(rankings["profanity"]["speaker_name"])
+    alpha = rankings["profanity"].set_index("bioguide").loc["A"]
+    assert alpha["profanity_per_100k"] == pytest.approx(25.0)
 
 
 # ------------------------------------------------------------------- storage

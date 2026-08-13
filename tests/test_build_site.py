@@ -146,7 +146,8 @@ def test_build_writes_html_json_and_figures(store, tmp_path):
     ]) == 0
     for rel in ("index.html", "data/leaderboard.json", "data/timeseries.json",
                 "data/meta.json", "data/congresses.json", "data/congress_119.json",
-                "figures/leaderboard.png", "figures/trend.png"):
+                "figures/leaderboard.png", "figures/trend.png",
+                "figures/language_trends.png", "figures/language_members.png"):
         assert (out / rel).exists(), rel
 
 
@@ -279,6 +280,37 @@ def test_payload_contains_all_five_transparent_leaderboards(store, tmp_path):
     assert payload["leaderboards"]["enacted"][0]["examples"][0]["url"] == (
         "https://www.congress.gov/bill/119th-congress/house-bill/1"
     )
+
+
+def test_payload_and_html_expose_selector_aware_language_graphs(store, tmp_path):
+    path, _, bills = store
+    module = _load_build_site()
+    out = tmp_path / "site"
+    assert module.main([
+        "--daily", str(path), "--bills", str(bills), "--out", str(out),
+        "--min-words", "1000",
+    ]) == 0
+    payload = json.loads((out / "data" / "congress_119.json").read_text())
+    language = payload["language"]
+    assert set(language["metrics"]) == {"profanity", "hostility", "misconduct"}
+    assert language["granularity"] == "month"
+    assert set(language["members"]) == {"profanity", "hostility", "misconduct"}
+    assert language["series"]
+    assert "per 100,000 attributed spoken words" in language["explanation"]["shown"]
+    assert "does not prove misconduct" in language["explanation"]["limitation"]
+
+    all_payload = json.loads((out / "data" / "congress_all.json").read_text())
+    assert all_payload["language"]["granularity"] == "year"
+
+    page = (out / "index.html").read_text()
+    for text in (
+        "Language on the floor", "What is shown", "What is being examined",
+        "What the data says", "What cannot be concluded",
+        'id="language-trends"', 'id="language-members"',
+        "renderLanguage(payload.language)", "renderTrendPanel",
+        "renderMemberPanel", "bindTooltip", 'role="alert"',
+    ):
+        assert text in page
 
 
 def test_unseeded_congress_is_labeled_unavailable_not_zero(store, tmp_path):
