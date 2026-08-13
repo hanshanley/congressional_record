@@ -984,12 +984,44 @@
         "misconduct_per_100k": 10.560184963829542
       }
     },
+    "highlights": [
+      {
+        "key": "profanity",
+        "label": "Profanity",
+        "democratic_rate": 0.1060027579026622,
+        "republican_rate": 0.09732889367584831,
+        "difference": 0.00867386422681389,
+        "higher_party": "Tie",
+        "leader_name": "Mr. LINCOLN DIAZ-BALART of Florida",
+        "leader_rate": 5.289046384936796
+      },
+      {
+        "key": "hostility",
+        "label": "Personal hostility / disrespect",
+        "democratic_rate": 1.532221682411208,
+        "republican_rate": 1.24905413550672,
+        "difference": 0.2831675469044881,
+        "higher_party": "Democrats",
+        "leader_name": "Mr. HINCHEY",
+        "leader_rate": 13.872704067476832
+      },
+      {
+        "key": "misconduct",
+        "label": "Misconduct allegations",
+        "democratic_rate": 10.13771830123642,
+        "republican_rate": 10.560184963829542,
+        "difference": -0.4224666625931217,
+        "higher_party": "Republicans",
+        "leader_name": "Mr. SANDLIN",
+        "leader_rate": 419.2395861299849
+      }
+    ],
     "trend_alt": "Monthly Democratic and Republican rates for profanity, personal hostility or disrespect, and misconduct allegations in Congress 105.",
     "member_alt": "Highest eligible member rates for profanity, personal hostility or disrespect, and misconduct allegations in Congress 105.",
     "explanation": {
       "shown": "The charts show monthly Democratic and Republican rates for three separate lexical measures, plus the highest-rate members in Congress 105. Rates are hits per 100,000 attributed spoken words.",
-      "examined": "The trend panels examine how the chamber-wide rates change over time. The member panels compare speakers with at least 25,000 words.",
-      "finding": "Democratic and Republican aggregate profanity rates are approximately equal at 0.1 per 100,000 words. Mr. LINCOLN DIAZ-BALART of Florida has the highest eligible profanity rate at 5.3 per 100,000 words. Democrats has the higher aggregate personal hostility / disrespect rate (1.5 versus 1.2 per 100,000 words). Mr. HINCHEY has the highest eligible personal hostility / disrespect rate at 13.9 per 100,000 words. Republicans has the higher aggregate misconduct allegations rate (10.6 versus 10.1 per 100,000 words). Mr. SANDLIN has the highest eligible misconduct allegations rate at 419.2 per 100,000 words.",
+      "examined": "The trend panels compare party-wide rates over time. Member panels show the highest nonzero rates among speakers with substantial floor remarks.",
+      "finding": "Democratic and Republican aggregate profanity rates are approximately equal at 0.1 per 100,000 words. Mr. LINCOLN DIAZ-BALART of Florida has the highest eligible profanity rate at 5.3 per 100,000 words. Democrats have the higher aggregate personal hostility / disrespect rate (1.5 versus 1.2 per 100,000 words). Mr. HINCHEY has the highest eligible personal hostility / disrespect rate at 13.9 per 100,000 words. Republicans have the higher aggregate misconduct allegations rate (10.6 versus 10.1 per 100,000 words). Mr. SANDLIN has the highest eligible misconduct allegations rate at 419.2 per 100,000 words.",
       "limitation": "These are descriptive word-pattern counts, not judgments about intent. Misconduct language does not prove misconduct, and quoted profanity is excluded from a speaker's rate."
     }
   },

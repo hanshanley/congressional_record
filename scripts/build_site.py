@@ -92,7 +92,9 @@ function svgNode(tag, attributes = {}, text = '') {
 }
 
 function addSvgText(svg, x, y, text, attributes = {}) {
-  svg.appendChild(svgNode('text', {x, y, ...attributes}, text));
+  const node = svgNode('text', {x, y, ...attributes}, text);
+  svg.appendChild(node);
+  return node;
 }
 
 function formatPeriod(period) {
@@ -107,6 +109,22 @@ function formatRate(value) {
   return Number(value).toLocaleString(undefined, {
     minimumFractionDigits: 1, maximumFractionDigits: 1,
   });
+}
+
+function spacedLabelIndices(length, maxLabels = 7) {
+  if (length <= maxLabels) return [...Array(length).keys()];
+  const step = Math.ceil((length - 1) / (maxLabels - 1));
+  const indices = [];
+  for (let index = 0; index < length; index += step) indices.push(index);
+  const last = length - 1;
+  if (indices[indices.length - 1] !== last) {
+    if (last - indices[indices.length - 1] < Math.max(2, Math.floor(step / 2))) {
+      indices[indices.length - 1] = last;
+    } else {
+      indices.push(last);
+    }
+  }
+  return indices;
 }
 
 function addTooltip(wrapper) {
@@ -245,9 +263,9 @@ function renderTrendPanel(language, key) {
       'text-anchor': 'end', fill: chartColors.muted, 'font-size': 12,
     });
   }
-  const labelStep = Math.max(1, Math.ceil(periods.length / 7));
+  const labelIndices = new Set(spacedLabelIndices(periods.length));
   periods.forEach((period, index) => {
-    if (index % labelStep !== 0 && index !== periods.length - 1) return;
+    if (!labelIndices.has(index)) return;
     addSvgText(svg, x(index), height - 18, formatPeriod(period), {
       'text-anchor': 'middle', fill: chartColors.muted, 'font-size': 12,
     });
@@ -282,11 +300,6 @@ function renderTrendPanel(language, key) {
         `${Number(row.words).toLocaleString()} words)`);
       mark.setAttribute('data-party', party);
       svg.appendChild(mark);
-    });
-    const last = points[points.length - 1];
-    addSvgText(svg, last[0] + 9, last[1] + 4, label, {
-      fill: chartColors[party], 'font-size': 12, 'font-weight': 'bold',
-      'data-party': party,
     });
   });
   wrapper.appendChild(svg);
@@ -341,9 +354,9 @@ function renderLongRunPanel(longRun, key) {
       'text-anchor': 'end', fill: chartColors.muted, 'font-size': 11,
     });
   }
-  const yearStep = Math.max(1, Math.ceil(years.length / 7));
+  const yearLabelIndices = new Set(spacedLabelIndices(years.length));
   years.forEach((year, index) => {
-    if (index % yearStep !== 0 && index !== years.length - 1) return;
+    if (!yearLabelIndices.has(index)) return;
     addSvgText(svg, x(year), height - 14, String(year), {
       'text-anchor': 'middle', fill: chartColors.muted, 'font-size': 11,
     });
@@ -369,11 +382,6 @@ function renderLongRunPanel(longRun, key) {
         `(${Number(row[metric.hits]).toLocaleString()} hits; ` +
         `${Number(row.words).toLocaleString()} words)`);
       svg.appendChild(mark);
-    });
-    const last = points[points.length - 1];
-    addSvgText(svg, last[0] + 9, last[1] + 4, label, {
-      fill: chartColors[party], 'font-size': 12, 'font-weight': 'bold',
-      'data-party': party,
     });
   });
   wrapper.appendChild(svg);
@@ -402,6 +410,7 @@ function renderMemberPanel(language, key) {
   const wrapper = document.createElement('section');
   wrapper.className = 'mini-chart';
   addPanelHeading(wrapper, metric, '');
+  addPartyLegend(wrapper);
   const tooltip = addTooltip(wrapper);
   const width = 760;
   const rowHeight = 38;
@@ -449,12 +458,15 @@ function renderMemberPanel(language, key) {
     const py = margin.top + index * rowHeight;
     const value = Number(row[metric.rate]) || 0;
     const barWidth = value / maxValue * plotWidth;
-    addSvgText(svg, margin.left - 12, py + 22, row.speaker_name, {
+    addSvgText(svg, margin.left - 12, py + 22,
+      `${row.speaker_name} (${row.party || 'Other'})`, {
       'text-anchor': 'end', fill: chartColors.text, 'font-size': 14,
+      'data-party': row.party || 'other',
     });
     const bar = svgNode('rect', {
       x: margin.left, y: py + 5, width: Math.max(1, barWidth), height: 23, rx: 2,
       fill: chartColors[row.party] || chartColors.other,
+      'data-party': row.party || 'other',
     });
     bindTooltip(bar, wrapper, tooltip,
       `${row.speaker_name} (${row.party || 'Other'}, ${row.chamber}): ` +
@@ -465,6 +477,7 @@ function renderMemberPanel(language, key) {
     addSvgText(svg, Math.min(width - 8, margin.left + barWidth + 8), py + 22,
       formatRate(value), {
         fill: chartColors.text, 'font-size': 13, 'font-weight': 'bold',
+        'data-party': row.party || 'other',
       });
   });
   wrapper.appendChild(svg);
@@ -514,6 +527,50 @@ function renderLanguageTable(language, key) {
   });
 }
 
+function renderHighlights(language) {
+  const container = document.getElementById('language-highlights');
+  container.replaceChildren();
+  language.highlights.forEach(highlight => {
+    const card = document.createElement('article');
+    card.className = 'summary-card';
+    const difference = Number(highlight.difference);
+    const comparison = highlight.higher_party === 'Tie'
+      ? 'Party rates are effectively tied'
+      : `${highlight.higher_party} +${formatRate(Math.abs(difference))}`;
+    const title = document.createElement('h3');
+    title.textContent = highlight.label;
+    const rates = document.createElement('div');
+    rates.className = 'party-rates';
+    [['democratic', highlight.democratic_rate, 'Democrats'],
+      ['republican', highlight.republican_rate, 'Republicans']].forEach(
+      ([className, rate, label]) => {
+        const item = document.createElement('span');
+        item.className = `party-rate ${className}`;
+        const value = document.createElement('b');
+        value.textContent = formatRate(rate);
+        item.append(value, document.createTextNode(` ${label}`));
+        rates.appendChild(item);
+      }
+    );
+    const comparisonText = document.createElement('p');
+    comparisonText.className = 'comparison';
+    comparisonText.textContent = `${comparison} per 100,000 words`;
+    const leader = document.createElement('p');
+    leader.className = 'leader';
+    if (highlight.leader_name) {
+      leader.append(
+        document.createTextNode('Highest member rate: '),
+        Object.assign(document.createElement('strong'), {textContent: highlight.leader_name}),
+        document.createTextNode(` (${formatRate(highlight.leader_rate)})`),
+      );
+    } else {
+      leader.textContent = 'No nonzero member rate in this view';
+    }
+    card.append(title, rates, comparisonText, leader);
+    container.appendChild(card);
+  });
+}
+
 function renderLanguage(language) {
   const trendContainer = document.getElementById('language-trends');
   trendContainer.replaceChildren(
@@ -525,9 +582,9 @@ function renderLanguage(language) {
     ...Object.keys(language.metrics).map(key => renderMemberPanel(language, key))
   );
   memberContainer.setAttribute('aria-label', language.member_alt);
+  renderHighlights(language);
   document.getElementById('language-shown').textContent = language.explanation.shown;
   document.getElementById('language-examined').textContent = language.explanation.examined;
-  document.getElementById('language-finding').textContent = language.explanation.finding;
   document.getElementById('language-limitation').textContent = language.explanation.limitation;
   Object.keys(language.metrics).forEach(key => renderLanguageTable(language, key));
 }
@@ -954,6 +1011,7 @@ def _language_payload(
         member_records[key] = records
 
     findings = []
+    highlights = []
     for key, metric in LANGUAGE_METRICS.items():
         democratic_rate = party_summary["D"][metric["rate"]]
         republican_rate = party_summary["R"][metric["rate"]]
@@ -967,14 +1025,26 @@ def _language_payload(
             higher_rate = max(democratic_rate, republican_rate)
             lower_rate = min(democratic_rate, republican_rate)
             party_finding = (
-                f"{higher} has the higher aggregate {metric['label'].lower()} rate "
+                f"{higher} have the higher aggregate {metric['label'].lower()} rate "
                 f"({higher_rate:.1f} versus {lower_rate:.1f} per 100,000 words)."
             )
         frame = rankings[key]
+        leader = None if frame.empty else frame.iloc[0]
+        highlights.append({
+            "key": key,
+            "label": metric["label"],
+            "democratic_rate": democratic_rate,
+            "republican_rate": republican_rate,
+            "difference": democratic_rate - republican_rate,
+            "higher_party": (
+                "Tie" if abs(democratic_rate - republican_rate) < 0.05 else higher
+            ),
+            "leader_name": "" if leader is None else str(leader["speaker_name"]),
+            "leader_rate": 0.0 if leader is None else float(leader[metric["rate"]]),
+        })
         if frame.empty:
             findings.append(party_finding)
             continue
-        leader = frame.iloc[0]
         findings.append(
             f"{party_finding} {leader['speaker_name']} has the highest eligible "
             f"{metric['label'].lower()} "
@@ -988,6 +1058,7 @@ def _language_payload(
         "series": _records(series),
         "members": member_records,
         "parties": party_summary,
+        "highlights": highlights,
         "trend_alt": (
             f"{period_label.title()} Democratic and Republican rates for profanity, personal "
             f"hostility or disrespect, and misconduct allegations in {scope_label}."
@@ -1003,8 +1074,8 @@ def _language_payload(
                 f"{scope_label}. Rates are hits per 100,000 attributed spoken words."
             ),
             "examined": (
-                "The trend panels examine how the chamber-wide rates change over time. "
-                f"The member panels compare speakers with at least {min_words:,} words."
+                "The trend panels compare party-wide rates over time. Member panels "
+                "show the highest nonzero rates among speakers with substantial floor remarks."
             ),
             "finding": " ".join(findings) if findings else (
                 "No member cleared the word threshold in this scope."
@@ -1315,7 +1386,12 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
          margin-bottom:1.4rem; }}
   nav a[aria-current="page"] {{ color:var(--text); font-weight:bold; text-decoration:none; }}
   .sub,.definition,.muted {{ color:var(--muted); }}
-  .toolbar {{ display:flex; gap:1rem; align-items:center; margin:1.5rem 0; }}
+  .section-header {{ display:flex; justify-content:space-between; gap:1rem; align-items:end;
+                     margin:1.8rem 0 1rem; }}
+  .section-header h2 {{ font-size:1.7rem; margin:0; }}
+  .section-header p {{ margin:.25rem 0 0; max-width:52rem; }}
+  .congress-control {{ display:flex; align-items:center; gap:.55rem; white-space:nowrap;
+                       font-weight:bold; }}
   select {{ font:inherit; padding:.45rem .6rem; background:var(--paper); border:1px solid var(--grid); }}
   .warning {{ background:#FFF3CD; border-left:4px solid #C7922B; padding:.8rem 1rem; margin:1rem 0; }}
   .card {{ background:var(--paper); border:1px solid var(--grid); padding:1rem;
@@ -1326,11 +1402,24 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
   .overview h2 {{ font-size:1.5rem; }}
   .long-run-charts {{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr));
                       gap:1rem; margin-top:1rem; }}
-  .explanation-grid {{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr));
-                       gap:.8rem; margin:1rem 0; }}
-  .explanation-grid article {{ background:var(--paper); border:1px solid var(--grid);
-                               padding:.85rem 1rem; }}
-  .explanation-grid p {{ margin:0; }}
+  .summary-grid {{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr));
+                   gap:.8rem; margin:1rem 0; }}
+  .summary-card {{ background:var(--paper); border:1px solid var(--grid);
+                   border-top:4px solid var(--blue); padding:.85rem 1rem; }}
+  .summary-card h3 {{ font-size:1.08rem; margin-bottom:.65rem; }}
+  .party-rates {{ display:grid; grid-template-columns:1fr 1fr; gap:.5rem; }}
+  .party-rate {{ border-radius:.2rem; padding:.55rem .6rem; font-size:.84rem; }}
+  .party-rate b {{ display:block; font-size:1.45rem; line-height:1; margin-bottom:.2rem; }}
+  .party-rate.democratic {{ color:{theme.BLUE}; background:{theme.tint(theme.BLUE, 0.88)}; }}
+  .party-rate.republican {{ color:{theme.ACCENT}; background:{theme.tint(theme.ACCENT, 0.88)}; }}
+  .summary-card .comparison {{ font-weight:bold; margin:.7rem 0 .25rem; }}
+  .summary-card .leader {{ color:var(--muted); margin:.25rem 0 0; font-size:.9rem; }}
+  .methodology {{ background:var(--paper); border:1px solid var(--grid); margin:1rem 0;
+                  padding:.75rem 1rem; }}
+  .methodology summary {{ cursor:pointer; font-weight:bold; }}
+  .methodology-grid {{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr));
+                       gap:1rem; margin-top:.8rem; }}
+  .methodology-grid p {{ margin:.2rem 0; color:var(--muted); }}
   .chart-card {{ background:var(--paper); border:1px solid var(--grid); margin:1rem 0;
                  padding:.75rem; }}
   .chart-card figcaption {{ color:var(--muted); font-size:.9rem; padding:.3rem .35rem 0; }}
@@ -1371,7 +1460,9 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
   @media (max-width:44rem) {{
     body {{ padding:1.5rem .75rem 3rem; }}
     h1 {{ font-size:1.8rem; }}
-    .explanation-grid {{ grid-template-columns:1fr; }}
+    .section-header {{ display:block; }}
+    .congress-control {{ margin-top:.75rem; }}
+    .summary-grid,.methodology-grid {{ grid-template-columns:1fr; }}
     .long-run-charts {{ grid-template-columns:1fr; }}
     .chart-card {{ padding:.3rem; }}
     #language-tables table {{ font-size:.78rem; table-layout:fixed; }}
@@ -1405,21 +1496,28 @@ The source transition and changing coverage mean individual jumps should not be 
  aria-label="Six interactive long-run Democratic and Republican language charts"></div>
 <p class="definition">{html.escape(long_run['source_note'])}</p>
 </section>
-<div class="toolbar"><label for="congress">Recent detail</label><select id="congress">{''.join(options)}</select></div>
 <div id="coverage-warning" class="warning" {'hidden' if not warning else ''}>{html.escape(warning)}</div>
 <p id="dashboard-error" class="error" role="alert" hidden></p>
 <section class="language" aria-labelledby="language-heading">
-<h2 id="language-heading">Recent language on the floor</h2>
+<div class="section-header">
+<div><h2 id="language-heading">Recent language on the floor</h2>
 <p class="sub">Three transparent lexical measures are shown separately: profanity,
 personal hostility or disrespect, and misconduct allegations. They describe language in
 attributed floor remarks and compare Democrats with Republicans; they do not establish intent
-or whether an allegation is true.</p>
-<div class="explanation-grid">
-<article><h3>What is shown</h3><p id="language-shown">{html.escape(explanation['shown'])}</p></article>
-<article><h3>What is being examined</h3><p id="language-examined">{html.escape(explanation['examined'])}</p></article>
-<article><h3>What the data says</h3><p id="language-finding">{html.escape(explanation['finding'])}</p></article>
-<article><h3>What cannot be concluded</h3><p id="language-limitation">{html.escape(explanation['limitation'])}</p></article>
+or whether an allegation is true.</p></div>
+<label class="congress-control" for="congress"><span>Congress</span>
+<select id="congress">{''.join(options)}</select></label>
 </div>
+<div id="language-highlights" class="summary-grid"
+ aria-label="Selected Congress language summary"></div>
+<details class="methodology">
+<summary>Methodology and limitations</summary>
+<div class="methodology-grid">
+<div><h3>What is shown</h3><p id="language-shown">{html.escape(explanation['shown'])}</p></div>
+<div><h3>What is examined</h3><p id="language-examined">{html.escape(explanation['examined'])}</p></div>
+<div><h3>Limits</h3><p id="language-limitation">{html.escape(explanation['limitation'])}</p></div>
+</div>
+</details>
 <figure class="chart-card">
 <div id="language-trends" class="interactive-chart" role="group"
  aria-label="{html.escape(language['trend_alt'], quote=True)}">

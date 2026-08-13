@@ -308,7 +308,7 @@ def test_payload_and_html_expose_selector_aware_language_graphs(store, tmp_path)
     for text in (
         "Congressional comity and conflict language", "The long-run picture",
         "Recent language on the floor", "What is shown", "What is being examined",
-        "What the data says", "What cannot be concluded",
+        "Methodology and limitations", 'id="language-highlights"',
         'id="language-trends"', 'id="language-members"',
         "renderLanguage(payload.language)", "renderTrendPanel",
         "renderMemberPanel", "bindTooltip", "chart-toggle",

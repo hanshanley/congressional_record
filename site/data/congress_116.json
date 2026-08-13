@@ -996,12 +996,44 @@
         "misconduct_per_100k": 10.777086356273594
       }
     },
+    "highlights": [
+      {
+        "key": "profanity",
+        "label": "Profanity",
+        "democratic_rate": 0.5006775116293143,
+        "republican_rate": 0.4544554487585251,
+        "difference": 0.04622206287078917,
+        "higher_party": "Tie",
+        "leader_name": "Mr. GRAHAM",
+        "leader_rate": 31.107424305267525
+      },
+      {
+        "key": "hostility",
+        "label": "Personal hostility / disrespect",
+        "democratic_rate": 2.0545042718582205,
+        "republican_rate": 1.1794200932066485,
+        "difference": 0.875084178651572,
+        "higher_party": "Democrats",
+        "leader_name": "Mr. JEFFRIES",
+        "leader_rate": 86.90513435533771
+      },
+      {
+        "key": "misconduct",
+        "label": "Misconduct allegations",
+        "democratic_rate": 22.60817936133059,
+        "republican_rate": 10.777086356273594,
+        "difference": 11.831093005056994,
+        "higher_party": "Democrats",
+        "leader_name": "Mrs. DEMINGS",
+        "leader_rate": 235.75910966265644
+      }
+    ],
     "trend_alt": "Monthly Democratic and Republican rates for profanity, personal hostility or disrespect, and misconduct allegations in Congress 116.",
     "member_alt": "Highest eligible member rates for profanity, personal hostility or disrespect, and misconduct allegations in Congress 116.",
     "explanation": {
       "shown": "The charts show monthly Democratic and Republican rates for three separate lexical measures, plus the highest-rate members in Congress 116. Rates are hits per 100,000 attributed spoken words.",
-      "examined": "The trend panels examine how the chamber-wide rates change over time. The member panels compare speakers with at least 25,000 words.",
-      "finding": "Democratic and Republican aggregate profanity rates are approximately equal at 0.5 per 100,000 words. Mr. GRAHAM has the highest eligible profanity rate at 31.1 per 100,000 words. Democrats has the higher aggregate personal hostility / disrespect rate (2.1 versus 1.2 per 100,000 words). Mr. JEFFRIES has the highest eligible personal hostility / disrespect rate at 86.9 per 100,000 words. Democrats has the higher aggregate misconduct allegations rate (22.6 versus 10.8 per 100,000 words). Mrs. DEMINGS has the highest eligible misconduct allegations rate at 235.8 per 100,000 words.",
+      "examined": "The trend panels compare party-wide rates over time. Member panels show the highest nonzero rates among speakers with substantial floor remarks.",
+      "finding": "Democratic and Republican aggregate profanity rates are approximately equal at 0.5 per 100,000 words. Mr. GRAHAM has the highest eligible profanity rate at 31.1 per 100,000 words. Democrats have the higher aggregate personal hostility / disrespect rate (2.1 versus 1.2 per 100,000 words). Mr. JEFFRIES has the highest eligible personal hostility / disrespect rate at 86.9 per 100,000 words. Democrats have the higher aggregate misconduct allegations rate (22.6 versus 10.8 per 100,000 words). Mrs. DEMINGS has the highest eligible misconduct allegations rate at 235.8 per 100,000 words.",
       "limitation": "These are descriptive word-pattern counts, not judgments about intent. Misconduct language does not prove misconduct, and quoted profanity is excluded from a speaker's rate."
     }
   },
