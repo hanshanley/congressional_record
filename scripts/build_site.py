@@ -160,9 +160,21 @@ function renderTrendPanel(language, key) {
     `Rates are shown per 100,000 words by ${language.granularity}.`);
   const legend = document.createElement('div');
   legend.className = 'chart-legend';
-  legend.innerHTML =
-    '<span><i style="background:#4A7C59"></i>House</span>' +
-    '<span><i style="background:#C2993E"></i>Senate</span>';
+  ['house', 'senate'].forEach(chamber => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'chart-toggle';
+    button.setAttribute('aria-pressed', 'true');
+    button.innerHTML = `<i style="background:${chartColors[chamber]}"></i>` +
+      `${chamber[0].toUpperCase() + chamber.slice(1)}`;
+    button.addEventListener('click', () => {
+      const active = button.getAttribute('aria-pressed') !== 'true';
+      button.setAttribute('aria-pressed', String(active));
+      wrapper.querySelectorAll(`[data-chamber="${chamber}"]`)
+        .forEach(element => { element.style.display = active ? '' : 'none'; });
+    });
+    legend.appendChild(button);
+  });
   wrapper.appendChild(legend);
   const tooltip = addTooltip(wrapper);
   const width = 900;
@@ -215,7 +227,7 @@ function renderTrendPanel(language, key) {
       points: points.map(point => `${point[0]},${point[1]}`).join(' '),
       fill: 'none', stroke: chartColors[chamber], 'stroke-width': chamber === 'house' ? 3 : 2.5,
       'stroke-dasharray': chamber === 'senate' ? '9 5' : '',
-      'vector-effect': 'non-scaling-stroke',
+      'vector-effect': 'non-scaling-stroke', 'data-chamber': chamber,
     }));
     points.forEach(([px, py, row]) => {
       const mark = chamber === 'house'
@@ -229,6 +241,7 @@ function renderTrendPanel(language, key) {
         `${formatRate(row[metric.rate])} per 100,000 words ` +
         `(${Number(row[metric.hits]).toLocaleString()} hits; ` +
         `${Number(row.words).toLocaleString()} words)`);
+      mark.setAttribute('data-chamber', chamber);
       svg.appendChild(mark);
     });
   });
@@ -593,12 +606,29 @@ def _language_payload(
 
     findings = []
     for key, metric in LANGUAGE_METRICS.items():
+        house_rate = chamber_summary["house"][metric["rate"]]
+        senate_rate = chamber_summary["senate"][metric["rate"]]
+        if abs(house_rate - senate_rate) < 0.05:
+            chamber_finding = (
+                f"House and Senate aggregate {metric['label'].lower()} rates are "
+                f"approximately equal at {house_rate:.1f} per 100,000 words."
+            )
+        else:
+            higher = "House" if house_rate > senate_rate else "Senate"
+            higher_rate = max(house_rate, senate_rate)
+            lower_rate = min(house_rate, senate_rate)
+            chamber_finding = (
+                f"{higher} has the higher aggregate {metric['label'].lower()} rate "
+                f"({higher_rate:.1f} versus {lower_rate:.1f} per 100,000 words)."
+            )
         frame = rankings[key]
         if frame.empty:
+            findings.append(chamber_finding)
             continue
         leader = frame.iloc[0]
         findings.append(
-            f"{leader['speaker_name']} has the highest eligible {metric['label'].lower()} "
+            f"{chamber_finding} {leader['speaker_name']} has the highest eligible "
+            f"{metric['label'].lower()} "
             f"rate at {float(leader[metric['rate']]):.1f} per 100,000 words."
         )
     period_label = "yearly" if granularity == "year" else "monthly"
@@ -866,7 +896,11 @@ bill sponsorship, passage, enactment, profanity, hostility, and misconduct langu
   .mini-chart svg text {{ font-family:Georgia,'Times New Roman',serif; }}
   .chart-legend {{ display:flex; gap:1rem; color:var(--muted); font-size:.86rem;
                    margin:.3rem 0 0; }}
-  .chart-legend span {{ display:inline-flex; align-items:center; gap:.35rem; }}
+  .chart-toggle {{ display:inline-flex; align-items:center; gap:.35rem; border:1px solid var(--grid);
+                   background:var(--paper); color:var(--text); font:inherit; padding:.25rem .5rem;
+                   cursor:pointer; border-radius:999px; }}
+  .chart-toggle[aria-pressed="false"] {{ opacity:.45; text-decoration:line-through; }}
+  .chart-toggle:focus-visible {{ outline:2px solid var(--blue); outline-offset:2px; }}
   .chart-legend i {{ width:1rem; height:.25rem; display:inline-block; }}
   .chart-tooltip {{ position:absolute; z-index:2; max-width:18rem; pointer-events:none;
                     background:var(--text); color:var(--paper); border-radius:.2rem;
@@ -939,6 +973,8 @@ H.R./S. bill records in this view. Newest Congressional Record date:
 const initialLanguage = {_script_json(language)};
 {INTERACTIVE_CHART_JS}
 const select = document.getElementById('congress');
+let loadedCongress = select.value;
+let loadSequence = 0;
 function cell(text, link) {{
   const td = document.createElement('td');
   if (link) {{
@@ -983,12 +1019,14 @@ function renderTable(metric, rows) {{
   }}
 }}
 async function loadCongress(value) {{
+  const sequence = ++loadSequence;
   const error = document.getElementById('dashboard-error');
   error.hidden = true; select.disabled = true;
   try {{
     const response = await fetch(`data/congress_${{value}}.json`);
     if (!response.ok) throw new Error(`Unable to load Congress ${{value}}`);
     const payload = await response.json();
+    if (sequence !== loadSequence) return;
     Object.entries(payload.leaderboards).forEach(([metric, rows]) => renderTable(metric, rows));
     renderLanguage(payload.language);
     const warning = document.getElementById('coverage-warning');
@@ -998,17 +1036,26 @@ async function loadCongress(value) {{
       `${{Number(payload.coverage.bills).toLocaleString()}} H.R./S. bill records in this view. ` +
       `Newest Congressional Record date: ${{payload.coverage.speech_last_date}}. ` +
       `Site data snapshot: ${{payload.generated_utc}}.`;
+    loadedCongress = value;
     history.replaceState(null, '', `#congress=${{value}}`);
   }} catch (caught) {{
+    if (sequence !== loadSequence) return;
+    select.value = loadedCongress;
     error.textContent = caught instanceof Error ? caught.message : 'Unable to update the dashboard.';
     error.hidden = false;
     throw caught;
   }} finally {{
-    select.disabled = false;
+    if (sequence === loadSequence) select.disabled = false;
   }}
 }}
 select.addEventListener('change', () => loadCongress(select.value).catch(() => {{}}));
 renderLanguage(initialLanguage);
+const requestedCongress = new URLSearchParams(location.hash.slice(1)).get('congress');
+if (requestedCongress && [...select.options].some(option => option.value === requestedCongress)
+    && requestedCongress !== select.value) {{
+  select.value = requestedCongress;
+  loadCongress(requestedCongress).catch(() => {{}});
+}}
 </script>
 </body>
 </html>

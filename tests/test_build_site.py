@@ -308,7 +308,8 @@ def test_payload_and_html_expose_selector_aware_language_graphs(store, tmp_path)
         "What the data says", "What cannot be concluded",
         'id="language-trends"', 'id="language-members"',
         "renderLanguage(payload.language)", "renderTrendPanel",
-        "renderMemberPanel", "bindTooltip", 'role="alert"',
+        "renderMemberPanel", "bindTooltip", "chart-toggle",
+        "URLSearchParams", "loadSequence", 'role="alert"',
     ):
         assert text in page
 
