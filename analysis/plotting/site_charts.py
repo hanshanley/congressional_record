@@ -148,9 +148,7 @@ def language_members(
             metric["label"],
             "Hits per 100,000 words",
             "",
-            subtitle=(
-                f"{metric['definition']} Members below {min_words:,} words are omitted."
-            ),
+            subtitle=metric["definition"],
         )
         ax.grid(axis="x", linestyle="-", linewidth=0.5)
         ax.grid(axis="y", visible=False)

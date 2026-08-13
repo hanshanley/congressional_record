@@ -9,7 +9,6 @@ import html
 import json
 import logging
 import os
-import shutil
 import sys
 from pathlib import Path
 from typing import List, Optional
@@ -30,6 +29,7 @@ from analysis.bills import (  # noqa: E402
     member_activity,
 )
 from analysis.plotting import charts, site_charts, theme  # noqa: E402
+from analysis.score.registry import HEADLINE_METRICS  # noqa: E402
 from analysis.speakers import (  # noqa: E402
     LANGUAGE_METRICS,
     language_member_rates,
@@ -43,11 +43,8 @@ LOG = logging.getLogger("build_site")
 DAILY_PATH = ROOT / "data" / "site" / "speaker_daily"
 BILLS_PATH = ROOT / "data" / "site" / "bills"
 SITE_DIR = ROOT / "site"
-LONG_RUN_FIGURES = {
-    "overview.png": ROOT / "outputs" / "figures" / "overview.png",
-    "overview_house.png": ROOT / "outputs" / "figures" / "overview_house.png",
-    "overview_senate.png": ROOT / "outputs" / "figures" / "overview_senate.png",
-}
+LONG_RUN_DATA_PATH = ROOT / "data" / "site" / "long_run_language.json"
+LONG_RUN_METRICS_PATH = ROOT / "data" / "processed" / "metrics" / "civility_metrics.parquet"
 
 CAVEATS = [
     "Speech counts include only remarks attributable to a specific member by Bioguide ID; "
@@ -156,9 +153,35 @@ function addPanelHeading(wrapper, metric, detail) {
   wrapper.appendChild(heading);
 }
 
+function partyName(party) {
+  return party === 'D' ? 'Democrats' : 'Republicans';
+}
+
+function addPartyLegend(wrapper) {
+  const legend = document.createElement('div');
+  legend.className = 'chart-legend';
+  legend.setAttribute('aria-label', 'Chart legend');
+  [['D', 'Democrats'], ['R', 'Republicans']].forEach(([party, label]) => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'chart-toggle';
+    button.setAttribute('aria-pressed', 'true');
+    button.innerHTML = `<i style="background:${chartColors[party]}"></i>${label}`;
+    button.addEventListener('click', () => {
+      const active = button.getAttribute('aria-pressed') !== 'true';
+      button.setAttribute('aria-pressed', String(active));
+      wrapper.querySelectorAll(`[data-party="${party}"]`)
+        .forEach(element => { element.style.display = active ? '' : 'none'; });
+    });
+    legend.appendChild(button);
+  });
+  wrapper.appendChild(legend);
+}
+
 function addAccessibleTable(wrapper, captionText, headers, rows) {
+  const accessible = document.createElement('div');
+  accessible.className = 'sr-only';
   const table = document.createElement('table');
-  table.className = 'sr-only';
   const caption = document.createElement('caption');
   caption.textContent = captionText;
   const thead = document.createElement('thead');
@@ -181,7 +204,8 @@ function addAccessibleTable(wrapper, captionText, headers, rows) {
     tbody.appendChild(row);
   });
   table.append(caption, thead, tbody);
-  wrapper.appendChild(table);
+  accessible.appendChild(table);
+  wrapper.appendChild(accessible);
 }
 
 function renderTrendPanel(language, key) {
@@ -190,27 +214,11 @@ function renderTrendPanel(language, key) {
   wrapper.className = 'mini-chart';
   addPanelHeading(wrapper, metric,
     `Rates are shown per 100,000 words by ${language.granularity}.`);
-  const legend = document.createElement('div');
-  legend.className = 'chart-legend';
-  [['D', 'Democrats'], ['R', 'Republicans']].forEach(([party, label]) => {
-    const button = document.createElement('button');
-    button.type = 'button';
-    button.className = 'chart-toggle';
-    button.setAttribute('aria-pressed', 'true');
-    button.innerHTML = `<i style="background:${chartColors[party]}"></i>${label}`;
-    button.addEventListener('click', () => {
-      const active = button.getAttribute('aria-pressed') !== 'true';
-      button.setAttribute('aria-pressed', String(active));
-      wrapper.querySelectorAll(`[data-party="${party}"]`)
-        .forEach(element => { element.style.display = active ? '' : 'none'; });
-    });
-    legend.appendChild(button);
-  });
-  wrapper.appendChild(legend);
+  addPartyLegend(wrapper);
   const tooltip = addTooltip(wrapper);
-  const width = 900;
+  const width = 760;
   const height = 280;
-  const margin = {left: 72, right: 28, top: 18, bottom: 54};
+  const margin = {left: 62, right: 92, top: 18, bottom: 54};
   const plotWidth = width - margin.left - margin.right;
   const plotHeight = height - margin.top - margin.bottom;
   const svg = svgNode('svg', {
@@ -275,6 +283,11 @@ function renderTrendPanel(language, key) {
       mark.setAttribute('data-party', party);
       svg.appendChild(mark);
     });
+    const last = points[points.length - 1];
+    addSvgText(svg, last[0] + 9, last[1] + 4, label, {
+      fill: chartColors[party], 'font-size': 12, 'font-weight': 'bold',
+      'data-party': party,
+    });
   });
   wrapper.appendChild(svg);
   addAccessibleTable(
@@ -292,18 +305,108 @@ function renderTrendPanel(language, key) {
   return wrapper;
 }
 
+function renderLongRunPanel(longRun, key) {
+  const metric = longRun.metrics[key];
+  const wrapper = document.createElement('section');
+  wrapper.className = 'mini-chart long-run-panel';
+  addPanelHeading(wrapper, metric, metric.units);
+  addPartyLegend(wrapper);
+  const tooltip = addTooltip(wrapper);
+  const width = 760;
+  const height = 270;
+  const margin = {left: 62, right: 92, top: 14, bottom: 44};
+  const plotWidth = width - margin.left - margin.right;
+  const plotHeight = height - margin.top - margin.bottom;
+  const svg = svgNode('svg', {
+    viewBox: `0 0 ${width} ${height}`,
+    role: 'img',
+    'aria-label': `${metric.label}, Democrats compared with Republicans, ` +
+      `${longRun.first_year} to ${longRun.last_year}`,
+  });
+  const years = [...new Set(longRun.series.map(row => Number(row.year)))].sort((a, b) => a - b);
+  const values = longRun.series.map(row => Number(row[metric.rate]) || 0);
+  const maxValue = Math.max(0.01, ...values) * 1.08;
+  const x = year => margin.left + (
+    (year - years[0]) / Math.max(1, years[years.length - 1] - years[0])
+  ) * plotWidth;
+  const y = value => margin.top + plotHeight - (value / maxValue) * plotHeight;
+  for (let tick = 0; tick <= 4; tick += 1) {
+    const value = maxValue * tick / 4;
+    const py = y(value);
+    svg.appendChild(svgNode('line', {
+      x1: margin.left, x2: width - margin.right, y1: py, y2: py,
+      stroke: chartColors.grid, 'stroke-width': 1,
+    }));
+    addSvgText(svg, margin.left - 9, py + 4, value.toFixed(2), {
+      'text-anchor': 'end', fill: chartColors.muted, 'font-size': 11,
+    });
+  }
+  const yearStep = Math.max(1, Math.ceil(years.length / 7));
+  years.forEach((year, index) => {
+    if (index % yearStep !== 0 && index !== years.length - 1) return;
+    addSvgText(svg, x(year), height - 14, String(year), {
+      'text-anchor': 'middle', fill: chartColors.muted, 'font-size': 11,
+    });
+  });
+  [['D', 'Democrats'], ['R', 'Republicans']].forEach(([party, label]) => {
+    const rows = longRun.series.filter(row => row.party === party)
+      .sort((a, b) => Number(a.year) - Number(b.year));
+    const points = rows.map(row => [
+      x(Number(row.year)), y(Number(row[metric.rate]) || 0), row,
+    ]);
+    svg.appendChild(svgNode('polyline', {
+      points: points.map(point => `${point[0]},${point[1]}`).join(' '),
+      fill: 'none', stroke: chartColors[party], 'stroke-width': 2.5,
+      'stroke-dasharray': party === 'R' ? '8 4' : '',
+      'vector-effect': 'non-scaling-stroke', 'data-party': party,
+    }));
+    points.forEach(([px, py, row]) => {
+      const mark = svgNode('circle', {
+        cx: px, cy: py, r: 3.5, fill: chartColors[party], 'data-party': party,
+      });
+      bindTooltip(mark, wrapper, tooltip,
+        `${row.year} ${label}: ${Number(row[metric.rate]).toFixed(3)} ${metric.units} ` +
+        `(${Number(row[metric.hits]).toLocaleString()} hits; ` +
+        `${Number(row.words).toLocaleString()} words)`);
+      svg.appendChild(mark);
+    });
+    const last = points[points.length - 1];
+    addSvgText(svg, last[0] + 9, last[1] + 4, label, {
+      fill: chartColors[party], 'font-size': 12, 'font-weight': 'bold',
+      'data-party': party,
+    });
+  });
+  wrapper.appendChild(svg);
+  addAccessibleTable(
+    wrapper,
+    `${metric.label}, ${longRun.first_year} to ${longRun.last_year}`,
+    ['Year', 'Party', metric.units, 'Hits', 'Words'],
+    longRun.series.map(row => [
+      row.year, partyName(row.party), Number(row[metric.rate]).toFixed(3),
+      Number(row[metric.hits]).toLocaleString(), Number(row.words).toLocaleString(),
+    ]),
+  );
+  return wrapper;
+}
+
+function renderLongRun(longRun) {
+  const container = document.getElementById('long-run-charts');
+  container.replaceChildren(
+    ...Object.keys(longRun.metrics).map(key => renderLongRunPanel(longRun, key))
+  );
+}
+
 function renderMemberPanel(language, key) {
   const metric = language.metrics[key];
   const rows = language.members[key] || [];
   const wrapper = document.createElement('section');
   wrapper.className = 'mini-chart';
-  addPanelHeading(wrapper, metric,
-    'Members below the word threshold are omitted.');
+  addPanelHeading(wrapper, metric, '');
   const tooltip = addTooltip(wrapper);
-  const width = 900;
+  const width = 760;
   const rowHeight = 38;
   const height = Math.max(170, rows.length * rowHeight + 72);
-  const margin = {left: 250, right: 80, top: 15, bottom: 42};
+  const margin = {left: 220, right: 72, top: 15, bottom: 42};
   const plotWidth = width - margin.left - margin.right;
   const svg = svgNode('svg', {
     viewBox: `0 0 ${width} ${height}`,
@@ -915,6 +1018,65 @@ def _language_payload(
     }
 
 
+def build_long_run_payload(metrics: pd.DataFrame) -> dict:
+    """Build compact annual Democratic/Republican data for the homepage overview."""
+    frame = metrics[
+        metrics["chamber"].isin(["house", "senate"])
+        & metrics["party"].isin(["D", "R"])
+    ].copy()
+    hit_columns = [metric.raw_count for metric in HEADLINE_METRICS]
+    grouped = frame.groupby(["year", "party"], as_index=False)[
+        ["words", *hit_columns]
+    ].sum()
+    for metric in HEADLINE_METRICS:
+        grouped[metric.rate] = (
+            metric.scale
+            * grouped[metric.raw_count]
+            / grouped["words"].where(grouped["words"] > 0)
+        ).fillna(0.0)
+    return {
+        "metrics": {
+            metric.rate: {
+                "rate": metric.rate,
+                "hits": metric.raw_count,
+                "label": metric.title,
+                "units": metric.units,
+                "polarity": metric.polarity,
+            }
+            for metric in HEADLINE_METRICS
+        },
+        "series": _records(grouped[
+            ["year", "party", "words", *hit_columns, *[
+                metric.rate for metric in HEADLINE_METRICS
+            ]]
+        ]),
+        "first_year": int(grouped["year"].min()),
+        "last_year": int(grouped["year"].max()),
+        "source_note": (
+            "Stanford Hein Congressional Record through 2017 and GovInfo CREC from "
+            "2017 onward; House and Senate floor language, Democrats and Republicans."
+        ),
+    }
+
+
+def load_long_run_payload() -> dict:
+    """Refresh long-run site data locally when possible, otherwise load committed data."""
+    if LONG_RUN_METRICS_PATH.exists():
+        payload = build_long_run_payload(pd.read_parquet(LONG_RUN_METRICS_PATH))
+        LONG_RUN_DATA_PATH.parent.mkdir(parents=True, exist_ok=True)
+        LONG_RUN_DATA_PATH.write_text(
+            json.dumps(payload, indent=2) + "\n",
+            encoding="utf-8",
+        )
+        return payload
+    if not LONG_RUN_DATA_PATH.exists():
+        raise SystemExit(
+            "error: no long-run site data; run scripts/build_site.py where "
+            "data/processed/metrics/civility_metrics.parquet is available"
+        )
+    return json.loads(LONG_RUN_DATA_PATH.read_text(encoding="utf-8"))
+
+
 def build_payload(
     daily: pd.DataFrame,
     bills: pd.DataFrame,
@@ -1109,7 +1271,7 @@ def _language_table(metric: str, rows: list[dict]) -> str:
     )
 
 
-def _render_html(payload: dict, congresses: list[int]) -> str:
+def _render_html(payload: dict, congresses: list[int], long_run: dict) -> str:
     all_selected = " selected" if payload["congress"] is None else ""
     options = [f'<option value="all"{all_selected}>All Congresses</option>']
     for congress in sorted(congresses, reverse=True):
@@ -1157,12 +1319,13 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
   select {{ font:inherit; padding:.45rem .6rem; background:var(--paper); border:1px solid var(--grid); }}
   .warning {{ background:#FFF3CD; border-left:4px solid #C7922B; padding:.8rem 1rem; margin:1rem 0; }}
   .card {{ background:var(--paper); border:1px solid var(--grid); padding:1rem;
-           margin:1.25rem 0 2rem; }}
+           margin:1.25rem 0 2rem; min-width:0; }}
   .language {{ margin:1.5rem 0 2.5rem; }}
   .overview {{ background:var(--paper); border:1px solid var(--grid); padding:1rem;
                margin:1.25rem 0 2.5rem; }}
   .overview h2 {{ font-size:1.5rem; }}
-  .overview-links {{ display:flex; gap:1rem; flex-wrap:wrap; margin:.7rem 0; }}
+  .long-run-charts {{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr));
+                      gap:1rem; margin-top:1rem; }}
   .explanation-grid {{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr));
                        gap:.8rem; margin:1rem 0; }}
   .explanation-grid article {{ background:var(--paper); border:1px solid var(--grid);
@@ -1173,11 +1336,11 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
   .chart-card figcaption {{ color:var(--muted); font-size:.9rem; padding:.3rem .35rem 0; }}
   .interactive-chart {{ display:grid; gap:1rem; }}
   .mini-chart {{ position:relative; border-top:1px solid var(--grid); padding:.75rem .25rem 0;
-                 overflow-x:auto; }}
+                 min-width:0; }}
   .mini-chart:first-child {{ border-top:0; }}
   .mini-chart-heading h3 {{ font-size:1.08rem; }}
   .mini-chart-heading p {{ margin:.15rem 0 .35rem; }}
-  .mini-chart svg {{ display:block; width:100%; min-width:42rem; height:auto; overflow:visible; }}
+  .mini-chart svg {{ display:block; width:100%; height:auto; overflow:visible; }}
   .mini-chart svg text {{ font-family:Georgia,'Times New Roman',serif; }}
   .chart-legend {{ display:flex; gap:1rem; color:var(--muted); font-size:.86rem;
                    margin:.3rem 0 0; }}
@@ -1197,7 +1360,7 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
               padding:0 !important; margin:-1px !important; overflow:hidden !important;
               clip:rect(0,0,0,0) !important; white-space:nowrap !important; border:0 !important; }}
   .error {{ color:#8A1C1C; font-weight:bold; }}
-  .table-wrap {{ overflow-x:auto; }}
+  .table-wrap {{ width:100%; max-width:100%; overflow-x:auto; }}
   table {{ border-collapse:collapse; width:100%; font-size:.92rem; }}
   th,td {{ padding:.48rem .55rem; border-bottom:1px solid var(--grid); text-align:left; }}
   th {{ border-bottom:2px solid var(--grid); white-space:nowrap; }}
@@ -1209,7 +1372,13 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
     body {{ padding:1.5rem .75rem 3rem; }}
     h1 {{ font-size:1.8rem; }}
     .explanation-grid {{ grid-template-columns:1fr; }}
+    .long-run-charts {{ grid-template-columns:1fr; }}
     .chart-card {{ padding:.3rem; }}
+    #language-tables table {{ font-size:.78rem; table-layout:fixed; }}
+    #language-tables th,#language-tables td {{ padding:.32rem .25rem; overflow-wrap:anywhere; }}
+    #language-tables th:nth-child(3),#language-tables td:nth-child(3),
+    #language-tables th:nth-child(4),#language-tables td:nth-child(4),
+    #language-tables th:nth-child(7),#language-tables td:nth-child(7) {{ display:none; }}
   }}
 </style>
 </head>
@@ -1228,14 +1397,13 @@ separate rather than being collapsed into a single score.</p>
 <p><strong>What is being examined:</strong> Whether congressional courtesy, praise,
 cooperation, personal attacks, misconduct allegations, and profanity move differently over
 time and by party.</p>
-<p><strong>What the figure suggests:</strong> Formal courtesy has declined sharply in recent
+<p><strong>What the charts suggest:</strong> Formal courtesy has declined sharply in recent
 decades, while cooperation language rose from a low historical base. Conflict measures remain
 rare but show pronounced recent spikes, especially misconduct allegations and profanity.
 The source transition and changing coverage mean individual jumps should not be read as causal.</p>
-<img src="figures/overview.png"
- alt="Six long-run charts comparing Democratic and Republican congressional language from 1873 to the present: courtesy, gratitude, cooperation, personal disrespect, misconduct allegations, and profanity.">
-<div class="overview-links"><a href="figures/overview_house.png">House detail</a>
-<a href="figures/overview_senate.png">Senate detail</a></div>
+<div id="long-run-charts" class="long-run-charts"
+ aria-label="Six interactive long-run Democratic and Republican language charts"></div>
+<p class="definition">{html.escape(long_run['source_note'])}</p>
 </section>
 <div class="toolbar"><label for="congress">Recent detail</label><select id="congress">{''.join(options)}</select></div>
 <div id="coverage-warning" class="warning" {'hidden' if not warning else ''}>{html.escape(warning)}</div>
@@ -1267,8 +1435,8 @@ averaging daily rates. Hover or focus a point for its hits and word count.</figc
 <noscript><img src="figures/language_members.png"
  alt="{html.escape(language['member_alt'], quote=True)}"></noscript>
 </div>
-<figcaption>Member comparisons exclude speakers below the displayed word threshold; exact
-profanity values remain available in the table below. Hover or focus a bar for its raw counts.</figcaption>
+<figcaption>Hover or focus a bar for its raw hits and word count. Exact values are also
+available in the table below.</figcaption>
 </figure>
 </section>
 <main id="language-tables">{language_cards}</main>
@@ -1278,6 +1446,7 @@ to {html.escape(payload['coverage']['speech_last_date'])}. Newest Congressional 
 {html.escape(payload['coverage']['speech_last_date'])}. Site data snapshot:
 {html.escape(payload['generated_utc'])}. <a href="activity.html">Open member activity and bill tables.</a></footer>
 <script>
+const longRunLanguage = {_script_json(long_run)};
 const initialLanguage = {_script_json(language)};
 {INTERACTIVE_CHART_JS}
 const select = document.getElementById('congress');
@@ -1312,6 +1481,7 @@ async function loadCongress(value) {{
   }}
 }}
 select.addEventListener('change', () => loadCongress(select.value).catch(() => {{}}));
+renderLongRun(longRunLanguage);
 renderLanguage(initialLanguage);
 const requestedCongress = new URLSearchParams(location.hash.slice(1)).get('congress');
 if (requestedCongress && [...select.options].some(option => option.value === requestedCongress)
@@ -1437,11 +1607,11 @@ def main(argv: Optional[List[str]] = None) -> int:
     data = out / "data"
     figs.mkdir(parents=True, exist_ok=True)
     data.mkdir(parents=True, exist_ok=True)
-    for name, source in LONG_RUN_FIGURES.items():
-        if not source.exists():
-            LOG.error("missing long-run figure %s; run scripts/update.py first", source)
-            return 1
-        shutil.copyfile(source, figs / name)
+    long_run = load_long_run_payload()
+    (data / "long_run_language.json").write_text(
+        json.dumps(long_run, indent=2) + "\n",
+        encoding="utf-8",
+    )
 
     payloads = {
         value: build_payload(
@@ -1521,7 +1691,7 @@ def main(argv: Optional[List[str]] = None) -> int:
         json.dumps(meta, indent=2) + "\n", encoding="utf-8"
     )
     (out / "index.html").write_text(
-        _render_html(selected, available), encoding="utf-8"
+        _render_html(selected, available, long_run), encoding="utf-8"
     )
     (out / "activity.html").write_text(
         _render_activity_html(selected, available), encoding="utf-8"

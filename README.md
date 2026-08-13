@@ -356,10 +356,11 @@ helpers, and how to reuse it.
 
 ## The website: congressional language first
 
-The GitHub Pages homepage leads with the long-run six-panel overview of congressional comity and
+The GitHub Pages homepage leads with six interactive long-run panels for congressional comity and
 conflict: courtesy, gratitude, bipartisan cooperation, personal disrespect, misconduct
-allegations, and profanity. The figure compares Democrats with Republicans from 1873 to the
-present, with separate House and Senate detail figures linked directly below it.
+allegations, and profanity. Each panel compares Democrats with Republicans from 1873 to the
+present and includes visible party controls, direct end labels, hover/focus values, and a
+screen-reader data table.
 
 Recent-Congress detail then presents three separate negative-language indicators: profanity,
 personal hostility/disrespect, and misconduct allegations. Monthly Democratic/Republican trends
@@ -486,7 +487,7 @@ site/data/congress_NNN.json    leaderboards, interactive chart data, definitions
 site/data/leaderboard.json     compatibility profanity leaderboard for the initial view
 site/data/timeseries.json      chamber-level profanity rate per year
 site/data/meta.json            build stamp, thresholds, coverage, caveat text
-site/figures/overview*.png     long-run party comparison and chamber detail
+site/data/long_run_language.json compact data for the six interactive long-run panels
 site/figures/*.png             no-JavaScript/compatibility charts in the project's house style
 ```
 

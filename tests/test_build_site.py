@@ -146,10 +146,9 @@ def test_build_writes_html_json_and_figures(store, tmp_path):
     ]) == 0
     for rel in ("index.html", "activity.html", "data/leaderboard.json", "data/timeseries.json",
                 "data/meta.json", "data/congresses.json", "data/congress_119.json",
+                "data/long_run_language.json",
                 "figures/leaderboard.png", "figures/trend.png",
-                "figures/language_trends.png", "figures/language_members.png",
-                "figures/overview.png", "figures/overview_house.png",
-                "figures/overview_senate.png"):
+                "figures/language_trends.png", "figures/language_members.png"):
         assert (out / rel).exists(), rel
 
 
@@ -313,11 +312,18 @@ def test_payload_and_html_expose_selector_aware_language_graphs(store, tmp_path)
         'id="language-trends"', 'id="language-members"',
         "renderLanguage(payload.language)", "renderTrendPanel",
         "renderMemberPanel", "bindTooltip", "chart-toggle",
+        "renderLongRun(longRunLanguage)", "renderLongRunPanel",
         "URLSearchParams", "loadSequence", "addAccessibleTable",
         'className = \'sr-only\'', 'role="alert"', "activity.html",
-        'figures/overview.png', 'data-language-metric="profanity"',
+        'id="long-run-charts"', 'data-language-metric="profanity"',
     ):
         assert text in page
+    assert "min-width:42rem" not in page
+    assert ".mini-chart { position:relative; border-top:1px solid var(--grid);" in page
+    assert "Members below the word threshold are omitted." not in page
+    long_run = json.loads((out / "data" / "long_run_language.json").read_text())
+    assert len(long_run["metrics"]) == 6
+    assert {row["party"] for row in long_run["series"]} == {"D", "R"}
     activity_page = (out / "activity.html").read_text()
     assert "Congressional member activity and bills" in activity_page
     assert "Who sponsors the most bills" in activity_page
