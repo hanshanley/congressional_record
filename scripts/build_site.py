@@ -1606,8 +1606,7 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
            margin:1.25rem 0 2rem; min-width:0; }}
   .language {{ margin:1.5rem 0 2.5rem; }}
   .overview {{ margin:1.25rem 0 2.5rem; }}
-  .overview-intro {{ display:grid; grid-template-columns:minmax(0,1fr) minmax(20rem,.65fr);
-                     gap:2.5rem; align-items:end; margin-bottom:1.5rem; }}
+  .overview-intro {{ max-width:48rem; margin-bottom:1.5rem; }}
   .overview-intro p {{ color:var(--muted); margin:.35rem 0; }}
   .tab-row {{ display:flex; gap:.4rem; flex-wrap:wrap; margin:.85rem 0; }}
   .tab-button {{ appearance:none; border:1px solid var(--grid); background:transparent;
@@ -1709,8 +1708,6 @@ and profanity.</p>
 <p>Choose a measure to compare Democratic and Republican floor language across the full
 digital and historical record. Rates are word-normalized; positive and negative measures
 remain separate.</p></div>
-<p><strong>Read carefully:</strong> source coverage changes over time, including the 2017
-transition from Stanford Hein to GovInfo. A jump is not automatically a behavioral change.</p>
 </div>
 <div id="long-run-tabs" class="tab-row"></div>
 <div id="long-run-chart" class="focus-panel"
