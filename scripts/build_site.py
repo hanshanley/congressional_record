@@ -9,6 +9,7 @@ import html
 import json
 import logging
 import os
+import shutil
 import sys
 from pathlib import Path
 from typing import List, Optional
@@ -42,6 +43,11 @@ LOG = logging.getLogger("build_site")
 DAILY_PATH = ROOT / "data" / "site" / "speaker_daily"
 BILLS_PATH = ROOT / "data" / "site" / "bills"
 SITE_DIR = ROOT / "site"
+LONG_RUN_FIGURES = {
+    "overview.png": ROOT / "outputs" / "figures" / "overview.png",
+    "overview_house.png": ROOT / "outputs" / "figures" / "overview_house.png",
+    "overview_senate.png": ROOT / "outputs" / "figures" / "overview_senate.png",
+}
 
 CAVEATS = [
     "Speech counts include only remarks attributable to a specific member by Bioguide ID; "
@@ -72,8 +78,6 @@ LANGUAGE_MEMBER_TOP = 8
 INTERACTIVE_CHART_JS = r"""
 const SVG_NS = 'http://www.w3.org/2000/svg';
 const chartColors = {
-  house: '#4A7C59',
-  senate: '#C2993E',
   D: '#3D6F8C',
   R: '#C85A3D',
   I: '#4A7C59',
@@ -152,6 +156,34 @@ function addPanelHeading(wrapper, metric, detail) {
   wrapper.appendChild(heading);
 }
 
+function addAccessibleTable(wrapper, captionText, headers, rows) {
+  const table = document.createElement('table');
+  table.className = 'sr-only';
+  const caption = document.createElement('caption');
+  caption.textContent = captionText;
+  const thead = document.createElement('thead');
+  const headerRow = document.createElement('tr');
+  headers.forEach(header => {
+    const th = document.createElement('th');
+    th.scope = 'col';
+    th.textContent = header;
+    headerRow.appendChild(th);
+  });
+  thead.appendChild(headerRow);
+  const tbody = document.createElement('tbody');
+  rows.forEach(values => {
+    const row = document.createElement('tr');
+    values.forEach(value => {
+      const cell = document.createElement('td');
+      cell.textContent = value;
+      row.appendChild(cell);
+    });
+    tbody.appendChild(row);
+  });
+  table.append(caption, thead, tbody);
+  wrapper.appendChild(table);
+}
+
 function renderTrendPanel(language, key) {
   const metric = language.metrics[key];
   const wrapper = document.createElement('section');
@@ -160,17 +192,16 @@ function renderTrendPanel(language, key) {
     `Rates are shown per 100,000 words by ${language.granularity}.`);
   const legend = document.createElement('div');
   legend.className = 'chart-legend';
-  ['house', 'senate'].forEach(chamber => {
+  [['D', 'Democrats'], ['R', 'Republicans']].forEach(([party, label]) => {
     const button = document.createElement('button');
     button.type = 'button';
     button.className = 'chart-toggle';
     button.setAttribute('aria-pressed', 'true');
-    button.innerHTML = `<i style="background:${chartColors[chamber]}"></i>` +
-      `${chamber[0].toUpperCase() + chamber.slice(1)}`;
+    button.innerHTML = `<i style="background:${chartColors[party]}"></i>${label}`;
     button.addEventListener('click', () => {
       const active = button.getAttribute('aria-pressed') !== 'true';
       button.setAttribute('aria-pressed', String(active));
-      wrapper.querySelectorAll(`[data-chamber="${chamber}"]`)
+      wrapper.querySelectorAll(`[data-party="${party}"]`)
         .forEach(element => { element.style.display = active ? '' : 'none'; });
     });
     legend.appendChild(button);
@@ -213,9 +244,9 @@ function renderTrendPanel(language, key) {
       'text-anchor': 'middle', fill: chartColors.muted, 'font-size': 12,
     });
   });
-  ['house', 'senate'].forEach(chamber => {
+  [['D', 'Democrats'], ['R', 'Republicans']].forEach(([party, label]) => {
     const rowsByPeriod = new Map(
-      language.series.filter(row => row.chamber === chamber)
+      language.series.filter(row => row.party === party)
         .map(row => [row.period, row])
     );
     const points = periods.flatMap((period, index) => {
@@ -225,27 +256,39 @@ function renderTrendPanel(language, key) {
     if (!points.length) return;
     svg.appendChild(svgNode('polyline', {
       points: points.map(point => `${point[0]},${point[1]}`).join(' '),
-      fill: 'none', stroke: chartColors[chamber], 'stroke-width': chamber === 'house' ? 3 : 2.5,
-      'stroke-dasharray': chamber === 'senate' ? '9 5' : '',
-      'vector-effect': 'non-scaling-stroke', 'data-chamber': chamber,
+      fill: 'none', stroke: chartColors[party], 'stroke-width': 2.8,
+      'stroke-dasharray': party === 'R' ? '9 5' : '',
+      'vector-effect': 'non-scaling-stroke', 'data-party': party,
     }));
     points.forEach(([px, py, row]) => {
-      const mark = chamber === 'house'
-        ? svgNode('circle', {cx: px, cy: py, r: 5, fill: chartColors[chamber]})
+      const mark = party === 'D'
+        ? svgNode('circle', {cx: px, cy: py, r: 5, fill: chartColors[party]})
         : svgNode('polygon', {
             points: `${px},${py - 6} ${px - 6},${py + 5} ${px + 6},${py + 5}`,
-            fill: chartColors[chamber],
+            fill: chartColors[party],
           });
       bindTooltip(mark, wrapper, tooltip,
-        `${formatPeriod(row.period)} ${chamber[0].toUpperCase() + chamber.slice(1)}: ` +
+        `${formatPeriod(row.period)} ${label}: ` +
         `${formatRate(row[metric.rate])} per 100,000 words ` +
         `(${Number(row[metric.hits]).toLocaleString()} hits; ` +
         `${Number(row.words).toLocaleString()} words)`);
-      mark.setAttribute('data-chamber', chamber);
+      mark.setAttribute('data-party', party);
       svg.appendChild(mark);
     });
   });
   wrapper.appendChild(svg);
+  addAccessibleTable(
+    wrapper,
+    `${metric.label} rates over time in ${language.scope_label}`,
+    ['Period', 'Party', 'Rate per 100,000 words', 'Hits', 'Words'],
+    language.series.map(row => [
+      formatPeriod(row.period),
+      row.party === 'D' ? 'Democrats' : 'Republicans',
+      formatRate(row[metric.rate]),
+      Number(row[metric.hits]).toLocaleString(),
+      Number(row.words).toLocaleString(),
+    ]),
+  );
   return wrapper;
 }
 
@@ -272,6 +315,20 @@ function renderMemberPanel(language, key) {
       'text-anchor': 'middle', fill: chartColors.muted, 'font-size': 16,
     });
     wrapper.appendChild(svg);
+    addAccessibleTable(
+      wrapper,
+      `Highest eligible ${metric.label.toLowerCase()} rates in ${language.scope_label}`,
+      ['Rank', 'Member', 'Party', 'Chamber', 'Rate per 100,000 words', 'Hits', 'Words'],
+      rows.map(row => [
+        row.rank,
+        row.speaker_name,
+        row.party || 'Other',
+        row.chamber,
+        formatRate(row[metric.rate]),
+        Number(row[metric.hits]).toLocaleString(),
+        Number(row.words).toLocaleString(),
+      ]),
+    );
     return wrapper;
   }
   const maxValue = Math.max(1, ...rows.map(row => Number(row[metric.rate]) || 0)) * 1.12;
@@ -311,6 +368,49 @@ function renderMemberPanel(language, key) {
   return wrapper;
 }
 
+function renderLanguageTable(language, key) {
+  const metric = language.metrics[key];
+  const table = document.querySelector(`table[data-language-metric="${key}"]`);
+  if (!table) return;
+  const tbody = table.querySelector('tbody');
+  tbody.replaceChildren();
+  const rows = language.members[key] || [];
+  if (!rows.length) {
+    const row = document.createElement('tr');
+    const cell = document.createElement('td');
+    cell.colSpan = 7;
+    cell.className = 'muted';
+    cell.textContent = 'No nonzero rates in this view.';
+    row.appendChild(cell);
+    tbody.appendChild(row);
+    return;
+  }
+  rows.forEach(item => {
+    const row = document.createElement('tr');
+    const values = [
+      item.rank, item.speaker_name, item.party, item.chamber,
+      formatRate(item[metric.rate]), Number(item[metric.hits]).toLocaleString(),
+      Number(item.words).toLocaleString(),
+    ];
+    values.forEach((value, index) => {
+      const cell = document.createElement('td');
+      if (index === 0 || index >= 4) cell.className = 'num';
+      if (index === 1 && item.member_url) {
+        const link = document.createElement('a');
+        link.href = item.member_url;
+        link.textContent = value;
+        cell.appendChild(link);
+      } else {
+        cell.textContent = index === 3
+          ? String(value).replace(/^./, character => character.toUpperCase())
+          : value;
+      }
+      row.appendChild(cell);
+    });
+    tbody.appendChild(row);
+  });
+}
+
 function renderLanguage(language) {
   const trendContainer = document.getElementById('language-trends');
   trendContainer.replaceChildren(
@@ -326,6 +426,7 @@ function renderLanguage(language) {
   document.getElementById('language-examined').textContent = language.explanation.examined;
   document.getElementById('language-finding').textContent = language.explanation.finding;
   document.getElementById('language-limitation').textContent = language.explanation.limitation;
+  Object.keys(language.metrics).forEach(key => renderLanguageTable(language, key));
 }
 """
 
@@ -587,11 +688,11 @@ def _language_payload(
         min_words=min_words,
         top=LANGUAGE_MEMBER_TOP,
     )
-    chamber_summary = {}
-    for chamber in ("house", "senate"):
-        rows = series[series["chamber"] == chamber]
+    party_summary = {}
+    for party in ("D", "R"):
+        rows = series[series["party"] == party]
         words = int(rows["words"].sum())
-        chamber_summary[chamber] = {
+        party_summary[party] = {
             "words": words,
             **{
                 metric["hits"]: int(rows[metric["hits"]].sum())
@@ -599,35 +700,46 @@ def _language_payload(
             },
         }
         for metric in LANGUAGE_METRICS.values():
-            hits = chamber_summary[chamber][metric["hits"]]
-            chamber_summary[chamber][metric["rate"]] = (
+            hits = party_summary[party][metric["hits"]]
+            party_summary[party][metric["rate"]] = (
                 100_000 * hits / words if words else 0.0
             )
 
+    member_records = {}
+    for key, frame in rankings.items():
+        records = _records(frame)
+        for row in records:
+            row["member_url"] = (
+                f"https://bioguide.congress.gov/search/bio/{row['bioguide']}"
+                if row.get("bioguide")
+                else ""
+            )
+        member_records[key] = records
+
     findings = []
     for key, metric in LANGUAGE_METRICS.items():
-        house_rate = chamber_summary["house"][metric["rate"]]
-        senate_rate = chamber_summary["senate"][metric["rate"]]
-        if abs(house_rate - senate_rate) < 0.05:
-            chamber_finding = (
-                f"House and Senate aggregate {metric['label'].lower()} rates are "
-                f"approximately equal at {house_rate:.1f} per 100,000 words."
+        democratic_rate = party_summary["D"][metric["rate"]]
+        republican_rate = party_summary["R"][metric["rate"]]
+        if abs(democratic_rate - republican_rate) < 0.05:
+            party_finding = (
+                f"Democratic and Republican aggregate {metric['label'].lower()} rates are "
+                f"approximately equal at {democratic_rate:.1f} per 100,000 words."
             )
         else:
-            higher = "House" if house_rate > senate_rate else "Senate"
-            higher_rate = max(house_rate, senate_rate)
-            lower_rate = min(house_rate, senate_rate)
-            chamber_finding = (
+            higher = "Democrats" if democratic_rate > republican_rate else "Republicans"
+            higher_rate = max(democratic_rate, republican_rate)
+            lower_rate = min(democratic_rate, republican_rate)
+            party_finding = (
                 f"{higher} has the higher aggregate {metric['label'].lower()} rate "
                 f"({higher_rate:.1f} versus {lower_rate:.1f} per 100,000 words)."
             )
         frame = rankings[key]
         if frame.empty:
-            findings.append(chamber_finding)
+            findings.append(party_finding)
             continue
         leader = frame.iloc[0]
         findings.append(
-            f"{chamber_finding} {leader['speaker_name']} has the highest eligible "
+            f"{party_finding} {leader['speaker_name']} has the highest eligible "
             f"{metric['label'].lower()} "
             f"rate at {float(leader[metric['rate']]):.1f} per 100,000 words."
         )
@@ -637,10 +749,10 @@ def _language_payload(
         "granularity": granularity,
         "metrics": LANGUAGE_METRICS,
         "series": _records(series),
-        "members": {key: _records(frame) for key, frame in rankings.items()},
-        "chambers": chamber_summary,
+        "members": member_records,
+        "parties": party_summary,
         "trend_alt": (
-            f"{period_label.title()} House and Senate rates for profanity, personal "
+            f"{period_label.title()} Democratic and Republican rates for profanity, personal "
             f"hostility or disrespect, and misconduct allegations in {scope_label}."
         ),
         "member_alt": (
@@ -649,7 +761,7 @@ def _language_payload(
         ),
         "explanation": {
             "shown": (
-                f"The charts show {period_label} House and Senate rates for three "
+                f"The charts show {period_label} Democratic and Republican rates for three "
                 "separate lexical measures, plus the highest-rate members in "
                 f"{scope_label}. Rates are hits per 100,000 attributed spoken words."
             ),
@@ -830,6 +942,39 @@ def _table(metric: str, rows: list[dict]) -> str:
     return f"<table data-metric=\"{metric}\"><thead><tr>{head}</tr></thead><tbody>{''.join(body)}</tbody></table>"
 
 
+def _language_table(metric: str, rows: list[dict]) -> str:
+    metadata = LANGUAGE_METRICS[metric]
+    headers = ["#", "Member", "Party", "Chamber", "Per 100k", "Hits", "Words"]
+    head = "".join(f"<th>{html.escape(label)}</th>" for label in headers)
+    body = []
+    for row in rows:
+        cells = [
+            row["rank"],
+            _member_cell(row),
+            row["party"],
+            str(row["chamber"]).title(),
+            f"{float(row[metadata['rate']]):.1f}",
+            _fmt_int(row[metadata["hits"]]),
+            _fmt_int(row["words"]),
+        ]
+        body.append(
+            "<tr>"
+            + "".join(
+                f"<td class=\"{'num' if index == 0 or index >= 4 else ''}\">"
+                f"{cell if isinstance(cell, _TrustedHTML) else html.escape(str(cell))}"
+                "</td>"
+                for index, cell in enumerate(cells)
+            )
+            + "</tr>"
+        )
+    if not body:
+        body.append('<tr><td colspan="7" class="muted">No nonzero rates in this view.</td></tr>')
+    return (
+        f'<table data-language-metric="{metric}"><thead><tr>{head}</tr></thead>'
+        f"<tbody>{''.join(body)}</tbody></table>"
+    )
+
+
 def _render_html(payload: dict, congresses: list[int]) -> str:
     all_selected = " selected" if payload["congress"] is None else ""
     options = [f'<option value="all"{all_selected}>All Congresses</option>']
@@ -839,28 +984,27 @@ def _render_html(payload: dict, congresses: list[int]) -> str:
     warning = payload["coverage"]["warning"]
     language = payload["language"]
     explanation = language["explanation"]
-    caveats = "".join(f"<li>{html.escape(item)}</li>" for item in CAVEATS)
-    sections = [
-        ("speech", "Who talks the most"),
-        ("sponsored", "Who sponsors the most bills"),
-        ("passed", "Whose sponsored bills pass a chamber"),
-        ("enacted", "Whose sponsored bills become law"),
-        ("profanity", "Who uses profanity at the highest rate"),
-    ]
-    cards = "".join(
-        f'<section class="card" id="{metric}"><h2>{html.escape(title)}</h2>'
-        f'<p class="definition">{html.escape(METRIC_DEFINITIONS[metric])}</p>'
-        f'<div class="table-wrap">{_table(metric, payload["leaderboards"][metric])}</div></section>'
-        for metric, title in sections
+    caveats = "".join(
+        f"<li>{html.escape(item)}</li>"
+        for item in (CAVEATS[0], CAVEATS[1], CAVEATS[2], CAVEATS[-1])
+    )
+    language_cards = "".join(
+        f'<section class="card" id="{metric}-table">'
+        f'<h2>Highest {html.escape(metadata["label"].lower())} rates</h2>'
+        f'<p class="definition">{html.escape(metadata["definition"])} '
+        "Only members with a nonzero rate and enough words are included.</p>"
+        f'<div class="table-wrap">{_language_table(metric, language["members"][metric])}</div>'
+        "</section>"
+        for metric, metadata in LANGUAGE_METRICS.items()
     )
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Congressional activity and language</title>
-<meta name="description" content="Transparent rankings of congressional floor speech,
-bill sponsorship, passage, enactment, profanity, hostility, and misconduct language.">
+<title>Congressional comity and conflict language</title>
+<meta name="description" content="Long-run Democratic and Republican trends in congressional
+courtesy, cooperation, personal disrespect, misconduct allegations, and profanity.">
 <style>
   :root {{ --bg:{theme.BG}; --text:{theme.TEXT}; --muted:{theme.MUTED};
            --grid:{theme.GRID}; --blue:{theme.BLUE}; --paper:#fff; }}
@@ -871,6 +1015,9 @@ bill sponsorship, passage, enactment, profanity, hostility, and misconduct langu
   h2 {{ font-size:1.3rem; margin:.1rem 0 .3rem; }}
   h3 {{ font-size:1rem; margin:0 0 .25rem; }}
   a {{ color:var(--blue); }}
+  nav {{ display:flex; gap:1rem; border-bottom:1px solid var(--grid); padding-bottom:.75rem;
+         margin-bottom:1.4rem; }}
+  nav a[aria-current="page"] {{ color:var(--text); font-weight:bold; text-decoration:none; }}
   .sub,.definition,.muted {{ color:var(--muted); }}
   .toolbar {{ display:flex; gap:1rem; align-items:center; margin:1.5rem 0; }}
   select {{ font:inherit; padding:.45rem .6rem; background:var(--paper); border:1px solid var(--grid); }}
@@ -878,6 +1025,10 @@ bill sponsorship, passage, enactment, profanity, hostility, and misconduct langu
   .card {{ background:var(--paper); border:1px solid var(--grid); padding:1rem;
            margin:1.25rem 0 2rem; }}
   .language {{ margin:1.5rem 0 2.5rem; }}
+  .overview {{ background:var(--paper); border:1px solid var(--grid); padding:1rem;
+               margin:1.25rem 0 2.5rem; }}
+  .overview h2 {{ font-size:1.5rem; }}
+  .overview-links {{ display:flex; gap:1rem; flex-wrap:wrap; margin:.7rem 0; }}
   .explanation-grid {{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr));
                        gap:.8rem; margin:1rem 0; }}
   .explanation-grid article {{ background:var(--paper); border:1px solid var(--grid);
@@ -908,6 +1059,9 @@ bill sponsorship, passage, enactment, profanity, hostility, and misconduct langu
                     box-shadow:0 2px 8px rgb(0 0 0 / 20%); }}
   .data-mark {{ cursor:pointer; transition:opacity .12s ease, filter .12s ease; }}
   .data-mark:hover,.data-mark:focus {{ opacity:.72; filter:brightness(.88); outline:none; }}
+  .sr-only {{ position:absolute !important; width:1px !important; height:1px !important;
+              padding:0 !important; margin:-1px !important; overflow:hidden !important;
+              clip:rect(0,0,0,0) !important; white-space:nowrap !important; border:0 !important; }}
   .error {{ color:#8A1C1C; font-weight:bold; }}
   .table-wrap {{ overflow-x:auto; }}
   table {{ border-collapse:collapse; width:100%; font-size:.92rem; }}
@@ -926,17 +1080,38 @@ bill sponsorship, passage, enactment, profanity, hostility, and misconduct langu
 </style>
 </head>
 <body>
-<h1>Congressional activity and language</h1>
-<p class="sub">Who speaks, sponsors bills, sees sponsored bills advance, and uses profanity
-on the floor. Rankings are descriptive and use official Congressional Record and Bill Status data.</p>
-<div class="toolbar"><label for="congress">View</label><select id="congress">{''.join(options)}</select></div>
+<nav aria-label="Primary"><a href="index.html" aria-current="page">Language analysis</a>
+<a href="activity.html">Member activity and bills</a></nav>
+<h1>Congressional comity and conflict language</h1>
+<p class="sub">How Democratic and Republican language in the Congressional Record has changed,
+from courtesy and bipartisan cooperation to personal disrespect, misconduct allegations,
+and profanity.</p>
+<section class="overview" aria-labelledby="overview-heading">
+<h2 id="overview-heading">The long-run picture, 1873-present</h2>
+<p><strong>What is shown:</strong> Six separate lexical measures, reported as
+word-normalized rates for Democrats and Republicans. Positive and negative language remain
+separate rather than being collapsed into a single score.</p>
+<p><strong>What is being examined:</strong> Whether congressional courtesy, praise,
+cooperation, personal attacks, misconduct allegations, and profanity move differently over
+time and by party.</p>
+<p><strong>What the figure suggests:</strong> Formal courtesy has declined sharply in recent
+decades, while cooperation language rose from a low historical base. Conflict measures remain
+rare but show pronounced recent spikes, especially misconduct allegations and profanity.
+The source transition and changing coverage mean individual jumps should not be read as causal.</p>
+<img src="figures/overview.png"
+ alt="Six long-run charts comparing Democratic and Republican congressional language from 1873 to the present: courtesy, gratitude, cooperation, personal disrespect, misconduct allegations, and profanity.">
+<div class="overview-links"><a href="figures/overview_house.png">House detail</a>
+<a href="figures/overview_senate.png">Senate detail</a></div>
+</section>
+<div class="toolbar"><label for="congress">Recent detail</label><select id="congress">{''.join(options)}</select></div>
 <div id="coverage-warning" class="warning" {'hidden' if not warning else ''}>{html.escape(warning)}</div>
 <p id="dashboard-error" class="error" role="alert" hidden></p>
 <section class="language" aria-labelledby="language-heading">
-<h2 id="language-heading">Language on the floor</h2>
+<h2 id="language-heading">Recent language on the floor</h2>
 <p class="sub">Three transparent lexical measures are shown separately: profanity,
 personal hostility or disrespect, and misconduct allegations. They describe language in
-attributed floor remarks; they do not establish intent or whether an allegation is true.</p>
+attributed floor remarks and compare Democrats with Republicans; they do not establish intent
+or whether an allegation is true.</p>
 <div class="explanation-grid">
 <article><h3>What is shown</h3><p id="language-shown">{html.escape(explanation['shown'])}</p></article>
 <article><h3>What is being examined</h3><p id="language-examined">{html.escape(explanation['examined'])}</p></article>
@@ -949,7 +1124,7 @@ attributed floor remarks; they do not establish intent or whether an allegation 
 <noscript><img src="figures/language_trends.png"
  alt="{html.escape(language['trend_alt'], quote=True)}"></noscript>
 </div>
-<figcaption>Chamber-wide rates use summed hits divided by summed spoken words, rather than
+<figcaption>Party rates use summed hits divided by summed spoken words, rather than
 averaging daily rates. Hover or focus a point for its hits and word count.</figcaption>
 </figure>
 <figure class="chart-card">
@@ -962,8 +1137,8 @@ averaging daily rates. Hover or focus a point for its hits and word count.</figc
 profanity values remain available in the table below. Hover or focus a bar for its raw counts.</figcaption>
 </figure>
 </section>
-<main id="leaderboards">{cards}</main>
-<section><h2>How to read these rankings</h2><ul>{caveats}</ul></section>
+<main id="language-tables">{language_cards}</main>
+<section><h2>How to read this language analysis</h2><ul>{caveats}</ul></section>
 <footer id="coverage">Speech coverage {html.escape(payload['coverage']['speech_first_date'])}
 to {html.escape(payload['coverage']['speech_last_date'])}; {_fmt_int(payload['coverage']['bills'])}
 H.R./S. bill records in this view. Newest Congressional Record date:

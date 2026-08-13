@@ -435,7 +435,10 @@ def activity_leaderboards(
         return ordered
 
     legislative = activity[activity["bills_sponsored"] > 0]
-    profanity = activity[activity["words"] >= int(min_words)]
+    profanity = activity[
+        (activity["words"] >= int(min_words))
+        & (activity["profanity_hits"] > 0)
+    ]
     return {
         "speech": ranked(activity[activity["words"] > 0], ["words", "turns"], [False, False]),
         "sponsored": ranked(

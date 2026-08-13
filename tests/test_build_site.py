@@ -309,9 +309,28 @@ def test_payload_and_html_expose_selector_aware_language_graphs(store, tmp_path)
         'id="language-trends"', 'id="language-members"',
         "renderLanguage(payload.language)", "renderTrendPanel",
         "renderMemberPanel", "bindTooltip", "chart-toggle",
-        "URLSearchParams", "loadSequence", 'role="alert"',
+        "URLSearchParams", "loadSequence", "addAccessibleTable",
+        'className = \'sr-only\'', 'role="alert"',
     ):
         assert text in page
+
+
+def test_nonselected_extension_only_congress_does_not_break_charts(store, tmp_path):
+    path, daily, bills = store
+    extension_only = _daily([
+        ["EXT", "2021-02-01", "extensions", "Ms. EXTENSION", "D", "CA", 117,
+         5, 30_000, 1, 0, 2, 3],
+    ])
+    save_daily(pd.concat([daily, extension_only], ignore_index=True), path)
+    module = _load_build_site()
+    out = tmp_path / "site"
+    assert module.main([
+        "--daily", str(path), "--bills", str(bills), "--out", str(out),
+        "--min-words", "1000",
+    ]) == 0
+    payload = json.loads((out / "data" / "congress_117.json").read_text())
+    assert payload["language"]["series"] == []
+    assert (out / "figures" / "language_trends.png").exists()
 
 
 def test_unseeded_congress_is_labeled_unavailable_not_zero(store, tmp_path):

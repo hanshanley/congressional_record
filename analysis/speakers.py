@@ -310,16 +310,19 @@ def language_timeseries(
     daily: pd.DataFrame,
     congress: Optional[int] = None,
 ) -> pd.DataFrame:
-    """Return floor-language rates by chamber and month/year for one dashboard scope."""
+    """Return Democratic/Republican floor-language rates by month/year."""
     columns = [
-        "period", "chamber", "words", "turns",
+        "period", "party", "words", "turns",
         *[metric["hits"] for metric in LANGUAGE_METRICS.values()],
         *[metric["rate"] for metric in LANGUAGE_METRICS.values()],
     ]
     if daily.empty:
         return pd.DataFrame(columns=columns)
     frame = daily if congress is None else daily[daily["congress"] == int(congress)]
-    frame = frame[frame["chamber"].isin(["house", "senate"])].copy()
+    frame = frame[
+        frame["chamber"].isin(["house", "senate"])
+        & frame["party"].isin(["D", "R"])
+    ].copy()
     if frame.empty:
         return pd.DataFrame(columns=columns)
     dates = pd.to_datetime(frame["date"], errors="coerce")
@@ -327,7 +330,7 @@ def language_timeseries(
     dates = dates[dates.notna()]
     frame["period"] = dates.dt.to_period("Y" if congress is None else "M").astype(str)
     hit_columns = [metric["hits"] for metric in LANGUAGE_METRICS.values()]
-    grouped = frame.groupby(["period", "chamber"], as_index=False)[
+    grouped = frame.groupby(["period", "party"], as_index=False)[
         ["words", "turns", *hit_columns]
     ].sum()
     for metric in LANGUAGE_METRICS.values():
@@ -336,7 +339,7 @@ def language_timeseries(
             * grouped[metric["hits"]]
             / grouped["words"].where(grouped["words"] > 0)
         ).fillna(0.0)
-    return grouped[columns].sort_values(["period", "chamber"]).reset_index(drop=True)
+    return grouped[columns].sort_values(["period", "party"]).reset_index(drop=True)
 
 
 def language_member_rates(
@@ -372,6 +375,7 @@ def language_member_rates(
             * ranked_frame[metric["hits"]]
             / ranked_frame["words"].where(ranked_frame["words"] > 0)
         ).fillna(0.0)
+        ranked_frame = ranked_frame[ranked_frame[metric["hits"]] > 0]
         ordered = ranked_frame.sort_values(
             [metric["rate"], metric["hits"], "bioguide"],
             ascending=[False, False, True],

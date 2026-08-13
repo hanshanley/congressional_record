@@ -53,6 +53,9 @@ bill sponsorship, passage, enactment, profanity, hostility, and misconduct langu
                     box-shadow:0 2px 8px rgb(0 0 0 / 20%); }
   .data-mark { cursor:pointer; transition:opacity .12s ease, filter .12s ease; }
   .data-mark:hover,.data-mark:focus { opacity:.72; filter:brightness(.88); outline:none; }
+  .sr-only { position:absolute !important; width:1px !important; height:1px !important;
+              padding:0 !important; margin:-1px !important; overflow:hidden !important;
+              clip:rect(0,0,0,0) !important; white-space:nowrap !important; border:0 !important; }
   .error { color:#8A1C1C; font-weight:bold; }
   .table-wrap { overflow-x:auto; }
   table { border-collapse:collapse; width:100%; font-size:.92rem; }
@@ -199,6 +202,34 @@ function addPanelHeading(wrapper, metric, detail) {
   wrapper.appendChild(heading);
 }
 
+function addAccessibleTable(wrapper, captionText, headers, rows) {
+  const table = document.createElement('table');
+  table.className = 'sr-only';
+  const caption = document.createElement('caption');
+  caption.textContent = captionText;
+  const thead = document.createElement('thead');
+  const headerRow = document.createElement('tr');
+  headers.forEach(header => {
+    const th = document.createElement('th');
+    th.scope = 'col';
+    th.textContent = header;
+    headerRow.appendChild(th);
+  });
+  thead.appendChild(headerRow);
+  const tbody = document.createElement('tbody');
+  rows.forEach(values => {
+    const row = document.createElement('tr');
+    values.forEach(value => {
+      const cell = document.createElement('td');
+      cell.textContent = value;
+      row.appendChild(cell);
+    });
+    tbody.appendChild(row);
+  });
+  table.append(caption, thead, tbody);
+  wrapper.appendChild(table);
+}
+
 function renderTrendPanel(language, key) {
   const metric = language.metrics[key];
   const wrapper = document.createElement('section');
@@ -293,6 +324,18 @@ function renderTrendPanel(language, key) {
     });
   });
   wrapper.appendChild(svg);
+  addAccessibleTable(
+    wrapper,
+    `${metric.label} rates over time in ${language.scope_label}`,
+    ['Period', 'Chamber', 'Rate per 100,000 words', 'Hits', 'Words'],
+    language.series.map(row => [
+      formatPeriod(row.period),
+      row.chamber[0].toUpperCase() + row.chamber.slice(1),
+      formatRate(row[metric.rate]),
+      Number(row[metric.hits]).toLocaleString(),
+      Number(row.words).toLocaleString(),
+    ]),
+  );
   return wrapper;
 }
 
@@ -319,6 +362,20 @@ function renderMemberPanel(language, key) {
       'text-anchor': 'middle', fill: chartColors.muted, 'font-size': 16,
     });
     wrapper.appendChild(svg);
+    addAccessibleTable(
+      wrapper,
+      `Highest eligible ${metric.label.toLowerCase()} rates in ${language.scope_label}`,
+      ['Rank', 'Member', 'Party', 'Chamber', 'Rate per 100,000 words', 'Hits', 'Words'],
+      rows.map(row => [
+        row.rank,
+        row.speaker_name,
+        row.party || 'Other',
+        row.chamber,
+        formatRate(row[metric.rate]),
+        Number(row[metric.hits]).toLocaleString(),
+        Number(row.words).toLocaleString(),
+      ]),
+    );
     return wrapper;
   }
   const maxValue = Math.max(1, ...rows.map(row => Number(row[metric.rate]) || 0)) * 1.12;

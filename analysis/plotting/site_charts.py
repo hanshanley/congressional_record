@@ -39,7 +39,7 @@ def language_trends(
     scope_label: str,
     granularity: str,
 ) -> Path:
-    """Render three chamber trend panels for one Congress scope."""
+    """Render three Democratic/Republican trend panels for one Congress scope."""
     theme.apply()
     fig, axes = plt.subplots(3, 1, figsize=(11, 12.5), sharex=True)
     fig.suptitle(
@@ -48,26 +48,40 @@ def language_trends(
         fontweight="bold",
         y=0.985,
     )
-    parsed_periods = pd.to_datetime(
-        series["period"] + ("-01" if granularity == "month" else "-01-01")
-    )
-    plotted = series.assign(_date=parsed_periods)
-    for ax, metric in zip(axes, LANGUAGE_METRICS.values()):
-        for chamber in ("house", "senate"):
-            sub = plotted[plotted["chamber"] == chamber].sort_values("_date")
-            if sub.empty:
-                continue
-            style = theme.CHAMBER_STYLE[chamber]
-            charts.line(
+    if series.empty or "period" not in series:
+        for ax, metric in zip(axes, LANGUAGE_METRICS.values()):
+            charts.style_axes(
                 ax,
-                sub["_date"],
-                sub[metric["rate"]],
-                color=theme.GREEN if chamber == "house" else theme.GOLD,
-                label=theme.CHAMBER_LABELS[chamber],
-                linestyle=style["linestyle"],
-                marker=style["marker"],
-                linewidth=style["linewidth"],
-                markersize=style["markersize"],
+                metric["label"],
+                "",
+                "Hits per 100,000 words",
+                subtitle="No attributed House or Senate floor remarks in this scope.",
+            )
+            ax.text(
+                0.5, 0.5, "No floor-language data", transform=ax.transAxes,
+                ha="center", va="center", color=theme.MUTED,
+            )
+        axes[-1].set_xlabel("Period")
+        return _save(fig, out_path, top=0.955        )
+        parsed_periods = pd.to_datetime(
+            series["period"] + ("-01" if granularity == "month" else "-01-01")
+        )
+        plotted = series.assign(_date=parsed_periods)
+        for ax, metric in zip(axes, LANGUAGE_METRICS.values()):
+            for party, linestyle, marker in (("D", "-", "o"), ("R", "--", "s")):
+                sub = plotted[plotted["party"] == party].sort_values("_date")
+                if sub.empty:
+                    continue
+                charts.line(
+                    ax,
+                    sub["_date"],
+                    sub[metric["rate"]],
+                    color=theme.PARTY_COLORS[party],
+                    label=theme.PARTY_LABELS[party],
+                    linestyle=linestyle,
+                    marker=marker,
+                    linewidth=2.3,
+                    markersize=4,
             )
         charts.style_axes(
             ax,
