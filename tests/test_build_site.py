@@ -310,7 +310,7 @@ def test_payload_and_html_expose_selector_aware_language_graphs(store, tmp_path)
 
     page = (out / "index.html").read_text()
     for text in (
-        "Congressional comity and conflict language", "The long-run picture",
+        "The Language of Congress", "The long-run picture",
         "Recent language on the floor", "What is shown", "What is examined",
         "Methodology and limitations", 'id="language-highlight"',
         'id="recent-visual"', 'id="recent-metric"', 'id="recent-view"',
@@ -335,7 +335,7 @@ def test_payload_and_html_expose_selector_aware_language_graphs(store, tmp_path)
     activity_page = (out / "activity" / "index.html").read_text()
     assert "Congressional member activity and bills" in activity_page
     assert "Who sponsors the most bills" in activity_page
-    assert "Language analysis" in activity_page
+    assert "The Language of Congress" in activity_page
     assert 'id="activity-metric"' in activity_page
     assert "selectActivityMetric" in activity_page
     assert "activityMetrics" in activity_page

@@ -1613,7 +1613,7 @@ def _render_html(payload: dict, congresses: list[int], long_run: dict) -> str:
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Congressional comity and conflict language</title>
+<title>The Language of Congress</title>
 <meta name="description" content="Long-run Democratic and Republican trends in congressional
 courtesy, cooperation, personal disrespect, misconduct allegations, and profanity.">
 <style>
@@ -1748,10 +1748,10 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
 </head>
 <body>
 <a class="skip-link" href="#main-content">Skip to content</a>
-<nav aria-label="Primary"><a href="./" aria-current="page">Language analysis</a>
+<nav aria-label="Primary"><a href="./" aria-current="page">The Language of Congress</a>
 <a href="activity/">Member activity and bills</a></nav>
 <main id="main-content">
-<h1>Congressional comity and conflict language</h1>
+<h1>The Language of Congress</h1>
 <p class="sub hero-deck">How Democratic and Republican language in the Congressional Record has changed,
 from courtesy and bipartisan cooperation to personal disrespect, misconduct allegations,
 and profanity.</p>
@@ -2015,7 +2015,7 @@ passage, enactment, and profanity tables by Congress.">
 </head>
 <body>
 <a class="skip-link" href="#main-content">Skip to content</a>
-<nav aria-label="Primary"><a href="../">Language analysis</a>
+<nav aria-label="Primary"><a href="../">The Language of Congress</a>
 <a href="./" aria-current="page">Member activity and bills</a></nav>
 <main id="main-content">
 <h1>Congressional member activity and bills</h1>
