@@ -76,7 +76,7 @@ INTERACTIVE_CHART_JS = r"""
 const SVG_NS = 'http://www.w3.org/2000/svg';
 const chartColors = {
   D: '#3D6F8C',
-  R: '#C85A3D',
+  R: '#A9442E',
   I: '#4A7C59',
   other: '#6B6B6B',
   text: '#1A1A1A',
@@ -87,6 +87,17 @@ let selectedLongRunMetric = 'formal_courtesy_per_1k';
 let selectedRecentMetric = 'profanity';
 let selectedRecentView = 'trend';
 let currentLanguage = null;
+let currentLongRun = null;
+
+function isCompactChart() {
+  return window.innerWidth < 600;
+}
+
+function updateHash(values) {
+  const params = new URLSearchParams(location.hash.slice(1));
+  Object.entries(values).forEach(([key, value]) => params.set(key, value));
+  history.replaceState(null, '', `#${params.toString()}`);
+}
 
 function svgNode(tag, attributes = {}, text = '') {
   const node = document.createElementNS(SVG_NS, tag);
@@ -145,9 +156,11 @@ function bindTooltip(mark, wrapper, tooltip, text) {
   mark.setAttribute('aria-label', text);
   const showAt = (left, top) => {
     tooltip.textContent = text;
-    tooltip.style.left = `${left}px`;
-    tooltip.style.top = `${top}px`;
     tooltip.hidden = false;
+    const maxLeft = Math.max(8, wrapper.clientWidth - tooltip.offsetWidth - 8);
+    const maxTop = Math.max(8, wrapper.clientHeight - tooltip.offsetHeight - 8);
+    tooltip.style.left = `${Math.max(8, Math.min(left, maxLeft))}px`;
+    tooltip.style.top = `${Math.max(8, Math.min(top, maxTop))}px`;
   };
   mark.addEventListener('pointermove', event => {
     const bounds = wrapper.getBoundingClientRect();
@@ -230,18 +243,42 @@ function addAccessibleTable(wrapper, captionText, headers, rows) {
   wrapper.appendChild(accessible);
 }
 
-function renderTabs(container, items, selected, onSelect, label) {
+function renderChoices(container, items, selected, onSelect, label, asTabs = false) {
   container.replaceChildren();
-  container.setAttribute('role', 'tablist');
+  container.setAttribute('role', asTabs ? 'tablist' : 'group');
   container.setAttribute('aria-label', label);
-  items.forEach(item => {
+  items.forEach((item, index) => {
     const button = document.createElement('button');
     button.type = 'button';
     button.className = 'tab-button';
-    button.setAttribute('role', 'tab');
-    button.setAttribute('aria-selected', String(item.key === selected));
+    button.dataset.key = item.key;
+    if (asTabs) {
+      button.setAttribute('role', 'tab');
+      button.setAttribute('aria-selected', String(item.key === selected));
+      button.tabIndex = item.key === selected ? 0 : -1;
+      button.addEventListener('keydown', event => {
+        if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+        event.preventDefault();
+        let target = index;
+        if (event.key === 'ArrowLeft') target = (index - 1 + items.length) % items.length;
+        if (event.key === 'ArrowRight') target = (index + 1) % items.length;
+        if (event.key === 'Home') target = 0;
+        if (event.key === 'End') target = items.length - 1;
+        onSelect(items[target].key);
+        requestAnimationFrame(() => {
+          container.querySelector(`[data-key="${items[target].key}"]`)?.focus();
+        });
+      });
+    } else {
+      button.setAttribute('aria-pressed', String(item.key === selected));
+    }
     button.textContent = item.label;
-    button.addEventListener('click', () => onSelect(item.key));
+    button.addEventListener('click', () => {
+      onSelect(item.key);
+      requestAnimationFrame(() => {
+        container.querySelector(`[data-key="${item.key}"]`)?.focus();
+      });
+    });
     container.appendChild(button);
   });
 }
@@ -254,9 +291,12 @@ function renderTrendPanel(language, key) {
     `Rates are shown per 100,000 words by ${language.granularity}.`);
   addPartyLegend(wrapper);
   const tooltip = addTooltip(wrapper);
-  const width = 760;
-  const height = 280;
-  const margin = {left: 62, right: 92, top: 18, bottom: 54};
+  const compact = isCompactChart();
+  const width = compact ? 360 : 760;
+  const height = compact ? 285 : 280;
+  const margin = compact
+    ? {left: 42, right: 14, top: 18, bottom: 48}
+    : {left: 62, right: 24, top: 18, bottom: 54};
   const plotWidth = width - margin.left - margin.right;
   const plotHeight = height - margin.top - margin.bottom;
   const svg = svgNode('svg', {
@@ -280,14 +320,14 @@ function renderTrendPanel(language, key) {
       stroke: chartColors.grid, 'stroke-width': 1,
     }));
     addSvgText(svg, margin.left - 10, py + 4, formatRate(value), {
-      'text-anchor': 'end', fill: chartColors.muted, 'font-size': 12,
+      'text-anchor': 'end', fill: chartColors.muted, 'font-size': compact ? 10 : 12,
     });
   }
-  const labelIndices = new Set(spacedLabelIndices(periods.length));
+  const labelIndices = new Set(spacedLabelIndices(periods.length, compact ? 4 : 7));
   periods.forEach((period, index) => {
     if (!labelIndices.has(index)) return;
     addSvgText(svg, x(index), height - 18, formatPeriod(period), {
-      'text-anchor': 'middle', fill: chartColors.muted, 'font-size': 12,
+      'text-anchor': 'middle', fill: chartColors.muted, 'font-size': compact ? 9 : 12,
     });
   });
   [['D', 'Democrats'], ['R', 'Republicans']].forEach(([party, label]) => {
@@ -345,9 +385,12 @@ function renderLongRunPanel(longRun, key) {
   addPanelHeading(wrapper, metric, metric.units);
   addPartyLegend(wrapper);
   const tooltip = addTooltip(wrapper);
-  const width = 760;
-  const height = 270;
-  const margin = {left: 62, right: 92, top: 14, bottom: 44};
+  const compact = isCompactChart();
+  const width = compact ? 360 : 760;
+  const height = compact ? 290 : 270;
+  const margin = compact
+    ? {left: 42, right: 14, top: 14, bottom: 42}
+    : {left: 62, right: 24, top: 14, bottom: 44};
   const plotWidth = width - margin.left - margin.right;
   const plotHeight = height - margin.top - margin.bottom;
   const svg = svgNode('svg', {
@@ -371,14 +414,14 @@ function renderLongRunPanel(longRun, key) {
       stroke: chartColors.grid, 'stroke-width': 1,
     }));
     addSvgText(svg, margin.left - 9, py + 4, value.toFixed(2), {
-      'text-anchor': 'end', fill: chartColors.muted, 'font-size': 11,
+      'text-anchor': 'end', fill: chartColors.muted, 'font-size': compact ? 9 : 11,
     });
   }
-  const yearLabelIndices = new Set(spacedLabelIndices(years.length));
+  const yearLabelIndices = new Set(spacedLabelIndices(years.length, compact ? 4 : 7));
   years.forEach((year, index) => {
     if (!yearLabelIndices.has(index)) return;
     addSvgText(svg, x(year), height - 14, String(year), {
-      'text-anchor': 'middle', fill: chartColors.muted, 'font-size': 11,
+      'text-anchor': 'middle', fill: chartColors.muted, 'font-size': compact ? 9 : 11,
     });
   });
   [['D', 'Democrats'], ['R', 'Republicans']].forEach(([party, label]) => {
@@ -423,15 +466,17 @@ function renderLongRunPanel(longRun, key) {
 }
 
 function renderLongRun(longRun) {
+  currentLongRun = longRun;
   if (!longRun.metrics[selectedLongRunMetric]) {
     selectedLongRunMetric = Object.keys(longRun.metrics)[0];
   }
-  renderTabs(
+  renderChoices(
     document.getElementById('long-run-tabs'),
     Object.entries(longRun.metrics).map(([key, metric]) => ({key, label: metric.label})),
     selectedLongRunMetric,
     key => {
       selectedLongRunMetric = key;
+      updateHash({longMetric: key});
       renderLongRun(longRun);
     },
     'Long-run language measure',
@@ -448,10 +493,13 @@ function renderMemberPanel(language, key) {
   addPanelHeading(wrapper, metric, '');
   addPartyLegend(wrapper);
   const tooltip = addTooltip(wrapper);
-  const width = 760;
-  const rowHeight = 38;
+  const compact = isCompactChart();
+  const width = compact ? 360 : 760;
+  const rowHeight = compact ? 34 : 38;
   const height = Math.max(170, rows.length * rowHeight + 72);
-  const margin = {left: 220, right: 72, top: 15, bottom: 42};
+  const margin = compact
+    ? {left: 138, right: 34, top: 15, bottom: 38}
+    : {left: 220, right: 72, top: 15, bottom: 42};
   const plotWidth = width - margin.left - margin.right;
   const svg = svgNode('svg', {
     viewBox: `0 0 ${width} ${height}`,
@@ -487,7 +535,7 @@ function renderMemberPanel(language, key) {
       stroke: chartColors.grid, 'stroke-width': 1,
     }));
     addSvgText(svg, px, height - 15, formatRate(maxValue * fraction), {
-      'text-anchor': 'middle', fill: chartColors.muted, 'font-size': 12,
+      'text-anchor': 'middle', fill: chartColors.muted, 'font-size': compact ? 9 : 12,
     });
   });
   rows.forEach((row, index) => {
@@ -496,7 +544,7 @@ function renderMemberPanel(language, key) {
     const barWidth = value / maxValue * plotWidth;
     addSvgText(svg, margin.left - 12, py + 22,
       `${row.speaker_name} (${row.party || 'Other'})`, {
-      'text-anchor': 'end', fill: chartColors.text, 'font-size': 14,
+      'text-anchor': 'end', fill: chartColors.text, 'font-size': compact ? 10 : 14,
       'data-party': row.party || 'other',
     });
     const bar = svgNode('rect', {
@@ -512,7 +560,7 @@ function renderMemberPanel(language, key) {
     svg.appendChild(bar);
     addSvgText(svg, Math.min(width - 8, margin.left + barWidth + 8), py + 22,
       formatRate(value), {
-        fill: chartColors.text, 'font-size': 13, 'font-weight': 'bold',
+        fill: chartColors.text, 'font-size': compact ? 10 : 13, 'font-weight': 'bold',
         'data-party': row.party || 'other',
       });
   });
@@ -609,17 +657,18 @@ function renderSelectedHighlight(language) {
 
 function renderRecentFocus() {
   if (!currentLanguage) return;
-  renderTabs(
+  renderChoices(
     document.getElementById('recent-metric-tabs'),
     Object.entries(currentLanguage.metrics).map(([key, metric]) => ({key, label: metric.label})),
     selectedRecentMetric,
     key => {
       selectedRecentMetric = key;
+      updateHash({metric: key});
       renderRecentFocus();
     },
     'Recent language measure',
   );
-  renderTabs(
+  renderChoices(
     document.getElementById('recent-view-tabs'),
     [
       {key: 'trend', label: 'Trend'},
@@ -629,9 +678,11 @@ function renderRecentFocus() {
     selectedRecentView,
     key => {
       selectedRecentView = key;
+      updateHash({view: key});
       renderRecentFocus();
     },
     'Recent language view',
+    true,
   );
   const visual = document.getElementById('recent-visual');
   const tables = document.getElementById('language-tables');
@@ -681,26 +732,33 @@ const activityMetrics = [
 function selectActivityMetric(metric) {
   selectedActivityMetric = metric;
   document.querySelectorAll('#activity-tabs button').forEach(button => {
-    button.setAttribute('aria-selected', String(button.dataset.metric === metric));
+    button.setAttribute('aria-pressed', String(button.dataset.metric === metric));
   });
   document.querySelectorAll('#leaderboards .card').forEach(card => {
     card.hidden = card.id !== metric;
   });
+  const params = new URLSearchParams(location.hash.slice(1));
+  params.set('table', metric);
+  history.replaceState(null, '', `#${params.toString()}`);
 }
 
 function renderActivityTabs() {
   const tabs = document.getElementById('activity-tabs');
   tabs.replaceChildren();
-  tabs.setAttribute('role', 'tablist');
+  tabs.setAttribute('role', 'group');
   tabs.setAttribute('aria-label', 'Activity table');
   activityMetrics.forEach(([metric, label]) => {
     const button = document.createElement('button');
     button.type = 'button';
     button.className = 'tab-button';
     button.dataset.metric = metric;
-    button.setAttribute('role', 'tab');
     button.textContent = label;
-    button.addEventListener('click', () => selectActivityMetric(metric));
+    button.addEventListener('click', () => {
+      selectActivityMetric(metric);
+      requestAnimationFrame(() => {
+        tabs.querySelector(`[data-metric="${metric}"]`)?.focus();
+      });
+    });
     tabs.appendChild(button);
   });
   selectActivityMetric(selectedActivityMetric);
@@ -794,7 +852,9 @@ async function loadActivityCongress(value) {
       `${Number(payload.coverage.bills).toLocaleString()} H.R./S. bill records. ` +
       `Site data snapshot: ${payload.generated_utc}.`;
     loadedCongress = value;
-    history.replaceState(null, '', `#congress=${value}`);
+    const params = new URLSearchParams(location.hash.slice(1));
+    params.set('congress', value);
+    history.replaceState(null, '', `#${params.toString()}`);
   } catch (caught) {
     if (sequence !== loadSequence) return;
     select.value = loadedCongress;
@@ -808,8 +868,12 @@ async function loadActivityCongress(value) {
 }
 
 select.addEventListener('change', () => loadActivityCongress(select.value).catch(() => {}));
+const activityState = new URLSearchParams(location.hash.slice(1));
+if (activityMetrics.some(([metric]) => metric === activityState.get('table'))) {
+  selectedActivityMetric = activityState.get('table');
+}
 renderActivityTabs();
-const requestedCongress = new URLSearchParams(location.hash.slice(1)).get('congress');
+const requestedCongress = activityState.get('congress');
 if (requestedCongress && [...select.options].some(option => option.value === requestedCongress)
     && requestedCongress !== select.value) {
   select.value = requestedCongress;
@@ -1537,8 +1601,9 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
                  color:var(--muted); border-radius:999px; padding:.52rem .8rem;
                  font:inherit; font-size:.84rem; font-weight:700; cursor:pointer; }}
   .tab-button:hover {{ color:var(--text); border-color:var(--muted); }}
-  .tab-button[aria-selected="true"] {{ color:var(--paper); background:var(--text);
-                                      border-color:var(--text); }}
+  .tab-button[aria-selected="true"],.tab-button[aria-pressed="true"] {{
+    color:var(--paper); background:var(--text); border-color:var(--text);
+  }}
   .focus-panel {{ background:var(--paper); border:1px solid var(--grid); border-radius:.65rem;
                   padding:1rem 1.2rem; box-shadow:0 12px 35px rgb(40 34 24 / 6%); }}
   .recent-shell {{ display:grid; grid-template-columns:minmax(0,1fr) 18rem; gap:1rem;
@@ -1609,7 +1674,6 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
     .chart-card {{ padding:.3rem; }}
     #language-tables table {{ font-size:.78rem; table-layout:fixed; }}
     #language-tables th,#language-tables td {{ padding:.32rem .25rem; overflow-wrap:anywhere; }}
-    #language-tables th:nth-child(3),#language-tables td:nth-child(3),
     #language-tables th:nth-child(4),#language-tables td:nth-child(4),
     #language-tables th:nth-child(7),#language-tables td:nth-child(7) {{ display:none; }}
   }}
@@ -1701,7 +1765,7 @@ async function loadCongress(value) {{
       `Newest Congressional Record date: ${{payload.coverage.speech_last_date}}. ` +
       `Site data snapshot: ${{payload.generated_utc}}.`;
     loadedCongress = value;
-    history.replaceState(null, '', `#congress=${{value}}`);
+    updateHash({{congress: value}});
   }} catch (caught) {{
     if (sequence !== loadSequence) return;
     select.value = loadedCongress;
@@ -1713,9 +1777,27 @@ async function loadCongress(value) {{
   }}
 }}
 select.addEventListener('change', () => loadCongress(select.value).catch(() => {{}}));
+const requestedState = new URLSearchParams(location.hash.slice(1));
+if (longRunLanguage.metrics[requestedState.get('longMetric')]) {{
+  selectedLongRunMetric = requestedState.get('longMetric');
+}}
+if (initialLanguage.metrics[requestedState.get('metric')]) {{
+  selectedRecentMetric = requestedState.get('metric');
+}}
+if (['trend', 'members', 'table'].includes(requestedState.get('view'))) {{
+  selectedRecentView = requestedState.get('view');
+}}
 renderLongRun(longRunLanguage);
 renderLanguage(initialLanguage);
-const requestedCongress = new URLSearchParams(location.hash.slice(1)).get('congress');
+let resizeTimer;
+window.addEventListener('resize', () => {{
+  window.clearTimeout(resizeTimer);
+  resizeTimer = window.setTimeout(() => {{
+    if (currentLongRun) renderLongRun(currentLongRun);
+    if (currentLanguage) renderRecentFocus();
+  }}, 120);
+}});
+const requestedCongress = requestedState.get('congress');
 if (requestedCongress && [...select.options].some(option => option.value === requestedCongress)
     && requestedCongress !== select.value) {{
   select.value = requestedCongress;
@@ -1791,8 +1873,8 @@ passage, enactment, and profanity tables by Congress.">
   .tab-button {{ appearance:none; border:1px solid var(--grid); background:transparent;
                  color:var(--muted); border-radius:999px; padding:.52rem .8rem;
                  font:inherit; font-size:.84rem; font-weight:700; cursor:pointer; }}
-  .tab-button[aria-selected="true"] {{ color:var(--paper); background:var(--text);
-                                      border-color:var(--text); }}
+  .tab-button[aria-pressed="true"] {{ color:var(--paper); background:var(--text);
+                                     border-color:var(--text); }}
   .warning {{ background:#FFF3CD; border-left:4px solid #C7922B; padding:.8rem 1rem; margin:1rem 0; }}
   .error {{ color:#8A1C1C; font-weight:bold; }}
   .card {{ background:var(--paper); border:1px solid var(--grid); border-radius:.65rem;
@@ -1814,6 +1896,30 @@ passage, enactment, and profanity tables by Congress.">
     body {{ padding:1.5rem .75rem 3rem; }}
     .toolbar {{ display:block; }}
     .toolbar label {{ display:block; margin-top:.75rem; }}
+    table {{ table-layout:fixed; font-size:.78rem; }}
+    th,td {{ padding:.36rem .28rem; overflow-wrap:normal; }}
+    table[data-metric="speech"] th:nth-child(3),table[data-metric="speech"] td:nth-child(3),
+    table[data-metric="speech"] th:nth-child(4),table[data-metric="speech"] td:nth-child(4),
+    table[data-metric="speech"] th:nth-child(5),table[data-metric="speech"] td:nth-child(5),
+    table[data-metric="speech"] th:nth-child(7),table[data-metric="speech"] td:nth-child(7),
+    table[data-metric="speech"] th:nth-child(8),table[data-metric="speech"] td:nth-child(8),
+    table[data-metric="sponsored"] th:nth-child(4),table[data-metric="sponsored"] td:nth-child(4),
+    table[data-metric="sponsored"] th:nth-child(6),table[data-metric="sponsored"] td:nth-child(6),
+    table[data-metric="sponsored"] th:nth-child(7),table[data-metric="sponsored"] td:nth-child(7),
+    table[data-metric="sponsored"] th:nth-child(8),table[data-metric="sponsored"] td:nth-child(8),
+    table[data-metric="passed"] th:nth-child(4),table[data-metric="passed"] td:nth-child(4),
+    table[data-metric="passed"] th:nth-child(6),table[data-metric="passed"] td:nth-child(6),
+    table[data-metric="passed"] th:nth-child(7),table[data-metric="passed"] td:nth-child(7),
+    table[data-metric="passed"] th:nth-child(8),table[data-metric="passed"] td:nth-child(8),
+    table[data-metric="enacted"] th:nth-child(4),table[data-metric="enacted"] td:nth-child(4),
+    table[data-metric="enacted"] th:nth-child(6),table[data-metric="enacted"] td:nth-child(6),
+    table[data-metric="enacted"] th:nth-child(7),table[data-metric="enacted"] td:nth-child(7),
+    table[data-metric="enacted"] th:nth-child(8),table[data-metric="enacted"] td:nth-child(8),
+    table[data-metric="profanity"] th:nth-child(4),table[data-metric="profanity"] td:nth-child(4),
+    table[data-metric="profanity"] th:nth-child(7),table[data-metric="profanity"] td:nth-child(7),
+    table[data-metric="profanity"] th:nth-child(8),table[data-metric="profanity"] td:nth-child(8) {{
+      display:none;
+    }}
   }}
 </style>
 </head>

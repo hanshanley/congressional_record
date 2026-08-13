@@ -37,8 +37,8 @@ passage, enactment, and profanity tables by Congress.">
   .tab-button { appearance:none; border:1px solid var(--grid); background:transparent;
                  color:var(--muted); border-radius:999px; padding:.52rem .8rem;
                  font:inherit; font-size:.84rem; font-weight:700; cursor:pointer; }
-  .tab-button[aria-selected="true"] { color:var(--paper); background:var(--text);
-                                      border-color:var(--text); }
+  .tab-button[aria-pressed="true"] { color:var(--paper); background:var(--text);
+                                     border-color:var(--text); }
   .warning { background:#FFF3CD; border-left:4px solid #C7922B; padding:.8rem 1rem; margin:1rem 0; }
   .error { color:#8A1C1C; font-weight:bold; }
   .card { background:var(--paper); border:1px solid var(--grid); border-radius:.65rem;
@@ -60,6 +60,30 @@ passage, enactment, and profanity tables by Congress.">
     body { padding:1.5rem .75rem 3rem; }
     .toolbar { display:block; }
     .toolbar label { display:block; margin-top:.75rem; }
+    table { table-layout:fixed; font-size:.78rem; }
+    th,td { padding:.36rem .28rem; overflow-wrap:normal; }
+    table[data-metric="speech"] th:nth-child(3),table[data-metric="speech"] td:nth-child(3),
+    table[data-metric="speech"] th:nth-child(4),table[data-metric="speech"] td:nth-child(4),
+    table[data-metric="speech"] th:nth-child(5),table[data-metric="speech"] td:nth-child(5),
+    table[data-metric="speech"] th:nth-child(7),table[data-metric="speech"] td:nth-child(7),
+    table[data-metric="speech"] th:nth-child(8),table[data-metric="speech"] td:nth-child(8),
+    table[data-metric="sponsored"] th:nth-child(4),table[data-metric="sponsored"] td:nth-child(4),
+    table[data-metric="sponsored"] th:nth-child(6),table[data-metric="sponsored"] td:nth-child(6),
+    table[data-metric="sponsored"] th:nth-child(7),table[data-metric="sponsored"] td:nth-child(7),
+    table[data-metric="sponsored"] th:nth-child(8),table[data-metric="sponsored"] td:nth-child(8),
+    table[data-metric="passed"] th:nth-child(4),table[data-metric="passed"] td:nth-child(4),
+    table[data-metric="passed"] th:nth-child(6),table[data-metric="passed"] td:nth-child(6),
+    table[data-metric="passed"] th:nth-child(7),table[data-metric="passed"] td:nth-child(7),
+    table[data-metric="passed"] th:nth-child(8),table[data-metric="passed"] td:nth-child(8),
+    table[data-metric="enacted"] th:nth-child(4),table[data-metric="enacted"] td:nth-child(4),
+    table[data-metric="enacted"] th:nth-child(6),table[data-metric="enacted"] td:nth-child(6),
+    table[data-metric="enacted"] th:nth-child(7),table[data-metric="enacted"] td:nth-child(7),
+    table[data-metric="enacted"] th:nth-child(8),table[data-metric="enacted"] td:nth-child(8),
+    table[data-metric="profanity"] th:nth-child(4),table[data-metric="profanity"] td:nth-child(4),
+    table[data-metric="profanity"] th:nth-child(7),table[data-metric="profanity"] td:nth-child(7),
+    table[data-metric="profanity"] th:nth-child(8),table[data-metric="profanity"] td:nth-child(8) {
+      display:none;
+    }
   }
 </style>
 </head>
@@ -99,26 +123,33 @@ const activityMetrics = [
 function selectActivityMetric(metric) {
   selectedActivityMetric = metric;
   document.querySelectorAll('#activity-tabs button').forEach(button => {
-    button.setAttribute('aria-selected', String(button.dataset.metric === metric));
+    button.setAttribute('aria-pressed', String(button.dataset.metric === metric));
   });
   document.querySelectorAll('#leaderboards .card').forEach(card => {
     card.hidden = card.id !== metric;
   });
+  const params = new URLSearchParams(location.hash.slice(1));
+  params.set('table', metric);
+  history.replaceState(null, '', `#${params.toString()}`);
 }
 
 function renderActivityTabs() {
   const tabs = document.getElementById('activity-tabs');
   tabs.replaceChildren();
-  tabs.setAttribute('role', 'tablist');
+  tabs.setAttribute('role', 'group');
   tabs.setAttribute('aria-label', 'Activity table');
   activityMetrics.forEach(([metric, label]) => {
     const button = document.createElement('button');
     button.type = 'button';
     button.className = 'tab-button';
     button.dataset.metric = metric;
-    button.setAttribute('role', 'tab');
     button.textContent = label;
-    button.addEventListener('click', () => selectActivityMetric(metric));
+    button.addEventListener('click', () => {
+      selectActivityMetric(metric);
+      requestAnimationFrame(() => {
+        tabs.querySelector(`[data-metric="${metric}"]`)?.focus();
+      });
+    });
     tabs.appendChild(button);
   });
   selectActivityMetric(selectedActivityMetric);
@@ -212,7 +243,9 @@ async function loadActivityCongress(value) {
       `${Number(payload.coverage.bills).toLocaleString()} H.R./S. bill records. ` +
       `Site data snapshot: ${payload.generated_utc}.`;
     loadedCongress = value;
-    history.replaceState(null, '', `#congress=${value}`);
+    const params = new URLSearchParams(location.hash.slice(1));
+    params.set('congress', value);
+    history.replaceState(null, '', `#${params.toString()}`);
   } catch (caught) {
     if (sequence !== loadSequence) return;
     select.value = loadedCongress;
@@ -226,8 +259,12 @@ async function loadActivityCongress(value) {
 }
 
 select.addEventListener('change', () => loadActivityCongress(select.value).catch(() => {}));
+const activityState = new URLSearchParams(location.hash.slice(1));
+if (activityMetrics.some(([metric]) => metric === activityState.get('table'))) {
+  selectedActivityMetric = activityState.get('table');
+}
 renderActivityTabs();
-const requestedCongress = new URLSearchParams(location.hash.slice(1)).get('congress');
+const requestedCongress = activityState.get('congress');
 if (requestedCongress && [...select.options].some(option => option.value === requestedCongress)
     && requestedCongress !== select.value) {
   select.value = requestedCongress;

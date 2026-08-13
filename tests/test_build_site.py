@@ -311,7 +311,8 @@ def test_payload_and_html_expose_selector_aware_language_graphs(store, tmp_path)
         "Methodology and limitations", 'id="language-highlight"',
         'id="recent-visual"', 'id="recent-metric-tabs"', 'id="recent-view-tabs"',
         "renderLanguage(payload.language)", "renderTrendPanel",
-        "renderMemberPanel", "bindTooltip", "chart-toggle",
+        "renderMemberPanel", "renderRecentFocus", "renderChoices",
+        "selectedRecentView", "bindTooltip", "chart-toggle",
         "renderLongRun(longRunLanguage)", "renderLongRunPanel",
         "URLSearchParams", "loadSequence", "addAccessibleTable",
         'className = \'sr-only\'', 'role="alert"', "activity.html",
@@ -330,6 +331,8 @@ def test_payload_and_html_expose_selector_aware_language_graphs(store, tmp_path)
     assert "Language analysis" in activity_page
     assert 'id="activity-tabs"' in activity_page
     assert "selectActivityMetric" in activity_page
+    assert "activityMetrics" in activity_page
+    assert 'id="leaderboards"' in activity_page
 
 
 def test_nonselected_extension_only_congress_does_not_break_charts(store, tmp_path):
