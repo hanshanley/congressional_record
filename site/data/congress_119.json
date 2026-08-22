@@ -1,15 +1,15 @@
 {
   "congress": 119,
   "label": "Congress 119",
-  "generated_utc": "2026-08-21T00:50:00+00:00",
+  "generated_utc": "2026-08-22T00:19:00+00:00",
   "min_words": 25000,
   "top": 25,
   "coverage": {
     "speech_first_date": "2025-01-06",
-    "speech_last_date": "2026-08-17",
-    "speaker_days": 19730,
+    "speech_last_date": "2026-08-20",
+    "speaker_days": 19747,
     "members_with_speech": 546,
-    "bills": 15478,
+    "bills": 15498,
     "members_with_bills": 545,
     "bill_sources": [
       "govinfo"
@@ -4007,10 +4007,10 @@
         "active_days": 16,
         "profanity_hits": 0,
         "profanity_quoted_hits": 1,
-        "bills_sponsored": 81,
+        "bills_sponsored": 82,
         "bills_passed": 3,
         "bills_enacted": 0,
-        "passage_share": 0.037037037,
+        "passage_share": 0.0365853659,
         "enactment_share": 0.0,
         "speaker_name": "Ms. MACE",
         "party": "R",
@@ -4019,6 +4019,12 @@
         "profanity_per_100k": 0.0,
         "member_url": "https://bioguide.congress.gov/search/bio/M000194",
         "examples": [
+          {
+            "bill_id": "119-hr-10127",
+            "label": "HR 10127",
+            "title": "To prohibit the use of Federal funds to conduct, support, or fund research that studies the effects of gender-related medical treatment, and for other purposes.",
+            "url": "https://www.congress.gov/bill/119th-congress/house-bill/10127"
+          },
           {
             "bill_id": "119-hr-10098",
             "label": "HR 10098",
@@ -4030,12 +4036,6 @@
             "label": "HR 9710",
             "title": "Third World Immigration Moratorium Act",
             "url": "https://www.congress.gov/bill/119th-congress/house-bill/9710"
-          },
-          {
-            "bill_id": "119-hr-9154",
-            "label": "HR 9154",
-            "title": "SHRIMP Act of 2026",
-            "url": "https://www.congress.gov/bill/119th-congress/house-bill/9154"
           }
         ]
       },
@@ -4769,10 +4769,10 @@
         "active_days": 9,
         "profanity_hits": 0,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 43,
+        "bills_sponsored": 45,
         "bills_passed": 6,
         "bills_enacted": 0,
-        "passage_share": 0.1395348837,
+        "passage_share": 0.1333333333,
         "enactment_share": 0.0,
         "speaker_name": "Mr. BARRETT",
         "party": "R",
@@ -6311,10 +6311,10 @@
         "active_days": 46,
         "profanity_hits": 7,
         "profanity_quoted_hits": 2,
-        "bills_sponsored": 61,
+        "bills_sponsored": 62,
         "bills_passed": 3,
         "bills_enacted": 0,
-        "passage_share": 0.0491803279,
+        "passage_share": 0.0483870968,
         "enactment_share": 0.0,
         "speaker_name": "Mr. ROY",
         "party": "R",
