@@ -1,15 +1,15 @@
 {
   "congress": 119,
   "label": "Congress 119",
-  "generated_utc": "2026-08-25T04:17:00+00:00",
+  "generated_utc": "2026-08-26T00:23:00+00:00",
   "min_words": 25000,
   "top": 25,
   "coverage": {
     "speech_first_date": "2025-01-06",
-    "speech_last_date": "2026-08-20",
-    "speaker_days": 19747,
+    "speech_last_date": "2026-08-24",
+    "speaker_days": 19753,
     "members_with_speech": 546,
-    "bills": 15498,
+    "bills": 15510,
     "members_with_bills": 545,
     "bill_sources": [
       "govinfo"
@@ -3527,10 +3527,10 @@
         "active_days": 9,
         "profanity_hits": 0,
         "profanity_quoted_hits": 0,
-        "bills_sponsored": 102,
+        "bills_sponsored": 103,
         "bills_passed": 3,
         "bills_enacted": 0,
-        "passage_share": 0.0294117647,
+        "passage_share": 0.0291262136,
         "enactment_share": 0.0,
         "speaker_name": "Mr. STEUBE",
         "party": "R",
@@ -3539,6 +3539,12 @@
         "profanity_per_100k": 0.0,
         "member_url": "https://bioguide.congress.gov/search/bio/S001214",
         "examples": [
+          {
+            "bill_id": "119-hr-10148",
+            "label": "HR 10148",
+            "title": "Safeguarding America\u2019s Nonprofits Act",
+            "url": "https://www.congress.gov/bill/119th-congress/house-bill/10148"
+          },
           {
             "bill_id": "119-hr-10117",
             "label": "HR 10117",
@@ -3550,12 +3556,6 @@
             "label": "HR 10104",
             "title": "Restoring Economic Diesel Fuel Act of 2026",
             "url": "https://www.congress.gov/bill/119th-congress/house-bill/10104"
-          },
-          {
-            "bill_id": "119-hr-10078",
-            "label": "HR 10078",
-            "title": "Dollar-for-Dollar Deficit Reduction Act",
-            "url": "https://www.congress.gov/bill/119th-congress/house-bill/10078"
           }
         ]
       },
@@ -3961,6 +3961,46 @@
       },
       {
         "rank": 21,
+        "bioguide": "M000194",
+        "turns": 59,
+        "words": 20340,
+        "active_days": 16,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 1,
+        "bills_sponsored": 84,
+        "bills_passed": 3,
+        "bills_enacted": 0,
+        "passage_share": 0.0357142857,
+        "enactment_share": 0.0,
+        "speaker_name": "Ms. MACE",
+        "party": "R",
+        "state": "SC",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/M000194",
+        "examples": [
+          {
+            "bill_id": "119-hr-10145",
+            "label": "HR 10145",
+            "title": "SOUND Pesticide Research Act",
+            "url": "https://www.congress.gov/bill/119th-congress/house-bill/10145"
+          },
+          {
+            "bill_id": "119-hr-10144",
+            "label": "HR 10144",
+            "title": "Pesticide Harm Accountability Act",
+            "url": "https://www.congress.gov/bill/119th-congress/house-bill/10144"
+          },
+          {
+            "bill_id": "119-hr-10127",
+            "label": "HR 10127",
+            "title": "TRANS Government Research Act",
+            "url": "https://www.congress.gov/bill/119th-congress/house-bill/10127"
+          }
+        ]
+      },
+      {
+        "rank": 22,
         "bioguide": "N000191",
         "turns": 112,
         "words": 28917,
@@ -3996,46 +4036,6 @@
             "label": "HR 9997",
             "title": "National Guard for National Service Act of 2026",
             "url": "https://www.congress.gov/bill/119th-congress/house-bill/9997"
-          }
-        ]
-      },
-      {
-        "rank": 22,
-        "bioguide": "M000194",
-        "turns": 59,
-        "words": 20340,
-        "active_days": 16,
-        "profanity_hits": 0,
-        "profanity_quoted_hits": 1,
-        "bills_sponsored": 82,
-        "bills_passed": 3,
-        "bills_enacted": 0,
-        "passage_share": 0.0365853659,
-        "enactment_share": 0.0,
-        "speaker_name": "Ms. MACE",
-        "party": "R",
-        "state": "SC",
-        "chamber": "house",
-        "profanity_per_100k": 0.0,
-        "member_url": "https://bioguide.congress.gov/search/bio/M000194",
-        "examples": [
-          {
-            "bill_id": "119-hr-10127",
-            "label": "HR 10127",
-            "title": "To prohibit the use of Federal funds to conduct, support, or fund research that studies the effects of gender-related medical treatment, and for other purposes.",
-            "url": "https://www.congress.gov/bill/119th-congress/house-bill/10127"
-          },
-          {
-            "bill_id": "119-hr-10098",
-            "label": "HR 10098",
-            "title": "Restoring the Death Penalty in DC Act",
-            "url": "https://www.congress.gov/bill/119th-congress/house-bill/10098"
-          },
-          {
-            "bill_id": "119-hr-9710",
-            "label": "HR 9710",
-            "title": "Third World Immigration Moratorium Act",
-            "url": "https://www.congress.gov/bill/119th-congress/house-bill/9710"
           }
         ]
       },
