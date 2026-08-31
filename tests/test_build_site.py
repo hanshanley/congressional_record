@@ -9,9 +9,11 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import subprocess
 import sys
 import zipfile
 from pathlib import Path
+from unittest.mock import patch
 
 import pandas as pd
 import pytest
@@ -48,6 +50,9 @@ def store(tmp_path: Path):
         ["NEW", "2025-02-01", "house", "Mr. NEW", "R", "TX", 119, 20, 60_000, 6, 0, 0, 0],
         ["NEW2", "2025-03-01", "senate", "Ms. NEW2", "D", "NY", 119, 20, 40_000, 8, 0, 0, 0],
     ])
+    daily["profanity_terms"] = [
+        '{"damn":60}', '{"damn":6}', '{"shit":8}',
+    ]
     path = tmp_path / "speaker_daily"
     save_daily(daily, path)
     bills = pd.DataFrame([
@@ -220,6 +225,7 @@ def test_html_escapes_member_names(tmp_path):
          "<a href='javascript:alert(2)'>D</a>", "CA", 119,
          20, 60_000, 6, 0, 0, 0],
     ])
+    daily["profanity_terms"] = ['{"damn":6}']
     path = tmp_path / "speaker_daily"
     save_daily(daily, path)
     bills = pd.DataFrame([
@@ -282,6 +288,39 @@ def test_payload_contains_all_five_transparent_leaderboards(store, tmp_path):
     assert payload["leaderboards"]["enacted"][0]["examples"][0]["url"] == (
         "https://www.congress.gov/bill/119th-congress/house-bill/1"
     )
+
+
+def test_profanity_tables_show_each_members_most_used_term(store, tmp_path):
+    path, daily, bills = store
+    daily["profanity_terms"] = ["{}", '{"damn":4,"crap":2}', '{"shit":8}']
+    save_daily(daily, path)
+    module = _load_build_site()
+    out = tmp_path / "site"
+    assert module.main([
+        "--daily", str(path), "--bills", str(bills), "--out", str(out),
+        "--min-words", "1000",
+    ]) == 0
+
+    payload = json.loads((out / "data" / "congress_119.json").read_text())
+    terms = {
+        row["bioguide"]: row["favorite_profanity_term"]
+        for row in payload["leaderboards"]["profanity"]
+    }
+    assert terms == {"NEW": "damn", "NEW2": "shit"}
+    assert "Most-used term" in (out / "index.html").read_text()
+    assert "Most-used term" in (out / "activity" / "index.html").read_text()
+    assert "not a claim of preference" in (out / "index.html").read_text()
+
+
+def test_build_refuses_incomplete_current_congress_term_counts(store, tmp_path):
+    path, daily, bills = store
+    daily.loc[daily["bioguide"] == "NEW", "profanity_terms"] = "{}"
+    save_daily(daily, path)
+    module = _load_build_site()
+    assert module.main([
+        "--daily", str(path), "--bills", str(bills), "--out", str(tmp_path / "site"),
+        "--min-words", "1000",
+    ]) == 1
 
 
 def test_payload_and_html_expose_selector_aware_language_graphs(store, tmp_path):
@@ -593,6 +632,31 @@ def test_probe_handles_an_inverted_range():
     from analysis.ingest.govinfo_bulk import probe_packages
 
     assert probe_packages("2026-07-28", "2026-07-20") == []
+
+
+def test_probe_fails_loudly_when_govinfo_status_is_unknown():
+    from analysis.ingest.govinfo_bulk import probe_packages
+
+    result = subprocess.CompletedProcess([], 0, stdout="503", stderr="")
+    with patch("analysis.ingest.govinfo_bulk.subprocess.run", return_value=result):
+        with pytest.raises(RuntimeError, match="could not determine"):
+            probe_packages("2026-07-20", "2026-07-20", workers=1)
+
+
+def test_probe_distinguishes_published_and_missing_issues():
+    from analysis.ingest.govinfo_bulk import probe_packages
+
+    responses = iter([
+        subprocess.CompletedProcess([], 0, stdout="200", stderr=""),
+        subprocess.CompletedProcess([], 0, stdout="302", stderr=""),
+    ])
+    with patch(
+        "analysis.ingest.govinfo_bulk.subprocess.run",
+        side_effect=lambda *args, **kwargs: next(responses),
+    ):
+        assert probe_packages(
+            "2026-07-20", "2026-07-21", workers=1
+        ) == ["CREC-2026-07-20"]
 
 
 def test_committed_site_state_is_not_gitignored():

@@ -1,0 +1,56 @@
+name: Backfill speaker profanity terms
+
+on:
+  workflow_dispatch:
+    inputs:
+      since:
+        description: "Start date (YYYY-MM-DD)"
+        required: true
+      until:
+        description: "End date (YYYY-MM-DD)"
+        required: true
+
+concurrency:
+  group: update-site
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  backfill:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt -r requirements-analysis.txt -r requirements-dev.txt
+
+      - name: Run targeted tests
+        run: python -m pytest tests/test_speakers.py tests/test_build_site.py -q
+
+      - name: Backfill one date window
+        run: |
+          python scripts/update_speakers.py \
+            --since "${{ inputs.since }}" \
+            --until "${{ inputs.until }}"
+
+      - name: Commit backfilled speaker data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/site/speaker_daily
+          if git diff --cached --quiet; then
+            echo "No speaker rows changed for this window."
+          else
+            git commit \
+              -m "Backfill speaker profanity terms ${{ inputs.since }} to ${{ inputs.until }}" \
+              -m "Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>" \
+              -m "Copilot-Session: 20de2f9c-02b3-4617-b28a-82ccd88b0490"
+            git push
+          fi

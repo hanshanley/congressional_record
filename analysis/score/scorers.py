@@ -462,6 +462,23 @@ class Scorers:
             "outparty_target": self._outgroup_spans(low, party),
         }
 
+    def profanity_term_counts(self, text: str) -> Counter:
+        """Return accepted, unquoted profanity surface forms and their counts.
+
+        Callers are responsible for masking quotations first. This uses the same
+        curated tiers and mild-term exclusions as ``score_turn``; identity slurs
+        remain excluded from profanity.
+        """
+        low = (text or "").lower()
+        mild = self._without_excluded_spans(
+            self.profanity["mild"].find_spans(low), low, _MILD_PROFANITY_EXCLUSIONS
+        )
+        strong = self.profanity["strong"].find_spans(low)
+        return Counter(
+            " ".join(low[start:end].split())
+            for start, end in sorted(mild + strong)
+        )
+
     def score_turn(self, text: str, party: str) -> Dict[str, float]:
         text = text or ""
         low = text.lower()

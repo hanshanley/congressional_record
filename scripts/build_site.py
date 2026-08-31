@@ -32,6 +32,7 @@ from analysis.plotting import charts, site_charts, theme  # noqa: E402
 from analysis.score.registry import HEADLINE_METRICS  # noqa: E402
 from analysis.speakers import (  # noqa: E402
     LANGUAGE_METRICS,
+    incomplete_profanity_term_rows,
     language_member_rates,
     language_timeseries,
     load_daily,
@@ -53,6 +54,8 @@ CAVEATS = [
     "Record are excluded.",
     "Profanity uses a narrow, hand-curated list. Passages marked as quotations are excluded "
     "from a member's rate and retained as a separate audit count.",
+    "A member's most-used profanity term is the most frequent accepted, unquoted surface form "
+    "in the selected period; alphabetical order breaks ties. It does not imply personal preference.",
     "Members below the word threshold are omitted from the profanity ranking because rates "
     "computed from small samples are unstable.",
     "Legislative counts cover sponsored House and Senate bills (H.R. and S.) only; "
@@ -570,11 +573,15 @@ function renderMemberPanel(language, key) {
       fill: chartColors[row.party] || chartColors.other,
       'data-party': row.party || 'other',
     });
+    const termDetail = key === 'profanity' && row.favorite_profanity_term
+      ? `; most-used term: “${row.favorite_profanity_term}” ` +
+        `(${Number(row.favorite_profanity_term_hits).toLocaleString()})`
+      : '';
     bindTooltip(bar, wrapper, tooltip,
       `${row.speaker_name} (${row.party || 'Other'}, ${row.chamber}): ` +
       `${formatRate(value)} per 100,000 words ` +
       `(${Number(row[metric.hits]).toLocaleString()} hits; ` +
-      `${Number(row.words).toLocaleString()} words)`);
+      `${Number(row.words).toLocaleString()} words${termDetail})`);
     svg.appendChild(bar);
     addSvgText(svg, Math.min(width - 8, margin.left + barWidth + 8), py + 22,
       formatRate(value), {
@@ -596,7 +603,7 @@ function renderLanguageTable(language, key) {
   if (!rows.length) {
     const row = document.createElement('tr');
     const cell = document.createElement('td');
-    cell.colSpan = 7;
+    cell.colSpan = key === 'profanity' ? 8 : 7;
     cell.className = 'muted';
     cell.textContent = 'No nonzero rates in this view.';
     row.appendChild(cell);
@@ -607,12 +614,13 @@ function renderLanguageTable(language, key) {
     const row = document.createElement('tr');
     const values = [
       item.rank, item.speaker_name, item.party, item.chamber,
+      ...(key === 'profanity' ? [item.favorite_profanity_term || '—'] : []),
       formatRate(item[metric.rate]), Number(item[metric.hits]).toLocaleString(),
       Number(item.words).toLocaleString(),
     ];
     values.forEach((value, index) => {
       const cell = document.createElement('td');
-      if (index === 0 || index >= 4) cell.className = 'num';
+      if (index === 0 || index >= (key === 'profanity' ? 5 : 4)) cell.className = 'num';
       if (index === 1 && item.member_url) {
         const link = document.createElement('a');
         link.href = item.member_url;
@@ -678,8 +686,11 @@ function renderSelectedHighlight(language) {
     const list = document.createElement('ol');
     topMembers.forEach(member => {
       const item = document.createElement('li');
+      const term = selectedRecentMetric === 'profanity' && member.favorite_profanity_term
+        ? ` · “${member.favorite_profanity_term}”`
+        : '';
       item.textContent = `${member.speaker_name} (${member.party}) — ` +
-        `${formatRate(member[metric.rate])}`;
+        `${formatRate(member[metric.rate])}${term}`;
       list.appendChild(item);
     });
     leader.append(label, list);
@@ -819,6 +830,7 @@ function renderActivityTable(metric, rows) {
     } else if (metric === 'profanity') {
       values = [
         item.rank, item.speaker_name, item.party, item.state,
+        item.favorite_profanity_term || '—',
         Number(item.profanity_per_100k).toFixed(1),
         Number(item.profanity_hits).toLocaleString(),
         Number(item.profanity_quoted_hits).toLocaleString(),
@@ -1522,9 +1534,11 @@ def _table(metric: str, rows: list[dict]) -> str:
             ],
         ),
         "profanity": (
-            ["#", "Member", "Party", "State", "Per 100k", "Hits", "Quoted (excl.)", "Words"],
+            ["#", "Member", "Party", "State", "Most-used term", "Per 100k", "Hits",
+             "Quoted (excl.)", "Words"],
             lambda r: [
                 r["rank"], _member_cell(r), r["party"], r["state"],
+                r.get("favorite_profanity_term") or "—",
                 f"{float(r['profanity_per_100k']):.1f}", _fmt_int(r["profanity_hits"]),
                 _fmt_int(r["profanity_quoted_hits"]), _fmt_int(r["words"]),
             ],
@@ -1554,7 +1568,10 @@ def _table(metric: str, rows: list[dict]) -> str:
 
 def _language_table(metric: str, rows: list[dict]) -> str:
     metadata = LANGUAGE_METRICS[metric]
-    headers = ["#", "Member", "Party", "Chamber", "Per 100k", "Hits", "Words"]
+    headers = ["#", "Member", "Party", "Chamber"]
+    if metric == "profanity":
+        headers.append("Most-used term")
+    headers.extend(["Per 100k", "Hits", "Words"])
     head = "".join(f'<th scope="col">{html.escape(label)}</th>' for label in headers)
     body = []
     for row in rows:
@@ -1563,6 +1580,10 @@ def _language_table(metric: str, rows: list[dict]) -> str:
             _member_cell(row),
             row["party"],
             str(row["chamber"]).title(),
+            *(
+                [row.get("favorite_profanity_term") or "—"]
+                if metric == "profanity" else []
+            ),
             f"{float(row[metadata['rate']]):.1f}",
             _fmt_int(row[metadata["hits"]]),
             _fmt_int(row["words"]),
@@ -1578,7 +1599,10 @@ def _language_table(metric: str, rows: list[dict]) -> str:
             + "</tr>"
         )
     if not body:
-        body.append('<tr><td colspan="7" class="muted">No nonzero rates in this view.</td></tr>')
+        colspan = 8 if metric == "profanity" else 7
+        body.append(
+            f'<tr><td colspan="{colspan}" class="muted">No nonzero rates in this view.</td></tr>'
+        )
     return (
         f'<table data-language-metric="{metric}"><caption class="sr-only">'
         f'{html.escape(metadata["label"])} member rates</caption>'
@@ -1598,15 +1622,21 @@ def _render_html(payload: dict, congresses: list[int], long_run: dict) -> str:
     explanation = language["explanation"]
     caveats = "".join(
         f"<li>{html.escape(item)}</li>"
-        for item in (CAVEATS[0], CAVEATS[1], CAVEATS[-1])
+        for item in (CAVEATS[0], CAVEATS[1], CAVEATS[2], CAVEATS[-1])
     )
     language_cards = "".join(
-        f'<section class="card" id="{metric}-table">'
-        f'<h2>Highest {html.escape(metadata["label"].lower())} rates</h2>'
-        f'<p class="definition">{html.escape(metadata["definition"])} '
-        "Only members with a nonzero rate and enough words are included.</p>"
-        f'<div class="table-wrap">{_language_table(metric, language["members"][metric])}</div>'
-        "</section>"
+        (
+            f'<section class="card" id="{metric}-table">'
+            f'<h2>Highest {html.escape(metadata["label"].lower())} rates</h2>'
+            f'<p class="definition">{html.escape(metadata["definition"])} '
+            + (
+                "“Most-used term” is the most frequent unquoted match, not a claim of preference. "
+                if metric == "profanity" else ""
+            )
+            + "Only members with a nonzero rate and enough words are included.</p>"
+            + f'<div class="table-wrap">{_language_table(metric, language["members"][metric])}</div>'
+            + "</section>"
+        )
         for metric, metadata in LANGUAGE_METRICS.items()
     )
     return f"""<!DOCTYPE html>
@@ -1919,7 +1949,7 @@ def _render_activity_html(payload: dict, congresses: list[int]) -> str:
     caveats = "".join(
         f"<li>{html.escape(item)}</li>"
         for index, item in enumerate(CAVEATS)
-        if index != 2
+        if index != 3
     )
     warning = payload["coverage"]["warning"]
     return f"""<!DOCTYPE html>
@@ -2009,8 +2039,8 @@ passage, enactment, and profanity tables by Congress.">
     table[data-metric="enacted"] th:nth-child(7),table[data-metric="enacted"] td:nth-child(7),
     table[data-metric="enacted"] th:nth-child(8),table[data-metric="enacted"] td:nth-child(8),
     table[data-metric="profanity"] th:nth-child(4),table[data-metric="profanity"] td:nth-child(4),
-    table[data-metric="profanity"] th:nth-child(7),table[data-metric="profanity"] td:nth-child(7),
-    table[data-metric="profanity"] th:nth-child(8),table[data-metric="profanity"] td:nth-child(8) {{
+    table[data-metric="profanity"] th:nth-child(8),table[data-metric="profanity"] td:nth-child(8),
+    table[data-metric="profanity"] th:nth-child(9),table[data-metric="profanity"] td:nth-child(9) {{
       display:none;
     }}
   }}
@@ -2055,6 +2085,17 @@ def main(argv: Optional[List[str]] = None) -> int:
     daily = load_daily(args.daily)
     if daily is None or daily.empty:
         LOG.error("no speaker table at %s; run scripts/update_speakers.py first", args.daily)
+        return 1
+    latest_congress = int(daily["congress"].max())
+    incomplete_terms = incomplete_profanity_term_rows(
+        daily[daily["congress"] == latest_congress]
+    )
+    if not incomplete_terms.empty:
+        LOG.error(
+            "%d current-Congress speaker-day rows have incomplete profanity term counts; "
+            "finish the backfill before publishing",
+            len(incomplete_terms),
+        )
         return 1
     bills = load_bills(args.bills)
     if bills is None or bills.empty:

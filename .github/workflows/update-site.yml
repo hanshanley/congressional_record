@@ -81,7 +81,10 @@ jobs:
             echo "changed=false" >> "$GITHUB_OUTPUT"
             echo "No new Congressional Record data; nothing to publish."
           else
-            git commit -m "Auto-update: refresh speaker table and site"
+            git commit \
+              -m "Auto-update: refresh speaker table and site" \
+              -m "Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>" \
+              -m "Copilot-Session: 20de2f9c-02b3-4617-b28a-82ccd88b0490"
             git push
             echo "changed=true" >> "$GITHUB_OUTPUT"
           fi

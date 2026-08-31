@@ -8,6 +8,7 @@ to top a rate ranking.
 
 from __future__ import annotations
 
+import json
 import sys
 from pathlib import Path
 
@@ -19,12 +20,14 @@ sys.path.insert(0, str(ROOT))
 
 from analysis.speakers import (  # noqa: E402
     LANGUAGE_METRICS,
+    incomplete_profanity_term_rows,
     language_member_rates,
     language_timeseries,
     leaderboard,
     load_daily,
     mask_quotations,
     merge_daily,
+    parse_profanity_terms,
     save_daily,
     speaker_counts,
     timeseries,
@@ -108,6 +111,7 @@ def test_quoted_profanity_is_not_charged_to_the_speaker(turn_file):
     assert len(counts) == 1
     assert counts.iloc[0]["profanity_hits"] == 0
     assert counts.iloc[0]["profanity_quoted_hits"] == 1
+    assert json.loads(counts.iloc[0]["profanity_terms"]) == {}
 
 
 def test_unquoted_profanity_is_counted(turn_file):
@@ -168,7 +172,44 @@ def test_counts_are_grouped_by_member_day_and_chamber(turn_file):
     counts = speaker_counts([path]).sort_values("date").reset_index(drop=True)
     assert len(counts) == 2
     assert counts.iloc[0]["profanity_hits"] == 2
+    assert json.loads(counts.iloc[0]["profanity_terms"]) == {"crap": 1, "damn": 1}
     assert counts.iloc[1]["profanity_hits"] == 0
+
+
+def test_term_counts_use_accepted_unquoted_surface_forms(turn_file):
+    path = turn_file([
+        _row(
+            turn_id="a",
+            bioguide="A000001",
+            text="Damn, damn. This is a crap game. ``bullshit''",
+        ),
+    ])
+    counts = speaker_counts([path])
+    assert counts.iloc[0]["profanity_hits"] == 2
+    assert counts.iloc[0]["profanity_quoted_hits"] == 1
+    assert json.loads(counts.iloc[0]["profanity_terms"]) == {"damn": 2}
+    assert sum(json.loads(counts.iloc[0]["profanity_terms"]).values()) == (
+        counts.iloc[0]["profanity_hits"]
+    )
+
+
+def test_term_parser_handles_legacy_missing_values_and_rejects_non_integers():
+    assert parse_profanity_terms(pd.NA) == {}
+    assert parse_profanity_terms(float("nan")) == {}
+    with pytest.raises(ValueError):
+        parse_profanity_terms('{"damn":1.0}')
+    with pytest.raises(ValueError):
+        parse_profanity_terms('{"damn":true}')
+
+
+def test_incomplete_term_rows_require_counts_to_equal_accepted_hits():
+    daily = _daily([
+        ["A", "2025-01-02", "house", "X", "D", "CA", 119, 1, 100, 2, 0, 0, 0],
+        ["B", "2025-01-02", "house", "Y", "R", "TX", 119, 1, 100, 1, 0, 0, 0],
+    ])
+    daily["profanity_terms"] = ['{"damn":2}', "{}"]
+    incomplete = incomplete_profanity_term_rows(daily)
+    assert list(incomplete["bioguide"]) == ["B"]
 
 
 # -------------------------------------------------------------------- merging
@@ -299,6 +340,9 @@ def test_language_member_rates_keep_measures_separate_and_apply_threshold():
         ["D", "2025-01-02", "house", "Zero", "R", "FL", 119,
          1, 60_000, 0, 0, 0, 0],
     ])
+    daily["profanity_terms"] = [
+        '{"damn":6,"crap":4}', "{}", '{"shit":5}', '{"crap":100}', "{}",
+    ]
     rankings = language_member_rates(daily, 119, min_words=25_000, top=5)
     assert set(rankings) == set(LANGUAGE_METRICS)
     assert list(rankings["profanity"]["speaker_name"]) == ["Alpha", "Beta"]
@@ -310,6 +354,8 @@ def test_language_member_rates_keep_measures_separate_and_apply_threshold():
     assert "Zero" not in set(rankings["misconduct"]["speaker_name"])
     alpha = rankings["profanity"].set_index("bioguide").loc["A"]
     assert alpha["profanity_per_100k"] == pytest.approx(25.0)
+    assert alpha["favorite_profanity_term"] == "damn"
+    assert alpha["favorite_profanity_term_hits"] == 6
     house_only = language_member_rates(
         daily, 119, min_words=25_000, top=5, chamber="house"
     )

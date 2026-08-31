@@ -25,9 +25,11 @@ conservative:
 
 from __future__ import annotations
 
+import json
 import logging
 import re
-from collections import defaultdict
+from collections import Counter, defaultdict
+from numbers import Integral
 from pathlib import Path
 from typing import Dict, Iterable, Iterator, List, Optional, Tuple
 
@@ -72,6 +74,79 @@ _READ_COLS = [
 # Emitted per (bioguide, date, chamber) group.
 _COUNT_KEYS = ("turns", "words", "profanity_hits", "profanity_quoted_hits",
                "hostility_hits", "misconduct_hits")
+_TERM_COUNTS_COLUMN = "profanity_terms"
+
+
+def parse_profanity_terms(value) -> Counter:
+    """Parse a stored profanity-term count map into a validated Counter."""
+    if value is None:
+        return Counter()
+    if not isinstance(value, (str, dict)):
+        try:
+            if bool(pd.isna(value)):
+                return Counter()
+        except (TypeError, ValueError):
+            pass
+    raw = json.loads(value) if isinstance(value, str) else value
+    if not isinstance(raw, dict):
+        raise ValueError("profanity_terms must be a JSON object")
+    counts = Counter()
+    for term, count in raw.items():
+        if not isinstance(term, str) or not term.strip():
+            raise ValueError("profanity_terms keys must be non-empty strings")
+        if isinstance(count, bool) or not isinstance(count, Integral) or count < 0:
+            raise ValueError("profanity_terms counts must be non-negative integers")
+        numeric = int(count)
+        if numeric:
+            counts[term] += numeric
+    return counts
+
+
+def serialize_profanity_terms(counts: Counter) -> str:
+    """Serialize positive term counts deterministically for compact Parquet storage."""
+    return json.dumps(
+        {term: int(counts[term]) for term in sorted(counts) if counts[term] > 0},
+        separators=(",", ":"),
+    )
+
+
+def combine_profanity_terms(values: Iterable) -> str:
+    """Combine stored term-count maps and return deterministic JSON."""
+    combined = Counter()
+    for value in values:
+        combined.update(parse_profanity_terms(value))
+    return serialize_profanity_terms(combined)
+
+
+def favorite_profanity_term(value) -> Tuple[str, int]:
+    """Return the most frequent term and count, breaking ties alphabetically."""
+    counts = parse_profanity_terms(value)
+    if not counts:
+        return "", 0
+    term, count = min(counts.items(), key=lambda item: (-item[1], item[0]))
+    return term, int(count)
+
+
+def incomplete_profanity_term_rows(frame: pd.DataFrame) -> pd.DataFrame:
+    """Return rows whose stored surface-form total differs from profanity hits."""
+    if frame.empty:
+        return frame.copy()
+    checked = _ensure_profanity_terms(frame).copy()
+    checked["_profanity_term_hits"] = checked[_TERM_COUNTS_COLUMN].map(
+        lambda value: sum(parse_profanity_terms(value).values())
+    )
+    return checked[
+        checked["_profanity_term_hits"]
+        != pd.to_numeric(checked["profanity_hits"], errors="raise")
+    ]
+
+
+def _ensure_profanity_terms(frame: pd.DataFrame) -> pd.DataFrame:
+    if _TERM_COUNTS_COLUMN in frame:
+        return frame
+    result = frame.copy()
+    result[_TERM_COUNTS_COLUMN] = "{}"
+    return result
 
 
 def mask_quotations(text: str) -> Tuple[str, str]:
@@ -118,6 +193,7 @@ def speaker_counts(
     )
     meta: Dict[str, dict] = {}
     row_congress: Dict[Tuple[str, str, str], int] = {}
+    profanity_terms: Dict[Tuple[str, str, str], Counter] = defaultdict(Counter)
     seen_turn_ids: set[str] = set()
 
     for path in files:
@@ -141,6 +217,11 @@ def speaker_counts(
             party = row.get("party") or "other"
             scored = scorers.score_turn(spoken, party)
             quoted_scored = scorers.score_turn(quoted, party) if quoted else None
+            turn_terms = scorers.profanity_term_counts(spoken)
+            if sum(turn_terms.values()) != int(scored["profanity_hits"]):
+                raise RuntimeError(
+                    "profanity surface-form counts diverged from accepted hit count"
+                )
 
             chamber = row.get("chamber") or "other"
             key = (bioguide, date, chamber)
@@ -148,6 +229,7 @@ def speaker_counts(
             bucket["turns"] += 1
             bucket["words"] += scored["n_words"]
             bucket["profanity_hits"] += scored["profanity_hits"]
+            profanity_terms[key].update(turn_terms)
             bucket["hostility_hits"] += scored["hostility_hits"]
             bucket["misconduct_hits"] += scored["misconduct_hits"]
             if quoted_scored is not None:
@@ -184,10 +266,13 @@ def speaker_counts(
             "state": info.get("state", ""),
             "congress": row_congress.get((bioguide, date, chamber), 0),
             **{k: int(counts[k]) for k in _COUNT_KEYS},
+            _TERM_COUNTS_COLUMN: serialize_profanity_terms(profanity_terms[
+                (bioguide, date, chamber)
+            ]),
         })
     return pd.DataFrame(rows, columns=[
         "bioguide", "date", "chamber", "speaker_name", "party", "state", "congress",
-        *_COUNT_KEYS,
+        *_COUNT_KEYS, _TERM_COUNTS_COLUMN,
     ])
 
 
@@ -197,12 +282,16 @@ def merge_daily(existing: Optional[pd.DataFrame], fresh: pd.DataFrame) -> pd.Dat
     Fresh rows win for any ``(bioguide, date, chamber)`` they cover, so re-running a
     day repairs it instead of double counting.
     """
+    fresh = _ensure_profanity_terms(fresh)
     if existing is None or existing.empty:
         combined = fresh
     elif fresh.empty:
-        combined = existing
+        combined = _ensure_profanity_terms(existing)
     else:
-        combined = pd.concat([existing, fresh], ignore_index=True)
+        combined = pd.concat([
+            _ensure_profanity_terms(existing),
+            fresh,
+        ], ignore_index=True)
         combined = combined.drop_duplicates(
             subset=["bioguide", "date", "chamber"], keep="last"
         )
@@ -220,9 +309,11 @@ def load_daily(path: Path) -> Optional[pd.DataFrame]:
         parts = sorted(path.glob("congress_*.parquet"))
         if not parts:
             return None
-        return pd.concat([pd.read_parquet(p) for p in parts], ignore_index=True)
+        return _ensure_profanity_terms(
+            pd.concat([pd.read_parquet(p) for p in parts], ignore_index=True)
+        )
     if path.exists():
-        return pd.read_parquet(path)
+        return _ensure_profanity_terms(pd.read_parquet(path))
     return None
 
 
@@ -232,6 +323,7 @@ def save_daily(frame: pd.DataFrame, path: Path) -> List[Path]:
     Only partitions whose contents actually changed are rewritten, so an update that
     touches a single Congress produces a single-file diff.
     """
+    frame = _ensure_profanity_terms(frame)
     path.mkdir(parents=True, exist_ok=True)
     written: List[Path] = []
     for congress, group in frame.groupby("congress", sort=True):
@@ -266,6 +358,7 @@ def leaderboard(
     frame = daily if congress is None else daily[daily["congress"] == congress]
     if frame.empty:
         return pd.DataFrame()
+    frame = _ensure_profanity_terms(frame)
     grouped = frame.groupby("bioguide", as_index=False).agg(
         speaker_name=("speaker_name", "last"),
         party=("party", "last"),
@@ -275,6 +368,7 @@ def leaderboard(
         words=("words", "sum"),
         profanity_hits=("profanity_hits", "sum"),
         profanity_quoted_hits=("profanity_quoted_hits", "sum"),
+        profanity_terms=(_TERM_COUNTS_COLUMN, combine_profanity_terms),
         first_date=("date", "min"),
         last_date=("date", "max"),
     )
@@ -282,6 +376,9 @@ def leaderboard(
     eligible["profanity_per_100k"] = (
         100_000 * eligible["profanity_hits"] / eligible["words"].where(eligible["words"] > 0)
     ).fillna(0.0)
+    favorites = eligible[_TERM_COUNTS_COLUMN].map(favorite_profanity_term)
+    eligible["favorite_profanity_term"] = favorites.map(lambda value: value[0])
+    eligible["favorite_profanity_term_hits"] = favorites.map(lambda value: value[1])
     ranked = eligible.sort_values(
         ["profanity_per_100k", "profanity_hits"], ascending=False
     ).head(top).reset_index(drop=True)
@@ -361,6 +458,7 @@ def language_member_rates(
     if frame.empty:
         return {key: pd.DataFrame() for key in LANGUAGE_METRICS}
     frame = frame.sort_values(["date", "bioguide", "chamber"])
+    frame = _ensure_profanity_terms(frame)
     hit_columns = [metric["hits"] for metric in LANGUAGE_METRICS.values()]
     grouped = frame.groupby("bioguide", as_index=False).agg(
         speaker_name=("speaker_name", "last"),
@@ -370,8 +468,12 @@ def language_member_rates(
         words=("words", "sum"),
         turns=("turns", "sum"),
         active_days=("date", "nunique"),
+        profanity_terms=(_TERM_COUNTS_COLUMN, combine_profanity_terms),
         **{column: (column, "sum") for column in hit_columns},
     )
+    favorites = grouped[_TERM_COUNTS_COLUMN].map(favorite_profanity_term)
+    grouped["favorite_profanity_term"] = favorites.map(lambda value: value[0])
+    grouped["favorite_profanity_term_hits"] = favorites.map(lambda value: value[1])
     eligible = grouped[grouped["words"] >= int(min_words)].copy()
     rankings: Dict[str, pd.DataFrame] = {}
     for key, metric in LANGUAGE_METRICS.items():
@@ -387,10 +489,15 @@ def language_member_rates(
             ascending=[False, False, True],
         ).head(top).reset_index(drop=True)
         ordered.insert(0, "rank", range(1, len(ordered) + 1))
-        rankings[key] = ordered[[
+        columns = [
             "rank", "bioguide", "speaker_name", "party", "state", "chamber",
             "words", "turns", "active_days", metric["hits"], metric["rate"],
-        ]].copy()
+        ]
+        if key == "profanity":
+            columns.extend([
+                "favorite_profanity_term", "favorite_profanity_term_hits",
+            ])
+        rankings[key] = ordered[columns].copy()
     return rankings
 
 

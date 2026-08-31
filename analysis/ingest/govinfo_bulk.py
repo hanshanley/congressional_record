@@ -207,7 +207,7 @@ def probe_packages(
 
     days = [first + dt.timedelta(days=i) for i in range(span)]
 
-    def exists(day: dt.date) -> Optional[str]:
+    def exists(day: dt.date) -> Tuple[str, Optional[str]]:
         pkg = f"CREC-{day.isoformat()}"
         url = CONTENT_URL.format(pkg=pkg)
         try:
@@ -218,16 +218,30 @@ def probe_packages(
             )
         except Exception as exc:  # noqa: BLE001 - treat a probe failure as "unknown"
             LOG.warning("probe failed for %s: %s", pkg, exc)
-            return None
+            return pkg, None
         # Only a direct 200 means the zip is there; anything else (notably the 302
         # to an error page) means no issue was published that day.
-        return pkg if result.stdout.strip() == "200" else None
+        status = result.stdout.strip()
+        if status == "200":
+            return pkg, pkg
+        if status in {"301", "302", "303", "307", "308", "404"}:
+            return pkg, ""
+        LOG.warning("unexpected HTTP status probing %s: %s", pkg, status or "empty")
+        return pkg, None
 
     found: List[str] = []
+    unknown: List[str] = []
     with cf.ThreadPoolExecutor(max_workers=workers) as pool:
-        for pkg in pool.map(exists, days):
-            if pkg:
-                found.append(pkg)
+        for pkg, result in pool.map(exists, days):
+            if result is None:
+                unknown.append(pkg)
+            elif result:
+                found.append(result)
+    if unknown:
+        raise RuntimeError(
+            f"could not determine whether {len(unknown)} GovInfo packages exist: "
+            + ", ".join(unknown)
+        )
     return sorted(found)
 
 

@@ -352,9 +352,15 @@ def speech_member_totals(
         return pd.DataFrame(columns=[
             "bioguide", "speaker_name", "party", "state", "chamber", "turns",
             "words", "active_days", "profanity_hits", "profanity_quoted_hits",
-            "hostility_hits", "misconduct_hits",
+            "profanity_terms", "favorite_profanity_term",
+            "favorite_profanity_term_hits", "hostility_hits", "misconduct_hits",
         ])
-    return frame.groupby("bioguide", as_index=False).agg(
+    from analysis.speakers import combine_profanity_terms, favorite_profanity_term
+
+    if "profanity_terms" not in frame:
+        frame = frame.copy()
+        frame["profanity_terms"] = "{}"
+    grouped = frame.groupby("bioguide", as_index=False).agg(
         speaker_name=("speaker_name", "last"),
         party=("party", "last"),
         state=("state", "last"),
@@ -364,9 +370,14 @@ def speech_member_totals(
         active_days=("date", "nunique"),
         profanity_hits=("profanity_hits", "sum"),
         profanity_quoted_hits=("profanity_quoted_hits", "sum"),
+        profanity_terms=("profanity_terms", combine_profanity_terms),
         hostility_hits=("hostility_hits", "sum"),
         misconduct_hits=("misconduct_hits", "sum"),
     )
+    favorites = grouped["profanity_terms"].map(favorite_profanity_term)
+    grouped["favorite_profanity_term"] = favorites.map(lambda value: value[0])
+    grouped["favorite_profanity_term_hits"] = favorites.map(lambda value: value[1])
+    return grouped
 
 
 def member_activity(
@@ -403,6 +414,17 @@ def member_activity(
         joined[column] = (
             pd.to_numeric(joined[column], errors="coerce").fillna(0).astype("int64")
         )
+    if "profanity_terms" not in joined:
+        joined["profanity_terms"] = "{}"
+    joined["profanity_terms"] = joined["profanity_terms"].fillna("{}")
+    if "favorite_profanity_term" not in joined:
+        joined["favorite_profanity_term"] = ""
+    joined["favorite_profanity_term"] = joined["favorite_profanity_term"].fillna("")
+    if "favorite_profanity_term_hits" not in joined:
+        joined["favorite_profanity_term_hits"] = 0
+    joined["favorite_profanity_term_hits"] = pd.to_numeric(
+        joined["favorite_profanity_term_hits"], errors="coerce"
+    ).fillna(0).astype("int64")
     for column in ("passage_share", "enactment_share"):
         if column not in joined:
             joined[column] = 0.0
