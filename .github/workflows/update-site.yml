@@ -6,7 +6,8 @@ name: Update site
 # date in the committed `data/site/speaker_daily/`, downloads only the
 # Congressional Record issues published since then, scores those days, and merges
 # the counts back in. The refreshed table and rendered site are committed, then
-# published to GitHub Pages.
+# published by the Margin of Error repository. This repository's Pages site
+# retains only a redirect from the former address.
 #
 # It also needs no secrets. Issue discovery probes the public bulk content URLs
 # instead of the GovInfo API, so nothing has to be stored in repository settings.
@@ -87,7 +88,7 @@ jobs:
 
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: site
+          path: redirect-site
 
   deploy:
     needs: update

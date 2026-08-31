@@ -45,6 +45,7 @@ BILLS_PATH = ROOT / "data" / "site" / "bills"
 SITE_DIR = ROOT / "site"
 LONG_RUN_DATA_PATH = ROOT / "data" / "site" / "long_run_language.json"
 LONG_RUN_METRICS_PATH = ROOT / "data" / "processed" / "metrics" / "civility_metrics.parquet"
+PUBLIC_URL = "https://www.themarginoferror.com/professional_profanity/"
 
 CAVEATS = [
     "Speech counts include only remarks attributable to a specific member by Bioguide ID; "
@@ -1616,6 +1617,7 @@ def _render_html(payload: dict, congresses: list[int], long_run: dict) -> str:
 <title>The Language of Congress</title>
 <meta name="description" content="Long-run Democratic and Republican trends in congressional
 courtesy, cooperation, personal disrespect, misconduct allegations, and profanity.">
+<link rel="canonical" href="{PUBLIC_URL}">
 <style>
   :root {{ --bg:#F3F0E8; --text:#171717; --muted:#68655F;
            --grid:#D8D3C9; --blue:{theme.BLUE}; --red:{theme.ACCENT};
@@ -1928,6 +1930,7 @@ def _render_activity_html(payload: dict, congresses: list[int]) -> str:
 <title>Congressional member activity and bills</title>
 <meta name="description" content="Exact-value congressional speech, bill sponsorship,
 passage, enactment, and profanity tables by Congress.">
+<link rel="canonical" href="{PUBLIC_URL}activity/">
 <style>
   :root {{ --bg:#F3F0E8; --text:#171717; --muted:#68655F;
            --grid:#D8D3C9; --blue:{theme.BLUE}; --paper:#FFFEFA; --soft:#EAE5DA; }}
@@ -2164,8 +2167,10 @@ def main(argv: Optional[List[str]] = None) -> int:
     (out / "activity.html").write_text(
         '<!doctype html><meta charset="utf-8">'
         '<meta http-equiv="refresh" content="0; url=activity/">'
-        '<link rel="canonical" href="activity/">'
-        '<title>Redirecting…</title><a href="activity/">Open member activity and bills</a>',
+        '<meta name="description" content="Redirect to congressional member activity and bills.">'
+        f'<link rel="canonical" href="{PUBLIC_URL}activity/">'
+        '<title>Redirecting…</title><h1>Congressional member activity and bills</h1>'
+        '<a href="activity/">Open member activity and bills</a>',
         encoding="utf-8",
     )
     LOG.info("site written to %s (%s)", out, selected["label"])

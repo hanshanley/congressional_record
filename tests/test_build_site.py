@@ -334,13 +334,28 @@ def test_payload_and_html_expose_selector_aware_language_graphs(store, tmp_path)
     assert {row["chamber"] for row in long_run["chamber_series"]} == {"house", "senate"}
     activity_page = (out / "activity" / "index.html").read_text()
     assert "Congressional member activity and bills" in activity_page
+    assert (
+        '<link rel="canonical" '
+        'href="https://www.themarginoferror.com/professional_profanity/">'
+    ) in page
+    assert (
+        '<link rel="canonical" '
+        'href="https://www.themarginoferror.com/professional_profanity/activity/">'
+    ) in activity_page
     assert "Who sponsors the most bills" in activity_page
     assert "The Language of Congress" in activity_page
     assert 'id="activity-metric"' in activity_page
     assert "selectActivityMetric" in activity_page
     assert "activityMetrics" in activity_page
     assert 'id="leaderboards"' in activity_page
-    assert "url=activity/" in (out / "activity.html").read_text()
+    activity_redirect = (out / "activity.html").read_text()
+    assert "url=activity/" in activity_redirect
+    assert 'name="description"' in activity_redirect
+    assert "<h1>Congressional member activity and bills</h1>" in activity_redirect
+    assert (
+        'href="https://www.themarginoferror.com/'
+        'professional_profanity/activity/"'
+    ) in activity_redirect
 
 
 def test_nonselected_extension_only_congress_does_not_break_charts(store, tmp_path):

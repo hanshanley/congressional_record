@@ -451,8 +451,10 @@ The default snapshot timestamp is derived from the newest speech or bill input, 
 inputs produce byte-identical output and no timestamp-only commit. `SOURCE_DATE_EPOCH` and
 `--generated-utc` remain available for an explicit reproducible-build timestamp.
 
-`.github/workflows/update-site.yml` runs the refreshes daily at 07:20 UTC, commits the refreshed
-tables and site, and publishes to GitHub Pages.
+`.github/workflows/update-site.yml` runs the refreshes daily at 07:20 UTC and commits the
+refreshed tables and site. The Margin of Error deployment then publishes that site at
+<https://www.themarginoferror.com/professional_profanity/>. The former GitHub Pages endpoint
+publishes only a redirect to the new address.
 
 **No API key or repository secret is required for scheduled updates.** Record issues and current
 bill statuses both come from public GovInfo bulk URLs. The Congress.gov API key is used only for
