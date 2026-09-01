@@ -310,6 +310,23 @@ def test_profanity_tables_show_each_members_most_used_term(store, tmp_path):
     assert "Most-used term" in (out / "index.html").read_text()
     assert "Most-used term" in (out / "activity" / "index.html").read_text()
     assert "not a claim of preference" in (out / "index.html").read_text()
+    term_leaders = {
+        row["term"]: row for row in payload["language"]["profanity_term_leaders"]
+    }
+    assert term_leaders["damn"]["leaders"][0]["speaker_name"] == "Mr. NEW"
+    assert term_leaders["shit"]["leaders"][0]["speaker_name"] == "Ms. NEW2"
+    assert set(payload["language"]["profanity_term_leaders_by_chamber"]) == {
+        "house", "senate",
+    }
+    assert payload["language"]["profanity_term_detail_available"] is True
+    assert payload["language"]["profanity_term_detail_available_by_chamber"] == {
+        "house": True, "senate": True,
+    }
+    page = (out / "index.html").read_text()
+    assert "Who uses each term the most?" in page
+    assert 'id="term-leaders-table"' in page
+    assert "renderTermLeaders(language)" in page
+    assert "recentTermDetailAvailable" in page
 
 
 def test_build_refuses_incomplete_current_congress_term_counts(store, tmp_path):

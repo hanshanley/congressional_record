@@ -28,6 +28,7 @@ from analysis.speakers import (  # noqa: E402
     mask_quotations,
     merge_daily,
     parse_profanity_terms,
+    profanity_term_leaders,
     save_daily,
     speaker_counts,
     timeseries,
@@ -210,6 +211,28 @@ def test_incomplete_term_rows_require_counts_to_equal_accepted_hits():
     daily["profanity_terms"] = ['{"damn":2}', "{}"]
     incomplete = incomplete_profanity_term_rows(daily)
     assert list(incomplete["bioguide"]) == ["B"]
+
+
+def test_term_leaders_include_ties_and_support_chamber_scope():
+    daily = _daily([
+        ["A", "2025-01-02", "house", "Alpha", "D", "CA", 119, 1, 100, 3, 0, 0, 0],
+        ["B", "2025-01-02", "senate", "Beta", "R", "TX", 119, 1, 100, 4, 0, 0, 0],
+        ["C", "2025-01-02", "house", "Gamma", "D", "NY", 119, 1, 100, 2, 0, 0, 0],
+    ])
+    daily["profanity_terms"] = [
+        '{"damn":2,"crap":1}', '{"damn":2,"shit":2}', '{"crap":2}',
+    ]
+    leaders = {row["term"]: row for row in profanity_term_leaders(daily, 119)}
+    assert [leader["speaker_name"] for leader in leaders["damn"]["leaders"]] == [
+        "Alpha", "Beta",
+    ]
+    assert leaders["damn"]["leader_hits"] == 2
+    assert leaders["damn"]["total_hits"] == 4
+    house = {
+        row["term"]: row
+        for row in profanity_term_leaders(daily, 119, chamber="house")
+    }
+    assert [leader["speaker_name"] for leader in house["crap"]["leaders"]] == ["Gamma"]
 
 
 # -------------------------------------------------------------------- merging

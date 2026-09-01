@@ -36,6 +36,7 @@ from analysis.speakers import (  # noqa: E402
     language_member_rates,
     language_timeseries,
     load_daily,
+    profanity_term_leaders,
     timeseries,
 )
 
@@ -126,6 +127,18 @@ function recentMembers(language, key) {
   return selectedRecentChamber === 'all'
     ? language.members[key]
     : language.members_by_chamber[selectedRecentChamber][key];
+}
+
+function recentTermLeaders(language) {
+  return selectedRecentChamber === 'all'
+    ? language.profanity_term_leaders
+    : language.profanity_term_leaders_by_chamber[selectedRecentChamber];
+}
+
+function recentTermDetailAvailable(language) {
+  return selectedRecentChamber === 'all'
+    ? language.profanity_term_detail_available
+    : language.profanity_term_detail_available_by_chamber[selectedRecentChamber];
 }
 
 function svgNode(tag, attributes = {}, text = '') {
@@ -702,6 +715,7 @@ function renderSelectedHighlight(language) {
 
 function renderRecentFocus() {
   if (!currentLanguage) return;
+  renderTermLeaders(currentLanguage);
   Object.keys(currentLanguage.metrics).forEach(
     key => renderLanguageTable(currentLanguage, key)
   );
@@ -770,6 +784,58 @@ function renderLanguage(language) {
   document.getElementById('language-examined').textContent = language.explanation.examined;
   document.getElementById('language-limitation').textContent = language.explanation.limitation;
   renderRecentFocus();
+}
+
+function renderTermLeaders(language) {
+  const body = document.querySelector('#term-leaders-table tbody');
+  body.replaceChildren();
+  const available = recentTermDetailAvailable(language);
+  const rows = recentTermLeaders(language) || [];
+  if (!available) {
+    const row = document.createElement('tr');
+    const cell = document.createElement('td');
+    cell.colSpan = 5;
+    cell.className = 'muted';
+    cell.textContent = 'Term-level detail is not available for this historical scope.';
+    row.appendChild(cell);
+    body.appendChild(row);
+  } else if (!rows.length) {
+    const row = document.createElement('tr');
+    const cell = document.createElement('td');
+    cell.colSpan = 5;
+    cell.className = 'muted';
+    cell.textContent = 'No accepted term uses were observed in this scope.';
+    row.appendChild(cell);
+    body.appendChild(row);
+  }
+  rows.forEach(item => {
+    const row = document.createElement('tr');
+    const term = document.createElement('td');
+    term.textContent = item.term;
+    const leaders = document.createElement('td');
+    item.leaders.forEach((leader, index) => {
+      if (index) leaders.appendChild(document.createTextNode(', '));
+      const link = document.createElement('a');
+      link.href = leader.member_url;
+      link.textContent = leader.speaker_name;
+      leaders.appendChild(link);
+    });
+    const party = document.createElement('td');
+    party.textContent = [...new Set(item.leaders.map(leader => leader.party))].join(', ');
+    const uses = document.createElement('td');
+    uses.className = 'num';
+    uses.textContent = Number(item.leader_hits).toLocaleString();
+    const total = document.createElement('td');
+    total.className = 'num';
+    total.textContent = Number(item.total_hits).toLocaleString();
+    row.append(term, leaders, party, uses, total);
+    body.appendChild(row);
+  });
+  document.getElementById('term-leaders-scope').textContent =
+    `${language.scope_label} · ${chamberLabel(selectedRecentChamber)}`;
+  document.getElementById('term-leaders-note').textContent = available
+    ? 'Counts include accepted, unquoted uses by attributed members.'
+    : 'Term-level detail has not been backfilled for this historical scope.';
 }
 """
 
@@ -1208,6 +1274,34 @@ def _language_payload(
         )
         for chamber in ("house", "senate")
     }
+    term_frame = daily if congress is None else daily[daily["congress"] == congress]
+    term_frame = term_frame[term_frame["chamber"].isin(["house", "senate"])]
+    term_detail_available = incomplete_profanity_term_rows(term_frame).empty
+    term_detail_available_by_chamber = {
+        chamber: incomplete_profanity_term_rows(
+            term_frame[term_frame["chamber"] == chamber]
+        ).empty
+        for chamber in ("house", "senate")
+    }
+    term_leaders = (
+        profanity_term_leaders(daily, congress)
+        if term_detail_available else []
+    )
+    chamber_term_leaders = {
+        chamber: (
+            profanity_term_leaders(daily, congress, chamber=chamber)
+            if term_detail_available_by_chamber[chamber] else []
+        )
+        for chamber in ("house", "senate")
+    }
+
+    def enrich_term_leaders(rows: list[dict]) -> list[dict]:
+        for row in rows:
+            for leader in row["leaders"]:
+                leader["member_url"] = (
+                    f"https://bioguide.congress.gov/search/bio/{leader['bioguide']}"
+                )
+        return rows
     party_summary = {}
     for party in ("D", "R"):
         rows = series[series["party"] == party]
@@ -1301,6 +1395,13 @@ def _language_payload(
             chamber: enrich_rankings(frames)
             for chamber, frames in chamber_rankings.items()
         },
+        "profanity_term_leaders": enrich_term_leaders(term_leaders),
+        "profanity_term_detail_available": term_detail_available,
+        "profanity_term_leaders_by_chamber": {
+            chamber: enrich_term_leaders(rows)
+            for chamber, rows in chamber_term_leaders.items()
+        },
+        "profanity_term_detail_available_by_chamber": term_detail_available_by_chamber,
         "parties": party_summary,
         "highlights": highlights,
         "trend_alt": (
@@ -1611,6 +1712,39 @@ def _language_table(metric: str, rows: list[dict]) -> str:
     )
 
 
+def _term_leaders_table(rows: list[dict], *, available: bool) -> str:
+    body = []
+    if not available:
+        body.append(
+            '<tr><td colspan="5" class="muted">'
+            "Term-level detail is not available for this historical scope.</td></tr>"
+        )
+    elif not rows:
+        body.append(
+            '<tr><td colspan="5" class="muted">'
+            "No accepted term uses were observed in this scope.</td></tr>"
+        )
+    for row in rows:
+        leaders = ", ".join(str(_member_cell(leader)) for leader in row["leaders"])
+        parties = ", ".join(sorted({leader["party"] for leader in row["leaders"]}))
+        body.append(
+            "<tr>"
+            f"<td>{html.escape(row['term'])}</td>"
+            f"<td>{leaders}</td>"
+            f"<td>{html.escape(parties)}</td>"
+            f'<td class="num">{_fmt_int(row["leader_hits"])}</td>'
+            f'<td class="num">{_fmt_int(row["total_hits"])}</td>'
+            "</tr>"
+        )
+    return (
+        '<table id="term-leaders-table"><caption class="sr-only">'
+        "Top congressional users of each observed profanity term</caption>"
+        '<thead><tr><th scope="col">Term</th><th scope="col">Top member</th>'
+        '<th scope="col">Party</th><th scope="col">Top uses</th>'
+        f'<th scope="col">All uses</th></tr></thead><tbody>{"".join(body)}</tbody></table>'
+    )
+
+
 def _render_html(payload: dict, congresses: list[int], long_run: dict) -> str:
     all_selected = " selected" if payload["congress"] is None else ""
     options = [f'<option value="all"{all_selected}>All Congresses</option>']
@@ -1836,6 +1970,24 @@ or whether an allegation is true.</p></div>
 </details>
 <noscript><img src="figures/language_trends.png"
  alt="{html.escape(language['trend_alt'], quote=True)}"></noscript>
+</section>
+<section class="language" aria-labelledby="term-leaders-heading">
+<div class="section-header">
+<div><p class="eyebrow" id="term-leaders-scope">{html.escape(language['scope_label'])} · House + Senate</p>
+<h2 id="term-leaders-heading">Who uses each term the most?</h2>
+<p class="sub">For every observed term in the selected Congress and chamber, this table shows
+the member with the most accepted, unquoted uses. Members tied for the highest count are shown
+together. “All uses” is the term’s total across all attributed members in that scope.</p>
+<p class="definition" id="term-leaders-note">{
+    "Counts include accepted, unquoted uses by attributed members."
+    if language["profanity_term_detail_available"]
+    else "Term-level detail has not been backfilled for this historical scope."
+}</p></div>
+</div>
+<div class="card table-wrap">{_term_leaders_table(
+    language['profanity_term_leaders'],
+    available=language['profanity_term_detail_available'],
+)}</div>
 </section>
 <details class="methodology"><summary>Data notes and exclusions</summary><ul>{caveats}</ul></details>
 </main>

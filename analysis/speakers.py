@@ -501,6 +501,58 @@ def language_member_rates(
     return rankings
 
 
+def profanity_term_leaders(
+    daily: pd.DataFrame,
+    congress: Optional[int] = None,
+    *,
+    chamber: Optional[str] = None,
+) -> List[dict]:
+    """Return the member or tied members with the most uses of each profanity term."""
+    frame = daily if congress is None else daily[daily["congress"] == int(congress)]
+    frame = frame[frame["chamber"].isin(["house", "senate"])].copy()
+    if chamber is not None:
+        frame = frame[frame["chamber"] == chamber].copy()
+    if frame.empty:
+        return []
+    frame = _ensure_profanity_terms(
+        frame.sort_values(["date", "bioguide", "chamber"])
+    )
+    members: Dict[str, dict] = {}
+    term_members: Dict[str, Counter] = defaultdict(Counter)
+    term_totals: Counter = Counter()
+    for _, row in frame.iterrows():
+        bioguide = str(row["bioguide"])
+        members[bioguide] = {
+            "bioguide": bioguide,
+            "speaker_name": str(row["speaker_name"]),
+            "party": str(row["party"]),
+            "state": str(row["state"]),
+            "chamber": str(row["chamber"]),
+        }
+        for term, count in parse_profanity_terms(row[_TERM_COUNTS_COLUMN]).items():
+            term_members[term][bioguide] += count
+            term_totals[term] += count
+
+    rows = []
+    for term in sorted(term_members):
+        leader_hits = max(term_members[term].values())
+        leaders = [
+            {**members[bioguide], "hits": int(leader_hits)}
+            for bioguide, hits in sorted(term_members[term].items())
+            if hits == leader_hits
+        ]
+        rows.append({
+            "term": term,
+            "leader_hits": int(leader_hits),
+            "total_hits": int(term_totals[term]),
+            "leaders": leaders,
+        })
+    return sorted(
+        rows,
+        key=lambda row: (-row["total_hits"], -row["leader_hits"], row["term"]),
+    )
+
+
 def build_daily(
     turns_dir: Path,
     out_path: Path,
