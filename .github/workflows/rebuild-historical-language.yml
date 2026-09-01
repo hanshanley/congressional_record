@@ -42,7 +42,6 @@ jobs:
         run: |
           python - <<'PY'
           from pathlib import Path
-          from zipfile import ZipFile
 
           expected = {
               "hein-bound.zip": 7_590_593_783,
@@ -53,17 +52,19 @@ jobs:
               actual = path.stat().st_size
               if actual != size:
                   raise SystemExit(f"{name}: expected {size} bytes, got {actual}")
-              with ZipFile(path) as archive:
-                  bad = archive.testzip()
-                  if bad is not None:
-                      raise SystemExit(f"{name}: corrupt member {bad}")
-                  print(name, actual, "bytes", len(archive.namelist()), "members")
+              print(name, actual, "bytes")
           PY
+          # Python's stdlib cannot seek correctly in the >4 GB ZIP64 bound archive.
+          # The runner's Info-ZIP implementation validates and extracts ZIP64 safely.
+          unzip -tq data/raw/hein-bound.zip
+          unzip -tq data/raw/hein-daily.zip
 
       - name: Ingest Stanford and GovInfo corpora
         run: |
+          unzip -q data/raw/hein-bound.zip -d data/raw
+          rm data/raw/hein-bound.zip
           python -m analysis.run ingest-hein
-          rm data/raw/hein-bound.zip data/raw/hein-daily.zip
+          rm -r data/raw/hein-bound data/raw/hein-daily.zip
           python -m analysis.run ingest-govinfo-bulk \
             --start 2017-01-01 \
             --end "$(date -u +%F)" \
