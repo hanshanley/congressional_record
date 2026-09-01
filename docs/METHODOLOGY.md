@@ -25,8 +25,15 @@ scale, construct family, polarity, codebook version, and plot eligibility.
   obstruction, abuse of power, or similar conduct. Direct negation patterns and selected
   legal-title references are excluded. It is not evidence that misconduct occurred.
 - **Ideological label**: tracked separately and not automatically treated as disrespect.
-- **Profanity and identity slurs**: curated exact forms. Neutral topical vocabulary is excluded;
-  slur occurrence requires quotation and endorsement review.
+- **Profanity and identity slurs**: conservative curated exact forms rather than an exhaustive
+  dictionary. Ambiguous neutral vocabulary is excluded; slur occurrence requires quotation and
+  endorsement review.
+
+Profanity candidates are cross-checked against the
+[LDNOOBW English list](https://github.com/LDNOOBW/List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words)
+and [Surge AI profanity dataset](https://github.com/mod-tc/profanity), then manually narrowed for
+congressional speech. Neither source is imported wholesale because both include terms that are
+neutral, topical, identity-related, or too context-dependent for reliable member attribution.
 
 Most rates use words as the denominator. Cross-party context rates use deduplicated out-party
 reference events and report affected contexts per 100 references.
@@ -69,11 +76,13 @@ passages. Two independent model passes use `docs/VALIDATION_RUBRIC.md`; a separa
 pass resolves disagreements. This is disclosed model-assisted face-validity and consistency
 checking, not independent human ground truth.
 
-The finalized 784-passage validation achieved overall precision of 89.4% or better for every
-published category and at least 80% precision in every era/source stratum with 10 or more coded
-examples. The codebooks intentionally favor precision over recall; category-level recall ranges
-from 16.5% for personal attacks to 94.8% for profanity. `precision_recall.csv` reports every
-category and stratum rather than hiding low-recall results.
+The finalized 784-passage validation of the July 2026 v3 codebook achieved overall precision of
+89.4% or better for every published category and at least 80% precision in every era/source
+stratum with 10 or more coded examples. Category-level recall ranged from 16.5% for personal
+attacks to 94.8% for profanity. The September 2026 v4 codebook conservatively expands explicit
+profanity surface forms; its precision and recall have not yet been re-estimated on a new blinded
+sample. `precision_recall.csv` reports the completed v3 validation rather than presenting it as
+validation of later revisions.
 
 ## Remaining interpretation limits
 

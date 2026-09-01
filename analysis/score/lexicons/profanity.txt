@@ -4,35 +4,160 @@
 # vocabulary. Matching is exact, so every accepted surface form is enumerated here.
 # Identity slurs live in slurs.txt and are reported separately because quoted/read-in
 # historical material requires contextual audit.
+#
+# Candidate forms were cross-checked against the CC BY 4.0 LDNOOBW English list and the
+# MIT-licensed Surge AI profanity dataset, then manually narrowed for congressional speech:
+# https://github.com/LDNOOBW/List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words
+# https://github.com/mod-tc/profanity
 damn	mild
 damned	mild
 dammit	mild
 goddamn	mild
 goddamned	mild
+goddammit	mild
+goddamnit	mild
+god damn	mild
+god damned	mild
+god dammit	mild
+god damnit	mild
 what the hell	mild
 go to hell	mild
 hell of a	mild
+helluva	mild
 crap	mild
+crapped	mild
+crapping	mild
+crappy	mild
+arse	mild
+bugger	mild
+buggered	mild
+buggers	mild
+effing	mild
+frickin	mild
+fricking	mild
+friggin	mild
+frigging	mild
 bullshit	strong
+bull shit	strong
+bullshitted	strong
+bullshitter	strong
+bullshitters	strong
 bullshitting	strong
 horseshit	strong
 shit	strong
 shitty	strong
 shitting	strong
+shits	strong
+apeshit	strong
+batshit	strong
+chickenshit	strong
+dipshit	strong
+dipshits	strong
+dogshit	strong
+shit bag	strong
+shit bags	strong
+shit show	strong
+shit shows	strong
+shitbag	strong
+shitbags	strong
+shithead	strong
+shitheads	strong
+shithole	strong
+shitholes	strong
+shitshow	strong
+shitshows	strong
+shitstorm	strong
+shitstorms	strong
 fuck	strong
 fucked	strong
 fucking	strong
 fucker	strong
 fuckers	strong
+fucks	strong
+fuckin	strong
+fuck off	strong
+fuck you	strong
+fuck up	strong
+fucked up	strong
+fucking up	strong
+fuckup	strong
+fuckups	strong
+clusterfuck	strong
+clusterfucks	strong
+motherfuck	strong
+motherfucked	strong
+motherfucks	strong
 motherfucker	strong
 motherfuckers	strong
 motherfucking	strong
+motherfuckin	strong
+mother fucker	strong
+mother fuckers	strong
+mother fucking	strong
+mother fuckin	strong
+mothafucka	strong
+mothafuckas	strong
+mothafucker	strong
+mothafuckers	strong
+ass	strong
+asses	strong
 asshole	strong
 assholes	strong
+assclown	strong
+assclowns	strong
+asshat	strong
+asshats	strong
+asswipe	strong
+asswipes	strong
+badass	strong
+badasses	strong
+fatass	strong
+fatasses	strong
+half-assed	strong
+kick ass	strong
+kicked ass	strong
+kicking ass	strong
+smartass	strong
+smartasses	strong
+wiseass	strong
+wiseasses	strong
 dumbass	strong
 dumbasses	strong
 jackass	strong
 jackasses	strong
+bastard	strong
+bastards	strong
+bitch	strong
+bitches	strong
+bitching	strong
+bitchy	strong
 son of a bitch	strong
+son-of-a-bitch	strong
+sons of bitches	strong
+sons-of-bitches	strong
 pissed off	strong
+piss off	strong
+pisses off	strong
+pissing off	strong
 screw you	strong
+arsehole	strong
+arseholes	strong
+bollocks	strong
+cunt	strong
+cunts	strong
+dickhead	strong
+dickheads	strong
+douchebag	strong
+douchebags	strong
+cocksuck	strong
+cocksucked	strong
+cocksucker	strong
+cocksuckers	strong
+cocksucking	strong
+cock sucker	strong
+cock suckers	strong
+cock sucking	strong
+twat	strong
+twats	strong
+wanker	strong
+wankers	strong

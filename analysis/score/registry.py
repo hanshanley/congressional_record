@@ -23,7 +23,7 @@ class MetricSpec:
     headline: bool = False
     chamber_plot: bool = False
     target_required: bool = False
-    codebook_version: str = "2026-07-v3"
+    codebook_version: str = "2026-09-v4"
 
     def __post_init__(self) -> None:
         identifiers = (self.rate, self.raw_count, self.score_key, self.family)

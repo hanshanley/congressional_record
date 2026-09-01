@@ -512,8 +512,9 @@ Naming individuals is a reputational claim, so the counts are deliberately conse
 * **Rate, not raw count**, so prolific speakers are not penalised — with a minimum word threshold
   (default 25,000 attributed words), because one profanity in 300 words of floor time is noise,
   not a ranking. Members below the threshold are omitted rather than shown with an unstable rate.
-* The profanity lexicon is a **narrow, hand-curated list**, not a broad word list, so ordinary
-  words are never miscounted (the repo's earlier broad list flagged "strips" and "erected").
+* The profanity lexicon is a **conservative, hand-curated list**, not an exhaustive word list.
+  It includes explicit surface forms and compounds while omitting ambiguous ordinary, anatomical,
+  medical, and identity terms (the repo's earlier broad list flagged "strips" and "erected").
 
 The Congressional Record is a lightly edited transcript, not a verbatim one, and members may
 revise their remarks — worth stating plainly wherever these numbers are published.

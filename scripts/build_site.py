@@ -53,8 +53,9 @@ CAVEATS = [
     "Speech counts include only remarks attributable to a specific member by Bioguide ID; "
     "procedural speech, submitted Extensions of Remarks, and material printed into the "
     "Record are excluded.",
-    "Profanity uses a narrow, hand-curated list. Passages marked as quotations are excluded "
-    "from a member's rate and retained as a separate audit count.",
+    "Profanity uses a conservative, hand-curated list rather than an exhaustive dictionary. "
+    "Passages marked as quotations are excluded from a member's rate and retained as a "
+    "separate audit count.",
     "A member's most-used profanity term is the most frequent accepted, unquoted surface form "
     "in the selected period; alphabetical order breaks ties. It does not imply personal preference.",
     "Members below the word threshold are omitted from the profanity ranking because rates "
@@ -1975,9 +1976,11 @@ or whether an allegation is true.</p></div>
 <div class="section-header">
 <div><p class="eyebrow" id="term-leaders-scope">{html.escape(language['scope_label'])} · House + Senate</p>
 <h2 id="term-leaders-heading">Who uses each term the most?</h2>
-<p class="sub">For every observed term in the selected Congress and chamber, this table shows
+<p class="sub">For every observed term in the conservative codebook, this table shows
 the member with the most accepted, unquoted uses. Members tied for the highest count are shown
-together. “All uses” is the term’s total across all attributed members in that scope.</p>
+together. “All uses” is the term’s total across all attributed members in that scope. The
+codebook favors precision over completeness and is not an exhaustive list of every possible
+curse word.</p>
 <p class="definition" id="term-leaders-note">{
     "Counts include accepted, unquoted uses by attributed members."
     if language["profanity_term_detail_available"]

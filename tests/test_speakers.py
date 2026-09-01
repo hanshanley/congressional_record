@@ -194,6 +194,29 @@ def test_term_counts_use_accepted_unquoted_surface_forms(turn_file):
     )
 
 
+def test_term_counts_include_conservative_expanded_forms(turn_file):
+    path = turn_file([
+        _row(
+            turn_id="a",
+            bioguide="A000001",
+            text=(
+                "This bitching shitshow is a motherfucking clusterfuck "
+                "run by cocksuckers and asshats."
+            ),
+        ),
+    ])
+    counts = speaker_counts([path])
+    assert counts.iloc[0]["profanity_hits"] == 6
+    assert json.loads(counts.iloc[0]["profanity_terms"]) == {
+        "asshats": 1,
+        "bitching": 1,
+        "clusterfuck": 1,
+        "cocksuckers": 1,
+        "motherfucking": 1,
+        "shitshow": 1,
+    }
+
+
 def test_term_parser_handles_legacy_missing_values_and_rejects_non_integers():
     assert parse_profanity_terms(pd.NA) == {}
     assert parse_profanity_terms(float("nan")) == {}

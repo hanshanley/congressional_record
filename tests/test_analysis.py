@@ -321,6 +321,37 @@ def test_scorer_profanity_tiers() -> None:
     assert r["profanity_hits"] >= 2
 
 
+def test_scorer_conservative_profanity_expansion() -> None:
+    scorer = Scorers()
+    text = (
+        "That bitching bastard called this a shitshow run by dipshits and douchebags. "
+        "The cocksucker made it a motherfucking clusterfuck and a pain in the ass."
+    )
+    scored = scorer.score_turn(text, "D")
+    assert scored["profanity_strong"] == 9
+    assert scored["profanity_hits"] == 9
+    assert scorer.profanity_term_counts(text) == {
+        "ass": 1,
+        "bastard": 1,
+        "bitching": 1,
+        "clusterfuck": 1,
+        "cocksucker": 1,
+        "dipshits": 1,
+        "douchebags": 1,
+        "motherfucking": 1,
+        "shitshow": 1,
+    }
+
+
+def test_scorer_still_excludes_ambiguous_profanity_candidates() -> None:
+    scorer = Scorers()
+    text = (
+        "Dick chaired the medical panel on breasts and reproductive anatomy. "
+        "The rooster cocked its head as the player kicked the balls."
+    )
+    assert scorer.score_turn(text, "D")["profanity_hits"] == 0
+
+
 def test_scorer_separates_neutral_topics_and_discourse_categories() -> None:
     s = Scorers()
     for text in (
