@@ -12,7 +12,7 @@ permissions:
 
 jobs:
   rebuild:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     timeout-minutes: 360
     steps:
       - uses: actions/checkout@v4
@@ -23,10 +23,7 @@ jobs:
           cache: pip
 
       - name: Install dependencies
-        run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y -qq libarchive-tools
-          pip install -r requirements.txt -r requirements-analysis.txt -r requirements-dev.txt
+        run: pip install -r requirements.txt -r requirements-analysis.txt -r requirements-dev.txt
 
       - name: Run tests
         run: python -m pytest tests/ -q
@@ -57,14 +54,28 @@ jobs:
                   raise SystemExit(f"{name}: expected {size} bytes, got {actual}")
               print(name, actual, "bytes")
           PY
-          # Python and Info-ZIP overflow offsets in the >4 GB bound archive.
-          # Libarchive handles its ZIP64 layout and verifies entry CRCs while reading.
-          bsdtar -tf data/raw/hein-bound.zip >/dev/null
-          bsdtar -tf data/raw/hein-daily.zip >/dev/null
+          # Generic ZIP readers overflow offsets in Stanford's >4 GB bound archive.
+          # macOS ditto is the extraction path verified for this canonical file.
+          ditto -x -k data/raw/hein-bound.zip data/raw
+          test -f data/raw/hein-bound/043_SpeakerMap.txt
+          test -f data/raw/hein-bound/speeches_111.txt
+          python - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile
+          from analysis.ingest.hein import available_congresses
+
+          congresses = available_congresses(Path("data/raw/hein-bound"), "bound")
+          if congresses != [f"{number:03d}" for number in range(43, 112)]:
+              raise SystemExit(f"unexpected bound Congress coverage: {congresses}")
+
+          with ZipFile("data/raw/hein-daily.zip") as archive:
+              bad = archive.testzip()
+              if bad is not None:
+                  raise SystemExit(f"hein-daily.zip: corrupt member {bad}")
+          PY
 
       - name: Ingest Stanford and GovInfo corpora
         run: |
-          bsdtar -xf data/raw/hein-bound.zip -C data/raw
           rm data/raw/hein-bound.zip
           python -m analysis.run ingest-hein
           rm -r data/raw/hein-bound data/raw/hein-daily.zip
