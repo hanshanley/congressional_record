@@ -23,7 +23,10 @@ jobs:
           cache: pip
 
       - name: Install dependencies
-        run: pip install -r requirements.txt -r requirements-analysis.txt -r requirements-dev.txt
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq libarchive-tools
+          pip install -r requirements.txt -r requirements-analysis.txt -r requirements-dev.txt
 
       - name: Run tests
         run: python -m pytest tests/ -q
@@ -54,14 +57,14 @@ jobs:
                   raise SystemExit(f"{name}: expected {size} bytes, got {actual}")
               print(name, actual, "bytes")
           PY
-          # Python's stdlib cannot seek correctly in the >4 GB ZIP64 bound archive.
-          # The runner's Info-ZIP implementation validates and extracts ZIP64 safely.
-          unzip -tq data/raw/hein-bound.zip
-          unzip -tq data/raw/hein-daily.zip
+          # Python and Info-ZIP overflow offsets in the >4 GB bound archive.
+          # Libarchive handles its ZIP64 layout and verifies entry CRCs while reading.
+          bsdtar -tf data/raw/hein-bound.zip >/dev/null
+          bsdtar -tf data/raw/hein-daily.zip >/dev/null
 
       - name: Ingest Stanford and GovInfo corpora
         run: |
-          unzip -q data/raw/hein-bound.zip -d data/raw
+          bsdtar -xf data/raw/hein-bound.zip -C data/raw
           rm data/raw/hein-bound.zip
           python -m analysis.run ingest-hein
           rm -r data/raw/hein-bound data/raw/hein-daily.zip
