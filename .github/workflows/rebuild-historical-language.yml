@@ -1,0 +1,91 @@
+name: Rebuild historical language
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: update-site
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt -r requirements-analysis.txt -r requirements-dev.txt
+
+      - name: Run tests
+        run: python -m pytest tests/ -q
+
+      - name: Download canonical Stanford archives
+        run: |
+          mkdir -p data/raw
+          curl -L -C - --fail --retry 20 --retry-all-errors --retry-delay 5 \
+            -o data/raw/hein-bound.zip \
+            https://stacks.stanford.edu/file/druid:md374tz9962/hein-bound.zip
+          curl -L -C - --fail --retry 20 --retry-all-errors --retry-delay 5 \
+            -o data/raw/hein-daily.zip \
+            https://stacks.stanford.edu/file/druid:md374tz9962/hein-daily.zip
+
+      - name: Verify canonical archives
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile
+
+          expected = {
+              "hein-bound.zip": 7_590_593_783,
+              "hein-daily.zip": 2_817_259_858,
+          }
+          for name, size in expected.items():
+              path = Path("data/raw") / name
+              actual = path.stat().st_size
+              if actual != size:
+                  raise SystemExit(f"{name}: expected {size} bytes, got {actual}")
+              with ZipFile(path) as archive:
+                  bad = archive.testzip()
+                  if bad is not None:
+                      raise SystemExit(f"{name}: corrupt member {bad}")
+                  print(name, actual, "bytes", len(archive.namelist()), "members")
+          PY
+
+      - name: Ingest Stanford and GovInfo corpora
+        run: |
+          python -m analysis.run ingest-hein
+          rm data/raw/hein-bound.zip data/raw/hein-daily.zip
+          python -m analysis.run ingest-govinfo-bulk \
+            --start 2017-01-01 \
+            --end "$(date -u +%F)" \
+            --workers 12
+
+      - name: Rebuild all aggregate language metrics
+        run: |
+          python -m analysis.run aggregate --full
+          python -m analysis.run viz
+          python scripts/build_site.py
+
+      - name: Commit rebuilt historical data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/site/long_run_language.json outputs/figures site
+          if git diff --cached --quiet; then
+            echo "Historical outputs are unchanged."
+          else
+            git commit \
+              -m "Rebuild historical language with v4 codebook" \
+              -m "Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>" \
+              -m "Copilot-Session: 20de2f9c-02b3-4617-b28a-82ccd88b0490"
+            git push
+          fi
