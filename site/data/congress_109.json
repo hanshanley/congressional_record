@@ -1,7 +1,7 @@
 {
   "congress": 109,
   "label": "Congress 109",
-  "generated_utc": "2026-09-01T00:17:00+00:00",
+  "generated_utc": "2026-09-01T12:21:00+00:00",
   "min_words": 25000,
   "top": 25,
   "coverage": {
@@ -25,7 +25,7 @@
   },
   "caveats": [
     "Speech counts include only remarks attributable to a specific member by Bioguide ID; procedural speech, submitted Extensions of Remarks, and material printed into the Record are excluded.",
-    "Profanity uses a narrow, hand-curated list. Passages marked as quotations are excluded from a member's rate and retained as a separate audit count.",
+    "Profanity uses a conservative, hand-curated list rather than an exhaustive dictionary. Passages marked as quotations are excluded from a member's rate and retained as a separate audit count.",
     "A member's most-used profanity term is the most frequent accepted, unquoted surface form in the selected period; alphabetical order breaks ties. It does not imply personal preference.",
     "Members below the word threshold are omitted from the profanity ranking because rates computed from small samples are unstable.",
     "Legislative counts cover sponsored House and Senate bills (H.R. and S.) only; cosponsorships, resolutions, and amendments are outside this version.",
