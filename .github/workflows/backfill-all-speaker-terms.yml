@@ -13,7 +13,12 @@ permissions:
 jobs:
   backfill:
     runs-on: ubuntu-latest
-    timeout-minutes: 360
+    timeout-minutes: 180
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        congress: [103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118]
     steps:
       - uses: actions/checkout@v4
 
@@ -28,31 +33,76 @@ jobs:
       - name: Run tests
         run: python -m pytest tests/ -q
 
-      - name: Rescore all historical member partitions
+      - name: Rescore Congress ${{ matrix.congress }}
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          for year in $(seq 1994 2024); do
-            python scripts/update_speakers.py \
-              --since "${year}-01-01" \
-              --until "${year}-12-31"
-            git add data/site/speaker_daily
-            if ! git diff --cached --quiet; then
-              git commit \
-                -m "Rescore speaker profanity terms for ${year}" \
-                -m "Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>" \
-                -m "Copilot-Session: 20de2f9c-02b3-4617-b28a-82ccd88b0490"
-              git push
-            fi
-          done
+          start_year=$((1787 + 2 * ${{ matrix.congress }}))
+          end_year=$((1788 + 2 * ${{ matrix.congress }}))
+          if [ "${{ matrix.congress }}" -eq 103 ]; then
+            start_year=1994
+          fi
+          python scripts/update_speakers.py \
+            --since "${start_year}-01-01" \
+            --until "${end_year}-12-31"
+
+      - name: Upload Congress ${{ matrix.congress }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: speaker-congress-${{ matrix.congress }}
+          path: data/site/speaker_daily/congress_${{ matrix.congress }}.parquet
+          if-no-files-found: error
+
+  publish:
+    needs: backfill
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt -r requirements-analysis.txt -r requirements-dev.txt
+
+      - name: Download rescored partitions
+        uses: actions/download-artifact@v4
+        with:
+          pattern: speaker-congress-*
+          path: data/site/speaker_daily
+          merge-multiple: true
+
+      - name: Validate historical term counts
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          import pandas as pd
+
+          from analysis.speakers import incomplete_profanity_term_rows
+
+          root = Path("data/site/speaker_daily")
+          for congress in range(103, 119):
+              path = root / f"congress_{congress}.parquet"
+              frame = pd.read_parquet(path)
+              incomplete = incomplete_profanity_term_rows(frame)
+              if not incomplete.empty:
+                  raise SystemExit(
+                      f"{path}: {len(incomplete)} rows have inconsistent profanity terms"
+                  )
+          PY
+          python -m pytest tests/ -q
 
       - name: Rebuild and commit site
         run: |
           python scripts/build_site.py
-          git add site
+          git add data/site/speaker_daily site
           if git diff --cached --quiet; then
             echo "Site outputs are unchanged."
           else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git commit \
               -m "Publish historical speaker profanity terms" \
               -m "Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>" \
