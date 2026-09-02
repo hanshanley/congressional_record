@@ -813,6 +813,9 @@ function renderTermLeaders(language) {
     const row = document.createElement('tr');
     const term = document.createElement('td');
     term.textContent = item.term;
+    if (item.variants && item.variants.length > 1) {
+      term.title = `Grouped forms: ${item.variants.join(', ')}`;
+    }
     const leaders = document.createElement('td');
     item.leaders.forEach((leader, index) => {
       if (index) leaders.appendChild(document.createTextNode(', '));
@@ -835,7 +838,8 @@ function renderTermLeaders(language) {
   document.getElementById('term-leaders-scope').textContent =
     `${language.scope_label} · ${chamberLabel(selectedRecentChamber)}`;
   document.getElementById('term-leaders-note').textContent = available
-    ? 'Counts include accepted, unquoted uses by attributed members.'
+    ? 'Counts include accepted, unquoted uses by attributed members; inflected, plural, ' +
+      'spacing, and spelling variants are grouped into term families.'
     : 'Term-level detail has not been backfilled for this historical scope.';
 }
 """
@@ -1254,8 +1258,11 @@ def _language_payload(
     congress: Optional[int],
     *,
     min_words: int,
+    scope_label: Optional[str] = None,
 ) -> dict:
-    scope_label = "All Congresses" if congress is None else f"Congress {congress}"
+    scope_label = scope_label or (
+        "All Congresses" if congress is None else f"Congress {congress}"
+    )
     granularity = "year" if congress is None else "month"
     series = language_timeseries(daily, congress)
     chamber_series = language_timeseries(daily, congress, by_chamber=True)
@@ -1509,6 +1516,7 @@ def build_payload(
     top: int,
     min_words: int,
     generated_utc: str,
+    scope_label: Optional[str] = None,
 ) -> dict:
     """Build one Congress payload consumed by the static dashboard."""
     activity = member_activity(daily, bills, congress)
@@ -1517,7 +1525,9 @@ def build_payload(
     scoped_bills = bills if congress is None else bills[bills["congress"] == congress]
     return {
         "congress": congress,
-        "label": "All Congresses" if congress is None else f"Congress {congress}",
+        "label": scope_label or (
+            "All Congresses" if congress is None else f"Congress {congress}"
+        ),
         "generated_utc": generated_utc,
         "min_words": min_words,
         "top": top,
@@ -1542,6 +1552,7 @@ def build_payload(
             daily,
             congress,
             min_words=min_words,
+            scope_label=scope_label,
         ),
         "leaderboards": {
             metric: _enrich_board(board, scoped_bills, metric)
@@ -1728,9 +1739,14 @@ def _term_leaders_table(rows: list[dict], *, available: bool) -> str:
     for row in rows:
         leaders = ", ".join(str(_member_cell(leader)) for leader in row["leaders"])
         parties = ", ".join(sorted({leader["party"] for leader in row["leaders"]}))
+        variants = row.get("variants", [])
+        variant_title = (
+            f' title="{html.escape("Grouped forms: " + ", ".join(variants), quote=True)}"'
+            if len(variants) > 1 else ""
+        )
         body.append(
             "<tr>"
-            f"<td>{html.escape(row['term'])}</td>"
+            f"<td{variant_title}>{html.escape(row['term'])}</td>"
             f"<td>{leaders}</td>"
             f"<td>{html.escape(parties)}</td>"
             f'<td class="num">{_fmt_int(row["leader_hits"])}</td>'
@@ -1749,6 +1765,8 @@ def _term_leaders_table(rows: list[dict], *, available: bool) -> str:
 def _render_html(payload: dict, congresses: list[int], long_run: dict) -> str:
     all_selected = " selected" if payload["congress"] is None else ""
     options = [f'<option value="all"{all_selected}>All Congresses</option>']
+    if len(congresses) >= 5:
+        options.append('<option value="recent5">Last 5 Congresses</option>')
     for congress in sorted(congresses, reverse=True):
         selected = " selected" if congress == payload["congress"] else ""
         options.append(f'<option value="{congress}"{selected}>Congress {congress}</option>')
@@ -1976,9 +1994,11 @@ or whether an allegation is true.</p></div>
 <div class="section-header">
 <div><p class="eyebrow" id="term-leaders-scope">{html.escape(language['scope_label'])} · House + Senate</p>
 <h2 id="term-leaders-heading">Who uses each term the most?</h2>
-<p class="sub">For every observed term in the conservative codebook, this table shows
+<p class="sub">For every observed term family in the conservative codebook, this table shows
 the member with the most accepted, unquoted uses. Members tied for the highest count are shown
-together. “All uses” is the term’s total across all attributed members in that scope. The
+together. Inflected, plural, spacing, and spelling variants—such as “damn” and “damned”—are
+grouped before ranking, while raw forms remain in the downloadable data. “All uses” is the
+family’s total across all attributed members in that scope. The
 codebook favors precision over completeness and is not an exhaustive list of every possible
 curse word.</p>
 <p class="definition" id="term-leaders-note">{
@@ -2075,6 +2095,8 @@ if (requestedCongress && [...select.options].some(option => option.value === req
 def _render_activity_html(payload: dict, congresses: list[int]) -> str:
     all_selected = " selected" if payload["congress"] is None else ""
     options = [f'<option value="all"{all_selected}>All Congresses</option>']
+    if len(congresses) >= 5:
+        options.append('<option value="recent5">Last 5 Congresses</option>')
     for congress in sorted(congresses, reverse=True):
         selected = " selected" if congress == payload["congress"] else ""
         options.append(f'<option value="{congress}"{selected}>Congress {congress}</option>')
@@ -2294,6 +2316,21 @@ def main(argv: Optional[List[str]] = None) -> int:
         min_words=args.min_words,
         generated_utc=generated_utc,
     )
+    if len(available) >= 5:
+        recent_congresses = available[-5:]
+        recent_daily = daily[daily["congress"].isin(recent_congresses)]
+        recent_bills = bills[bills["congress"].isin(recent_congresses)]
+        payloads["recent5"] = build_payload(
+            recent_daily,
+            recent_bills,
+            None,
+            top=args.top,
+            min_words=args.min_words,
+            generated_utc=generated_utc,
+            scope_label=(
+                f"Last 5 Congresses ({recent_congresses[0]}–{recent_congresses[-1]})"
+            ),
+        )
     for value, payload in payloads.items():
         suffix = "all" if value is None else str(value)
         (data / f"congress_{suffix}.json").write_text(

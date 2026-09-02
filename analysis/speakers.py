@@ -76,6 +76,75 @@ _COUNT_KEYS = ("turns", "words", "profanity_hits", "profanity_quoted_hits",
                "hostility_hits", "misconduct_hits")
 _TERM_COUNTS_COLUMN = "profanity_terms"
 
+# Raw surface forms remain stored for auditability. Member summaries group only
+# explicit morphological, spacing, and spelling variants into these families.
+PROFANITY_TERM_FAMILIES = {
+    "damn": ("damn", "damned", "dammit"),
+    "goddamn": (
+        "goddamn", "goddamned", "goddammit", "goddamnit",
+        "god damn", "god damned", "god dammit", "god damnit",
+    ),
+    "hell": ("what the hell", "go to hell", "hell of a", "helluva"),
+    "crap": ("crap", "crapped", "crapping", "crappy"),
+    "bugger": ("bugger", "buggered", "buggers"),
+    "frick": ("frickin", "fricking"),
+    "frig": ("friggin", "frigging"),
+    "bullshit": (
+        "bullshit", "bull shit", "bullshitted", "bullshitter",
+        "bullshitters", "bullshitting",
+    ),
+    "shit": ("shit", "shits", "shitting", "shitty"),
+    "dipshit": ("dipshit", "dipshits"),
+    "shit bag": ("shit bag", "shit bags", "shitbag", "shitbags"),
+    "shithead": ("shithead", "shitheads"),
+    "shithole": ("shithole", "shitholes"),
+    "shit show": ("shit show", "shit shows", "shitshow", "shitshows"),
+    "shitstorm": ("shitstorm", "shitstorms"),
+    "fuck": ("fuck", "fucked", "fucking", "fucker", "fuckers", "fucks", "fuckin"),
+    "fuck up": ("fuck up", "fucked up", "fucking up"),
+    "fuckup": ("fuckup", "fuckups"),
+    "clusterfuck": ("clusterfuck", "clusterfucks"),
+    "motherfucker": (
+        "motherfuck", "motherfucked", "motherfucks", "motherfucker",
+        "motherfuckers", "motherfucking", "motherfuckin", "mother fucker",
+        "mother fuckers", "mother fucking", "mother fuckin", "mothafucka",
+        "mothafuckas", "mothafucker", "mothafuckers",
+    ),
+    "ass": ("ass", "asses"),
+    "asshole": ("asshole", "assholes"),
+    "assclown": ("assclown", "assclowns"),
+    "asshat": ("asshat", "asshats"),
+    "asswipe": ("asswipe", "asswipes"),
+    "badass": ("badass", "badasses"),
+    "fatass": ("fatass", "fatasses"),
+    "kick ass": ("kick ass", "kicked ass", "kicking ass"),
+    "smartass": ("smartass", "smartasses"),
+    "wiseass": ("wiseass", "wiseasses"),
+    "dumbass": ("dumbass", "dumbasses"),
+    "jackass": ("jackass", "jackasses"),
+    "bastard": ("bastard", "bastards"),
+    "bitch": ("bitch", "bitches", "bitching", "bitchy"),
+    "son of a bitch": (
+        "son of a bitch", "son-of-a-bitch", "sons of bitches", "sons-of-bitches",
+    ),
+    "piss off": ("piss off", "pissed off", "pisses off", "pissing off"),
+    "arsehole": ("arsehole", "arseholes"),
+    "cunt": ("cunt", "cunts"),
+    "dickhead": ("dickhead", "dickheads"),
+    "douchebag": ("douchebag", "douchebags"),
+    "cocksucker": (
+        "cocksuck", "cocksucked", "cocksucker", "cocksuckers", "cocksucking",
+        "cock sucker", "cock suckers", "cock sucking",
+    ),
+    "twat": ("twat", "twats"),
+    "wanker": ("wanker", "wankers"),
+}
+_TERM_FAMILY_BY_FORM = {
+    form: family
+    for family, forms in PROFANITY_TERM_FAMILIES.items()
+    for form in forms
+}
+
 
 def parse_profanity_terms(value) -> Counter:
     """Parse a stored profanity-term count map into a validated Counter."""
@@ -118,9 +187,17 @@ def combine_profanity_terms(values: Iterable) -> str:
     return serialize_profanity_terms(combined)
 
 
+def grouped_profanity_terms(value) -> Counter:
+    """Group stored raw forms into explicit display families."""
+    grouped = Counter()
+    for term, count in parse_profanity_terms(value).items():
+        grouped[_TERM_FAMILY_BY_FORM.get(term, term)] += count
+    return grouped
+
+
 def favorite_profanity_term(value) -> Tuple[str, int]:
-    """Return the most frequent term and count, breaking ties alphabetically."""
-    counts = parse_profanity_terms(value)
+    """Return the most frequent term family and count, breaking ties alphabetically."""
+    counts = grouped_profanity_terms(value)
     if not counts:
         return "", 0
     term, count = min(counts.items(), key=lambda item: (-item[1], item[0]))
@@ -535,6 +612,7 @@ def profanity_term_leaders(
     members: Dict[str, dict] = {}
     term_members: Dict[str, Counter] = defaultdict(Counter)
     term_totals: Counter = Counter()
+    term_variants: Dict[str, set[str]] = defaultdict(set)
     for _, row in frame.iterrows():
         bioguide = str(row["bioguide"])
         members[bioguide] = {
@@ -544,9 +622,11 @@ def profanity_term_leaders(
             "state": str(row["state"]),
             "chamber": str(row["chamber"]),
         }
-        for term, count in parse_profanity_terms(row[_TERM_COUNTS_COLUMN]).items():
+        for raw_term, count in parse_profanity_terms(row[_TERM_COUNTS_COLUMN]).items():
+            term = _TERM_FAMILY_BY_FORM.get(raw_term, raw_term)
             term_members[term][bioguide] += count
             term_totals[term] += count
+            term_variants[term].add(raw_term)
 
     rows = []
     for term in sorted(term_members):
@@ -560,6 +640,7 @@ def profanity_term_leaders(
             "term": term,
             "leader_hits": int(leader_hits),
             "total_hits": int(term_totals[term]),
+            "variants": sorted(term_variants[term]),
             "leaders": leaders,
         })
     return sorted(

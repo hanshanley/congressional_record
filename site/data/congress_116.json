@@ -1887,8 +1887,8 @@
           "active_days": 58,
           "profanity_hits": 5,
           "profanity_per_100k": 7.6155662173,
-          "favorite_profanity_term": "damned",
-          "favorite_profanity_term_hits": 3,
+          "favorite_profanity_term": "damn",
+          "favorite_profanity_term_hits": 5,
           "member_url": "https://bioguide.congress.gov/search/bio/P000603"
         },
         {
@@ -1904,7 +1904,7 @@
           "profanity_hits": 13,
           "profanity_per_100k": 7.5197103176,
           "favorite_profanity_term": "damn",
-          "favorite_profanity_term_hits": 8,
+          "favorite_profanity_term_hits": 9,
           "member_url": "https://bioguide.congress.gov/search/bio/M000312"
         },
         {
@@ -1951,8 +1951,8 @@
           "active_days": 42,
           "profanity_hits": 8,
           "profanity_per_100k": 6.5107875611,
-          "favorite_profanity_term": "crappy",
-          "favorite_profanity_term_hits": 4,
+          "favorite_profanity_term": "crap",
+          "favorite_profanity_term_hits": 6,
           "member_url": "https://bioguide.congress.gov/search/bio/S001183"
         },
         {
@@ -1983,8 +1983,8 @@
           "active_days": 40,
           "profanity_hits": 4,
           "profanity_per_100k": 4.8892582995,
-          "favorite_profanity_term": "crappy",
-          "favorite_profanity_term_hits": 2,
+          "favorite_profanity_term": "crap",
+          "favorite_profanity_term_hits": 3,
           "member_url": "https://bioguide.congress.gov/search/bio/D000191"
         }
       ],
@@ -2233,7 +2233,7 @@
             "profanity_hits": 13,
             "profanity_per_100k": 7.5197103176,
             "favorite_profanity_term": "damn",
-            "favorite_profanity_term_hits": 8,
+            "favorite_profanity_term_hits": 9,
             "member_url": "https://bioguide.congress.gov/search/bio/M000312"
           },
           {
@@ -2264,8 +2264,8 @@
             "active_days": 42,
             "profanity_hits": 8,
             "profanity_per_100k": 6.5107875611,
-            "favorite_profanity_term": "crappy",
-            "favorite_profanity_term_hits": 4,
+            "favorite_profanity_term": "crap",
+            "favorite_profanity_term_hits": 6,
             "member_url": "https://bioguide.congress.gov/search/bio/S001183"
           },
           {
@@ -2296,8 +2296,8 @@
             "active_days": 40,
             "profanity_hits": 4,
             "profanity_per_100k": 4.8892582995,
-            "favorite_profanity_term": "crappy",
-            "favorite_profanity_term_hits": 2,
+            "favorite_profanity_term": "crap",
+            "favorite_profanity_term_hits": 3,
             "member_url": "https://bioguide.congress.gov/search/bio/D000191"
           },
           {
@@ -2608,8 +2608,8 @@
             "active_days": 58,
             "profanity_hits": 5,
             "profanity_per_100k": 7.6155662173,
-            "favorite_profanity_term": "damned",
-            "favorite_profanity_term_hits": 3,
+            "favorite_profanity_term": "damn",
+            "favorite_profanity_term_hits": 5,
             "member_url": "https://bioguide.congress.gov/search/bio/P000603"
           },
           {
@@ -2641,7 +2641,7 @@
             "profanity_hits": 5,
             "profanity_per_100k": 3.7070262976,
             "favorite_profanity_term": "damn",
-            "favorite_profanity_term_hits": 4,
+            "favorite_profanity_term_hits": 5,
             "member_url": "https://bioguide.congress.gov/search/bio/B000944"
           },
           {
@@ -2656,7 +2656,7 @@
             "active_days": 35,
             "profanity_hits": 1,
             "profanity_per_100k": 3.4902795714,
-            "favorite_profanity_term": "damned",
+            "favorite_profanity_term": "damn",
             "favorite_profanity_term_hits": 1,
             "member_url": "https://bioguide.congress.gov/search/bio/D000622"
           },
@@ -2704,7 +2704,7 @@
             "active_days": 39,
             "profanity_hits": 1,
             "profanity_per_100k": 2.3832789151,
-            "favorite_profanity_term": "what the hell",
+            "favorite_profanity_term": "hell",
             "favorite_profanity_term_hits": 1,
             "member_url": "https://bioguide.congress.gov/search/bio/C001098"
           }
@@ -2942,8 +2942,12 @@
     "profanity_term_leaders": [
       {
         "term": "damn",
-        "leader_hits": 8,
-        "total_hits": 52,
+        "leader_hits": 9,
+        "total_hits": 75,
+        "variants": [
+          "damn",
+          "damned"
+        ],
         "leaders": [
           {
             "bioguide": "M000312",
@@ -2951,31 +2955,19 @@
             "party": "D",
             "state": "MA",
             "chamber": "house",
-            "hits": 8,
+            "hits": 9,
             "member_url": "https://bioguide.congress.gov/search/bio/M000312"
           }
         ]
       },
       {
-        "term": "damned",
-        "leader_hits": 5,
-        "total_hits": 23,
-        "leaders": [
-          {
-            "bioguide": "S000148",
-            "speaker_name": "Mr. SCHUMER",
-            "party": "D",
-            "state": "NY",
-            "chamber": "senate",
-            "hits": 5,
-            "member_url": "https://bioguide.congress.gov/search/bio/S000148"
-          }
-        ]
-      },
-      {
-        "term": "hell of a",
-        "leader_hits": 2,
-        "total_hits": 10,
+        "term": "hell",
+        "leader_hits": 3,
+        "total_hits": 16,
+        "variants": [
+          "hell of a",
+          "what the hell"
+        ],
         "leaders": [
           {
             "bioguide": "M000312",
@@ -2983,109 +2975,27 @@
             "party": "D",
             "state": "MA",
             "chamber": "house",
-            "hits": 2,
+            "hits": 3,
             "member_url": "https://bioguide.congress.gov/search/bio/M000312"
-          }
-        ]
-      },
-      {
-        "term": "crappy",
-        "leader_hits": 4,
-        "total_hits": 7,
-        "leaders": [
-          {
-            "bioguide": "S001183",
-            "speaker_name": "Mr. SCHWEIKERT",
-            "party": "R",
-            "state": "AZ",
-            "chamber": "house",
-            "hits": 4,
-            "member_url": "https://bioguide.congress.gov/search/bio/S001183"
           }
         ]
       },
       {
         "term": "crap",
-        "leader_hits": 2,
-        "total_hits": 6,
+        "leader_hits": 6,
+        "total_hits": 13,
+        "variants": [
+          "crap",
+          "crappy"
+        ],
         "leaders": [
-          {
-            "bioguide": "G000359",
-            "speaker_name": "Mr. GRAHAM",
-            "party": "R",
-            "state": "SC",
-            "chamber": "senate",
-            "hits": 2,
-            "member_url": "https://bioguide.congress.gov/search/bio/G000359"
-          },
           {
             "bioguide": "S001183",
             "speaker_name": "Mr. SCHWEIKERT",
             "party": "R",
             "state": "AZ",
             "chamber": "house",
-            "hits": 2,
-            "member_url": "https://bioguide.congress.gov/search/bio/S001183"
-          }
-        ]
-      },
-      {
-        "term": "what the hell",
-        "leader_hits": 1,
-        "total_hits": 6,
-        "leaders": [
-          {
-            "bioguide": "C001098",
-            "speaker_name": "Mr. CRUZ",
-            "party": "R",
-            "state": "TX",
-            "chamber": "senate",
-            "hits": 1,
-            "member_url": "https://bioguide.congress.gov/search/bio/C001098"
-          },
-          {
-            "bioguide": "E000296",
-            "speaker_name": "Mr. EVANS",
-            "party": "D",
-            "state": "PA",
-            "chamber": "house",
-            "hits": 1,
-            "member_url": "https://bioguide.congress.gov/search/bio/E000296"
-          },
-          {
-            "bioguide": "G000359",
-            "speaker_name": "Mr. GRAHAM",
-            "party": "R",
-            "state": "SC",
-            "chamber": "senate",
-            "hits": 1,
-            "member_url": "https://bioguide.congress.gov/search/bio/G000359"
-          },
-          {
-            "bioguide": "H001090",
-            "speaker_name": "Mr. HARDER of California",
-            "party": "D",
-            "state": "CA",
-            "chamber": "house",
-            "hits": 1,
-            "member_url": "https://bioguide.congress.gov/search/bio/H001090"
-          },
-          {
-            "bioguide": "M000312",
-            "speaker_name": "Mr. McGOVERN",
-            "party": "D",
-            "state": "MA",
-            "chamber": "house",
-            "hits": 1,
-            "member_url": "https://bioguide.congress.gov/search/bio/M000312"
-          },
-          {
-            "bioguide": "S001183",
-            "speaker_name": "Mr. SCHWEIKERT",
-            "party": "R",
-            "state": "AZ",
-            "chamber": "house",
-            "hits": 1,
+            "hits": 6,
             "member_url": "https://bioguide.congress.gov/search/bio/S001183"
           }
         ]
@@ -3094,6 +3004,9 @@
         "term": "bugger",
         "leader_hits": 2,
         "total_hits": 2,
+        "variants": [
+          "bugger"
+        ],
         "leaders": [
           {
             "bioguide": "S000364",
@@ -3110,6 +3023,9 @@
         "term": "ass",
         "leader_hits": 1,
         "total_hits": 2,
+        "variants": [
+          "ass"
+        ],
         "leaders": [
           {
             "bioguide": "G000359",
@@ -3132,9 +3048,12 @@
         ]
       },
       {
-        "term": "pissed off",
+        "term": "piss off",
         "leader_hits": 1,
         "total_hits": 2,
+        "variants": [
+          "pissed off"
+        ],
         "leaders": [
           {
             "bioguide": "G000359",
@@ -3160,6 +3079,9 @@
         "term": "half-assed",
         "leader_hits": 1,
         "total_hits": 1,
+        "variants": [
+          "half-assed"
+        ],
         "leaders": [
           {
             "bioguide": "R000614",
@@ -3176,6 +3098,9 @@
         "term": "son of a bitch",
         "leader_hits": 1,
         "total_hits": 1,
+        "variants": [
+          "son of a bitch"
+        ],
         "leaders": [
           {
             "bioguide": "M000312",
@@ -3194,8 +3119,12 @@
       "house": [
         {
           "term": "damn",
-          "leader_hits": 8,
-          "total_hits": 32,
+          "leader_hits": 9,
+          "total_hits": 44,
+          "variants": [
+            "damn",
+            "damned"
+          ],
           "leaders": [
             {
               "bioguide": "M000312",
@@ -3203,124 +3132,19 @@
               "party": "D",
               "state": "MA",
               "chamber": "house",
-              "hits": 8,
+              "hits": 9,
               "member_url": "https://bioguide.congress.gov/search/bio/M000312"
-            }
-          ]
-        },
-        {
-          "term": "damned",
-          "leader_hits": 2,
-          "total_hits": 12,
-          "leaders": [
-            {
-              "bioguide": "C001093",
-              "speaker_name": "Mr. COLLINS of Georgia",
-              "party": "R",
-              "state": "GA",
-              "chamber": "house",
-              "hits": 2,
-              "member_url": "https://bioguide.congress.gov/search/bio/C001093"
-            },
-            {
-              "bioguide": "H001052",
-              "speaker_name": "Mr. HARRIS",
-              "party": "R",
-              "state": "MD",
-              "chamber": "house",
-              "hits": 2,
-              "member_url": "https://bioguide.congress.gov/search/bio/H001052"
-            },
-            {
-              "bioguide": "K000376",
-              "speaker_name": "Mr. KELLY of Pennsylvania",
-              "party": "R",
-              "state": "PA",
-              "chamber": "house",
-              "hits": 2,
-              "member_url": "https://bioguide.congress.gov/search/bio/K000376"
-            }
-          ]
-        },
-        {
-          "term": "crappy",
-          "leader_hits": 4,
-          "total_hits": 7,
-          "leaders": [
-            {
-              "bioguide": "S001183",
-              "speaker_name": "Mr. SCHWEIKERT",
-              "party": "R",
-              "state": "AZ",
-              "chamber": "house",
-              "hits": 4,
-              "member_url": "https://bioguide.congress.gov/search/bio/S001183"
-            }
-          ]
-        },
-        {
-          "term": "hell of a",
-          "leader_hits": 2,
-          "total_hits": 6,
-          "leaders": [
-            {
-              "bioguide": "M000312",
-              "speaker_name": "Mr. McGOVERN",
-              "party": "D",
-              "state": "MA",
-              "chamber": "house",
-              "hits": 2,
-              "member_url": "https://bioguide.congress.gov/search/bio/M000312"
-            }
-          ]
-        },
-        {
-          "term": "what the hell",
-          "leader_hits": 1,
-          "total_hits": 4,
-          "leaders": [
-            {
-              "bioguide": "E000296",
-              "speaker_name": "Mr. EVANS",
-              "party": "D",
-              "state": "PA",
-              "chamber": "house",
-              "hits": 1,
-              "member_url": "https://bioguide.congress.gov/search/bio/E000296"
-            },
-            {
-              "bioguide": "H001090",
-              "speaker_name": "Mr. HARDER of California",
-              "party": "D",
-              "state": "CA",
-              "chamber": "house",
-              "hits": 1,
-              "member_url": "https://bioguide.congress.gov/search/bio/H001090"
-            },
-            {
-              "bioguide": "M000312",
-              "speaker_name": "Mr. McGOVERN",
-              "party": "D",
-              "state": "MA",
-              "chamber": "house",
-              "hits": 1,
-              "member_url": "https://bioguide.congress.gov/search/bio/M000312"
-            },
-            {
-              "bioguide": "S001183",
-              "speaker_name": "Mr. SCHWEIKERT",
-              "party": "R",
-              "state": "AZ",
-              "chamber": "house",
-              "hits": 1,
-              "member_url": "https://bioguide.congress.gov/search/bio/S001183"
             }
           ]
         },
         {
           "term": "crap",
-          "leader_hits": 2,
-          "total_hits": 3,
+          "leader_hits": 6,
+          "total_hits": 10,
+          "variants": [
+            "crap",
+            "crappy"
+          ],
           "leaders": [
             {
               "bioguide": "S001183",
@@ -3328,8 +3152,28 @@
               "party": "R",
               "state": "AZ",
               "chamber": "house",
-              "hits": 2,
+              "hits": 6,
               "member_url": "https://bioguide.congress.gov/search/bio/S001183"
+            }
+          ]
+        },
+        {
+          "term": "hell",
+          "leader_hits": 3,
+          "total_hits": 10,
+          "variants": [
+            "hell of a",
+            "what the hell"
+          ],
+          "leaders": [
+            {
+              "bioguide": "M000312",
+              "speaker_name": "Mr. McGOVERN",
+              "party": "D",
+              "state": "MA",
+              "chamber": "house",
+              "hits": 3,
+              "member_url": "https://bioguide.congress.gov/search/bio/M000312"
             }
           ]
         },
@@ -3337,6 +3181,9 @@
           "term": "bugger",
           "leader_hits": 2,
           "total_hits": 2,
+          "variants": [
+            "bugger"
+          ],
           "leaders": [
             {
               "bioguide": "S000364",
@@ -3353,6 +3200,9 @@
           "term": "half-assed",
           "leader_hits": 1,
           "total_hits": 1,
+          "variants": [
+            "half-assed"
+          ],
           "leaders": [
             {
               "bioguide": "R000614",
@@ -3366,9 +3216,12 @@
           ]
         },
         {
-          "term": "pissed off",
+          "term": "piss off",
           "leader_hits": 1,
           "total_hits": 1,
+          "variants": [
+            "pissed off"
+          ],
           "leaders": [
             {
               "bioguide": "G000586",
@@ -3385,6 +3238,9 @@
           "term": "son of a bitch",
           "leader_hits": 1,
           "total_hits": 1,
+          "variants": [
+            "son of a bitch"
+          ],
           "leaders": [
             {
               "bioguide": "M000312",
@@ -3401,24 +3257,12 @@
       "senate": [
         {
           "term": "damn",
-          "leader_hits": 5,
-          "total_hits": 20,
-          "leaders": [
-            {
-              "bioguide": "G000359",
-              "speaker_name": "Mr. GRAHAM",
-              "party": "R",
-              "state": "SC",
-              "chamber": "senate",
-              "hits": 5,
-              "member_url": "https://bioguide.congress.gov/search/bio/G000359"
-            }
-          ]
-        },
-        {
-          "term": "damned",
-          "leader_hits": 5,
-          "total_hits": 11,
+          "leader_hits": 6,
+          "total_hits": 31,
+          "variants": [
+            "damn",
+            "damned"
+          ],
           "leaders": [
             {
               "bioguide": "S000148",
@@ -3426,16 +3270,38 @@
               "party": "D",
               "state": "NY",
               "chamber": "senate",
-              "hits": 5,
+              "hits": 6,
               "member_url": "https://bioguide.congress.gov/search/bio/S000148"
             }
           ]
         },
         {
-          "term": "hell of a",
+          "term": "hell",
           "leader_hits": 1,
-          "total_hits": 4,
+          "total_hits": 6,
+          "variants": [
+            "hell of a",
+            "what the hell"
+          ],
           "leaders": [
+            {
+              "bioguide": "C001098",
+              "speaker_name": "Mr. CRUZ",
+              "party": "R",
+              "state": "TX",
+              "chamber": "senate",
+              "hits": 1,
+              "member_url": "https://bioguide.congress.gov/search/bio/C001098"
+            },
+            {
+              "bioguide": "G000359",
+              "speaker_name": "Mr. GRAHAM",
+              "party": "R",
+              "state": "SC",
+              "chamber": "senate",
+              "hits": 1,
+              "member_url": "https://bioguide.congress.gov/search/bio/G000359"
+            },
             {
               "bioguide": "M001176",
               "speaker_name": "Mr. MERKLEY",
@@ -3478,6 +3344,9 @@
           "term": "crap",
           "leader_hits": 2,
           "total_hits": 3,
+          "variants": [
+            "crap"
+          ],
           "leaders": [
             {
               "bioguide": "G000359",
@@ -3494,6 +3363,9 @@
           "term": "ass",
           "leader_hits": 1,
           "total_hits": 2,
+          "variants": [
+            "ass"
+          ],
           "leaders": [
             {
               "bioguide": "G000359",
@@ -3516,34 +3388,12 @@
           ]
         },
         {
-          "term": "what the hell",
-          "leader_hits": 1,
-          "total_hits": 2,
-          "leaders": [
-            {
-              "bioguide": "C001098",
-              "speaker_name": "Mr. CRUZ",
-              "party": "R",
-              "state": "TX",
-              "chamber": "senate",
-              "hits": 1,
-              "member_url": "https://bioguide.congress.gov/search/bio/C001098"
-            },
-            {
-              "bioguide": "G000359",
-              "speaker_name": "Mr. GRAHAM",
-              "party": "R",
-              "state": "SC",
-              "chamber": "senate",
-              "hits": 1,
-              "member_url": "https://bioguide.congress.gov/search/bio/G000359"
-            }
-          ]
-        },
-        {
-          "term": "pissed off",
+          "term": "piss off",
           "leader_hits": 1,
           "total_hits": 1,
+          "variants": [
+            "pissed off"
+          ],
           "leaders": [
             {
               "bioguide": "G000359",
@@ -3740,8 +3590,8 @@
         "profanity_hits": 6,
         "profanity_quoted_hits": 1,
         "profanity_terms": "{\"damn\":1,\"damned\":5}",
-        "favorite_profanity_term": "damned",
-        "favorite_profanity_term_hits": 5,
+        "favorite_profanity_term": "damn",
+        "favorite_profanity_term_hits": 6,
         "bills_sponsored": 27,
         "bills_passed": 1,
         "bills_enacted": 1,
@@ -3763,7 +3613,7 @@
         "profanity_hits": 1,
         "profanity_quoted_hits": 0,
         "profanity_terms": "{\"damned\":1}",
-        "favorite_profanity_term": "damned",
+        "favorite_profanity_term": "damn",
         "favorite_profanity_term_hits": 1,
         "bills_sponsored": 87,
         "bills_passed": 11,
@@ -3948,7 +3798,7 @@
         "profanity_quoted_hits": 2,
         "profanity_terms": "{\"damn\":8,\"damned\":1,\"hell of a\":2,\"son of a bitch\":1,\"what the hell\":1}",
         "favorite_profanity_term": "damn",
-        "favorite_profanity_term_hits": 8,
+        "favorite_profanity_term_hits": 9,
         "bills_sponsored": 18,
         "bills_passed": 3,
         "bills_enacted": 0,
@@ -3993,7 +3843,7 @@
         "profanity_hits": 1,
         "profanity_quoted_hits": 0,
         "profanity_terms": "{\"hell of a\":1}",
-        "favorite_profanity_term": "hell of a",
+        "favorite_profanity_term": "hell",
         "favorite_profanity_term_hits": 1,
         "bills_sponsored": 100,
         "bills_passed": 1,
@@ -4109,7 +3959,7 @@
         "profanity_quoted_hits": 2,
         "profanity_terms": "{\"damn\":4,\"damned\":1}",
         "favorite_profanity_term": "damn",
-        "favorite_profanity_term_hits": 4,
+        "favorite_profanity_term_hits": 5,
         "bills_sponsored": 72,
         "bills_passed": 2,
         "bills_enacted": 1,
@@ -4314,7 +4164,7 @@
         "profanity_hits": 1,
         "profanity_quoted_hits": 1,
         "profanity_terms": "{\"hell of a\":1}",
-        "favorite_profanity_term": "hell of a",
+        "favorite_profanity_term": "hell",
         "favorite_profanity_term_hits": 1,
         "bills_sponsored": 112,
         "bills_passed": 8,
@@ -4572,7 +4422,7 @@
         "profanity_hits": 1,
         "profanity_quoted_hits": 0,
         "profanity_terms": "{\"hell of a\":1}",
-        "favorite_profanity_term": "hell of a",
+        "favorite_profanity_term": "hell",
         "favorite_profanity_term_hits": 1,
         "bills_sponsored": 100,
         "bills_passed": 1,
@@ -4744,7 +4594,7 @@
         "profanity_hits": 1,
         "profanity_quoted_hits": 0,
         "profanity_terms": "{\"damned\":1}",
-        "favorite_profanity_term": "damned",
+        "favorite_profanity_term": "damn",
         "favorite_profanity_term_hits": 1,
         "bills_sponsored": 87,
         "bills_passed": 11,
@@ -5088,7 +4938,7 @@
         "profanity_hits": 1,
         "profanity_quoted_hits": 0,
         "profanity_terms": "{\"damned\":1}",
-        "favorite_profanity_term": "damned",
+        "favorite_profanity_term": "damn",
         "favorite_profanity_term_hits": 1,
         "bills_sponsored": 77,
         "bills_passed": 4,
@@ -5261,7 +5111,7 @@
         "profanity_quoted_hits": 2,
         "profanity_terms": "{\"damn\":4,\"damned\":1}",
         "favorite_profanity_term": "damn",
-        "favorite_profanity_term_hits": 4,
+        "favorite_profanity_term_hits": 5,
         "bills_sponsored": 72,
         "bills_passed": 2,
         "bills_enacted": 1,
@@ -5434,7 +5284,7 @@
         "profanity_hits": 1,
         "profanity_quoted_hits": 0,
         "profanity_terms": "{\"damned\":1}",
-        "favorite_profanity_term": "damned",
+        "favorite_profanity_term": "damn",
         "favorite_profanity_term_hits": 1,
         "bills_sponsored": 87,
         "bills_passed": 11,
@@ -5563,8 +5413,8 @@
         "profanity_hits": 4,
         "profanity_quoted_hits": 0,
         "profanity_terms": "{\"crap\":1,\"crappy\":2,\"damn\":1}",
-        "favorite_profanity_term": "crappy",
-        "favorite_profanity_term_hits": 2,
+        "favorite_profanity_term": "crap",
+        "favorite_profanity_term_hits": 3,
         "bills_sponsored": 48,
         "bills_passed": 10,
         "bills_enacted": 1,
@@ -5692,7 +5542,7 @@
         "profanity_hits": 1,
         "profanity_quoted_hits": 1,
         "profanity_terms": "{\"hell of a\":1}",
-        "favorite_profanity_term": "hell of a",
+        "favorite_profanity_term": "hell",
         "favorite_profanity_term_hits": 1,
         "bills_sponsored": 112,
         "bills_passed": 8,
@@ -6554,7 +6404,7 @@
         "profanity_hits": 1,
         "profanity_quoted_hits": 0,
         "profanity_terms": "{\"damned\":1}",
-        "favorite_profanity_term": "damned",
+        "favorite_profanity_term": "damn",
         "favorite_profanity_term_hits": 1,
         "bills_sponsored": 87,
         "bills_passed": 11,
@@ -6597,7 +6447,7 @@
         "profanity_hits": 1,
         "profanity_quoted_hits": 1,
         "profanity_terms": "{\"hell of a\":1}",
-        "favorite_profanity_term": "hell of a",
+        "favorite_profanity_term": "hell",
         "favorite_profanity_term_hits": 1,
         "bills_sponsored": 112,
         "bills_passed": 8,
@@ -7525,8 +7375,8 @@
         "profanity_hits": 5,
         "profanity_quoted_hits": 0,
         "profanity_terms": "{\"damn\":2,\"damned\":3}",
-        "favorite_profanity_term": "damned",
-        "favorite_profanity_term_hits": 3,
+        "favorite_profanity_term": "damn",
+        "favorite_profanity_term_hits": 5,
         "bills_sponsored": 61,
         "bills_passed": 1,
         "bills_enacted": 0,
@@ -7549,7 +7399,7 @@
         "profanity_quoted_hits": 2,
         "profanity_terms": "{\"damn\":8,\"damned\":1,\"hell of a\":2,\"son of a bitch\":1,\"what the hell\":1}",
         "favorite_profanity_term": "damn",
-        "favorite_profanity_term_hits": 8,
+        "favorite_profanity_term_hits": 9,
         "bills_sponsored": 18,
         "bills_passed": 3,
         "bills_enacted": 0,
@@ -7617,8 +7467,8 @@
         "profanity_hits": 8,
         "profanity_quoted_hits": 0,
         "profanity_terms": "{\"crap\":2,\"crappy\":4,\"damn\":1,\"what the hell\":1}",
-        "favorite_profanity_term": "crappy",
-        "favorite_profanity_term_hits": 4,
+        "favorite_profanity_term": "crap",
+        "favorite_profanity_term_hits": 6,
         "bills_sponsored": 13,
         "bills_passed": 0,
         "bills_enacted": 0,
@@ -7663,8 +7513,8 @@
         "profanity_hits": 4,
         "profanity_quoted_hits": 0,
         "profanity_terms": "{\"crap\":1,\"crappy\":2,\"damn\":1}",
-        "favorite_profanity_term": "crappy",
-        "favorite_profanity_term_hits": 2,
+        "favorite_profanity_term": "crap",
+        "favorite_profanity_term_hits": 3,
         "bills_sponsored": 48,
         "bills_passed": 10,
         "bills_enacted": 1,
@@ -7710,7 +7560,7 @@
         "profanity_quoted_hits": 2,
         "profanity_terms": "{\"damn\":4,\"damned\":1}",
         "favorite_profanity_term": "damn",
-        "favorite_profanity_term_hits": 4,
+        "favorite_profanity_term_hits": 5,
         "bills_sponsored": 72,
         "bills_passed": 2,
         "bills_enacted": 1,
@@ -7732,7 +7582,7 @@
         "profanity_hits": 1,
         "profanity_quoted_hits": 0,
         "profanity_terms": "{\"damned\":1}",
-        "favorite_profanity_term": "damned",
+        "favorite_profanity_term": "damn",
         "favorite_profanity_term_hits": 1,
         "bills_sponsored": 77,
         "bills_passed": 4,
@@ -7824,7 +7674,7 @@
         "profanity_hits": 1,
         "profanity_quoted_hits": 0,
         "profanity_terms": "{\"damned\":1}",
-        "favorite_profanity_term": "damned",
+        "favorite_profanity_term": "damn",
         "favorite_profanity_term_hits": 1,
         "bills_sponsored": 23,
         "bills_passed": 2,
@@ -7893,7 +7743,7 @@
         "profanity_hits": 2,
         "profanity_quoted_hits": 1,
         "profanity_terms": "{\"damned\":2}",
-        "favorite_profanity_term": "damned",
+        "favorite_profanity_term": "damn",
         "favorite_profanity_term_hits": 2,
         "bills_sponsored": 15,
         "bills_passed": 2,
@@ -7939,7 +7789,7 @@
         "profanity_hits": 1,
         "profanity_quoted_hits": 1,
         "profanity_terms": "{\"what the hell\":1}",
-        "favorite_profanity_term": "what the hell",
+        "favorite_profanity_term": "hell",
         "favorite_profanity_term_hits": 1,
         "bills_sponsored": 69,
         "bills_passed": 1,
@@ -7962,8 +7812,8 @@
         "profanity_hits": 6,
         "profanity_quoted_hits": 1,
         "profanity_terms": "{\"damn\":1,\"damned\":5}",
-        "favorite_profanity_term": "damned",
-        "favorite_profanity_term_hits": 5,
+        "favorite_profanity_term": "damn",
+        "favorite_profanity_term_hits": 6,
         "bills_sponsored": 27,
         "bills_passed": 1,
         "bills_enacted": 1,

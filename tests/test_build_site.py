@@ -329,6 +329,33 @@ def test_profanity_tables_show_each_members_most_used_term(store, tmp_path):
     assert "recentTermDetailAvailable" in page
 
 
+def test_builds_combined_last_five_congresses_payload(store, tmp_path):
+    path, daily, bills = store
+    earlier = _daily([
+        ["C115", "2017-01-03", "house", "Member 115", "D", "CA", 115,
+         1, 30_000, 1, 0, 0, 0],
+        ["C116", "2019-01-03", "house", "Member 116", "R", "TX", 116,
+         1, 30_000, 1, 0, 0, 0],
+        ["C117", "2021-01-03", "senate", "Member 117", "D", "NY", 117,
+         1, 30_000, 1, 0, 0, 0],
+    ])
+    earlier["profanity_terms"] = ['{"damned":1}', '{"damn":1}', '{"damn":1}']
+    save_daily(pd.concat([earlier, daily], ignore_index=True), path)
+    module = _load_build_site()
+    out = tmp_path / "site"
+
+    assert module.main([
+        "--daily", str(path), "--bills", str(bills), "--out", str(out),
+        "--min-words", "1000",
+    ]) == 0
+
+    payload = json.loads((out / "data" / "congress_recent5.json").read_text())
+    assert payload["label"] == "Last 5 Congresses (115–119)"
+    assert payload["language"]["scope_label"] == "Last 5 Congresses (115–119)"
+    assert "Last 5 Congresses" in (out / "index.html").read_text()
+    assert "damn” and “damned" in (out / "index.html").read_text()
+
+
 def test_build_refuses_incomplete_current_congress_term_counts(store, tmp_path):
     path, daily, bills = store
     daily.loc[daily["bioguide"] == "NEW", "profanity_terms"] = "{}"

@@ -244,7 +244,7 @@ def test_term_leaders_include_ties_and_support_chamber_scope():
         ["C", "2025-01-02", "house", "Gamma", "D", "NY", 119, 1, 100, 2, 0, 0, 0],
     ])
     daily["profanity_terms"] = [
-        '{"damn":2,"crap":1}', '{"damn":2,"shit":2}', '{"crap":2}',
+        '{"damn":2,"crap":1}', '{"damned":2,"shit":2}', '{"crap":2}',
     ]
     leaders = {row["term"]: row for row in profanity_term_leaders(daily, 119)}
     assert [leader["speaker_name"] for leader in leaders["damn"]["leaders"]] == [
@@ -252,6 +252,7 @@ def test_term_leaders_include_ties_and_support_chamber_scope():
     ]
     assert leaders["damn"]["leader_hits"] == 2
     assert leaders["damn"]["total_hits"] == 4
+    assert leaders["damn"]["variants"] == ["damn", "damned"]
     house = {
         row["term"]: row
         for row in profanity_term_leaders(daily, 119, chamber="house")
@@ -402,7 +403,7 @@ def test_language_member_rates_keep_measures_separate_and_apply_threshold():
          1, 60_000, 0, 0, 0, 0],
     ])
     daily["profanity_terms"] = [
-        '{"damn":6,"crap":4}', "{}", '{"shit":5}', '{"crap":100}', "{}",
+        '{"damn":3,"damned":3,"crap":4}', "{}", '{"shit":5}', '{"crap":100}', "{}",
     ]
     rankings = language_member_rates(daily, 119, min_words=25_000, top=5)
     assert set(rankings) == set(LANGUAGE_METRICS)

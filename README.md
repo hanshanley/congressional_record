@@ -515,6 +515,9 @@ Naming individuals is a reputational claim, so the counts are deliberately conse
 * The profanity lexicon is a **conservative, hand-curated list**, not an exhaustive word list.
   It includes explicit surface forms and compounds while omitting ambiguous ordinary, anatomical,
   medical, and identity terms (the repo's earlier broad list flagged "strips" and "erected").
+* Raw matched forms remain in the audit table, but member “most-used term” and per-term leader
+  summaries group explicit inflectional, plural, spacing, and spelling variants into documented
+  families (for example, `damn` and `damned`). Distinct expressions and compounds remain separate.
 
 The Congressional Record is a lightly edited transcript, not a verbatim one, and members may
 revise their remarks — worth stating plainly wherever these numbers are published.
