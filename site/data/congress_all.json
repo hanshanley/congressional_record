@@ -1,13 +1,13 @@
 {
   "congress": null,
   "label": "All Congresses",
-  "generated_utc": "2026-09-01T12:21:00+00:00",
+  "generated_utc": "2026-09-02T00:19:00+00:00",
   "min_words": 25000,
   "top": 25,
   "coverage": {
     "speech_first_date": "1994-01-25",
-    "speech_last_date": "2026-08-27",
-    "speaker_days": 558349,
+    "speech_last_date": "2026-08-31",
+    "speaker_days": 558416,
     "members_with_speech": 1751,
     "bills": 182190,
     "members_with_bills": 1787,
@@ -828,26 +828,26 @@
       {
         "period": "2026",
         "party": "D",
-        "words": 2409808,
-        "turns": 7156,
+        "words": 2426989,
+        "turns": 7202,
         "profanity_hits": 133,
         "hostility_hits": 97,
-        "misconduct_hits": 701,
-        "profanity_per_100k": 5.5191118961,
-        "hostility_per_100k": 4.0252169467,
-        "misconduct_per_100k": 29.0894544296
+        "misconduct_hits": 705,
+        "profanity_per_100k": 5.4800413187,
+        "hostility_per_100k": 3.996721864,
+        "misconduct_per_100k": 29.0483393209
       },
       {
         "period": "2026",
         "party": "R",
-        "words": 2255532,
-        "turns": 9248,
+        "words": 2269371,
+        "turns": 9356,
         "profanity_hits": 94,
         "hostility_hits": 22,
-        "misconduct_hits": 217,
-        "profanity_per_100k": 4.1675312077,
-        "hostility_per_100k": 0.9753796444,
-        "misconduct_per_100k": 9.6207901284
+        "misconduct_hits": 218,
+        "profanity_per_100k": 4.1421169126,
+        "hostility_per_100k": 0.9694316178,
+        "misconduct_per_100k": 9.6061860313
       }
     ],
     "chamber_series": [
@@ -2519,14 +2519,14 @@
         "period": "2026",
         "party": "D",
         "chamber": "house",
-        "words": 1229083,
-        "turns": 5005,
+        "words": 1246264,
+        "turns": 5051,
         "profanity_hits": 87,
         "hostility_hits": 31,
-        "misconduct_hits": 267,
-        "profanity_per_100k": 7.078447916,
-        "hostility_per_100k": 2.5222055793,
-        "misconduct_per_100k": 21.7235125699
+        "misconduct_hits": 271,
+        "profanity_per_100k": 6.9808644075,
+        "hostility_per_100k": 2.4874344441,
+        "misconduct_per_100k": 21.7449914304
       },
       {
         "period": "2026",
@@ -2545,14 +2545,14 @@
         "period": "2026",
         "party": "R",
         "chamber": "house",
-        "words": 1151980,
-        "turns": 5758,
+        "words": 1165819,
+        "turns": 5866,
         "profanity_hits": 65,
         "hostility_hits": 9,
-        "misconduct_hits": 103,
-        "profanity_per_100k": 5.6424590705,
-        "hostility_per_100k": 0.7812635636,
-        "misconduct_per_100k": 8.9411274501
+        "misconduct_hits": 104,
+        "profanity_per_100k": 5.5754795556,
+        "hostility_per_100k": 0.7719894769,
+        "misconduct_per_100k": 8.9207672889
       },
       {
         "period": "2026",
@@ -2877,11 +2877,11 @@
           "party": "D",
           "state": "TX",
           "chamber": "house",
-          "words": 84846,
-          "turns": 345,
-          "active_days": 237,
+          "words": 84894,
+          "turns": 346,
+          "active_days": 238,
           "misconduct_hits": 69,
-          "misconduct_per_100k": 81.3238101973,
+          "misconduct_per_100k": 81.2778288218,
           "member_url": "https://bioguide.congress.gov/search/bio/G000587"
         },
         {
@@ -6448,31 +6448,31 @@
     },
     "parties": {
       "D": {
-        "words": 240405230,
+        "words": 240422411,
         "profanity_hits": 1112,
         "hostility_hits": 4293,
-        "misconduct_hits": 19065,
-        "profanity_per_100k": 0.4625523329920901,
-        "hostility_per_100k": 1.7857348610926642,
-        "misconduct_per_100k": 7.930359917710609
+        "misconduct_hits": 19069,
+        "profanity_per_100k": 0.46251927820489247,
+        "hostility_per_100k": 1.7856072494007225,
+        "misconduct_per_100k": 7.931456938929042
       },
       "R": {
-        "words": 227315404,
+        "words": 227329243,
         "profanity_hits": 1189,
         "hostility_hits": 3576,
-        "misconduct_hits": 16286,
-        "profanity_per_100k": 0.5230617807141658,
-        "hostility_per_100k": 1.5731445986828063,
-        "misconduct_per_100k": 7.164494668385958
+        "misconduct_hits": 16287,
+        "profanity_per_100k": 0.5230299385636014,
+        "hostility_per_100k": 1.5730488312055833,
+        "misconduct_per_100k": 7.164498409912006
       }
     },
     "highlights": [
       {
         "key": "profanity",
         "label": "Profanity",
-        "democratic_rate": 0.4625523329920901,
-        "republican_rate": 0.5230617807141658,
-        "difference": -0.06050944772207567,
+        "democratic_rate": 0.46251927820489247,
+        "republican_rate": 0.5230299385636014,
+        "difference": -0.06051066035870889,
         "higher_party": "Republicans",
         "leader_name": "Mr. SCHWEIKERT",
         "leader_rate": 46.78017435622931,
@@ -6500,9 +6500,9 @@
       {
         "key": "hostility",
         "label": "Personal hostility / disrespect",
-        "democratic_rate": 1.7857348610926642,
-        "republican_rate": 1.5731445986828063,
-        "difference": 0.2125902624098579,
+        "democratic_rate": 1.7856072494007225,
+        "republican_rate": 1.5730488312055833,
+        "difference": 0.2125584181951392,
         "higher_party": "Democrats",
         "leader_name": "Mr. BROWN of Maryland",
         "leader_rate": 31.17692907248636,
@@ -6530,9 +6530,9 @@
       {
         "key": "misconduct",
         "label": "Misconduct allegations",
-        "democratic_rate": 7.930359917710609,
-        "republican_rate": 7.164494668385958,
-        "difference": 0.7658652493246514,
+        "democratic_rate": 7.931456938929042,
+        "republican_rate": 7.164498409912006,
+        "difference": 0.7669585290170362,
         "higher_party": "Democrats",
         "leader_name": "Mr. ROGAN",
         "leader_rate": 140.37701254798603,

@@ -1,13 +1,13 @@
 {
   "congress": 119,
   "label": "Congress 119",
-  "generated_utc": "2026-09-01T12:21:00+00:00",
+  "generated_utc": "2026-09-02T00:19:00+00:00",
   "min_words": 25000,
   "top": 25,
   "coverage": {
     "speech_first_date": "2025-01-06",
-    "speech_last_date": "2026-08-27",
-    "speaker_days": 19771,
+    "speech_last_date": "2026-08-31",
+    "speaker_days": 19838,
     "members_with_speech": 546,
     "bills": 15563,
     "members_with_bills": 545,
@@ -515,26 +515,26 @@
       {
         "period": "2026-08",
         "party": "D",
-        "words": 52022,
-        "turns": 114,
+        "words": 69203,
+        "turns": 160,
         "profanity_hits": 3,
         "hostility_hits": 1,
-        "misconduct_hits": 35,
-        "profanity_per_100k": 5.766790973,
-        "hostility_per_100k": 1.9222636577,
-        "misconduct_per_100k": 67.2792280189
+        "misconduct_hits": 39,
+        "profanity_per_100k": 4.335072179,
+        "hostility_per_100k": 1.4450240597,
+        "misconduct_per_100k": 56.3559383264
       },
       {
         "period": "2026-08",
         "party": "R",
-        "words": 66189,
-        "turns": 298,
+        "words": 80028,
+        "turns": 406,
         "profanity_hits": 0,
         "hostility_hits": 1,
-        "misconduct_hits": 7,
+        "misconduct_hits": 8,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 1.5108250616,
-        "misconduct_per_100k": 10.575775431
+        "hostility_per_100k": 1.2495626531,
+        "misconduct_per_100k": 9.9965012246
       }
     ],
     "chamber_series": [
@@ -1477,6 +1477,19 @@
       {
         "period": "2026-08",
         "party": "D",
+        "chamber": "house",
+        "words": 17181,
+        "turns": 46,
+        "profanity_hits": 0,
+        "hostility_hits": 0,
+        "misconduct_hits": 4,
+        "profanity_per_100k": 0.0,
+        "hostility_per_100k": 0.0,
+        "misconduct_per_100k": 23.2815319248
+      },
+      {
+        "period": "2026-08",
+        "party": "D",
         "chamber": "senate",
         "words": 52022,
         "turns": 114,
@@ -1486,6 +1499,19 @@
         "profanity_per_100k": 5.766790973,
         "hostility_per_100k": 1.9222636577,
         "misconduct_per_100k": 67.2792280189
+      },
+      {
+        "period": "2026-08",
+        "party": "R",
+        "chamber": "house",
+        "words": 13839,
+        "turns": 108,
+        "profanity_hits": 0,
+        "hostility_hits": 0,
+        "misconduct_hits": 1,
+        "profanity_per_100k": 0.0,
+        "hostility_per_100k": 0.0,
+        "misconduct_per_100k": 7.2259556326
       },
       {
         "period": "2026-08",
@@ -1738,11 +1764,11 @@
           "party": "R",
           "state": "SC",
           "chamber": "house",
-          "words": 26300,
-          "turns": 149,
-          "active_days": 120,
+          "words": 26476,
+          "turns": 150,
+          "active_days": 121,
           "hostility_hits": 3,
-          "hostility_per_100k": 11.4068441065,
+          "hostility_per_100k": 11.3310167699,
           "member_url": "https://bioguide.congress.gov/search/bio/W000795"
         }
       ],
@@ -2029,11 +2055,11 @@
             "party": "R",
             "state": "SC",
             "chamber": "house",
-            "words": 26300,
-            "turns": 149,
-            "active_days": 120,
+            "words": 26476,
+            "turns": 150,
+            "active_days": 121,
             "hostility_hits": 3,
-            "hostility_per_100k": 11.4068441065,
+            "hostility_per_100k": 11.3310167699,
             "member_url": "https://bioguide.congress.gov/search/bio/W000795"
           },
           {
@@ -2066,20 +2092,6 @@
           },
           {
             "rank": 6,
-            "bioguide": "H001068",
-            "speaker_name": "Mr. HUFFMAN",
-            "party": "D",
-            "state": "CA",
-            "chamber": "house",
-            "words": 46056,
-            "turns": 166,
-            "active_days": 19,
-            "hostility_hits": 2,
-            "hostility_per_100k": 4.3425395171,
-            "member_url": "https://bioguide.congress.gov/search/bio/H001068"
-          },
-          {
-            "rank": 7,
             "bioguide": "J000294",
             "speaker_name": "Mr. JEFFRIES",
             "party": "D",
@@ -2091,6 +2103,20 @@
             "hostility_hits": 2,
             "hostility_per_100k": 4.29000429,
             "member_url": "https://bioguide.congress.gov/search/bio/J000294"
+          },
+          {
+            "rank": 7,
+            "bioguide": "H001068",
+            "speaker_name": "Mr. HUFFMAN",
+            "party": "D",
+            "state": "CA",
+            "chamber": "house",
+            "words": 46720,
+            "turns": 168,
+            "active_days": 20,
+            "hostility_hits": 2,
+            "hostility_per_100k": 4.2808219178,
+            "member_url": "https://bioguide.congress.gov/search/bio/H001068"
           },
           {
             "rank": 8,
@@ -2199,11 +2225,11 @@
             "party": "R",
             "state": "SC",
             "chamber": "house",
-            "words": 26300,
-            "turns": 149,
-            "active_days": 120,
+            "words": 26476,
+            "turns": 150,
+            "active_days": 121,
             "misconduct_hits": 10,
-            "misconduct_per_100k": 38.0228136882,
+            "misconduct_per_100k": 37.7700558997,
             "member_url": "https://bioguide.congress.gov/search/bio/W000795"
           },
           {
@@ -4024,31 +4050,31 @@
     },
     "parties": {
       "D": {
-        "words": 7257617,
+        "words": 7274798,
         "profanity_hits": 404,
         "hostility_hits": 268,
-        "misconduct_hits": 1858,
-        "profanity_per_100k": 5.566565444277371,
-        "hostility_per_100k": 3.6926721264018205,
-        "misconduct_per_100k": 25.600689592740977
+        "misconduct_hits": 1862,
+        "profanity_per_100k": 5.553418802831364,
+        "hostility_per_100k": 3.6839510870267462,
+        "misconduct_per_100k": 25.595212403148512
       },
       "R": {
-        "words": 5622061,
+        "words": 5635900,
         "profanity_hits": 222,
         "hostility_hits": 77,
-        "misconduct_hits": 450,
-        "profanity_per_100k": 3.9487298341302237,
-        "hostility_per_100k": 1.3696044920181407,
-        "misconduct_per_100k": 8.004182096209913
+        "misconduct_hits": 451,
+        "profanity_per_100k": 3.9390336947071454,
+        "hostility_per_100k": 1.3662414166326584,
+        "misconduct_per_100k": 8.002271154562713
       }
     },
     "highlights": [
       {
         "key": "profanity",
         "label": "Profanity",
-        "democratic_rate": 5.566565444277371,
-        "republican_rate": 3.9487298341302237,
-        "difference": 1.6178356101471474,
+        "democratic_rate": 5.553418802831364,
+        "republican_rate": 3.9390336947071454,
+        "difference": 1.6143851081242184,
         "higher_party": "Democrats",
         "leader_name": "Mr. McGOVERN",
         "leader_rate": 78.2801392926008,
@@ -4076,9 +4102,9 @@
       {
         "key": "hostility",
         "label": "Personal hostility / disrespect",
-        "democratic_rate": 3.6926721264018205,
-        "republican_rate": 1.3696044920181407,
-        "difference": 2.32306763438368,
+        "democratic_rate": 3.6839510870267462,
+        "republican_rate": 1.3662414166326584,
+        "difference": 2.3177096703940876,
         "higher_party": "Democrats",
         "leader_name": "Ms. DUCKWORTH",
         "leader_rate": 20.210866709334052,
@@ -4106,9 +4132,9 @@
       {
         "key": "misconduct",
         "label": "Misconduct allegations",
-        "democratic_rate": 25.600689592740977,
-        "republican_rate": 8.004182096209913,
-        "difference": 17.596507496531064,
+        "democratic_rate": 25.595212403148512,
+        "republican_rate": 8.002271154562713,
+        "difference": 17.5929412485858,
         "higher_party": "Democrats",
         "leader_name": "Mr. MURPHY",
         "leader_rate": 149.37029426706195,
@@ -4585,9 +4611,9 @@
       {
         "rank": 20,
         "bioguide": "G000553",
-        "turns": 93,
-        "words": 121314,
-        "active_days": 61,
+        "turns": 94,
+        "words": 121424,
+        "active_days": 62,
         "profanity_hits": 0,
         "profanity_quoted_hits": 0,
         "profanity_terms": "{}",
