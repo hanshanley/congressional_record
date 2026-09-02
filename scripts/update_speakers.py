@@ -34,7 +34,7 @@ import pandas as pd  # noqa: E402
 
 from analysis.speakers import (  # noqa: E402
     load_daily,
-    merge_daily,
+    replace_daily_window,
     save_daily,
     speaker_counts,
 )
@@ -129,7 +129,7 @@ def main(argv: Optional[List[str]] = None) -> int:
         LOG.info("no new rows; speaker table unchanged")
         return 0
 
-    merged = merge_daily(daily, fresh)
+    merged = replace_daily_window(daily, fresh, start, end)
     before = 0 if daily is None else len(daily)
     save_daily(merged, args.daily)
     LOG.info(

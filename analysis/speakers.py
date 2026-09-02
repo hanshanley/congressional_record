@@ -298,6 +298,21 @@ def merge_daily(existing: Optional[pd.DataFrame], fresh: pd.DataFrame) -> pd.Dat
     return combined.sort_values(["date", "bioguide", "chamber"]).reset_index(drop=True)
 
 
+def replace_daily_window(
+    existing: Optional[pd.DataFrame],
+    fresh: pd.DataFrame,
+    start: str,
+    end: str,
+) -> pd.DataFrame:
+    """Replace every stored speaker row in a fully recomputed date window."""
+    if existing is None or existing.empty:
+        retained = existing
+    else:
+        dates = existing["date"].astype(str).str[:10]
+        retained = existing[(dates < start) | (dates > end)]
+    return merge_daily(retained, fresh)
+
+
 def load_daily(path: Path) -> Optional[pd.DataFrame]:
     """Load the daily table from a partition directory (or a legacy single file).
 

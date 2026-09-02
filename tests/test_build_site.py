@@ -670,10 +670,11 @@ def test_probe_distinguishes_published_and_missing_issues():
     with patch(
         "analysis.ingest.govinfo_bulk.subprocess.run",
         side_effect=lambda *args, **kwargs: next(responses),
-    ):
+    ) as run:
         assert probe_packages(
             "2026-07-20", "2026-07-21", workers=1
         ) == ["CREC-2026-07-20"]
+    assert all("--retry-all-errors" in call.args[0] for call in run.call_args_list)
 
 
 def test_committed_site_state_is_not_gitignored():

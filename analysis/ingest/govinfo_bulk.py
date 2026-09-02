@@ -213,7 +213,8 @@ def probe_packages(
         try:
             result = subprocess.run(
                 ["curl", "-sS", "-o", "/dev/null", "-w", "%{http_code}",
-                 "-I", "--max-time", "30", "--retry", "3", "--retry-delay", "2", url],
+                 "-I", "--max-time", "30", "--retry", "3", "--retry-all-errors",
+                 "--retry-delay", "2", url],
                 capture_output=True, text=True, timeout=180, check=True,
             )
         except Exception as exc:  # noqa: BLE001 - treat a probe failure as "unknown"
@@ -253,7 +254,8 @@ def _download(pkg: str, dest: Path) -> Optional[Path]:
     url = CONTENT_URL.format(pkg=pkg)
     try:
         subprocess.run(
-            ["curl", "-sL", "--retry", "5", "--retry-delay", "2", "-o", str(dest), url],
+            ["curl", "-sL", "--retry", "5", "--retry-all-errors",
+             "--retry-delay", "2", "-o", str(dest), url],
             check=True, timeout=600,
         )
         if not dest.exists() or dest.stat().st_size == 0 or not zipfile.is_zipfile(dest):

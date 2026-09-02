@@ -29,6 +29,7 @@ from analysis.speakers import (  # noqa: E402
     merge_daily,
     parse_profanity_terms,
     profanity_term_leaders,
+    replace_daily_window,
     save_daily,
     speaker_counts,
     timeseries,
@@ -282,6 +283,20 @@ def test_merge_appends_new_days_and_sorts():
     fresh = _daily([["A", "2025-01-01", "house", "X", "D", "CA", 119, 1, 100, 2, 0, 0, 0]])
     merged = merge_daily(existing, fresh)
     assert list(merged["date"]) == ["2025-01-01", "2025-01-02"]
+
+
+def test_replace_daily_window_removes_stale_member_rows():
+    existing = _daily([
+        ["A", "2025-01-01", "house", "X", "D", "CA", 119, 1, 100, 1, 0, 0, 0],
+        ["B", "2025-01-02", "house", "Y", "R", "TX", 119, 1, 100, 1, 0, 0, 0],
+    ])
+    fresh = _daily([
+        ["C", "2025-01-02", "house", "Z", "D", "NY", 119, 1, 100, 0, 0, 0, 0],
+    ])
+
+    replaced = replace_daily_window(existing, fresh, "2025-01-02", "2025-01-02")
+
+    assert list(replaced["bioguide"]) == ["A", "C"]
 
 
 def test_merge_handles_missing_and_empty_inputs():
