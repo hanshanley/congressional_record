@@ -1,7 +1,7 @@
 {
   "congress": 119,
   "label": "Congress 119",
-  "generated_utc": "2026-09-02T00:19:00+00:00",
+  "generated_utc": "2026-09-02T08:57:00+00:00",
   "min_words": 25000,
   "top": 25,
   "coverage": {
@@ -9,7 +9,7 @@
     "speech_last_date": "2026-08-31",
     "speaker_days": 19838,
     "members_with_speech": 546,
-    "bills": 15563,
+    "bills": 15580,
     "members_with_bills": 545,
     "bill_sources": [
       "govinfo"
@@ -5948,10 +5948,10 @@
         "profanity_terms": "{\"crap\":80,\"crappy\":4,\"damn\":22,\"damned\":4,\"fricking\":1,\"hell of a\":10,\"piss off\":1,\"pissed off\":1,\"pisses off\":1,\"screw you\":1,\"what the hell\":11}",
         "favorite_profanity_term": "crap",
         "favorite_profanity_term_hits": 84,
-        "bills_sponsored": 30,
+        "bills_sponsored": 31,
         "bills_passed": 1,
         "bills_enacted": 0,
-        "passage_share": 0.0333333333,
+        "passage_share": 0.0322580645,
         "enactment_share": 0.0,
         "speaker_name": "Mr. SCHWEIKERT",
         "party": "R",
@@ -6646,9 +6646,9 @@
         "favorite_profanity_term": "damn",
         "favorite_profanity_term_hits": 2,
         "bills_sponsored": 113,
-        "bills_passed": 5,
+        "bills_passed": 6,
         "bills_enacted": 0,
-        "passage_share": 0.0442477876,
+        "passage_share": 0.0530973451,
         "enactment_share": 0.0,
         "speaker_name": "Mr. LAWLER",
         "party": "R",
@@ -7247,10 +7247,10 @@
         "profanity_terms": "{\"ass\":1}",
         "favorite_profanity_term": "ass",
         "favorite_profanity_term_hits": 1,
-        "bills_sponsored": 84,
+        "bills_sponsored": 85,
         "bills_passed": 3,
         "bills_enacted": 0,
-        "passage_share": 0.0357142857,
+        "passage_share": 0.0352941176,
         "enactment_share": 0.0,
         "speaker_name": "Ms. MACE",
         "party": "R",
@@ -7259,6 +7259,12 @@
         "profanity_per_100k": 4.9164208456,
         "member_url": "https://bioguide.congress.gov/search/bio/M000194",
         "examples": [
+          {
+            "bill_id": "119-hr-10212",
+            "label": "HR 10212",
+            "title": "To direct the Secretary of Veterans Affairs to study the potential benefits of peptide-based therapies for veterans receiving care through the Department of Veterans Affairs, and for other purposes.",
+            "url": "https://www.congress.gov/bill/119th-congress/house-bill/10212"
+          },
           {
             "bill_id": "119-hr-10145",
             "label": "HR 10145",
@@ -7270,12 +7276,6 @@
             "label": "HR 10144",
             "title": "Pesticide Harm Accountability Act",
             "url": "https://www.congress.gov/bill/119th-congress/house-bill/10144"
-          },
-          {
-            "bill_id": "119-hr-10127",
-            "label": "HR 10127",
-            "title": "TRANS Government Research Act",
-            "url": "https://www.congress.gov/bill/119th-congress/house-bill/10127"
           }
         ]
       },
@@ -7290,10 +7290,10 @@
         "profanity_terms": "{\"pissed off\":1}",
         "favorite_profanity_term": "piss off",
         "favorite_profanity_term_hits": 1,
-        "bills_sponsored": 83,
+        "bills_sponsored": 84,
         "bills_passed": 2,
         "bills_enacted": 0,
-        "passage_share": 0.0240963855,
+        "passage_share": 0.0238095238,
         "enactment_share": 0.0,
         "speaker_name": "Mr. NEGUSE",
         "party": "D",
@@ -7302,6 +7302,12 @@
         "profanity_per_100k": 3.4581733928,
         "member_url": "https://bioguide.congress.gov/search/bio/N000191",
         "examples": [
+          {
+            "bill_id": "119-hr-10214",
+            "label": "HR 10214",
+            "title": "To amend the Public Lands Corps Act of 1993 to modify the cost-sharing requirement for conservation projects carried out by a qualified youth or conservation corps, and for other purposes.",
+            "url": "https://www.congress.gov/bill/119th-congress/house-bill/10214"
+          },
           {
             "bill_id": "119-hr-10100",
             "label": "HR 10100",
@@ -7313,12 +7319,6 @@
             "label": "HR 10061",
             "title": "Wildfire Response and Readiness Act",
             "url": "https://www.congress.gov/bill/119th-congress/house-bill/10061"
-          },
-          {
-            "bill_id": "119-hr-9997",
-            "label": "HR 9997",
-            "title": "National Guard for National Service Act of 2026",
-            "url": "https://www.congress.gov/bill/119th-congress/house-bill/9997"
           }
         ]
       },
@@ -8057,6 +8057,49 @@
       },
       {
         "rank": 15,
+        "bioguide": "L000599",
+        "turns": 114,
+        "words": 22165,
+        "active_days": 54,
+        "profanity_hits": 3,
+        "profanity_quoted_hits": 0,
+        "profanity_terms": "{\"crap\":1,\"damn\":2}",
+        "favorite_profanity_term": "damn",
+        "favorite_profanity_term_hits": 2,
+        "bills_sponsored": 113,
+        "bills_passed": 6,
+        "bills_enacted": 0,
+        "passage_share": 0.0530973451,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. LAWLER",
+        "party": "R",
+        "state": "NY",
+        "chamber": "house",
+        "profanity_per_100k": 13.5348522445,
+        "member_url": "https://bioguide.congress.gov/search/bio/L000599",
+        "examples": [
+          {
+            "bill_id": "119-hr-9436",
+            "label": "HR 9436",
+            "title": "Northeast Lobsterman Protection Act of 2026",
+            "url": "https://www.congress.gov/bill/119th-congress/house-bill/9436"
+          },
+          {
+            "bill_id": "119-hr-3352",
+            "label": "HR 3352",
+            "title": "HALOS Act of 2025",
+            "url": "https://www.congress.gov/bill/119th-congress/house-bill/3352"
+          },
+          {
+            "bill_id": "119-hr-2683",
+            "label": "HR 2683",
+            "title": "Remote Access Security Act",
+            "url": "https://www.congress.gov/bill/119th-congress/house-bill/2683"
+          }
+        ]
+      },
+      {
+        "rank": 16,
         "bioguide": "E000295",
         "turns": 219,
         "words": 70077,
@@ -8099,7 +8142,7 @@
         ]
       },
       {
-        "rank": 16,
+        "rank": 17,
         "bioguide": "B001321",
         "turns": 41,
         "words": 6673,
@@ -8142,7 +8185,7 @@
         ]
       },
       {
-        "rank": 17,
+        "rank": 18,
         "bioguide": "V000129",
         "turns": 18,
         "words": 3645,
@@ -8185,7 +8228,7 @@
         ]
       },
       {
-        "rank": 18,
+        "rank": 19,
         "bioguide": "H001100",
         "turns": 45,
         "words": 8071,
@@ -8228,7 +8271,7 @@
         ]
       },
       {
-        "rank": 19,
+        "rank": 20,
         "bioguide": "S001212",
         "turns": 111,
         "words": 28078,
@@ -8271,7 +8314,7 @@
         ]
       },
       {
-        "rank": 20,
+        "rank": 21,
         "bioguide": "E000300",
         "turns": 26,
         "words": 9107,
@@ -8314,7 +8357,7 @@
         ]
       },
       {
-        "rank": 21,
+        "rank": 22,
         "bioguide": "L000566",
         "turns": 123,
         "words": 13969,
@@ -8353,49 +8396,6 @@
             "label": "HR 3109",
             "title": "REFINER Act",
             "url": "https://www.congress.gov/bill/119th-congress/house-bill/3109"
-          }
-        ]
-      },
-      {
-        "rank": 22,
-        "bioguide": "L000599",
-        "turns": 114,
-        "words": 22165,
-        "active_days": 54,
-        "profanity_hits": 3,
-        "profanity_quoted_hits": 0,
-        "profanity_terms": "{\"crap\":1,\"damn\":2}",
-        "favorite_profanity_term": "damn",
-        "favorite_profanity_term_hits": 2,
-        "bills_sponsored": 113,
-        "bills_passed": 5,
-        "bills_enacted": 0,
-        "passage_share": 0.0442477876,
-        "enactment_share": 0.0,
-        "speaker_name": "Mr. LAWLER",
-        "party": "R",
-        "state": "NY",
-        "chamber": "house",
-        "profanity_per_100k": 13.5348522445,
-        "member_url": "https://bioguide.congress.gov/search/bio/L000599",
-        "examples": [
-          {
-            "bill_id": "119-hr-3352",
-            "label": "HR 3352",
-            "title": "HALOS Act of 2025",
-            "url": "https://www.congress.gov/bill/119th-congress/house-bill/3352"
-          },
-          {
-            "bill_id": "119-hr-2683",
-            "label": "HR 2683",
-            "title": "Remote Access Security Act",
-            "url": "https://www.congress.gov/bill/119th-congress/house-bill/2683"
-          },
-          {
-            "bill_id": "119-hr-1422",
-            "label": "HR 1422",
-            "title": "Enhanced Iran Sanctions Act of 2025",
-            "url": "https://www.congress.gov/bill/119th-congress/house-bill/1422"
           }
         ]
       },
@@ -9419,10 +9419,10 @@
         "profanity_terms": "{\"crap\":80,\"crappy\":4,\"damn\":22,\"damned\":4,\"fricking\":1,\"hell of a\":10,\"piss off\":1,\"pissed off\":1,\"pisses off\":1,\"screw you\":1,\"what the hell\":11}",
         "favorite_profanity_term": "crap",
         "favorite_profanity_term_hits": 84,
-        "bills_sponsored": 30,
+        "bills_sponsored": 31,
         "bills_passed": 1,
         "bills_enacted": 0,
-        "passage_share": 0.0333333333,
+        "passage_share": 0.0322580645,
         "enactment_share": 0.0,
         "speaker_name": "Mr. SCHWEIKERT",
         "party": "R",
