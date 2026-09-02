@@ -40,9 +40,11 @@ jobs:
           if [ "${{ matrix.congress }}" -eq 103 ]; then
             start_year=1994
           fi
-          python scripts/update_speakers.py \
-            --since "${start_year}-01-01" \
-            --until "${end_year}-12-31"
+          for year in $(seq "${start_year}" "${end_year}"); do
+            python scripts/update_speakers.py \
+              --since "${year}-01-01" \
+              --until "${year}-12-31"
+          done
 
       - name: Upload Congress ${{ matrix.congress }}
         uses: actions/upload-artifact@v4
