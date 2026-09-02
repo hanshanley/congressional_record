@@ -649,6 +649,55 @@ def profanity_term_leaders(
     )
 
 
+def profanity_term_member_counts(
+    daily: pd.DataFrame,
+    congress: Optional[int] = None,
+) -> List[dict]:
+    """Return grouped term counts by member, party, chamber, and state."""
+    frame = daily if congress is None else daily[daily["congress"] == int(congress)]
+    frame = frame[frame["chamber"].isin(["house", "senate"])].copy()
+    if frame.empty:
+        return []
+    frame = _ensure_profanity_terms(
+        frame.sort_values(["date", "bioguide", "chamber"])
+    )
+    counts: Counter = Counter()
+    variants: Dict[Tuple[str, str, str, str, str], set[str]] = defaultdict(set)
+    names: Dict[Tuple[str, str, str, str], str] = {}
+    for _, row in frame.iterrows():
+        member_key = (
+            str(row["bioguide"]),
+            str(row["party"]),
+            str(row["state"]),
+            str(row["chamber"]),
+        )
+        names[member_key] = str(row["speaker_name"])
+        for raw_term, count in parse_profanity_terms(row[_TERM_COUNTS_COLUMN]).items():
+            term = _TERM_FAMILY_BY_FORM.get(raw_term, raw_term)
+            key = (*member_key, term)
+            counts[key] += count
+            variants[key].add(raw_term)
+    rows = [
+        {
+            "bioguide": bioguide,
+            "speaker_name": names[(bioguide, party, state, chamber)],
+            "party": party,
+            "state": state,
+            "chamber": chamber,
+            "term": term,
+            "hits": int(hits),
+            "variants": sorted(variants[(bioguide, party, state, chamber, term)]),
+        }
+        for (bioguide, party, state, chamber, term), hits in counts.items()
+    ]
+    return sorted(
+        rows,
+        key=lambda row: (
+            -row["hits"], row["term"], row["bioguide"], row["party"], row["chamber"],
+        ),
+    )
+
+
 def build_daily(
     turns_dir: Path,
     out_path: Path,

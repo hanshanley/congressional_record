@@ -28,6 +28,7 @@ from analysis.speakers import (  # noqa: E402
     mask_quotations,
     merge_daily,
     parse_profanity_terms,
+    profanity_term_member_counts,
     profanity_term_leaders,
     replace_daily_window,
     save_daily,
@@ -258,6 +259,42 @@ def test_term_leaders_include_ties_and_support_chamber_scope():
         for row in profanity_term_leaders(daily, 119, chamber="house")
     }
     assert [leader["speaker_name"] for leader in house["crap"]["leaders"]] == ["Gamma"]
+
+
+def test_term_member_counts_preserve_party_chamber_and_state_dimensions():
+    daily = _daily([
+        ["A", "2025-01-02", "house", "Alpha", "D", "CA", 119, 1, 100, 2, 0, 0, 0],
+        ["A", "2025-02-02", "house", "Alpha", "D", "CA", 119, 1, 100, 1, 0, 0, 0],
+        ["B", "2025-01-02", "senate", "Beta", "R", "TX", 119, 1, 100, 2, 0, 0, 0],
+    ])
+    daily["profanity_terms"] = [
+        '{"damn":1,"damned":1}', '{"damn":1}', '{"shit":2}',
+    ]
+
+    rows = profanity_term_member_counts(daily, 119)
+
+    assert rows == [
+        {
+            "bioguide": "A",
+            "speaker_name": "Alpha",
+            "party": "D",
+            "state": "CA",
+            "chamber": "house",
+            "term": "damn",
+            "hits": 3,
+            "variants": ["damn", "damned"],
+        },
+        {
+            "bioguide": "B",
+            "speaker_name": "Beta",
+            "party": "R",
+            "state": "TX",
+            "chamber": "senate",
+            "term": "shit",
+            "hits": 2,
+            "variants": ["shit"],
+        },
+    ]
 
 
 # -------------------------------------------------------------------- merging

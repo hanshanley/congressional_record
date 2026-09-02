@@ -322,11 +322,25 @@ def test_profanity_tables_show_each_members_most_used_term(store, tmp_path):
     assert payload["language"]["profanity_term_detail_available_by_chamber"] == {
         "house": True, "senate": True,
     }
+    breakdown = payload["language"]["profanity_term_member_counts"]
+    assert {
+        (row["bioguide"], row["party"], row["state"], row["chamber"], row["term"])
+        for row in breakdown
+    } == {
+        ("NEW", "R", "TX", "house", "damn"),
+        ("NEW", "R", "TX", "house", "crap"),
+        ("NEW2", "D", "NY", "senate", "shit"),
+    }
     page = (out / "index.html").read_text()
     assert "Who uses each term the most?" in page
     assert 'id="term-leaders-table"' in page
-    assert "renderTermLeaders(language)" in page
+    assert "renderTermExplorer(language)" in page
     assert "recentTermDetailAvailable" in page
+    assert 'id="term-view"' in page
+    assert 'id="term-party"' in page
+    assert 'id="term-chamber"' in page
+    assert 'id="state-term-map"' in page
+    assert "Most-used term by state" in page
 
 
 def test_builds_combined_last_five_congresses_payload(store, tmp_path):

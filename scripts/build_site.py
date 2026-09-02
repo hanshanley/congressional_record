@@ -36,6 +36,7 @@ from analysis.speakers import (  # noqa: E402
     language_member_rates,
     language_timeseries,
     load_daily,
+    profanity_term_member_counts,
     profanity_term_leaders,
     timeseries,
 )
@@ -94,8 +95,24 @@ let selectedLongRunChamber = 'all';
 let selectedRecentMetric = 'profanity';
 let selectedRecentView = 'trend';
 let selectedRecentChamber = 'all';
+let selectedTermView = 'leaders';
+let selectedTermParty = 'all';
+let selectedTermChamber = 'all';
 let currentLanguage = null;
 let currentLongRun = null;
+
+const STATE_TILES = {
+  ME:[10,0], VT:[8,1], NH:[9,1], MA:[10,1],
+  WA:[0,2], ID:[1,2], MT:[2,2], ND:[3,2], MN:[4,2], WI:[5,2],
+  MI:[7,2], NY:[8,2], RI:[9,2], CT:[10,2],
+  OR:[0,3], NV:[1,3], WY:[2,3], SD:[3,3], IA:[4,3], IL:[5,3],
+  IN:[6,3], OH:[7,3], PA:[8,3], NJ:[9,3],
+  CA:[0,4], UT:[1,4], CO:[2,4], NE:[3,4], MO:[4,4], KY:[5,4],
+  WV:[6,4], VA:[7,4], MD:[8,4], DE:[9,4], DC:[10,4],
+  AZ:[0,5], NM:[1,5], KS:[2,5], AR:[3,5], TN:[4,5], NC:[5,5], SC:[6,5],
+  AK:[0,6], HI:[1,6], OK:[2,6], LA:[3,6], MS:[4,6], AL:[5,6], GA:[6,6],
+  TX:[2,7], FL:[7,7],
+};
 
 function isCompactChart() {
   return window.innerWidth < 600;
@@ -130,16 +147,10 @@ function recentMembers(language, key) {
     : language.members_by_chamber[selectedRecentChamber][key];
 }
 
-function recentTermLeaders(language) {
-  return selectedRecentChamber === 'all'
-    ? language.profanity_term_leaders
-    : language.profanity_term_leaders_by_chamber[selectedRecentChamber];
-}
-
 function recentTermDetailAvailable(language) {
-  return selectedRecentChamber === 'all'
+  return selectedTermChamber === 'all'
     ? language.profanity_term_detail_available
-    : language.profanity_term_detail_available_by_chamber[selectedRecentChamber];
+    : language.profanity_term_detail_available_by_chamber[selectedTermChamber];
 }
 
 function svgNode(tag, attributes = {}, text = '') {
@@ -716,7 +727,7 @@ function renderSelectedHighlight(language) {
 
 function renderRecentFocus() {
   if (!currentLanguage) return;
-  renderTermLeaders(currentLanguage);
+  renderTermExplorer(currentLanguage);
   Object.keys(currentLanguage.metrics).forEach(
     key => renderLanguageTable(currentLanguage, key)
   );
@@ -787,11 +798,73 @@ function renderLanguage(language) {
   renderRecentFocus();
 }
 
-function renderTermLeaders(language) {
+function filteredTermRecords(language) {
+  return (language.profanity_term_member_counts || []).filter(row =>
+    (selectedTermParty === 'all' || row.party === selectedTermParty) &&
+    (selectedTermChamber === 'all' || row.chamber === selectedTermChamber)
+  );
+}
+
+function summarizeTerms(records) {
+  const terms = new Map();
+  records.forEach(record => {
+    if (!terms.has(record.term)) {
+      terms.set(record.term, {term: record.term, total_hits: 0, variants: new Set(), members: new Map()});
+    }
+    const term = terms.get(record.term);
+    term.total_hits += Number(record.hits);
+    (record.variants || []).forEach(variant => term.variants.add(variant));
+    if (!term.members.has(record.bioguide)) {
+      term.members.set(record.bioguide, {
+        bioguide: record.bioguide,
+        speaker_name: record.speaker_name,
+        party: record.party,
+        hits: 0,
+      });
+    }
+    term.members.get(record.bioguide).hits += Number(record.hits);
+  });
+  return [...terms.values()].map(term => {
+    const leaderHits = Math.max(...[...term.members.values()].map(member => member.hits));
+    return {
+      term: term.term,
+      total_hits: term.total_hits,
+      leader_hits: leaderHits,
+      variants: [...term.variants].sort(),
+      leaders: [...term.members.values()]
+        .filter(member => member.hits === leaderHits)
+        .sort((a, b) => a.speaker_name.localeCompare(b.speaker_name)),
+    };
+  }).sort((a, b) =>
+    b.total_hits - a.total_hits || b.leader_hits - a.leader_hits ||
+    a.term.localeCompare(b.term)
+  );
+}
+
+function appendCell(row, value, className = '') {
+  const cell = document.createElement('td');
+  if (className) cell.className = className;
+  if (value instanceof Node) cell.appendChild(value);
+  else cell.textContent = value;
+  row.appendChild(cell);
+}
+
+function renderTermTable(language, summaries) {
+  const table = document.getElementById('term-leaders-table');
+  const head = table.querySelector('thead tr');
   const body = document.querySelector('#term-leaders-table tbody');
+  head.replaceChildren();
   body.replaceChildren();
   const available = recentTermDetailAvailable(language);
-  const rows = recentTermLeaders(language) || [];
+  const headers = selectedTermView === 'leaders'
+    ? ['Term family', 'Top member', 'Party', 'Top uses', 'All uses']
+    : ['#', 'Term family', 'Uses', 'Share', 'Grouped forms'];
+  headers.forEach(label => {
+    const cell = document.createElement('th');
+    cell.scope = 'col';
+    cell.textContent = label;
+    head.appendChild(cell);
+  });
   if (!available) {
     const row = document.createElement('tr');
     const cell = document.createElement('td');
@@ -800,7 +873,7 @@ function renderTermLeaders(language) {
     cell.textContent = 'Term-level detail is not available for this historical scope.';
     row.appendChild(cell);
     body.appendChild(row);
-  } else if (!rows.length) {
+  } else if (!summaries.length) {
     const row = document.createElement('tr');
     const cell = document.createElement('td');
     cell.colSpan = 5;
@@ -809,34 +882,157 @@ function renderTermLeaders(language) {
     row.appendChild(cell);
     body.appendChild(row);
   }
-  rows.forEach(item => {
+  const allHits = summaries.reduce((sum, item) => sum + item.total_hits, 0);
+  summaries.forEach((item, index) => {
     const row = document.createElement('tr');
-    const term = document.createElement('td');
-    term.textContent = item.term;
-    if (item.variants && item.variants.length > 1) {
-      term.title = `Grouped forms: ${item.variants.join(', ')}`;
+    if (selectedTermView === 'leaders') {
+      const term = document.createElement('span');
+      term.textContent = item.term;
+      if (item.variants.length > 1) term.title = `Grouped forms: ${item.variants.join(', ')}`;
+      const leaders = document.createElement('span');
+      item.leaders.forEach((leader, leaderIndex) => {
+        if (leaderIndex) leaders.appendChild(document.createTextNode(', '));
+        const link = document.createElement('a');
+        link.href = `https://bioguide.congress.gov/search/bio/${leader.bioguide}`;
+        link.textContent = leader.speaker_name;
+        leaders.appendChild(link);
+      });
+      appendCell(row, term);
+      appendCell(row, leaders);
+      appendCell(row, [...new Set(item.leaders.map(leader => leader.party))].join(', '));
+      appendCell(row, item.leader_hits.toLocaleString(), 'num');
+      appendCell(row, item.total_hits.toLocaleString(), 'num');
+    } else {
+      appendCell(row, String(index + 1), 'num');
+      appendCell(row, item.term);
+      appendCell(row, item.total_hits.toLocaleString(), 'num');
+      appendCell(row, allHits ? `${(100 * item.total_hits / allHits).toFixed(1)}%` : '0.0%', 'num');
+      appendCell(row, item.variants.join(', '));
     }
-    const leaders = document.createElement('td');
-    item.leaders.forEach((leader, index) => {
-      if (index) leaders.appendChild(document.createTextNode(', '));
-      const link = document.createElement('a');
-      link.href = leader.member_url;
-      link.textContent = leader.speaker_name;
-      leaders.appendChild(link);
-    });
-    const party = document.createElement('td');
-    party.textContent = [...new Set(item.leaders.map(leader => leader.party))].join(', ');
-    const uses = document.createElement('td');
-    uses.className = 'num';
-    uses.textContent = Number(item.leader_hits).toLocaleString();
-    const total = document.createElement('td');
-    total.className = 'num';
-    total.textContent = Number(item.total_hits).toLocaleString();
-    row.append(term, leaders, party, uses, total);
     body.appendChild(row);
   });
+}
+
+function renderStateMap(language, records) {
+  const container = document.getElementById('state-term-map');
+  container.replaceChildren();
+  const stateTerms = new Map();
+  records.forEach(record => {
+    if (!STATE_TILES[record.state]) return;
+    if (!stateTerms.has(record.state)) stateTerms.set(record.state, new Map());
+    const terms = stateTerms.get(record.state);
+    terms.set(record.term, (terms.get(record.term) || 0) + Number(record.hits));
+  });
+  const winners = new Map();
+  stateTerms.forEach((terms, state) => {
+    const ordered = [...terms.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+    const topHits = ordered[0][1];
+    winners.set(state, {
+      terms: ordered.filter(item => item[1] === topHits).map(item => item[0]),
+      hits: topHits,
+    });
+  });
+  const maxHits = Math.max(1, ...[...winners.values()].map(item => item.hits));
+  const svg = svgNode('svg', {
+    viewBox: '0 0 880 650',
+    role: 'img',
+    'aria-label': `Most-used profanity term family by state in ${language.scope_label}`,
+  });
+  const title = svgNode('title', {}, `Most-used profanity term family by state in ${language.scope_label}`);
+  svg.appendChild(title);
+  Object.entries(STATE_TILES).forEach(([state, [column, row]]) => {
+    const winner = winners.get(state);
+    const ratio = winner ? Math.sqrt(winner.hits / maxHits) : 0;
+    const shades = ['#EAE5DA', '#D7E5F1', '#B8D2E7', '#86B2D4', '#4A86B5', '#23567D'];
+    const shade = winner ? shades[Math.min(5, Math.max(1, Math.ceil(ratio * 5)))] : shades[0];
+    const group = svgNode('g', {transform: `translate(${column * 78 + 10} ${row * 75 + 18})`});
+    const tile = svgNode('rect', {
+      width: 70, height: 67, rx: 7, fill: shade, stroke: '#FFFEFA', 'stroke-width': 2,
+    });
+    const tooltip = winner
+      ? `${state}: ${winner.terms.join(' / ')} (${winner.hits.toLocaleString()} uses)`
+      : `${state}: no accepted uses`;
+    tile.setAttribute('tabindex', '0');
+    tile.setAttribute('aria-label', tooltip);
+    tile.appendChild(svgNode('title', {}, tooltip));
+    group.appendChild(tile);
+    const dark = ratio > 0.62;
+    group.appendChild(svgNode('text', {
+      x: 8, y: 18, fill: dark ? '#FFFEFA' : '#171717', 'font-size': 13, 'font-weight': 800,
+    }, state));
+    if (winner) {
+      const label = winner.terms.join(' / ');
+      group.appendChild(svgNode('text', {
+        x: 35, y: 42, fill: dark ? '#FFFEFA' : '#171717', 'font-size': 10,
+        'text-anchor': 'middle', 'font-weight': 700,
+      }, label.length > 11 ? `${label.slice(0, 10)}…` : label));
+      group.appendChild(svgNode('text', {
+        x: 35, y: 56, fill: dark ? '#E6EEF5' : '#4F4B45', 'font-size': 9,
+        'text-anchor': 'middle',
+      }, winner.hits.toLocaleString()));
+    }
+    svg.appendChild(group);
+  });
+  container.appendChild(svg);
+  const note = document.createElement('p');
+  note.className = 'definition map-legend';
+  note.textContent = 'Each tile names the most-used grouped term; darker tiles indicate more uses. ' +
+    'Hover or focus a state for its full term and count.';
+  container.appendChild(note);
+}
+
+function renderTermExplorer(language) {
+  syncSelect(
+    document.getElementById('term-view'),
+    [
+      {key: 'leaders', label: 'Top member for each term'},
+      {key: 'frequency', label: 'Most-used terms'},
+    ],
+    selectedTermView,
+    key => {
+      selectedTermView = key;
+      updateHash({termView: key});
+      renderTermExplorer(currentLanguage);
+    },
+  );
+  syncSelect(
+    document.getElementById('term-party'),
+    [
+      {key: 'all', label: 'All parties'},
+      {key: 'D', label: 'Democratic'},
+      {key: 'R', label: 'Republican'},
+      {key: 'I', label: 'Independent'},
+      {key: 'other', label: 'Other / unknown'},
+    ],
+    selectedTermParty,
+    key => {
+      selectedTermParty = key;
+      updateHash({termParty: key});
+      renderTermExplorer(currentLanguage);
+    },
+  );
+  syncSelect(
+    document.getElementById('term-chamber'),
+    [
+      {key: 'all', label: 'House + Senate'},
+      {key: 'house', label: 'House'},
+      {key: 'senate', label: 'Senate'},
+    ],
+    selectedTermChamber,
+    key => {
+      selectedTermChamber = key;
+      updateHash({termChamber: key});
+      renderTermExplorer(currentLanguage);
+    },
+  );
+  const records = filteredTermRecords(language);
+  const summaries = summarizeTerms(records);
+  const available = recentTermDetailAvailable(language);
+  renderTermTable(language, summaries);
+  renderStateMap(language, records);
   document.getElementById('term-leaders-scope').textContent =
-    `${language.scope_label} · ${chamberLabel(selectedRecentChamber)}`;
+    `${language.scope_label} · ${selectedTermParty === 'all' ? 'All parties' : selectedTermParty} · ` +
+    `${chamberLabel(selectedTermChamber)}`;
   document.getElementById('term-leaders-note').textContent = available
     ? 'Counts include accepted, unquoted uses by attributed members; inflected, plural, ' +
       'spacing, and spelling variants are grouped into term families.'
@@ -1404,6 +1600,7 @@ def _language_payload(
             for chamber, frames in chamber_rankings.items()
         },
         "profanity_term_leaders": enrich_term_leaders(term_leaders),
+        "profanity_term_member_counts": profanity_term_member_counts(daily, congress),
         "profanity_term_detail_available": term_detail_available,
         "profanity_term_leaders_by_chamber": {
             chamber: enrich_term_leaders(rows)
@@ -1835,6 +2032,7 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
   .explorer-controls {{ display:grid; grid-template-columns:repeat(2,minmax(12rem,18rem));
                         gap:.75rem; margin:1rem 0 1.2rem; }}
   .recent-controls {{ grid-template-columns:2fr 1fr 1fr 1fr; }}
+  .term-controls {{ grid-template-columns:2fr 1fr 1fr; }}
   .explorer-controls label {{ display:grid; gap:.3rem; color:var(--muted);
                               font-size:.72rem; font-weight:800; letter-spacing:.08em;
                               text-transform:uppercase; }}
@@ -1910,6 +2108,15 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
               clip:rect(0,0,0,0) !important; white-space:nowrap !important; border:0 !important; }}
   .error {{ color:#8A1C1C; font-weight:bold; }}
   .table-wrap {{ width:100%; max-width:100%; overflow-x:auto; }}
+  .term-explorer-grid {{ display:grid; grid-template-columns:minmax(0,1.1fr) minmax(24rem,.9fr);
+                         gap:1rem; align-items:start; }}
+  .term-explorer-grid .card {{ margin:0; height:100%; }}
+  .state-map-card figcaption {{ margin:0 0 .75rem; }}
+  .state-map-card figcaption strong {{ display:block; font-family:'Iowan Old Style',
+                                       'Palatino Linotype',Georgia,serif; font-size:1.35rem; }}
+  #state-term-map svg {{ display:block; width:100%; height:auto; }}
+  #state-term-map svg text {{ font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; }}
+  .map-legend {{ margin:.5rem 0 0; }}
   #language-tables .card {{ border:0; box-shadow:none; padding:0; margin:0; }}
   table {{ border-collapse:collapse; width:100%; font-size:.92rem; }}
   th,td {{ padding:.48rem .55rem; border-bottom:1px solid var(--grid); text-align:left; }}
@@ -1920,8 +2127,10 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
   footer {{ margin-top:3rem; color:var(--muted); font-size:.86rem; }}
   @media (max-width:44rem) {{
     body {{ padding:1.5rem .75rem 3rem; }}
-    .explorer-controls,.recent-controls {{ grid-template-columns:1fr 1fr; }}
-    .overview-intro,.methodology-grid,.recent-shell {{ grid-template-columns:1fr; }}
+    .explorer-controls,.recent-controls,.term-controls {{ grid-template-columns:1fr 1fr; }}
+    .overview-intro,.methodology-grid,.recent-shell,.term-explorer-grid {{
+      grid-template-columns:1fr;
+    }}
     .context-panel {{ position:static; }}
     .chart-card {{ padding:.3rem; }}
     #language-tables table {{ font-size:.78rem; table-layout:fixed; }}
@@ -2007,10 +2216,22 @@ curse word.</p>
     else "Term-level detail has not been backfilled for this historical scope."
 }</p></div>
 </div>
+<div class="explorer-controls term-controls">
+<label>Table<select id="term-view"></select></label>
+<label>Party<select id="term-party"></select></label>
+<label>Chamber<select id="term-chamber"></select></label>
+</div>
+<div class="term-explorer-grid">
 <div class="card table-wrap">{_term_leaders_table(
     language['profanity_term_leaders'],
     available=language['profanity_term_detail_available'],
 )}</div>
+<figure class="card state-map-card">
+<figcaption><strong>Most-used term by state</strong>
+The leading grouped term among attributed members from each state in the selected scope.</figcaption>
+<div id="state-term-map"></div>
+</figure>
+</div>
 </section>
 <details class="methodology"><summary>Data notes and exclusions</summary><ul>{caveats}</ul></details>
 </main>
@@ -2066,6 +2287,15 @@ if (initialLanguage.metrics[requestedState.get('metric')]) {{
 }}
 if (['all', 'house', 'senate'].includes(requestedState.get('chamber'))) {{
   selectedRecentChamber = requestedState.get('chamber');
+}}
+if (['leaders', 'frequency'].includes(requestedState.get('termView'))) {{
+  selectedTermView = requestedState.get('termView');
+}}
+if (['all', 'D', 'R', 'I', 'other'].includes(requestedState.get('termParty'))) {{
+  selectedTermParty = requestedState.get('termParty');
+}}
+if (['all', 'house', 'senate'].includes(requestedState.get('termChamber'))) {{
+  selectedTermChamber = requestedState.get('termChamber');
 }}
 if (['trend', 'members', 'table'].includes(requestedState.get('view'))) {{
   selectedRecentView = requestedState.get('view');

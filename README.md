@@ -518,6 +518,9 @@ Naming individuals is a reputational claim, so the counts are deliberately conse
 * Raw matched forms remain in the audit table, but member “most-used term” and per-term leader
   summaries group explicit inflectional, plural, spacing, and spelling variants into documented
   families (for example, `damn` and `damned`). Distinct expressions and compounds remain separate.
+* The term explorer can rank families by total use or show each family's top member, filtered by
+  Congress, party, and chamber. Its state tile map applies the same scope and displays each state's
+  most-used family; states without an accepted use remain visibly unclassified.
 
 The Congressional Record is a lightly edited transcript, not a verbatim one, and members may
 revise their remarks — worth stating plainly wherever these numbers are published.
