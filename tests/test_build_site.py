@@ -391,6 +391,11 @@ def test_builds_combined_last_five_congresses_payload(store, tmp_path):
     assert "this view opens with\nthe last five Congresses" in page
     assert "Member(s) with most uses" in page
     assert "Leader / all uses" in page
+    assert '<th scope="col">Term</th>' in page
+    assert "Term family" not in page
+    assert "term family" not in page
+    assert "font-family:ui-monospace" not in page
+    assert "font-family:-apple-system" not in page
     assert 'class="term-usage"' in page
     assert "</strong><span>/ " in page
     assert "<progress" not in page

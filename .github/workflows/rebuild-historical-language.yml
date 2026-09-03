@@ -88,20 +88,36 @@ jobs:
         run: |
           python -m analysis.run aggregate --full
           python -m analysis.run viz
-          python scripts/build_site.py
 
       - name: Commit rebuilt historical data
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/site/long_run_language.json outputs/figures site
-          if git diff --cached --quiet; then
-            echo "Historical outputs are unchanged."
-          else
+          git add data/site/long_run_language.json outputs/figures
+          historical_commit=false
+          if ! git diff --cached --quiet; then
             git commit \
               -m "Rebuild historical language with v4 codebook" \
               -m "Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>" \
               -m "Copilot-Session: 20de2f9c-02b3-4617-b28a-82ccd88b0490"
-            git pull --rebase origin master
+            historical_commit=true
+          fi
+
+          # Rebase the data-only commit before generating the site so concurrent
+          # presentation changes cannot conflict with stale generated HTML.
+          git pull --rebase origin master
+          python scripts/build_site.py
+          git add site
+          if ! git diff --cached --quiet; then
+            if [[ "$historical_commit" == true ]]; then
+              git commit --amend --no-edit
+            else
+              git commit \
+                -m "Refresh historical language site" \
+                -m "Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>" \
+                -m "Copilot-Session: 20de2f9c-02b3-4617-b28a-82ccd88b0490"
+            fi
+          fi
+          if [[ "$(git rev-list --count origin/master..HEAD)" -gt 0 ]]; then
             git push
           fi

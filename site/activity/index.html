@@ -9,12 +9,15 @@ passage, enactment, and profanity tables by Congress.">
 <link rel="canonical" href="https://www.themarginoferror.com/professional_profanity/activity/">
 <style>
   :root { --bg:#F3F0E8; --text:#171717; --muted:#68655F;
-           --grid:#D8D3C9; --blue:#3D6F8C; --paper:#FFFEFA; --soft:#EAE5DA; }
+           --grid:#D8D3C9; --blue:#3D6F8C; --paper:#FFFEFA; --soft:#EAE5DA;
+           --serif:'Iowan Old Style','Palatino Linotype','Book Antiqua',Palatino,Georgia,serif;
+           --sans:'Arial Narrow','Avenir Next Condensed','Franklin Gothic Medium',Arial,sans-serif; }
   * { box-sizing:border-box; }
   body { background:var(--bg); color:var(--text);
-          font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+          font-family:var(--serif);
           margin:0 auto; padding:1.4rem 1.25rem 4rem; max-width:74rem; line-height:1.55; }
-  h1,h2 { font-family:'Iowan Old Style','Palatino Linotype',Georgia,serif; }
+  h1,h2 { font-family:var(--serif); }
+  nav,select,button,table,.eyebrow,.controls,footer { font-family:var(--sans); }
   h1 { font-size:clamp(2.4rem,5vw,4.2rem); line-height:1; letter-spacing:-.04em;
         margin:2.4rem 0 1rem; }
   h2 { font-size:1.7rem; margin:.1rem 0 .3rem; }

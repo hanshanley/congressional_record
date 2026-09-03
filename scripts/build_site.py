@@ -919,8 +919,8 @@ function renderTermTable(language, summaries) {
   body.replaceChildren();
   const available = recentTermDetailAvailable(language);
   const headers = selectedTermView === 'leaders'
-    ? ['Term family', 'Member(s) with most uses', 'Leader / all uses']
-    : ['#', 'Term family', 'Uses', 'Share'];
+    ? ['Term', 'Member(s) with most uses', 'Leader / all uses']
+    : ['#', 'Term', 'Uses', 'Share'];
   headers.forEach(label => {
     const cell = document.createElement('th');
     cell.scope = 'col';
@@ -1009,9 +1009,9 @@ function renderStateMap(language, records) {
   const svg = svgNode('svg', {
     viewBox: '0 0 880 650',
     role: 'img',
-    'aria-label': `Most-used profanity term family by state in ${language.scope_label}`,
+    'aria-label': `Most-used profanity term by state in ${language.scope_label}`,
   });
-  const title = svgNode('title', {}, `Most-used profanity term family by state in ${language.scope_label}`);
+  const title = svgNode('title', {}, `Most-used profanity term by state in ${language.scope_label}`);
   svg.appendChild(title);
   Object.entries(STATE_TILES).forEach(([state, [column, row]]) => {
     const winner = winners.get(state);
@@ -2124,7 +2124,7 @@ def _term_leaders_table(rows: list[dict], *, available: bool) -> str:
     return (
         '<table id="term-leaders-table" data-view="leaders"><caption class="sr-only">'
         "Top congressional users of each observed profanity term</caption>"
-        '<thead><tr><th scope="col">Term family</th>'
+        '<thead><tr><th scope="col">Term</th>'
         '<th scope="col">Member(s) with most uses</th>'
         '<th scope="col">Leader / all uses</th>'
         f'</tr></thead><tbody>{"".join(body)}</tbody></table>'
@@ -2181,12 +2181,17 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
 <style>
   :root {{ --bg:#F3F0E8; --text:#171717; --muted:#68655F;
            --grid:#D8D3C9; --blue:{theme.BLUE}; --red:{theme.ACCENT};
-           --paper:#FFFEFA; --soft:#EAE5DA; }}
+           --paper:#FFFEFA; --soft:#EAE5DA;
+           --serif:'Iowan Old Style','Palatino Linotype','Book Antiqua',Palatino,Georgia,serif;
+           --sans:'Arial Narrow','Avenir Next Condensed','Franklin Gothic Medium',Arial,sans-serif; }}
   * {{ box-sizing:border-box; }}
   body {{ background:var(--bg); color:var(--text);
-          font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+          font-family:var(--serif);
           margin:0 auto; padding:1.4rem 1.25rem 4rem; max-width:74rem; line-height:1.55; }}
-  h1,h2,h3 {{ font-family:'Iowan Old Style','Palatino Linotype',Georgia,serif; }}
+  h1,h2,h3 {{ font-family:var(--serif); }}
+  nav,select,button,table,.eyebrow,.chart-legend,.chart-tooltip,.map-legend,footer {{
+    font-family:var(--sans);
+  }}
   h1 {{ font-size:clamp(2.4rem,5vw,4.5rem); line-height:.98; letter-spacing:-.045em;
         max-width:58rem; margin:2.4rem 0 1rem; }}
   h2 {{ font-size:clamp(1.8rem,3vw,2.7rem); line-height:1.05; letter-spacing:-.025em;
@@ -2278,7 +2283,7 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
   .mini-chart-heading h3 {{ font-size:1.45rem; }}
   .mini-chart-heading p {{ margin:.15rem 0 .35rem; }}
   .mini-chart svg {{ display:block; width:100%; height:auto; overflow:visible; }}
-  .mini-chart svg text {{ font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; }}
+  .mini-chart svg text {{ font-family:var(--sans); }}
   .chart-legend {{ display:flex; gap:1rem; color:var(--muted); font-size:.86rem;
                    margin:.3rem 0 0; }}
   .chart-toggle {{ display:inline-flex; align-items:center; gap:.35rem; border:1px solid var(--grid);
@@ -2289,7 +2294,7 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
   .chart-legend i {{ width:1rem; height:.25rem; display:inline-block; }}
   .chart-tooltip {{ position:absolute; z-index:2; max-width:18rem; pointer-events:none;
                     background:var(--text); color:var(--paper); border-radius:.2rem;
-                    padding:.45rem .55rem; font: .82rem/1.35 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+                    padding:.45rem .55rem; font: .82rem/1.35 var(--sans);
                     box-shadow:0 2px 8px rgb(0 0 0 / 20%); }}
   .data-mark {{ cursor:pointer; transition:opacity .12s ease, filter .12s ease; }}
   .data-mark:hover,.data-mark:focus {{ opacity:.72; filter:brightness(.88); outline:none; }}
@@ -2304,10 +2309,9 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
   .term-explorer-grid .card {{ margin:0; height:100%; }}
   .term-explorer-grid .table-wrap {{ padding:.45rem 1rem 1rem; }}
   .state-map-card figcaption {{ margin:0 0 .75rem; }}
-  .state-map-card figcaption strong {{ display:block; font-family:'Iowan Old Style',
-                                       'Palatino Linotype',Georgia,serif; font-size:1.35rem; }}
+  .state-map-card figcaption strong {{ display:block; font-family:var(--serif); font-size:1.35rem; }}
   #state-term-map svg {{ display:block; width:100%; height:auto; }}
-  #state-term-map svg text {{ font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; }}
+  #state-term-map svg text {{ font-family:var(--sans); }}
   .map-legend {{ margin:.5rem 0 0; }}
   #language-tables .card {{ border:0; box-shadow:none; padding:0; margin:0; }}
   table {{ border-collapse:separate; border-spacing:0; width:100%; font-size:.84rem; }}
@@ -2327,9 +2331,7 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
   #term-leaders-table[data-view="leaders"] th:last-child,
   #term-leaders-table[data-view="leaders"] td:last-child {{ width:12rem; }}
   #term-leaders-table[data-view="leaders"] td:first-child,
-  #term-leaders-table[data-view="totals"] td:nth-child(2) {{
-    font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.82rem;
-  }}
+  #term-leaders-table[data-view="totals"] td:nth-child(2) {{ font-size:.82rem; }}
   #term-leaders-table[data-view="totals"] th:first-child,
   #term-leaders-table[data-view="totals"] td:first-child {{ width:2.5rem; }}
   #term-leaders-table[data-view="totals"] th:nth-child(3),
@@ -2444,7 +2446,7 @@ the last five Congresses.</p></div>
 <div><p class="eyebrow" id="term-leaders-scope">{html.escape(language['scope_label'])} · House + Senate</p>
 <h2 id="term-leaders-heading">Who uses each term the most?</h2>
 <p class="sub">Shows the member or tied members with the most accepted, unquoted uses of each
-term family. “Total” includes all attributed members; “each” applies to every member in a tie.
+grouped term. “Total” includes all attributed members; “each” applies to every member in a tie.
 Related forms are grouped, while raw matches remain in the downloadable data. Terms are censored;
 hover over or focus one to reveal it. The conservative codebook favors precision over
 exhaustiveness.</p>
@@ -2611,12 +2613,15 @@ passage, enactment, and profanity tables by Congress.">
 <link rel="canonical" href="{PUBLIC_URL}activity/">
 <style>
   :root {{ --bg:#F3F0E8; --text:#171717; --muted:#68655F;
-           --grid:#D8D3C9; --blue:{theme.BLUE}; --paper:#FFFEFA; --soft:#EAE5DA; }}
+           --grid:#D8D3C9; --blue:{theme.BLUE}; --paper:#FFFEFA; --soft:#EAE5DA;
+           --serif:'Iowan Old Style','Palatino Linotype','Book Antiqua',Palatino,Georgia,serif;
+           --sans:'Arial Narrow','Avenir Next Condensed','Franklin Gothic Medium',Arial,sans-serif; }}
   * {{ box-sizing:border-box; }}
   body {{ background:var(--bg); color:var(--text);
-          font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+          font-family:var(--serif);
           margin:0 auto; padding:1.4rem 1.25rem 4rem; max-width:74rem; line-height:1.55; }}
-  h1,h2 {{ font-family:'Iowan Old Style','Palatino Linotype',Georgia,serif; }}
+  h1,h2 {{ font-family:var(--serif); }}
+  nav,select,button,table,.eyebrow,.controls,footer {{ font-family:var(--sans); }}
   h1 {{ font-size:clamp(2.4rem,5vw,4.2rem); line-height:1; letter-spacing:-.04em;
         margin:2.4rem 0 1rem; }}
   h2 {{ font-size:1.7rem; margin:.1rem 0 .3rem; }}
