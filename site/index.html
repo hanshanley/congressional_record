@@ -45,6 +45,7 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
   .section-header { margin:4rem 0 1.2rem; }
   .section-header h2 { margin:0; }
   .section-header p { margin:.25rem 0 0; max-width:52rem; }
+  .term-section-header p { max-width:70rem; }
   select { font:inherit; padding:.6rem 2.2rem .6rem .8rem; background:var(--paper);
             border:1px solid var(--grid); border-radius:.45rem; }
   .explorer-controls { display:grid; grid-template-columns:repeat(2,minmax(12rem,18rem));
@@ -246,19 +247,15 @@ the last five Congresses.</p></div>
  alt="Yearly Democratic and Republican rates for profanity, personal hostility or disrespect, and misconduct allegations in Last 5 Congresses (115–119)."></noscript>
 </section>
 <section class="language" aria-labelledby="term-leaders-heading">
-<div class="section-header">
+<div class="section-header term-section-header">
 <div><p class="eyebrow" id="term-leaders-scope">Last 5 Congresses (115–119) · House + Senate</p>
 <h2 id="term-leaders-heading">Who uses each term the most?</h2>
-<p class="sub">For every observed term family in the conservative codebook, this table shows
-the member with the highest individual count of accepted, unquoted uses—not the source of every
-use in the total. Members tied for the highest count are shown together, and “each” means every
-listed member has that count. Inflected, plural, spacing, and spelling variants—such as “damn” and “damned”—are
-grouped before ranking, as are phrasal forms that use the same base expletive, such as “fuck”
-and “fuck you”; raw forms remain in the downloadable data. “Total uses” is the family’s total
-across all attributed members in that scope. The
-codebook favors precision over completeness and is not an exhaustive list of every possible
-curse word. Displayed terms are censored; hover over or focus a term to reveal it.</p>
-<p class="definition" id="term-leaders-note">Counts include accepted, unquoted uses by attributed members.</p></div>
+<p class="sub">Shows the member or tied members with the most accepted, unquoted uses of each
+term family. “Total” includes all attributed members; “each” applies to every member in a tie.
+Related forms are grouped, while raw matches remain in the downloadable data. Terms are censored;
+hover over or focus one to reveal it. The conservative codebook favors precision over
+exhaustiveness.</p>
+<p class="definition" id="term-leaders-note" hidden></p></div>
 </div>
 <div class="explorer-controls term-controls">
 <label>Table<select id="term-view"></select></label>
@@ -1294,10 +1291,10 @@ function renderTermExplorer(language) {
   document.getElementById('term-leaders-scope').textContent =
     `${language.scope_label} · ${selectedTermParty === 'all' ? 'All parties' : selectedTermParty} · ` +
     `${chamberLabel(selectedTermChamber)}`;
-  document.getElementById('term-leaders-note').textContent = available
-    ? 'Counts include accepted, unquoted uses by attributed members; inflected, plural, ' +
-      'spacing, spelling, and phrasal variants are grouped into term families. ' +
-      'Displayed terms are censored; hover over or focus a term to reveal it.'
+  const note = document.getElementById('term-leaders-note');
+  note.hidden = available;
+  note.textContent = available
+    ? ''
     : 'Term-level detail has not been backfilled for this historical scope.';
 }
 

@@ -389,13 +389,13 @@ def test_builds_combined_last_five_congresses_payload(store, tmp_path):
     assert "Last 5 Congresses (115–119) · House + Senate" in page
     assert "All available Congresses (1994–present)" in page
     assert "this view opens with\nthe last five Congresses" in page
-    assert "damn” and “damned" in page
     assert "Member(s) with most uses" in page
     assert "Leader / all uses" in page
     assert " total</strong>" in page
     assert "% of all uses" in page
-    assert "not the source of every\nuse in the total" in page
-    assert "“fuck”\nand “fuck you”" in page
+    assert "Related forms are grouped" in page
+    assert "term-section-header" in page
+    assert 'id="term-leaders-note" hidden>' in page
     assert "Named-member speech coverage begins January 25, 1994" in activity_page
     assert "does not include the 1873–1993 aggregate-only period" in activity_page
 
