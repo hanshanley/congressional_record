@@ -2182,11 +2182,11 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
   :root {{ --bg:#F3F0E8; --text:#171717; --muted:#68655F;
            --grid:#D8D3C9; --blue:{theme.BLUE}; --red:{theme.ACCENT};
            --paper:#FFFEFA; --soft:#EAE5DA;
-           --serif:'Iowan Old Style','Palatino Linotype','Book Antiqua',Palatino,Georgia,serif;
-           --sans:'Arial Narrow','Avenir Next Condensed','Franklin Gothic Medium',Arial,sans-serif; }}
+           --serif:Georgia,'Times New Roman',serif;
+           --sans:Arial,Helvetica,sans-serif; }}
   * {{ box-sizing:border-box; }}
   body {{ background:var(--bg); color:var(--text);
-          font-family:var(--serif);
+          font-family:var(--sans);
           margin:0 auto; padding:1.4rem 1.25rem 4rem; max-width:74rem; line-height:1.55; }}
   h1,h2,h3 {{ font-family:var(--serif); }}
   nav,select,button,table,.eyebrow,.chart-legend,.chart-tooltip,.map-legend,footer {{
@@ -2614,11 +2614,11 @@ passage, enactment, and profanity tables by Congress.">
 <style>
   :root {{ --bg:#F3F0E8; --text:#171717; --muted:#68655F;
            --grid:#D8D3C9; --blue:{theme.BLUE}; --paper:#FFFEFA; --soft:#EAE5DA;
-           --serif:'Iowan Old Style','Palatino Linotype','Book Antiqua',Palatino,Georgia,serif;
-           --sans:'Arial Narrow','Avenir Next Condensed','Franklin Gothic Medium',Arial,sans-serif; }}
+           --serif:Georgia,'Times New Roman',serif;
+           --sans:Arial,Helvetica,sans-serif; }}
   * {{ box-sizing:border-box; }}
   body {{ background:var(--bg); color:var(--text);
-          font-family:var(--serif);
+          font-family:var(--sans);
           margin:0 auto; padding:1.4rem 1.25rem 4rem; max-width:74rem; line-height:1.55; }}
   h1,h2 {{ font-family:var(--serif); }}
   nav,select,button,table,.eyebrow,.controls,footer {{ font-family:var(--sans); }}

@@ -396,6 +396,11 @@ def test_builds_combined_last_five_congresses_payload(store, tmp_path):
     assert "term family" not in page
     assert "font-family:ui-monospace" not in page
     assert "font-family:-apple-system" not in page
+    assert "Iowan Old Style" not in page
+    assert "Avenir Next Condensed" not in page
+    assert "--serif:Georgia,'Times New Roman',serif" in page
+    assert "--sans:Arial,Helvetica,sans-serif" in page
+    assert "body { background:var(--bg); color:var(--text);\n          font-family:var(--sans)" in page
     assert 'class="term-usage"' in page
     assert "</strong><span>/ " in page
     assert "<progress" not in page
