@@ -859,7 +859,7 @@ function renderTermTable(language, summaries) {
   body.replaceChildren();
   const available = recentTermDetailAvailable(language);
   const headers = selectedTermView === 'leaders'
-    ? ['Term family', 'Top member', 'Party', 'Top uses', 'All uses']
+    ? ['Term family', 'Top member', 'Party', 'Leader’s uses', 'Total uses']
     : ['#', 'Term family', 'Uses', 'Share', 'Grouped forms'];
   headers.forEach(label => {
     const cell = document.createElement('th');
@@ -1956,8 +1956,8 @@ def _term_leaders_table(rows: list[dict], *, available: bool) -> str:
         '<table id="term-leaders-table"><caption class="sr-only">'
         "Top congressional users of each observed profanity term</caption>"
         '<thead><tr><th scope="col">Term</th><th scope="col">Top member</th>'
-        '<th scope="col">Party</th><th scope="col">Top uses</th>'
-        f'<th scope="col">All uses</th></tr></thead><tbody>{"".join(body)}</tbody></table>'
+        '<th scope="col">Party</th><th scope="col">Leader’s uses</th>'
+        f'<th scope="col">Total uses</th></tr></thead><tbody>{"".join(body)}</tbody></table>'
     )
 
 
@@ -2215,8 +2215,9 @@ the last five Congresses.</p></div>
 <p class="sub">For every observed term family in the conservative codebook, this table shows
 the member with the most accepted, unquoted uses. Members tied for the highest count are shown
 together. Inflected, plural, spacing, and spelling variants—such as “damn” and “damned”—are
-grouped before ranking, while raw forms remain in the downloadable data. “All uses” is the
-family’s total across all attributed members in that scope. The
+grouped before ranking, as are phrasal forms that use the same base expletive, such as “fuck”
+and “fuck you”; raw forms remain in the downloadable data. “Total uses” is the family’s total
+across all attributed members in that scope. The
 codebook favors precision over completeness and is not an exhaustive list of every possible
 curse word.</p>
 <p class="definition" id="term-leaders-note">{

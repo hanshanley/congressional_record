@@ -100,8 +100,10 @@ PROFANITY_TERM_FAMILIES = {
     "shithole": ("shithole", "shitholes"),
     "shit show": ("shit show", "shit shows", "shitshow", "shitshows"),
     "shitstorm": ("shitstorm", "shitstorms"),
-    "fuck": ("fuck", "fucked", "fucking", "fucker", "fuckers", "fucks", "fuckin"),
-    "fuck up": ("fuck up", "fucked up", "fucking up"),
+    "fuck": (
+        "fuck", "fucked", "fucking", "fucker", "fuckers", "fucks", "fuckin",
+        "fuck off", "fuck you", "fuck up", "fucked up", "fucking up",
+    ),
     "fuckup": ("fuckup", "fuckups"),
     "clusterfuck": ("clusterfuck", "clusterfucks"),
     "motherfucker": (

@@ -261,6 +261,24 @@ def test_term_leaders_include_ties_and_support_chamber_scope():
     assert [leader["speaker_name"] for leader in house["crap"]["leaders"]] == ["Gamma"]
 
 
+def test_term_families_group_phrases_that_use_the_same_base_expletive():
+    daily = _daily([
+        ["A", "2025-01-02", "house", "Alpha", "D", "CA", 119, 1, 100, 3, 0, 0, 0],
+        ["B", "2025-01-02", "house", "Beta", "R", "TX", 119, 1, 100, 1, 0, 0, 0],
+    ])
+    daily["profanity_terms"] = [
+        '{"fuck":1,"fuck you":1,"fucked up":1}', '{"fucking":1}',
+    ]
+
+    leaders = profanity_term_leaders(daily, 119)
+
+    assert len(leaders) == 1
+    assert leaders[0]["term"] == "fuck"
+    assert leaders[0]["leader_hits"] == 3
+    assert leaders[0]["total_hits"] == 4
+    assert leaders[0]["variants"] == ["fuck", "fuck you", "fucked up", "fucking"]
+
+
 def test_term_member_counts_preserve_party_chamber_and_state_dimensions():
     daily = _daily([
         ["A", "2025-01-02", "house", "Alpha", "D", "CA", 119, 1, 100, 2, 0, 0, 0],

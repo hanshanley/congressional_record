@@ -866,7 +866,7 @@
           "profanity_hits": 18,
           "profanity_per_100k": 26.9517563561,
           "favorite_profanity_term": "fuck",
-          "favorite_profanity_term_hits": 8,
+          "favorite_profanity_term_hits": 13,
           "member_url": "https://bioguide.congress.gov/search/bio/K000380"
         },
         {
@@ -2016,6 +2016,27 @@
         ]
       },
       {
+        "term": "fuck",
+        "leader_hits": 13,
+        "total_hits": 26,
+        "variants": [
+          "fuck",
+          "fuck you",
+          "fucking"
+        ],
+        "leaders": [
+          {
+            "bioguide": "K000380",
+            "speaker_name": "Mr. KILDEE",
+            "party": "D",
+            "state": "MI",
+            "chamber": "house",
+            "hits": 13,
+            "member_url": "https://bioguide.congress.gov/search/bio/K000380"
+          }
+        ]
+      },
+      {
         "term": "bastard",
         "leader_hits": 3,
         "total_hits": 21,
@@ -2050,26 +2071,6 @@
             "chamber": "senate",
             "hits": 3,
             "member_url": "https://bioguide.congress.gov/search/bio/T000476"
-          }
-        ]
-      },
-      {
-        "term": "fuck",
-        "leader_hits": 8,
-        "total_hits": 19,
-        "variants": [
-          "fuck",
-          "fucking"
-        ],
-        "leaders": [
-          {
-            "bioguide": "K000380",
-            "speaker_name": "Mr. KILDEE",
-            "party": "D",
-            "state": "MI",
-            "chamber": "house",
-            "hits": 8,
-            "member_url": "https://bioguide.congress.gov/search/bio/K000380"
           }
         ]
       },
@@ -2168,25 +2169,6 @@
             "chamber": "house",
             "hits": 2,
             "member_url": "https://bioguide.congress.gov/search/bio/S001218"
-          }
-        ]
-      },
-      {
-        "term": "fuck you",
-        "leader_hits": 5,
-        "total_hits": 7,
-        "variants": [
-          "fuck you"
-        ],
-        "leaders": [
-          {
-            "bioguide": "K000380",
-            "speaker_name": "Mr. KILDEE",
-            "party": "D",
-            "state": "MI",
-            "chamber": "house",
-            "hits": 5,
-            "member_url": "https://bioguide.congress.gov/search/bio/K000380"
           }
         ]
       },
@@ -2837,6 +2819,20 @@
         ]
       },
       {
+        "bioguide": "K000380",
+        "speaker_name": "Mr. KILDEE",
+        "party": "D",
+        "state": "MI",
+        "chamber": "senate",
+        "term": "fuck",
+        "hits": 13,
+        "variants": [
+          "fuck",
+          "fuck you",
+          "fucking"
+        ]
+      },
+      {
         "bioguide": "K000393",
         "speaker_name": "Mr. KENNEDY",
         "party": "R",
@@ -2938,19 +2934,6 @@
         "hits": 8,
         "variants": [
           "damn"
-        ]
-      },
-      {
-        "bioguide": "K000380",
-        "speaker_name": "Mr. KILDEE",
-        "party": "D",
-        "state": "MI",
-        "chamber": "senate",
-        "term": "fuck",
-        "hits": 8,
-        "variants": [
-          "fuck",
-          "fucking"
         ]
       },
       {
@@ -3165,18 +3148,6 @@
         "variants": [
           "damn",
           "damned"
-        ]
-      },
-      {
-        "bioguide": "K000380",
-        "speaker_name": "Mr. KILDEE",
-        "party": "D",
-        "state": "MI",
-        "chamber": "senate",
-        "term": "fuck you",
-        "hits": 5,
-        "variants": [
-          "fuck you"
         ]
       },
       {
@@ -4237,6 +4208,18 @@
         ]
       },
       {
+        "bioguide": "M000355",
+        "speaker_name": "Mr. McCONNELL",
+        "party": "R",
+        "state": "KY",
+        "chamber": "senate",
+        "term": "fuck",
+        "hits": 2,
+        "variants": [
+          "fuck you"
+        ]
+      },
+      {
         "bioguide": "S001193",
         "speaker_name": "Mr. SWALWELL",
         "party": "D",
@@ -4246,18 +4229,6 @@
         "hits": 2,
         "variants": [
           "fuck"
-        ]
-      },
-      {
-        "bioguide": "M000355",
-        "speaker_name": "Mr. McCONNELL",
-        "party": "R",
-        "state": "KY",
-        "chamber": "senate",
-        "term": "fuck you",
-        "hits": 2,
-        "variants": [
-          "fuck you"
         ]
       },
       {
@@ -7470,10 +7441,11 @@
         },
         {
           "term": "fuck",
-          "leader_hits": 8,
-          "total_hits": 19,
+          "leader_hits": 13,
+          "total_hits": 26,
           "variants": [
             "fuck",
+            "fuck you",
             "fucking"
           ],
           "leaders": [
@@ -7483,7 +7455,7 @@
               "party": "D",
               "state": "MI",
               "chamber": "senate",
-              "hits": 8,
+              "hits": 13,
               "member_url": "https://bioguide.congress.gov/search/bio/K000380"
             }
           ]
@@ -7575,25 +7547,6 @@
               "chamber": "senate",
               "hits": 6,
               "member_url": "https://bioguide.congress.gov/search/bio/W000802"
-            }
-          ]
-        },
-        {
-          "term": "fuck you",
-          "leader_hits": 5,
-          "total_hits": 7,
-          "variants": [
-            "fuck you"
-          ],
-          "leaders": [
-            {
-              "bioguide": "K000380",
-              "speaker_name": "Mr. KILDEE",
-              "party": "D",
-              "state": "MI",
-              "chamber": "senate",
-              "hits": 5,
-              "member_url": "https://bioguide.congress.gov/search/bio/K000380"
             }
           ]
         },
@@ -8097,7 +8050,7 @@
         "profanity_hits": 2,
         "profanity_quoted_hits": 1,
         "profanity_terms": "{\"fuck you\":2}",
-        "favorite_profanity_term": "fuck you",
+        "favorite_profanity_term": "fuck",
         "favorite_profanity_term_hits": 2,
         "bills_sponsored": 41,
         "bills_passed": 5,
@@ -11883,7 +11836,7 @@
         "profanity_quoted_hits": 0,
         "profanity_terms": "{\"bitch\":2,\"fuck\":2,\"fuck you\":5,\"fucking\":6,\"goddamn\":1,\"motherfucker\":2}",
         "favorite_profanity_term": "fuck",
-        "favorite_profanity_term_hits": 8,
+        "favorite_profanity_term_hits": 13,
         "bills_sponsored": 79,
         "bills_passed": 2,
         "bills_enacted": 0,
