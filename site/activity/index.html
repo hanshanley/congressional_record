@@ -63,11 +63,19 @@ passage, enactment, and profanity tables by Congress.">
   .sr-only { position:absolute !important; width:1px !important; height:1px !important;
               padding:0 !important; margin:-1px !important; overflow:hidden !important;
               clip:rect(0,0,0,0) !important; white-space:nowrap !important; border:0 !important; }
-  .table-wrap { overflow-x:auto; }
-  table { border-collapse:collapse; width:100%; font-size:.92rem; }
-  th,td { padding:.48rem .55rem; border-bottom:1px solid var(--grid); text-align:left; }
-  th { border-bottom:2px solid var(--grid); white-space:nowrap; }
-  td.num { font-variant-numeric:tabular-nums; }
+  .table-wrap { overflow-x:auto; border:1px solid var(--grid); border-radius:.55rem;
+                 background:var(--paper); }
+  table { border-collapse:separate; border-spacing:0; width:100%; font-size:.92rem; }
+  th,td { padding:.72rem .7rem; border-bottom:1px solid var(--grid); text-align:left;
+           vertical-align:middle; }
+  th { position:sticky; top:0; z-index:1; background:var(--paper); color:var(--muted);
+        border-bottom:2px solid var(--grid); white-space:nowrap; font-size:.7rem;
+        font-weight:800; letter-spacing:.06em; text-transform:uppercase; }
+  tbody tr:nth-child(even) { background:rgb(234 229 218 / 28%); }
+  tbody tr:hover { background:rgb(61 111 140 / 8%); }
+  tbody tr:last-child td { border-bottom:0; }
+  td.num { font-variant-numeric:tabular-nums; text-align:right; }
+  td a { text-underline-offset:.16em; text-decoration-thickness:.06em; }
   li { margin:.4rem 0; }
   footer { margin-top:3rem; color:var(--muted); font-size:.86rem; }
   @media (max-width:44rem) {

@@ -878,6 +878,27 @@ function appendCell(row, value, className = '') {
   row.appendChild(cell);
 }
 
+function termUsageNode(item) {
+  const wrapper = document.createElement('div');
+  wrapper.className = 'term-usage';
+  const count = document.createElement('strong');
+  count.textContent = `${Number(item.leader_hits).toLocaleString()}` +
+    `${item.leaders.length > 1 ? ' each' : ''} of ${Number(item.total_hits).toLocaleString()} total`;
+  const share = item.total_hits ? 100 * item.leader_hits / item.total_hits : 0;
+  const detail = document.createElement('small');
+  detail.textContent = `${share.toFixed(1)}% per leading member`;
+  const meter = document.createElement('progress');
+  meter.max = Math.max(1, Number(item.total_hits));
+  meter.value = Number(item.leader_hits);
+  meter.setAttribute(
+    'aria-label',
+    `${Number(item.leader_hits).toLocaleString()} uses by each leading member ` +
+      `out of ${Number(item.total_hits).toLocaleString()} uses by all members`,
+  );
+  wrapper.append(count, meter, detail);
+  return wrapper;
+}
+
 function renderTermTable(language, summaries) {
   const table = document.getElementById('term-leaders-table');
   const head = table.querySelector('thead tr');
@@ -886,7 +907,7 @@ function renderTermTable(language, summaries) {
   body.replaceChildren();
   const available = recentTermDetailAvailable(language);
   const headers = selectedTermView === 'leaders'
-    ? ['Term family', 'Top member', 'Party', 'Leader’s uses', 'Total uses']
+    ? ['Term family', 'Member(s) with most uses', 'Party', 'Their use vs all members']
     : ['#', 'Term family', 'Uses', 'Share', 'Grouped forms'];
   headers.forEach(label => {
     const cell = document.createElement('th');
@@ -897,7 +918,7 @@ function renderTermTable(language, summaries) {
   if (!available) {
     const row = document.createElement('tr');
     const cell = document.createElement('td');
-    cell.colSpan = 5;
+    cell.colSpan = headers.length;
     cell.className = 'muted';
     cell.textContent = 'Term-level detail is not available for this historical scope.';
     row.appendChild(cell);
@@ -905,7 +926,7 @@ function renderTermTable(language, summaries) {
   } else if (!summaries.length) {
     const row = document.createElement('tr');
     const cell = document.createElement('td');
-    cell.colSpan = 5;
+    cell.colSpan = headers.length;
     cell.className = 'muted';
     cell.textContent = 'No accepted term uses were observed in this scope.';
     row.appendChild(cell);
@@ -929,8 +950,7 @@ function renderTermTable(language, summaries) {
       appendCell(row, term);
       appendCell(row, leaders);
       appendCell(row, [...new Set(item.leaders.map(leader => leader.party))].join(', '));
-      appendCell(row, item.leader_hits.toLocaleString(), 'num');
-      appendCell(row, item.total_hits.toLocaleString(), 'num');
+      appendCell(row, termUsageNode(item), 'num');
     } else {
       appendCell(row, String(index + 1), 'num');
       appendCell(row, censoredTermNode(item.term));
@@ -1019,7 +1039,7 @@ function renderTermExplorer(language) {
   syncSelect(
     document.getElementById('term-view'),
     [
-      {key: 'leaders', label: 'Top member for each term'},
+      {key: 'leaders', label: 'Compare leading member(s) with everyone'},
       {key: 'frequency', label: 'Most-used terms'},
     ],
     selectedTermView,
@@ -1905,6 +1925,26 @@ def _censored_term_cell(term: str, detail: str = "") -> _TrustedHTML:
     )
 
 
+def _term_usage_cell(row: dict) -> _TrustedHTML:
+    leader_hits = int(row["leader_hits"])
+    total_hits = int(row["total_hits"])
+    tied = len(row["leaders"]) > 1
+    share = 100 * leader_hits / total_hits if total_hits else 0.0
+    each = " each" if tied else ""
+    aria = (
+        f"{leader_hits:,} uses by each leading member out of "
+        f"{total_hits:,} uses by all members"
+    )
+    return _TrustedHTML(
+        '<div class="term-usage">'
+        f"<strong>{leader_hits:,}{each} of {total_hits:,} total</strong>"
+        f'<progress max="{max(1, total_hits)}" value="{leader_hits}" '
+        f'aria-label="{html.escape(aria, quote=True)}"></progress>'
+        f"<small>{share:.1f}% per leading member</small>"
+        "</div>"
+    )
+
+
 def _table(metric: str, rows: list[dict]) -> str:
     configs = {
         "speech": (
@@ -2026,12 +2066,12 @@ def _term_leaders_table(rows: list[dict], *, available: bool) -> str:
     body = []
     if not available:
         body.append(
-            '<tr><td colspan="5" class="muted">'
+            '<tr><td colspan="4" class="muted">'
             "Term-level detail is not available for this historical scope.</td></tr>"
         )
     elif not rows:
         body.append(
-            '<tr><td colspan="5" class="muted">'
+            '<tr><td colspan="4" class="muted">'
             "No accepted term uses were observed in this scope.</td></tr>"
         )
     for row in rows:
@@ -2047,16 +2087,16 @@ def _term_leaders_table(rows: list[dict], *, available: bool) -> str:
             f"<td>{_censored_term_cell(row['term'], detail)}</td>"
             f"<td>{leaders}</td>"
             f"<td>{html.escape(parties)}</td>"
-            f'<td class="num">{_fmt_int(row["leader_hits"])}</td>'
-            f'<td class="num">{_fmt_int(row["total_hits"])}</td>'
+            f'<td class="num">{_term_usage_cell(row)}</td>'
             "</tr>"
         )
     return (
         '<table id="term-leaders-table"><caption class="sr-only">'
         "Top congressional users of each observed profanity term</caption>"
-        '<thead><tr><th scope="col">Term</th><th scope="col">Top member</th>'
-        '<th scope="col">Party</th><th scope="col">Leader’s uses</th>'
-        f'<th scope="col">Total uses</th></tr></thead><tbody>{"".join(body)}</tbody></table>'
+        '<thead><tr><th scope="col">Term family</th>'
+        '<th scope="col">Member(s) with most uses</th>'
+        '<th scope="col">Party</th><th scope="col">Their use vs all members</th>'
+        f'</tr></thead><tbody>{"".join(body)}</tbody></table>'
     )
 
 
@@ -2223,10 +2263,12 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
               padding:0 !important; margin:-1px !important; overflow:hidden !important;
               clip:rect(0,0,0,0) !important; white-space:nowrap !important; border:0 !important; }}
   .error {{ color:#8A1C1C; font-weight:bold; }}
-  .table-wrap {{ width:100%; max-width:100%; overflow-x:auto; }}
+  .table-wrap {{ width:100%; max-width:100%; overflow-x:auto; background:var(--paper);
+                 border:1px solid var(--grid); border-radius:.65rem; }}
   .term-explorer-grid {{ display:grid; grid-template-columns:minmax(0,1.1fr) minmax(24rem,.9fr);
                          gap:1rem; align-items:start; }}
   .term-explorer-grid .card {{ margin:0; height:100%; }}
+  .term-explorer-grid .table-wrap {{ padding:.45rem 1rem 1rem; }}
   .state-map-card figcaption {{ margin:0 0 .75rem; }}
   .state-map-card figcaption strong {{ display:block; font-family:'Iowan Old Style',
                                        'Palatino Linotype',Georgia,serif; font-size:1.35rem; }}
@@ -2234,10 +2276,28 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
   #state-term-map svg text {{ font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; }}
   .map-legend {{ margin:.5rem 0 0; }}
   #language-tables .card {{ border:0; box-shadow:none; padding:0; margin:0; }}
-  table {{ border-collapse:collapse; width:100%; font-size:.92rem; }}
-  th,td {{ padding:.48rem .55rem; border-bottom:1px solid var(--grid); text-align:left; }}
-  th {{ border-bottom:2px solid var(--grid); white-space:nowrap; }}
-  td.num {{ font-variant-numeric:tabular-nums; }}
+  table {{ border-collapse:separate; border-spacing:0; width:100%; font-size:.92rem; }}
+  th,td {{ padding:.72rem .7rem; border-bottom:1px solid var(--grid); text-align:left;
+           vertical-align:middle; }}
+  th {{ position:sticky; top:0; z-index:1; background:var(--paper); color:var(--muted);
+        border-bottom:2px solid var(--grid); white-space:nowrap; font-size:.7rem;
+        font-weight:800; letter-spacing:.06em; text-transform:uppercase; }}
+  tbody tr:nth-child(even) {{ background:rgb(234 229 218 / 28%); }}
+  tbody tr:hover {{ background:rgb(61 111 140 / 8%); }}
+  tbody tr:last-child td {{ border-bottom:0; }}
+  td.num {{ font-variant-numeric:tabular-nums; text-align:right; }}
+  td a {{ text-underline-offset:.16em; text-decoration-thickness:.06em; }}
+  #term-leaders-table {{ min-width:45rem; }}
+  #term-leaders-table th:last-child,#term-leaders-table td:last-child {{ width:15rem; }}
+  .term-usage {{ display:grid; grid-template-columns:1fr; gap:.18rem; min-width:12rem;
+                 text-align:left; }}
+  .term-usage strong {{ font-size:.9rem; white-space:nowrap; }}
+  .term-usage small {{ color:var(--muted); font-size:.72rem; }}
+  .term-usage progress {{ appearance:none; width:100%; height:.38rem; border:0;
+                          border-radius:999px; overflow:hidden; background:var(--soft); }}
+  .term-usage progress::-webkit-progress-bar {{ background:var(--soft); }}
+  .term-usage progress::-webkit-progress-value {{ background:var(--blue); }}
+  .term-usage progress::-moz-progress-bar {{ background:var(--blue); }}
   img {{ width:100%; height:auto; }}
   li {{ margin:.4rem 0; }}
   footer {{ margin-top:3rem; color:var(--muted); font-size:.86rem; }}
@@ -2321,8 +2381,9 @@ the last five Congresses.</p></div>
 <div><p class="eyebrow" id="term-leaders-scope">{html.escape(language['scope_label'])} · House + Senate</p>
 <h2 id="term-leaders-heading">Who uses each term the most?</h2>
 <p class="sub">For every observed term family in the conservative codebook, this table shows
-the member with the most accepted, unquoted uses. Members tied for the highest count are shown
-together. Inflected, plural, spacing, and spelling variants—such as “damn” and “damned”—are
+the member with the highest individual count of accepted, unquoted uses—not the source of every
+use in the total. Members tied for the highest count are shown together, and “each” means every
+listed member has that count. Inflected, plural, spacing, and spelling variants—such as “damn” and “damned”—are
 grouped before ranking, as are phrasal forms that use the same base expletive, such as “fuck”
 and “fuck you”; raw forms remain in the downloadable data. “Total uses” is the family’s total
 across all attributed members in that scope. The
@@ -2544,11 +2605,19 @@ passage, enactment, and profanity tables by Congress.">
   .sr-only {{ position:absolute !important; width:1px !important; height:1px !important;
               padding:0 !important; margin:-1px !important; overflow:hidden !important;
               clip:rect(0,0,0,0) !important; white-space:nowrap !important; border:0 !important; }}
-  .table-wrap {{ overflow-x:auto; }}
-  table {{ border-collapse:collapse; width:100%; font-size:.92rem; }}
-  th,td {{ padding:.48rem .55rem; border-bottom:1px solid var(--grid); text-align:left; }}
-  th {{ border-bottom:2px solid var(--grid); white-space:nowrap; }}
-  td.num {{ font-variant-numeric:tabular-nums; }}
+  .table-wrap {{ overflow-x:auto; border:1px solid var(--grid); border-radius:.55rem;
+                 background:var(--paper); }}
+  table {{ border-collapse:separate; border-spacing:0; width:100%; font-size:.92rem; }}
+  th,td {{ padding:.72rem .7rem; border-bottom:1px solid var(--grid); text-align:left;
+           vertical-align:middle; }}
+  th {{ position:sticky; top:0; z-index:1; background:var(--paper); color:var(--muted);
+        border-bottom:2px solid var(--grid); white-space:nowrap; font-size:.7rem;
+        font-weight:800; letter-spacing:.06em; text-transform:uppercase; }}
+  tbody tr:nth-child(even) {{ background:rgb(234 229 218 / 28%); }}
+  tbody tr:hover {{ background:rgb(61 111 140 / 8%); }}
+  tbody tr:last-child td {{ border-bottom:0; }}
+  td.num {{ font-variant-numeric:tabular-nums; text-align:right; }}
+  td a {{ text-underline-offset:.16em; text-decoration-thickness:.06em; }}
   li {{ margin:.4rem 0; }}
   footer {{ margin-top:3rem; color:var(--muted); font-size:.86rem; }}
   @media (max-width:44rem) {{
