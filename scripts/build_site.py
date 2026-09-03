@@ -9,6 +9,7 @@ import html
 import json
 import logging
 import os
+import re
 import sys
 from pathlib import Path
 from typing import List, Optional
@@ -100,6 +101,8 @@ let selectedRecentChamber = 'all';
 let selectedTermView = 'leaders';
 let selectedTermParty = 'all';
 let selectedTermChamber = 'all';
+let showAllTerms = false;
+const TERM_INITIAL_ROWS = 12;
 let currentLanguage = null;
 let currentLongRun = null;
 
@@ -881,25 +884,35 @@ function appendCell(row, value, className = '') {
 function termUsageNode(item) {
   const wrapper = document.createElement('div');
   wrapper.className = 'term-usage';
-  const share = item.total_hits ? 100 * item.leader_hits / item.total_hits : 0;
-  const aria = `${Number(item.leader_hits).toLocaleString()} uses by each leading member ` +
+  const unit = Number(item.leader_hits) === 1 ? 'use' : 'uses';
+  const subject = item.leaders.length > 1 ? 'by each leading member' : 'by the leading member';
+  const aria = `${Number(item.leader_hits).toLocaleString()} ${unit} ${subject} ` +
     `out of ${Number(item.total_hits).toLocaleString()} uses by all members`;
   wrapper.setAttribute('aria-label', aria);
   const count = document.createElement('strong');
   count.textContent = `${Number(item.leader_hits).toLocaleString()}` +
     `${item.leaders.length > 1 ? ' each' : ''}`;
   const total = document.createElement('span');
-  total.textContent = `/ ${Number(item.total_hits).toLocaleString()}`;
-  const detail = document.createElement('small');
-  detail.textContent = item.leaders.length > 1
-    ? `${share.toFixed(1)}% each`
-    : `${share.toFixed(1)}%`;
-  wrapper.append(count, total, detail);
+  total.textContent = `/ ${Number(item.total_hits).toLocaleString()} total`;
+  wrapper.append(count, total);
+  return wrapper;
+}
+
+function partyBadges(parties) {
+  const wrapper = document.createElement('span');
+  wrapper.className = 'party-badges';
+  parties.forEach(party => {
+    const badge = document.createElement('span');
+    badge.className = `party-badge party-${String(party).toLowerCase()}`;
+    badge.textContent = party;
+    wrapper.appendChild(badge);
+  });
   return wrapper;
 }
 
 function renderTermTable(language, summaries) {
   const table = document.getElementById('term-leaders-table');
+  table.dataset.view = selectedTermView;
   const head = table.querySelector('thead tr');
   const body = document.querySelector('#term-leaders-table tbody');
   head.replaceChildren();
@@ -907,7 +920,7 @@ function renderTermTable(language, summaries) {
   const available = recentTermDetailAvailable(language);
   const headers = selectedTermView === 'leaders'
     ? ['Term family', 'Member(s) with most uses', 'Leader / all uses']
-    : ['#', 'Term family', 'Uses', 'Share', 'Grouped forms'];
+    : ['#', 'Term family', 'Uses', 'Share'];
   headers.forEach(label => {
     const cell = document.createElement('th');
     cell.scope = 'col';
@@ -934,6 +947,7 @@ function renderTermTable(language, summaries) {
   const allHits = summaries.reduce((sum, item) => sum + item.total_hits, 0);
   summaries.forEach((item, index) => {
     const row = document.createElement('tr');
+    row.hidden = !showAllTerms && index >= TERM_INITIAL_ROWS;
     if (selectedTermView === 'leaders') {
       const detail = item.variants.length > 1
         ? `Grouped forms: ${item.variants.join(', ')}` : '';
@@ -944,29 +958,32 @@ function renderTermTable(language, summaries) {
         const link = document.createElement('a');
         link.href = `https://bioguide.congress.gov/search/bio/${leader.bioguide}`;
         link.textContent = leader.speaker_name;
-        leaders.appendChild(link);
+        leaders.append(link, partyBadges([leader.party]));
       });
-      const parties = document.createElement('small');
-      parties.className = 'party-note';
-      parties.textContent = [...new Set(item.leaders.map(leader => leader.party))].join(' · ');
-      leaders.appendChild(parties);
       appendCell(row, term);
       appendCell(row, leaders);
       appendCell(row, termUsageNode(item), 'num');
     } else {
       appendCell(row, String(index + 1), 'num');
-      appendCell(row, censoredTermNode(item.term));
+      const detail = item.variants.length > 1
+        ? `Grouped forms: ${item.variants.join(', ')}` : '';
+      appendCell(row, censoredTermNode(item.term, detail));
       appendCell(row, item.total_hits.toLocaleString(), 'num');
       appendCell(row, allHits ? `${(100 * item.total_hits / allHits).toFixed(1)}%` : '0.0%', 'num');
-      const variants = document.createElement('span');
-      item.variants.forEach((variant, variantIndex) => {
-        if (variantIndex) variants.appendChild(document.createTextNode(', '));
-        variants.appendChild(censoredTermNode(variant));
-      });
-      appendCell(row, variants);
     }
     body.appendChild(row);
   });
+  const toggle = document.getElementById('term-row-toggle');
+  const remaining = Math.max(0, summaries.length - TERM_INITIAL_ROWS);
+  toggle.hidden = remaining === 0;
+  toggle.textContent = showAllTerms
+    ? 'Show fewer terms'
+    : `Show ${remaining.toLocaleString()} more term${remaining === 1 ? '' : 's'}`;
+  toggle.setAttribute('aria-expanded', String(showAllTerms));
+  toggle.onclick = () => {
+    showAllTerms = !showAllTerms;
+    renderTermTable(language, summaries);
+  };
 }
 
 function renderStateMap(language, records) {
@@ -1931,18 +1948,28 @@ def _term_usage_cell(row: dict) -> _TrustedHTML:
     leader_hits = int(row["leader_hits"])
     total_hits = int(row["total_hits"])
     tied = len(row["leaders"]) > 1
-    share = 100 * leader_hits / total_hits if total_hits else 0.0
     each = " each" if tied else ""
-    aria = (
-        f"{leader_hits:,} uses by each leading member out of "
-        f"{total_hits:,} uses by all members"
-    )
+    unit = "use" if leader_hits == 1 else "uses"
+    subject = "by each leading member" if tied else "by the leading member"
+    aria = f"{leader_hits:,} {unit} {subject} out of {total_hits:,} uses by all members"
     return _TrustedHTML(
         f'<div class="term-usage" aria-label="{html.escape(aria, quote=True)}">'
         f"<strong>{leader_hits:,}{each}</strong>"
-        f"<span>/ {total_hits:,}</span>"
-        f"<small>{share:.1f}%{' each' if tied else ''}</small>"
+        f"<span>/ {total_hits:,} total</span>"
         "</div>"
+    )
+
+
+def _party_badges(parties: set[str]) -> _TrustedHTML:
+    badges = []
+    for party in sorted(parties):
+        css_party = re.sub(r"[^a-z0-9_-]", "", party.lower()) or "other"
+        badges.append(
+            f'<span class="party-badge party-{css_party}">'
+            f"{html.escape(party)}</span>"
+        )
+    return _TrustedHTML(
+        f'<span class="party-badges">{"".join(badges)}</span>'
     )
 
 
@@ -2076,10 +2103,11 @@ def _term_leaders_table(rows: list[dict], *, available: bool) -> str:
             "No accepted term uses were observed in this scope.</td></tr>"
         )
     for row in rows:
-        parties = ", ".join(sorted({leader["party"] for leader in row["leaders"]}))
         leaders = _TrustedHTML(
-            ", ".join(str(_member_cell(leader)) for leader in row["leaders"])
-            + f'<small class="party-note">{html.escape(parties)}</small>'
+            ", ".join(
+                str(_member_cell(leader)) + str(_party_badges({leader["party"]}))
+                for leader in row["leaders"]
+            )
         )
         variants = row.get("variants", [])
         detail = (
@@ -2094,12 +2122,14 @@ def _term_leaders_table(rows: list[dict], *, available: bool) -> str:
             "</tr>"
         )
     return (
-        '<table id="term-leaders-table"><caption class="sr-only">'
+        '<table id="term-leaders-table" data-view="leaders"><caption class="sr-only">'
         "Top congressional users of each observed profanity term</caption>"
         '<thead><tr><th scope="col">Term family</th>'
         '<th scope="col">Member(s) with most uses</th>'
         '<th scope="col">Leader / all uses</th>'
         f'</tr></thead><tbody>{"".join(body)}</tbody></table>'
+        '<button id="term-row-toggle" class="term-row-toggle" type="button" '
+        'aria-controls="term-leaders-table" aria-expanded="false" hidden></button>'
     )
 
 
@@ -2292,19 +2322,41 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
   td.num {{ font-variant-numeric:tabular-nums; text-align:right; }}
   td a {{ text-underline-offset:.16em; text-decoration-thickness:.06em; }}
   #term-leaders-table {{ table-layout:fixed; }}
-  #term-leaders-table th:first-child,#term-leaders-table td:first-child {{ width:18%; }}
-  #term-leaders-table th:last-child,#term-leaders-table td:last-child {{ width:12rem; }}
-  #term-leaders-table td:nth-child(2) a {{ font-size:.86rem; }}
-  .party-note {{ display:inline; color:var(--muted); font-size:.68rem;
-                 font-weight:750; letter-spacing:.04em; white-space:nowrap; }}
-  .party-note::before {{ content:" · "; }}
+  #term-leaders-table[data-view="leaders"] th:first-child,
+  #term-leaders-table[data-view="leaders"] td:first-child {{ width:18%; }}
+  #term-leaders-table[data-view="leaders"] th:last-child,
+  #term-leaders-table[data-view="leaders"] td:last-child {{ width:12rem; }}
+  #term-leaders-table[data-view="leaders"] td:first-child,
+  #term-leaders-table[data-view="totals"] td:nth-child(2) {{
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.82rem;
+  }}
+  #term-leaders-table[data-view="totals"] th:first-child,
+  #term-leaders-table[data-view="totals"] td:first-child {{ width:2.5rem; }}
+  #term-leaders-table[data-view="totals"] th:nth-child(3),
+  #term-leaders-table[data-view="totals"] td:nth-child(3),
+  #term-leaders-table[data-view="totals"] th:last-child,
+  #term-leaders-table[data-view="totals"] td:last-child {{ width:4.4rem; }}
+  #term-leaders-table td:nth-child(2) a {{ color:var(--text); font-size:.84rem;
+                                          font-weight:650; text-decoration:none; }}
+  #term-leaders-table td:nth-child(2) a:hover {{ color:var(--blue);
+                                                 text-decoration:underline; }}
+  .party-badges {{ display:inline-flex; gap:.2rem; margin-left:.38rem; vertical-align:.08em; }}
+  .party-badge {{ display:inline-grid; place-items:center; min-width:1.35rem; height:1.35rem;
+                  border-radius:999px; font-size:.58rem; font-weight:850; line-height:1; }}
+  .party-d {{ color:#315D77; background:#DFEAF0; }}
+  .party-r {{ color:#8E3828; background:#F2E2DE; }}
+  .party-i {{ color:#356443; background:#E1ECE4; }}
+  .party-other {{ color:var(--muted); background:var(--soft); }}
   .term-usage {{ display:flex; align-items:baseline; justify-content:flex-end; gap:.28rem;
                  text-align:right; white-space:nowrap; }}
-  .term-usage strong {{ font-size:.86rem; }}
-  .term-usage span {{ color:var(--muted); }}
-  .term-usage small {{ color:var(--blue); font-size:.68rem; font-weight:750;
-                       background:rgb(61 111 140 / 10%); border-radius:999px;
-                       padding:.08rem .32rem; }}
+  .term-usage strong {{ font-size:.88rem; }}
+  .term-usage span {{ color:var(--muted); font-size:.76rem; }}
+  .term-row-toggle {{ display:block; margin:.8rem auto .25rem; border:1px solid var(--grid);
+                      border-radius:999px; background:var(--paper); color:var(--blue);
+                      padding:.45rem .9rem; font:inherit; font-size:.76rem; font-weight:750;
+                      cursor:pointer; }}
+  .term-row-toggle:hover {{ border-color:var(--blue); background:rgb(61 111 140 / 7%); }}
+  .term-row-toggle[hidden] {{ display:none; }}
   img {{ width:100%; height:auto; }}
   li {{ margin:.4rem 0; }}
   footer {{ margin-top:3rem; color:var(--muted); font-size:.86rem; }}

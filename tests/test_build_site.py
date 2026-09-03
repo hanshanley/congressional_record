@@ -394,6 +394,10 @@ def test_builds_combined_last_five_congresses_payload(store, tmp_path):
     assert 'class="term-usage"' in page
     assert "</strong><span>/ " in page
     assert "<progress" not in page
+    assert 'class="party-badge party-d"' in page
+    assert 'id="term-row-toggle"' in page
+    assert "TERM_INITIAL_ROWS = 12" in page
+    assert "row.hidden = !showAllTerms" in page
     assert "Related forms are grouped" in page
     assert "term-section-header" in page
     assert 'id="term-leaders-note" hidden>' in page
