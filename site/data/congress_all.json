@@ -1,6 +1,6 @@
 {
   "congress": null,
-  "label": "All Congresses",
+  "label": "All available Congresses (1994\u2013present)",
   "generated_utc": "2026-09-02T08:57:00+00:00",
   "min_words": 25000,
   "top": 25,
@@ -25,7 +25,7 @@
     "profanity": "Unquoted curated profanity hits per 100,000 attributed words."
   },
   "caveats": [
-    "Speech counts include only remarks attributable to a specific member by Bioguide ID; procedural speech, submitted Extensions of Remarks, and material printed into the Record are excluded.",
+    "Speech counts include only remarks attributable to a specific member by Bioguide ID; procedural speech, submitted Extensions of Remarks, and material printed into the Record are excluded. Named-member coverage begins January 25, 1994; the separate long-run party charts use the Stanford Hein corpus back to 1873.",
     "Profanity uses a conservative, hand-curated list rather than an exhaustive dictionary. Passages marked as quotations are excluded from a member's rate and retained as a separate audit count.",
     "A member's most-used profanity term is the most frequent accepted, unquoted surface form in the selected period; alphabetical order breaks ties. It does not imply personal preference.",
     "Members below the word threshold are omitted from the profanity ranking because rates computed from small samples are unstable.",
@@ -34,7 +34,7 @@
     "The Congressional Record is lightly edited rather than verbatim, and source metadata can be corrected after publication."
   ],
   "language": {
-    "scope_label": "All Congresses",
+    "scope_label": "All available Congresses (1994\u2013present)",
     "granularity": "year",
     "metrics": {
       "profanity": {
@@ -14311,10 +14311,10 @@
         ]
       }
     ],
-    "trend_alt": "Yearly Democratic and Republican rates for profanity, personal hostility or disrespect, and misconduct allegations in All Congresses.",
-    "member_alt": "Highest eligible member rates for profanity, personal hostility or disrespect, and misconduct allegations in All Congresses.",
+    "trend_alt": "Yearly Democratic and Republican rates for profanity, personal hostility or disrespect, and misconduct allegations in All available Congresses (1994\u2013present).",
+    "member_alt": "Highest eligible member rates for profanity, personal hostility or disrespect, and misconduct allegations in All available Congresses (1994\u2013present).",
     "explanation": {
-      "shown": "The charts show yearly Democratic and Republican rates for three separate lexical measures, plus the highest-rate members in All Congresses. Rates are hits per 100,000 attributed spoken words.",
+      "shown": "The charts show yearly Democratic and Republican rates for three separate lexical measures, plus the highest-rate members in All available Congresses (1994\u2013present). Rates are hits per 100,000 attributed spoken words.",
       "examined": "The trend panels compare party-wide rates over time. Member panels show the highest nonzero rates among speakers with substantial floor remarks.",
       "finding": "Republicans have the higher aggregate profanity rate (0.5 versus 0.5 per 100,000 words). Mr. SCHWEIKERT has the highest eligible profanity rate at 47.0 per 100,000 words. Democrats have the higher aggregate personal hostility / disrespect rate (1.8 versus 1.6 per 100,000 words). Mr. BROWN of Maryland has the highest eligible personal hostility / disrespect rate at 31.2 per 100,000 words. Democrats have the higher aggregate misconduct allegations rate (7.9 versus 7.2 per 100,000 words). Mr. ROGAN has the highest eligible misconduct allegations rate at 140.4 per 100,000 words.",
       "limitation": "These are descriptive word-pattern counts, not judgments about intent. Misconduct language does not prove misconduct, and quoted profanity is excluded from a speaker's rate."

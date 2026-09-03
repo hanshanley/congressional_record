@@ -366,8 +366,15 @@ def test_builds_combined_last_five_congresses_payload(store, tmp_path):
     payload = json.loads((out / "data" / "congress_recent5.json").read_text())
     assert payload["label"] == "Last 5 Congresses (115–119)"
     assert payload["language"]["scope_label"] == "Last 5 Congresses (115–119)"
-    assert "Last 5 Congresses" in (out / "index.html").read_text()
-    assert "damn” and “damned" in (out / "index.html").read_text()
+    page = (out / "index.html").read_text()
+    activity_page = (out / "activity" / "index.html").read_text()
+    assert '<option value="recent5" selected>Last 5 Congresses</option>' in page
+    assert "Last 5 Congresses (115–119) · House + Senate" in page
+    assert "All available Congresses (1994–present)" in page
+    assert "this view opens with\nthe last five Congresses" in page
+    assert "damn” and “damned" in page
+    assert "Named-member speech coverage begins January 25, 1994" in activity_page
+    assert "does not include the 1873–1993 aggregate-only period" in activity_page
 
 
 def test_build_refuses_incomplete_current_congress_term_counts(store, tmp_path):

@@ -49,11 +49,13 @@ SITE_DIR = ROOT / "site"
 LONG_RUN_DATA_PATH = ROOT / "data" / "site" / "long_run_language.json"
 LONG_RUN_METRICS_PATH = ROOT / "data" / "processed" / "metrics" / "civility_metrics.parquet"
 PUBLIC_URL = "https://www.themarginoferror.com/professional_profanity/"
+ALL_MEMBER_SCOPE_LABEL = "All available Congresses (1994–present)"
 
 CAVEATS = [
     "Speech counts include only remarks attributable to a specific member by Bioguide ID; "
     "procedural speech, submitted Extensions of Remarks, and material printed into the "
-    "Record are excluded.",
+    "Record are excluded. Named-member coverage begins January 25, 1994; the separate "
+    "long-run party charts use the Stanford Hein corpus back to 1873.",
     "Profanity uses a conservative, hand-curated list rather than an exhaustive dictionary. "
     "Passages marked as quotations are excluded from a member's rate and retained as a "
     "separate audit count.",
@@ -1457,7 +1459,7 @@ def _language_payload(
     scope_label: Optional[str] = None,
 ) -> dict:
     scope_label = scope_label or (
-        "All Congresses" if congress is None else f"Congress {congress}"
+        ALL_MEMBER_SCOPE_LABEL if congress is None else f"Congress {congress}"
     )
     granularity = "year" if congress is None else "month"
     series = language_timeseries(daily, congress)
@@ -1723,7 +1725,7 @@ def build_payload(
     return {
         "congress": congress,
         "label": scope_label or (
-            "All Congresses" if congress is None else f"Congress {congress}"
+            ALL_MEMBER_SCOPE_LABEL if congress is None else f"Congress {congress}"
         ),
         "generated_utc": generated_utc,
         "min_words": min_words,
@@ -1960,10 +1962,16 @@ def _term_leaders_table(rows: list[dict], *, available: bool) -> str:
 
 
 def _render_html(payload: dict, congresses: list[int], long_run: dict) -> str:
-    all_selected = " selected" if payload["congress"] is None else ""
-    options = [f'<option value="all"{all_selected}>All Congresses</option>']
+    recent_selected = payload["label"].startswith("Last 5 Congresses")
+    all_selected = " selected" if payload["congress"] is None and not recent_selected else ""
+    options = [
+        f'<option value="all"{all_selected}>{ALL_MEMBER_SCOPE_LABEL}</option>'
+    ]
     if len(congresses) >= 5:
-        options.append('<option value="recent5">Last 5 Congresses</option>')
+        selected = " selected" if recent_selected else ""
+        options.append(
+            f'<option value="recent5"{selected}>Last 5 Congresses</option>'
+        )
     for congress in sorted(congresses, reverse=True):
         selected = " selected" if congress == payload["congress"] else ""
         options.append(f'<option value="{congress}"{selected}>Congress {congress}</option>')
@@ -2172,7 +2180,8 @@ remain separate.</p></div>
 <p class="sub">Three transparent lexical measures are shown separately: profanity,
 personal hostility or disrespect, and misconduct allegations. They describe language in
 attributed floor remarks and compare Democrats with Republicans; they do not establish intent
-or whether an allegation is true.</p></div>
+or whether an allegation is true. Named-member results begin in 1994; this view opens with
+the last five Congresses.</p></div>
 </div>
 <div class="explorer-controls recent-controls">
 <label>Measure<select id="recent-metric"></select></label>
@@ -2324,7 +2333,9 @@ if (requestedCongress && [...select.options].some(option => option.value === req
 
 def _render_activity_html(payload: dict, congresses: list[int]) -> str:
     all_selected = " selected" if payload["congress"] is None else ""
-    options = [f'<option value="all"{all_selected}>All Congresses</option>']
+    options = [
+        f'<option value="all"{all_selected}>{ALL_MEMBER_SCOPE_LABEL}</option>'
+    ]
     if len(congresses) >= 5:
         options.append('<option value="recent5">Last 5 Congresses</option>')
     for congress in sorted(congresses, reverse=True):
@@ -2460,7 +2471,9 @@ passage, enactment, and profanity tables by Congress.">
 <main id="main-content">
 <h1>Congressional member activity and bills</h1>
 <p class="sub hero-deck">Exact-value tables for attributed speech, sponsored bills, passage,
-enactment, and nonzero profanity rates. The language-analysis homepage remains the primary view.</p>
+enactment, and nonzero profanity rates. Named-member speech coverage begins January 25, 1994;
+“all available Congresses” does not include the 1873–1993 aggregate-only period. The
+language-analysis homepage remains the primary view.</p>
 <div class="toolbar">
 <label for="activity-metric">Table<select id="activity-metric">{metric_options}</select></label>
 <label for="congress">Congress<select id="congress">{''.join(options)}</select></label>
@@ -2571,6 +2584,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     )
 
     selected = payloads[congress]
+    homepage_selected = payloads.get("recent5", selected)
     selected_language = selected["language"]
     site_charts.language_trends(
         pd.DataFrame(selected_language["series"]),
@@ -2620,7 +2634,7 @@ def main(argv: Optional[List[str]] = None) -> int:
         json.dumps(meta, indent=2) + "\n", encoding="utf-8"
     )
     (out / "index.html").write_text(
-        _render_html(selected, available, long_run), encoding="utf-8"
+        _render_html(homepage_selected, available, long_run), encoding="utf-8"
     )
     activity_dir = out / "activity"
     activity_dir.mkdir(parents=True, exist_ok=True)
