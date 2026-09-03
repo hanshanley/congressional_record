@@ -87,9 +87,12 @@ validation of later revisions.
 Member term summaries retain exact matched surface forms in the underlying daily audit table.
 For presentation, explicit inflectional, plural, spacing, spelling, and phrasal variants are
 grouped into families before selecting a member's most-used term or the top member for a term.
-For example, `damn` and `damned` contribute to one `damn` family, while `fuck` and `fuck you`
-contribute to one `fuck` family. The explicit family map is defined in `analysis/speakers.py`;
-unrelated expressions and compounds such as `motherfucker` are not stemmed together automatically.
+For example, `damn` and `god damn` contribute to one `damn` family, `fuck` and `fuck you`
+contribute to one `fuck` family, and `ass` and `kick ass` contribute to one `ass` family.
+The explicit family map is defined in `analysis/speakers.py`; unrelated lexical compounds such
+as `motherfucker` and `bullshit` are not stemmed together automatically. Every codebook form,
+including intentional singletons, must appear in that map so additions cannot create unreviewed
+display families.
 
 ## Remaining interpretation limits
 

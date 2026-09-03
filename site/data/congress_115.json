@@ -2630,8 +2630,8 @@
             "active_days": 131,
             "profanity_hits": 6,
             "profanity_per_100k": 2.4406912037,
-            "favorite_profanity_term": "goddamn",
-            "favorite_profanity_term_hits": 3,
+            "favorite_profanity_term": "damn",
+            "favorite_profanity_term_hits": 5,
             "member_url": "https://bioguide.congress.gov/search/bio/W000802"
           },
           {
@@ -2917,10 +2917,11 @@
       {
         "term": "damn",
         "leader_hits": 7,
-        "total_hits": 41,
+        "total_hits": 44,
         "variants": [
           "damn",
-          "damned"
+          "damned",
+          "god damn"
         ],
         "leaders": [
           {
@@ -2994,32 +2995,23 @@
         ]
       },
       {
-        "term": "goddamn",
-        "leader_hits": 3,
-        "total_hits": 3,
+        "term": "ass",
+        "leader_hits": 1,
+        "total_hits": 2,
         "variants": [
-          "god damn"
+          "asses",
+          "half-assed"
         ],
         "leaders": [
           {
-            "bioguide": "W000802",
-            "speaker_name": "Mr. WHITEHOUSE",
+            "bioguide": "B001277",
+            "speaker_name": "Mr. BLUMENTHAL",
             "party": "D",
-            "state": "RI",
+            "state": "CT",
             "chamber": "senate",
-            "hits": 3,
-            "member_url": "https://bioguide.congress.gov/search/bio/W000802"
-          }
-        ]
-      },
-      {
-        "term": "ass",
-        "leader_hits": 1,
-        "total_hits": 1,
-        "variants": [
-          "asses"
-        ],
-        "leaders": [
+            "hits": 1,
+            "member_url": "https://bioguide.congress.gov/search/bio/B001277"
+          },
           {
             "bioguide": "M000639",
             "speaker_name": "Mr. MENENDEZ",
@@ -3047,25 +3039,6 @@
             "chamber": "senate",
             "hits": 1,
             "member_url": "https://bioguide.congress.gov/search/bio/S001197"
-          }
-        ]
-      },
-      {
-        "term": "half-assed",
-        "leader_hits": 1,
-        "total_hits": 1,
-        "variants": [
-          "half-assed"
-        ],
-        "leaders": [
-          {
-            "bioguide": "B001277",
-            "speaker_name": "Mr. BLUMENTHAL",
-            "party": "D",
-            "state": "CT",
-            "chamber": "senate",
-            "hits": 1,
-            "member_url": "https://bioguide.congress.gov/search/bio/B001277"
           }
         ]
       },
@@ -3149,6 +3122,19 @@
         ]
       },
       {
+        "bioguide": "W000802",
+        "speaker_name": "Mr. WHITEHOUSE",
+        "party": "D",
+        "state": "RI",
+        "chamber": "senate",
+        "term": "damn",
+        "hits": 5,
+        "variants": [
+          "damn",
+          "god damn"
+        ]
+      },
+      {
         "bioguide": "G000535",
         "speaker_name": "Mr. GUTIERREZ",
         "party": "D",
@@ -3170,18 +3156,6 @@
         "hits": 3,
         "variants": [
           "damn"
-        ]
-      },
-      {
-        "bioguide": "W000802",
-        "speaker_name": "Mr. WHITEHOUSE",
-        "party": "D",
-        "state": "RI",
-        "chamber": "senate",
-        "term": "goddamn",
-        "hits": 3,
-        "variants": [
-          "god damn"
         ]
       },
       {
@@ -3246,18 +3220,6 @@
         ]
       },
       {
-        "bioguide": "W000802",
-        "speaker_name": "Mr. WHITEHOUSE",
-        "party": "D",
-        "state": "RI",
-        "chamber": "senate",
-        "term": "damn",
-        "hits": 2,
-        "variants": [
-          "damn"
-        ]
-      },
-      {
         "bioguide": "D000191",
         "speaker_name": "Mr. DeFAZIO",
         "party": "D",
@@ -3291,6 +3253,18 @@
         "hits": 2,
         "variants": [
           "hell of a"
+        ]
+      },
+      {
+        "bioguide": "B001277",
+        "speaker_name": "Mr. BLUMENTHAL",
+        "party": "D",
+        "state": "CT",
+        "chamber": "senate",
+        "term": "ass",
+        "hits": 1,
+        "variants": [
+          "half-assed"
         ]
       },
       {
@@ -3594,18 +3568,6 @@
         ]
       },
       {
-        "bioguide": "B001277",
-        "speaker_name": "Mr. BLUMENTHAL",
-        "party": "D",
-        "state": "CT",
-        "chamber": "senate",
-        "term": "half-assed",
-        "hits": 1,
-        "variants": [
-          "half-assed"
-        ]
-      },
-      {
         "bioguide": "G000359",
         "speaker_name": "Mr. GRAHAM",
         "party": "R",
@@ -3833,10 +3795,11 @@
         {
           "term": "damn",
           "leader_hits": 7,
-          "total_hits": 20,
+          "total_hits": 23,
           "variants": [
             "damn",
-            "damned"
+            "damned",
+            "god damn"
           ],
           "leaders": [
             {
@@ -3909,32 +3872,23 @@
           ]
         },
         {
-          "term": "goddamn",
-          "leader_hits": 3,
-          "total_hits": 3,
+          "term": "ass",
+          "leader_hits": 1,
+          "total_hits": 2,
           "variants": [
-            "god damn"
+            "asses",
+            "half-assed"
           ],
           "leaders": [
             {
-              "bioguide": "W000802",
-              "speaker_name": "Mr. WHITEHOUSE",
+              "bioguide": "B001277",
+              "speaker_name": "Mr. BLUMENTHAL",
               "party": "D",
-              "state": "RI",
+              "state": "CT",
               "chamber": "senate",
-              "hits": 3,
-              "member_url": "https://bioguide.congress.gov/search/bio/W000802"
-            }
-          ]
-        },
-        {
-          "term": "ass",
-          "leader_hits": 1,
-          "total_hits": 1,
-          "variants": [
-            "asses"
-          ],
-          "leaders": [
+              "hits": 1,
+              "member_url": "https://bioguide.congress.gov/search/bio/B001277"
+            },
             {
               "bioguide": "M000639",
               "speaker_name": "Mr. MENENDEZ",
@@ -3962,25 +3916,6 @@
               "chamber": "senate",
               "hits": 1,
               "member_url": "https://bioguide.congress.gov/search/bio/S001197"
-            }
-          ]
-        },
-        {
-          "term": "half-assed",
-          "leader_hits": 1,
-          "total_hits": 1,
-          "variants": [
-            "half-assed"
-          ],
-          "leaders": [
-            {
-              "bioguide": "B001277",
-              "speaker_name": "Mr. BLUMENTHAL",
-              "party": "D",
-              "state": "CT",
-              "chamber": "senate",
-              "hits": 1,
-              "member_url": "https://bioguide.congress.gov/search/bio/B001277"
             }
           ]
         }
@@ -4375,8 +4310,8 @@
         "profanity_hits": 6,
         "profanity_quoted_hits": 2,
         "profanity_terms": "{\"damn\":2,\"god damn\":3,\"what the hell\":1}",
-        "favorite_profanity_term": "goddamn",
-        "favorite_profanity_term_hits": 3,
+        "favorite_profanity_term": "damn",
+        "favorite_profanity_term_hits": 5,
         "bills_sponsored": 36,
         "bills_passed": 1,
         "bills_enacted": 0,
@@ -4513,7 +4448,7 @@
         "profanity_hits": 1,
         "profanity_quoted_hits": 0,
         "profanity_terms": "{\"half-assed\":1}",
-        "favorite_profanity_term": "half-assed",
+        "favorite_profanity_term": "ass",
         "favorite_profanity_term_hits": 1,
         "bills_sponsored": 60,
         "bills_passed": 1,
@@ -5559,7 +5494,7 @@
         "profanity_hits": 1,
         "profanity_quoted_hits": 0,
         "profanity_terms": "{\"half-assed\":1}",
-        "favorite_profanity_term": "half-assed",
+        "favorite_profanity_term": "ass",
         "favorite_profanity_term_hits": 1,
         "bills_sponsored": 60,
         "bills_passed": 1,
@@ -8137,8 +8072,8 @@
         "profanity_hits": 6,
         "profanity_quoted_hits": 2,
         "profanity_terms": "{\"damn\":2,\"god damn\":3,\"what the hell\":1}",
-        "favorite_profanity_term": "goddamn",
-        "favorite_profanity_term_hits": 3,
+        "favorite_profanity_term": "damn",
+        "favorite_profanity_term_hits": 5,
         "bills_sponsored": 36,
         "bills_passed": 1,
         "bills_enacted": 0,
@@ -8482,7 +8417,7 @@
         "profanity_hits": 1,
         "profanity_quoted_hits": 0,
         "profanity_terms": "{\"half-assed\":1}",
-        "favorite_profanity_term": "half-assed",
+        "favorite_profanity_term": "ass",
         "favorite_profanity_term_hits": 1,
         "bills_sponsored": 60,
         "bills_passed": 1,

@@ -341,6 +341,14 @@ def test_profanity_tables_show_each_members_most_used_term(store, tmp_path):
     assert 'id="term-chamber"' in page
     assert 'id="state-term-map"' in page
     assert "Most-used term by state" in page
+    assert 'class="censored-term"' in page
+    assert 'data-term="damn"' in page
+    assert 'aria-label="damn"' in page
+    assert ">d***</span>" in page
+    assert "censoredTermNode(item.term" in page
+    activity_page = (out / "activity" / "index.html").read_text()
+    assert 'data-term="damn"' in activity_page
+    assert ">d***</span>" in activity_page
 
 
 def test_builds_combined_last_five_congresses_payload(store, tmp_path):

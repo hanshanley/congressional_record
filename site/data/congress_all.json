@@ -3653,12 +3653,16 @@
     "profanity_term_leaders": [
       {
         "term": "damn",
-        "leader_hits": 102,
-        "total_hits": 1119,
+        "leader_hits": 104,
+        "total_hits": 1138,
         "variants": [
           "dammit",
           "damn",
-          "damned"
+          "damned",
+          "god damn",
+          "goddammit",
+          "goddamn",
+          "goddamned"
         ],
         "leaders": [
           {
@@ -3667,7 +3671,7 @@
             "party": "D",
             "state": "MA",
             "chamber": "house",
-            "hits": 102,
+            "hits": 104,
             "member_url": "https://bioguide.congress.gov/search/bio/M000312"
           }
         ]
@@ -3717,10 +3721,13 @@
       {
         "term": "ass",
         "leader_hits": 12,
-        "total_hits": 63,
+        "total_hits": 70,
         "variants": [
           "ass",
-          "asses"
+          "asses",
+          "half-assed",
+          "kick ass",
+          "kicking ass"
         ],
         "leaders": [
           {
@@ -3803,28 +3810,6 @@
             "chamber": "house",
             "hits": 13,
             "member_url": "https://bioguide.congress.gov/search/bio/K000380"
-          }
-        ]
-      },
-      {
-        "term": "goddamn",
-        "leader_hits": 6,
-        "total_hits": 19,
-        "variants": [
-          "god damn",
-          "goddammit",
-          "goddamn",
-          "goddamned"
-        ],
-        "leaders": [
-          {
-            "bioguide": "W000802",
-            "speaker_name": "Mr. WHITEHOUSE",
-            "party": "D",
-            "state": "RI",
-            "chamber": "senate",
-            "hits": 6,
-            "member_url": "https://bioguide.congress.gov/search/bio/W000802"
           }
         ]
       },
@@ -3921,6 +3906,27 @@
             "chamber": "house",
             "hits": 2,
             "member_url": "https://bioguide.congress.gov/search/bio/S001218"
+          }
+        ]
+      },
+      {
+        "term": "bitch",
+        "leader_hits": 2,
+        "total_hits": 9,
+        "variants": [
+          "bitch",
+          "bitching",
+          "son of a bitch"
+        ],
+        "leaders": [
+          {
+            "bioguide": "K000380",
+            "speaker_name": "Mr. KILDEE",
+            "party": "D",
+            "state": "MI",
+            "chamber": "house",
+            "hits": 2,
+            "member_url": "https://bioguide.congress.gov/search/bio/K000380"
           }
         ]
       },
@@ -4033,81 +4039,6 @@
             "chamber": "house",
             "hits": 1,
             "member_url": "https://bioguide.congress.gov/search/bio/W000792"
-          }
-        ]
-      },
-      {
-        "term": "bitch",
-        "leader_hits": 2,
-        "total_hits": 7,
-        "variants": [
-          "bitch",
-          "bitching"
-        ],
-        "leaders": [
-          {
-            "bioguide": "K000380",
-            "speaker_name": "Mr. KILDEE",
-            "party": "D",
-            "state": "MI",
-            "chamber": "house",
-            "hits": 2,
-            "member_url": "https://bioguide.congress.gov/search/bio/K000380"
-          }
-        ]
-      },
-      {
-        "term": "half-assed",
-        "leader_hits": 1,
-        "total_hits": 5,
-        "variants": [
-          "half-assed"
-        ],
-        "leaders": [
-          {
-            "bioguide": "B001277",
-            "speaker_name": "Mr. BLUMENTHAL",
-            "party": "D",
-            "state": "CT",
-            "chamber": "senate",
-            "hits": 1,
-            "member_url": "https://bioguide.congress.gov/search/bio/B001277"
-          },
-          {
-            "bioguide": "D000064",
-            "speaker_name": "Mr. DASCHLE",
-            "party": "D",
-            "state": "SD",
-            "chamber": "senate",
-            "hits": 1,
-            "member_url": "https://bioguide.congress.gov/search/bio/D000064"
-          },
-          {
-            "bioguide": "D000622",
-            "speaker_name": "Ms. DUCKWORTH",
-            "party": "D",
-            "state": "IL",
-            "chamber": "senate",
-            "hits": 1,
-            "member_url": "https://bioguide.congress.gov/search/bio/D000622"
-          },
-          {
-            "bioguide": "R000614",
-            "speaker_name": "Mr. ROY",
-            "party": "R",
-            "state": "TX",
-            "chamber": "house",
-            "hits": 1,
-            "member_url": "https://bioguide.congress.gov/search/bio/R000614"
-          },
-          {
-            "bioguide": "S001183",
-            "speaker_name": "Mr. SCHWEIKERT",
-            "party": "R",
-            "state": "AZ",
-            "chamber": "house",
-            "hits": 1,
-            "member_url": "https://bioguide.congress.gov/search/bio/S001183"
           }
         ]
       },
@@ -4325,63 +4256,6 @@
             "member_url": "https://bioguide.congress.gov/search/bio/S000709"
           }
         ]
-      },
-      {
-        "term": "kick ass",
-        "leader_hits": 1,
-        "total_hits": 2,
-        "variants": [
-          "kick ass",
-          "kicking ass"
-        ],
-        "leaders": [
-          {
-            "bioguide": "M000404",
-            "speaker_name": "Mr. McDERMOTT",
-            "party": "D",
-            "state": "WA",
-            "chamber": "house",
-            "hits": 1,
-            "member_url": "https://bioguide.congress.gov/search/bio/M000404"
-          },
-          {
-            "bioguide": "R000305",
-            "speaker_name": "Ms. ROSS",
-            "party": "D",
-            "state": "NC",
-            "chamber": "house",
-            "hits": 1,
-            "member_url": "https://bioguide.congress.gov/search/bio/R000305"
-          }
-        ]
-      },
-      {
-        "term": "son of a bitch",
-        "leader_hits": 1,
-        "total_hits": 2,
-        "variants": [
-          "son of a bitch"
-        ],
-        "leaders": [
-          {
-            "bioguide": "D000018",
-            "speaker_name": "Mr. D'AMATO",
-            "party": "R",
-            "state": "NY",
-            "chamber": "senate",
-            "hits": 1,
-            "member_url": "https://bioguide.congress.gov/search/bio/D000018"
-          },
-          {
-            "bioguide": "M000312",
-            "speaker_name": "Mr. McGOVERN",
-            "party": "D",
-            "state": "MA",
-            "chamber": "house",
-            "hits": 1,
-            "member_url": "https://bioguide.congress.gov/search/bio/M000312"
-          }
-        ]
       }
     ],
     "profanity_term_member_counts": [
@@ -4418,10 +4292,12 @@
         "state": "MA",
         "chamber": "house",
         "term": "damn",
-        "hits": 102,
+        "hits": 104,
         "variants": [
           "damn",
-          "damned"
+          "damned",
+          "goddamn",
+          "goddamned"
         ]
       },
       {
@@ -4431,11 +4307,12 @@
         "state": "AZ",
         "chamber": "house",
         "term": "damn",
-        "hits": 96,
+        "hits": 97,
         "variants": [
           "dammit",
           "damn",
-          "damned"
+          "damned",
+          "goddammit"
         ]
       },
       {
@@ -4462,6 +4339,21 @@
         "hits": 37,
         "variants": [
           "crap"
+        ]
+      },
+      {
+        "bioguide": "W000802",
+        "speaker_name": "Mr. WHITEHOUSE",
+        "party": "D",
+        "state": "RI",
+        "chamber": "senate",
+        "term": "damn",
+        "hits": 37,
+        "variants": [
+          "dammit",
+          "damn",
+          "damned",
+          "god damn"
         ]
       },
       {
@@ -4499,20 +4391,6 @@
         "term": "damn",
         "hits": 32,
         "variants": [
-          "damn",
-          "damned"
-        ]
-      },
-      {
-        "bioguide": "W000802",
-        "speaker_name": "Mr. WHITEHOUSE",
-        "party": "D",
-        "state": "RI",
-        "chamber": "senate",
-        "term": "damn",
-        "hits": 31,
-        "variants": [
-          "dammit",
           "damn",
           "damned"
         ]
@@ -5087,18 +4965,6 @@
         ]
       },
       {
-        "bioguide": "W000802",
-        "speaker_name": "Mr. WHITEHOUSE",
-        "party": "D",
-        "state": "RI",
-        "chamber": "senate",
-        "term": "goddamn",
-        "hits": 6,
-        "variants": [
-          "god damn"
-        ]
-      },
-      {
         "bioguide": "K000393",
         "speaker_name": "Mr. KENNEDY",
         "party": "R",
@@ -5489,6 +5355,19 @@
         ]
       },
       {
+        "bioguide": "K000148",
+        "speaker_name": "Mr. KERRY",
+        "party": "D",
+        "state": "MA",
+        "chamber": "senate",
+        "term": "damn",
+        "hits": 4,
+        "variants": [
+          "damned",
+          "goddamn"
+        ]
+      },
+      {
         "bioguide": "L000261",
         "speaker_name": "Mr. LEVIN",
         "party": "D",
@@ -5870,15 +5749,15 @@
         ]
       },
       {
-        "bioguide": "K000148",
-        "speaker_name": "Mr. KERRY",
+        "bioguide": "L000090",
+        "speaker_name": "Mr. LANTOS",
         "party": "D",
-        "state": "MA",
-        "chamber": "senate",
+        "state": "CA",
+        "chamber": "house",
         "term": "damn",
         "hits": 3,
         "variants": [
-          "damned"
+          "goddamn"
         ]
       },
       {
@@ -6044,18 +5923,6 @@
         "variants": [
           "fuck",
           "fucking"
-        ]
-      },
-      {
-        "bioguide": "L000090",
-        "speaker_name": "Mr. LANTOS",
-        "party": "D",
-        "state": "CA",
-        "chamber": "house",
-        "term": "goddamn",
-        "hits": 3,
-        "variants": [
-          "goddamn"
         ]
       },
       {
@@ -6241,6 +6108,19 @@
         "hits": 2,
         "variants": [
           "ass"
+        ]
+      },
+      {
+        "bioguide": "S001183",
+        "speaker_name": "Mr. SCHWEIKERT",
+        "party": "R",
+        "state": "AZ",
+        "chamber": "house",
+        "term": "ass",
+        "hits": 2,
+        "variants": [
+          "ass",
+          "half-assed"
         ]
       },
       {
@@ -7349,6 +7229,19 @@
         ]
       },
       {
+        "bioguide": "S001205",
+        "speaker_name": "Ms. SCANLON",
+        "party": "D",
+        "state": "PA",
+        "chamber": "house",
+        "term": "damn",
+        "hits": 2,
+        "variants": [
+          "damn",
+          "goddamn"
+        ]
+      },
+      {
         "bioguide": "S001218",
         "speaker_name": "Ms. STANSBURY",
         "party": "D",
@@ -7483,19 +7376,6 @@
         "hits": 2,
         "variants": [
           "fuck"
-        ]
-      },
-      {
-        "bioguide": "M000312",
-        "speaker_name": "Mr. McGOVERN",
-        "party": "D",
-        "state": "MA",
-        "chamber": "house",
-        "term": "goddamn",
-        "hits": 2,
-        "variants": [
-          "goddamn",
-          "goddamned"
         ]
       },
       {
@@ -7878,6 +7758,18 @@
         ]
       },
       {
+        "bioguide": "B001277",
+        "speaker_name": "Mr. BLUMENTHAL",
+        "party": "D",
+        "state": "CT",
+        "chamber": "senate",
+        "term": "ass",
+        "hits": 1,
+        "variants": [
+          "half-assed"
+        ]
+      },
+      {
         "bioguide": "C001051",
         "speaker_name": "Mr. CARTER of Texas",
         "party": "R",
@@ -7914,6 +7806,18 @@
         ]
       },
       {
+        "bioguide": "D000064",
+        "speaker_name": "Mr. DASCHLE",
+        "party": "D",
+        "state": "SD",
+        "chamber": "senate",
+        "term": "ass",
+        "hits": 1,
+        "variants": [
+          "half-assed"
+        ]
+      },
+      {
         "bioguide": "D000435",
         "speaker_name": "Mr. DORNAN",
         "party": "R",
@@ -7923,6 +7827,18 @@
         "hits": 1,
         "variants": [
           "ass"
+        ]
+      },
+      {
+        "bioguide": "D000622",
+        "speaker_name": "Ms. DUCKWORTH",
+        "party": "D",
+        "state": "IL",
+        "chamber": "senate",
+        "term": "ass",
+        "hits": 1,
+        "variants": [
+          "half-assed"
         ]
       },
       {
@@ -8058,6 +7974,18 @@
         ]
       },
       {
+        "bioguide": "M000404",
+        "speaker_name": "Mr. McDERMOTT",
+        "party": "D",
+        "state": "WA",
+        "chamber": "house",
+        "term": "ass",
+        "hits": 1,
+        "variants": [
+          "kicking ass"
+        ]
+      },
+      {
         "bioguide": "M000639",
         "speaker_name": "Mr. MENENDEZ",
         "party": "D",
@@ -8142,6 +8070,30 @@
         ]
       },
       {
+        "bioguide": "R000305",
+        "speaker_name": "Ms. ROSS",
+        "party": "D",
+        "state": "NC",
+        "chamber": "house",
+        "term": "ass",
+        "hits": 1,
+        "variants": [
+          "kick ass"
+        ]
+      },
+      {
+        "bioguide": "R000614",
+        "speaker_name": "Mr. ROY",
+        "party": "R",
+        "state": "TX",
+        "chamber": "house",
+        "term": "ass",
+        "hits": 1,
+        "variants": [
+          "half-assed"
+        ]
+      },
+      {
         "bioguide": "S000344",
         "speaker_name": "Mr. SHERMAN",
         "party": "D",
@@ -8183,18 +8135,6 @@
         "party": "D",
         "state": "CA",
         "chamber": "senate",
-        "term": "ass",
-        "hits": 1,
-        "variants": [
-          "ass"
-        ]
-      },
-      {
-        "bioguide": "S001183",
-        "speaker_name": "Mr. SCHWEIKERT",
-        "party": "R",
-        "state": "AZ",
-        "chamber": "house",
         "term": "ass",
         "hits": 1,
         "variants": [
@@ -8574,6 +8514,18 @@
         ]
       },
       {
+        "bioguide": "D000018",
+        "speaker_name": "Mr. D'AMATO",
+        "party": "R",
+        "state": "NY",
+        "chamber": "senate",
+        "term": "bitch",
+        "hits": 1,
+        "variants": [
+          "son of a bitch"
+        ]
+      },
+      {
         "bioguide": "D000435",
         "speaker_name": "Mr. DORNAN",
         "party": "R",
@@ -8595,6 +8547,18 @@
         "hits": 1,
         "variants": [
           "bitch"
+        ]
+      },
+      {
+        "bioguide": "M000312",
+        "speaker_name": "Mr. McGOVERN",
+        "party": "D",
+        "state": "MA",
+        "chamber": "house",
+        "term": "bitch",
+        "hits": 1,
+        "variants": [
+          "son of a bitch"
         ]
       },
       {
@@ -9282,6 +9246,18 @@
         ]
       },
       {
+        "bioguide": "B000169",
+        "speaker_name": "Mr. BARR of Georgia",
+        "party": "R",
+        "state": "GA",
+        "chamber": "house",
+        "term": "damn",
+        "hits": 1,
+        "variants": [
+          "god damn"
+        ]
+      },
+      {
         "bioguide": "B000468",
         "speaker_name": "Mr. BINGAMAN",
         "party": "D",
@@ -9558,6 +9534,18 @@
         ]
       },
       {
+        "bioguide": "C001091",
+        "speaker_name": "Mr. CASTRO of Texas",
+        "party": "D",
+        "state": "TX",
+        "chamber": "house",
+        "term": "damn",
+        "hits": 1,
+        "variants": [
+          "goddamned"
+        ]
+      },
+      {
         "bioguide": "C001095",
         "speaker_name": "Mr. COTTON",
         "party": "R",
@@ -9663,6 +9651,18 @@
         "hits": 1,
         "variants": [
           "damn"
+        ]
+      },
+      {
+        "bioguide": "D000623",
+        "speaker_name": "Mr. DeSAULNIER",
+        "party": "D",
+        "state": "CA",
+        "chamber": "house",
+        "term": "damn",
+        "hits": 1,
+        "variants": [
+          "goddamn"
         ]
       },
       {
@@ -10158,6 +10158,18 @@
         ]
       },
       {
+        "bioguide": "K000380",
+        "speaker_name": "Mr. KILDEE",
+        "party": "D",
+        "state": "MI",
+        "chamber": "senate",
+        "term": "damn",
+        "hits": 1,
+        "variants": [
+          "goddamn"
+        ]
+      },
+      {
         "bioguide": "K000384",
         "speaker_name": "Mr. KAINE",
         "party": "D",
@@ -10455,6 +10467,18 @@
         "hits": 1,
         "variants": [
           "damn"
+        ]
+      },
+      {
+        "bioguide": "M001223",
+        "speaker_name": "Mr. MAGAZINER",
+        "party": "D",
+        "state": "RI",
+        "chamber": "house",
+        "term": "damn",
+        "hits": 1,
+        "variants": [
+          "goddamned"
         ]
       },
       {
@@ -10950,18 +10974,6 @@
         ]
       },
       {
-        "bioguide": "S001205",
-        "speaker_name": "Ms. SCANLON",
-        "party": "D",
-        "state": "PA",
-        "chamber": "house",
-        "term": "damn",
-        "hits": 1,
-        "variants": [
-          "damn"
-        ]
-      },
-      {
         "bioguide": "S001208",
         "speaker_name": "Ms. SLOTKIN",
         "party": "D",
@@ -11367,162 +11379,6 @@
         "hits": 1,
         "variants": [
           "fucking"
-        ]
-      },
-      {
-        "bioguide": "B000169",
-        "speaker_name": "Mr. BARR of Georgia",
-        "party": "R",
-        "state": "GA",
-        "chamber": "house",
-        "term": "goddamn",
-        "hits": 1,
-        "variants": [
-          "god damn"
-        ]
-      },
-      {
-        "bioguide": "C001091",
-        "speaker_name": "Mr. CASTRO of Texas",
-        "party": "D",
-        "state": "TX",
-        "chamber": "house",
-        "term": "goddamn",
-        "hits": 1,
-        "variants": [
-          "goddamned"
-        ]
-      },
-      {
-        "bioguide": "D000623",
-        "speaker_name": "Mr. DeSAULNIER",
-        "party": "D",
-        "state": "CA",
-        "chamber": "house",
-        "term": "goddamn",
-        "hits": 1,
-        "variants": [
-          "goddamn"
-        ]
-      },
-      {
-        "bioguide": "K000148",
-        "speaker_name": "Mr. KERRY",
-        "party": "D",
-        "state": "MA",
-        "chamber": "senate",
-        "term": "goddamn",
-        "hits": 1,
-        "variants": [
-          "goddamn"
-        ]
-      },
-      {
-        "bioguide": "K000380",
-        "speaker_name": "Mr. KILDEE",
-        "party": "D",
-        "state": "MI",
-        "chamber": "senate",
-        "term": "goddamn",
-        "hits": 1,
-        "variants": [
-          "goddamn"
-        ]
-      },
-      {
-        "bioguide": "M001223",
-        "speaker_name": "Mr. MAGAZINER",
-        "party": "D",
-        "state": "RI",
-        "chamber": "house",
-        "term": "goddamn",
-        "hits": 1,
-        "variants": [
-          "goddamned"
-        ]
-      },
-      {
-        "bioguide": "S001183",
-        "speaker_name": "Mr. SCHWEIKERT",
-        "party": "R",
-        "state": "AZ",
-        "chamber": "house",
-        "term": "goddamn",
-        "hits": 1,
-        "variants": [
-          "goddammit"
-        ]
-      },
-      {
-        "bioguide": "S001205",
-        "speaker_name": "Ms. SCANLON",
-        "party": "D",
-        "state": "PA",
-        "chamber": "house",
-        "term": "goddamn",
-        "hits": 1,
-        "variants": [
-          "goddamn"
-        ]
-      },
-      {
-        "bioguide": "B001277",
-        "speaker_name": "Mr. BLUMENTHAL",
-        "party": "D",
-        "state": "CT",
-        "chamber": "senate",
-        "term": "half-assed",
-        "hits": 1,
-        "variants": [
-          "half-assed"
-        ]
-      },
-      {
-        "bioguide": "D000064",
-        "speaker_name": "Mr. DASCHLE",
-        "party": "D",
-        "state": "SD",
-        "chamber": "senate",
-        "term": "half-assed",
-        "hits": 1,
-        "variants": [
-          "half-assed"
-        ]
-      },
-      {
-        "bioguide": "D000622",
-        "speaker_name": "Ms. DUCKWORTH",
-        "party": "D",
-        "state": "IL",
-        "chamber": "senate",
-        "term": "half-assed",
-        "hits": 1,
-        "variants": [
-          "half-assed"
-        ]
-      },
-      {
-        "bioguide": "R000614",
-        "speaker_name": "Mr. ROY",
-        "party": "R",
-        "state": "TX",
-        "chamber": "house",
-        "term": "half-assed",
-        "hits": 1,
-        "variants": [
-          "half-assed"
-        ]
-      },
-      {
-        "bioguide": "S001183",
-        "speaker_name": "Mr. SCHWEIKERT",
-        "party": "R",
-        "state": "AZ",
-        "chamber": "house",
-        "term": "half-assed",
-        "hits": 1,
-        "variants": [
-          "half-assed"
         ]
       },
       {
@@ -12666,30 +12522,6 @@
         ]
       },
       {
-        "bioguide": "M000404",
-        "speaker_name": "Mr. McDERMOTT",
-        "party": "D",
-        "state": "WA",
-        "chamber": "house",
-        "term": "kick ass",
-        "hits": 1,
-        "variants": [
-          "kicking ass"
-        ]
-      },
-      {
-        "bioguide": "R000305",
-        "speaker_name": "Ms. ROSS",
-        "party": "D",
-        "state": "NC",
-        "chamber": "house",
-        "term": "kick ass",
-        "hits": 1,
-        "variants": [
-          "kick ass"
-        ]
-      },
-      {
         "bioguide": "L000575",
         "speaker_name": "Mr. LANKFORD",
         "party": "R",
@@ -13012,30 +12844,6 @@
         "variants": [
           "shithole"
         ]
-      },
-      {
-        "bioguide": "D000018",
-        "speaker_name": "Mr. D'AMATO",
-        "party": "R",
-        "state": "NY",
-        "chamber": "senate",
-        "term": "son of a bitch",
-        "hits": 1,
-        "variants": [
-          "son of a bitch"
-        ]
-      },
-      {
-        "bioguide": "M000312",
-        "speaker_name": "Mr. McGOVERN",
-        "party": "D",
-        "state": "MA",
-        "chamber": "house",
-        "term": "son of a bitch",
-        "hits": 1,
-        "variants": [
-          "son of a bitch"
-        ]
       }
     ],
     "profanity_term_detail_available": true,
@@ -13043,12 +12851,16 @@
       "house": [
         {
           "term": "damn",
-          "leader_hits": 102,
-          "total_hits": 618,
+          "leader_hits": 104,
+          "total_hits": 629,
           "variants": [
             "dammit",
             "damn",
-            "damned"
+            "damned",
+            "god damn",
+            "goddammit",
+            "goddamn",
+            "goddamned"
           ],
           "leaders": [
             {
@@ -13057,7 +12869,7 @@
               "party": "D",
               "state": "MA",
               "chamber": "house",
-              "hits": 102,
+              "hits": 104,
               "member_url": "https://bioguide.congress.gov/search/bio/M000312"
             }
           ]
@@ -13106,10 +12918,13 @@
         {
           "term": "ass",
           "leader_hits": 3,
-          "total_hits": 22,
+          "total_hits": 26,
           "variants": [
             "ass",
-            "asses"
+            "asses",
+            "half-assed",
+            "kick ass",
+            "kicking ass"
           ],
           "leaders": [
             {
@@ -13161,28 +12976,6 @@
               "chamber": "house",
               "hits": 5,
               "member_url": "https://bioguide.congress.gov/search/bio/S001183"
-            }
-          ]
-        },
-        {
-          "term": "goddamn",
-          "leader_hits": 3,
-          "total_hits": 11,
-          "variants": [
-            "god damn",
-            "goddammit",
-            "goddamn",
-            "goddamned"
-          ],
-          "leaders": [
-            {
-              "bioguide": "L000090",
-              "speaker_name": "Mr. LANTOS",
-              "party": "D",
-              "state": "CA",
-              "chamber": "house",
-              "hits": 3,
-              "member_url": "https://bioguide.congress.gov/search/bio/L000090"
             }
           ]
         },
@@ -13302,6 +13095,54 @@
           ]
         },
         {
+          "term": "bitch",
+          "leader_hits": 1,
+          "total_hits": 4,
+          "variants": [
+            "bitch",
+            "bitching",
+            "son of a bitch"
+          ],
+          "leaders": [
+            {
+              "bioguide": "D000435",
+              "speaker_name": "Mr. DORNAN",
+              "party": "R",
+              "state": "CA",
+              "chamber": "house",
+              "hits": 1,
+              "member_url": "https://bioguide.congress.gov/search/bio/D000435"
+            },
+            {
+              "bioguide": "E000179",
+              "speaker_name": "Mr. ENGEL",
+              "party": "D",
+              "state": "NY",
+              "chamber": "house",
+              "hits": 1,
+              "member_url": "https://bioguide.congress.gov/search/bio/E000179"
+            },
+            {
+              "bioguide": "M000312",
+              "speaker_name": "Mr. McGOVERN",
+              "party": "D",
+              "state": "MA",
+              "chamber": "house",
+              "hits": 1,
+              "member_url": "https://bioguide.congress.gov/search/bio/M000312"
+            },
+            {
+              "bioguide": "U000031",
+              "speaker_name": "Mr. UPTON",
+              "party": "R",
+              "state": "MI",
+              "chamber": "house",
+              "hits": 1,
+              "member_url": "https://bioguide.congress.gov/search/bio/U000031"
+            }
+          ]
+        },
+        {
           "term": "frick",
           "leader_hits": 1,
           "total_hits": 4,
@@ -13394,44 +13235,6 @@
           ]
         },
         {
-          "term": "bitch",
-          "leader_hits": 1,
-          "total_hits": 3,
-          "variants": [
-            "bitch",
-            "bitching"
-          ],
-          "leaders": [
-            {
-              "bioguide": "D000435",
-              "speaker_name": "Mr. DORNAN",
-              "party": "R",
-              "state": "CA",
-              "chamber": "house",
-              "hits": 1,
-              "member_url": "https://bioguide.congress.gov/search/bio/D000435"
-            },
-            {
-              "bioguide": "E000179",
-              "speaker_name": "Mr. ENGEL",
-              "party": "D",
-              "state": "NY",
-              "chamber": "house",
-              "hits": 1,
-              "member_url": "https://bioguide.congress.gov/search/bio/E000179"
-            },
-            {
-              "bioguide": "U000031",
-              "speaker_name": "Mr. UPTON",
-              "party": "R",
-              "state": "MI",
-              "chamber": "house",
-              "hits": 1,
-              "member_url": "https://bioguide.congress.gov/search/bio/U000031"
-            }
-          ]
-        },
-        {
           "term": "badass",
           "leader_hits": 1,
           "total_hits": 2,
@@ -13456,63 +13259,6 @@
               "chamber": "house",
               "hits": 1,
               "member_url": "https://bioguide.congress.gov/search/bio/S001208"
-            }
-          ]
-        },
-        {
-          "term": "half-assed",
-          "leader_hits": 1,
-          "total_hits": 2,
-          "variants": [
-            "half-assed"
-          ],
-          "leaders": [
-            {
-              "bioguide": "R000614",
-              "speaker_name": "Mr. ROY",
-              "party": "R",
-              "state": "TX",
-              "chamber": "house",
-              "hits": 1,
-              "member_url": "https://bioguide.congress.gov/search/bio/R000614"
-            },
-            {
-              "bioguide": "S001183",
-              "speaker_name": "Mr. SCHWEIKERT",
-              "party": "R",
-              "state": "AZ",
-              "chamber": "house",
-              "hits": 1,
-              "member_url": "https://bioguide.congress.gov/search/bio/S001183"
-            }
-          ]
-        },
-        {
-          "term": "kick ass",
-          "leader_hits": 1,
-          "total_hits": 2,
-          "variants": [
-            "kick ass",
-            "kicking ass"
-          ],
-          "leaders": [
-            {
-              "bioguide": "M000404",
-              "speaker_name": "Mr. McDERMOTT",
-              "party": "D",
-              "state": "WA",
-              "chamber": "house",
-              "hits": 1,
-              "member_url": "https://bioguide.congress.gov/search/bio/M000404"
-            },
-            {
-              "bioguide": "R000305",
-              "speaker_name": "Ms. ROSS",
-              "party": "D",
-              "state": "NC",
-              "chamber": "house",
-              "hits": 1,
-              "member_url": "https://bioguide.congress.gov/search/bio/R000305"
             }
           ]
         },
@@ -13553,46 +13299,29 @@
               "member_url": "https://bioguide.congress.gov/search/bio/G000535"
             }
           ]
-        },
-        {
-          "term": "son of a bitch",
-          "leader_hits": 1,
-          "total_hits": 1,
-          "variants": [
-            "son of a bitch"
-          ],
-          "leaders": [
-            {
-              "bioguide": "M000312",
-              "speaker_name": "Mr. McGOVERN",
-              "party": "D",
-              "state": "MA",
-              "chamber": "house",
-              "hits": 1,
-              "member_url": "https://bioguide.congress.gov/search/bio/M000312"
-            }
-          ]
         }
       ],
       "senate": [
         {
           "term": "damn",
-          "leader_hits": 34,
-          "total_hits": 501,
+          "leader_hits": 37,
+          "total_hits": 509,
           "variants": [
             "dammit",
             "damn",
-            "damned"
+            "damned",
+            "god damn",
+            "goddamn"
           ],
           "leaders": [
             {
-              "bioguide": "S000148",
-              "speaker_name": "Mr. SCHUMER",
+              "bioguide": "W000802",
+              "speaker_name": "Mr. WHITEHOUSE",
               "party": "D",
-              "state": "NY",
+              "state": "RI",
               "chamber": "senate",
-              "hits": 34,
-              "member_url": "https://bioguide.congress.gov/search/bio/S000148"
+              "hits": 37,
+              "member_url": "https://bioguide.congress.gov/search/bio/W000802"
             }
           ]
         },
@@ -13659,10 +13388,11 @@
         {
           "term": "ass",
           "leader_hits": 12,
-          "total_hits": 41,
+          "total_hits": 44,
           "variants": [
             "ass",
-            "asses"
+            "asses",
+            "half-assed"
           ],
           "leaders": [
             {
@@ -13739,26 +13469,6 @@
           ]
         },
         {
-          "term": "goddamn",
-          "leader_hits": 6,
-          "total_hits": 8,
-          "variants": [
-            "god damn",
-            "goddamn"
-          ],
-          "leaders": [
-            {
-              "bioguide": "W000802",
-              "speaker_name": "Mr. WHITEHOUSE",
-              "party": "D",
-              "state": "RI",
-              "chamber": "senate",
-              "hits": 6,
-              "member_url": "https://bioguide.congress.gov/search/bio/W000802"
-            }
-          ]
-        },
-        {
           "term": "shit",
           "leader_hits": 3,
           "total_hits": 6,
@@ -13780,9 +13490,10 @@
         {
           "term": "bitch",
           "leader_hits": 2,
-          "total_hits": 4,
+          "total_hits": 5,
           "variants": [
-            "bitch"
+            "bitch",
+            "son of a bitch"
           ],
           "leaders": [
             {
@@ -13940,43 +13651,6 @@
           ]
         },
         {
-          "term": "half-assed",
-          "leader_hits": 1,
-          "total_hits": 3,
-          "variants": [
-            "half-assed"
-          ],
-          "leaders": [
-            {
-              "bioguide": "B001277",
-              "speaker_name": "Mr. BLUMENTHAL",
-              "party": "D",
-              "state": "CT",
-              "chamber": "senate",
-              "hits": 1,
-              "member_url": "https://bioguide.congress.gov/search/bio/B001277"
-            },
-            {
-              "bioguide": "D000064",
-              "speaker_name": "Mr. DASCHLE",
-              "party": "D",
-              "state": "SD",
-              "chamber": "senate",
-              "hits": 1,
-              "member_url": "https://bioguide.congress.gov/search/bio/D000064"
-            },
-            {
-              "bioguide": "D000622",
-              "speaker_name": "Ms. DUCKWORTH",
-              "party": "D",
-              "state": "IL",
-              "chamber": "senate",
-              "hits": 1,
-              "member_url": "https://bioguide.congress.gov/search/bio/D000622"
-            }
-          ]
-        },
-        {
           "term": "screw you",
           "leader_hits": 1,
           "total_hits": 3,
@@ -14124,25 +13798,6 @@
               "chamber": "senate",
               "hits": 1,
               "member_url": "https://bioguide.congress.gov/search/bio/S000709"
-            }
-          ]
-        },
-        {
-          "term": "son of a bitch",
-          "leader_hits": 1,
-          "total_hits": 1,
-          "variants": [
-            "son of a bitch"
-          ],
-          "leaders": [
-            {
-              "bioguide": "D000018",
-              "speaker_name": "Mr. D'AMATO",
-              "party": "R",
-              "state": "NY",
-              "chamber": "senate",
-              "hits": 1,
-              "member_url": "https://bioguide.congress.gov/search/bio/D000018"
             }
           ]
         }
@@ -15678,7 +15333,7 @@
         "profanity_hits": 2,
         "profanity_quoted_hits": 0,
         "profanity_terms": "{\"effing\":1,\"half-assed\":1}",
-        "favorite_profanity_term": "effing",
+        "favorite_profanity_term": "ass",
         "favorite_profanity_term_hits": 1,
         "bills_sponsored": 590,
         "bills_passed": 9,

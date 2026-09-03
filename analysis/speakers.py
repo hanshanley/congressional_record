@@ -77,10 +77,11 @@ _COUNT_KEYS = ("turns", "words", "profanity_hits", "profanity_quoted_hits",
 _TERM_COUNTS_COLUMN = "profanity_terms"
 
 # Raw surface forms remain stored for auditability. Member summaries group only
-# explicit morphological, spacing, and spelling variants into these families.
+# explicitly reviewed morphological, spacing, spelling, and phrasal variants.
+# Singleton entries make every codebook form's display treatment deliberate.
 PROFANITY_TERM_FAMILIES = {
-    "damn": ("damn", "damned", "dammit"),
-    "goddamn": (
+    "damn": (
+        "damn", "damned", "dammit",
         "goddamn", "goddamned", "goddammit", "goddamnit",
         "god damn", "god damned", "god dammit", "god damnit",
     ),
@@ -89,12 +90,19 @@ PROFANITY_TERM_FAMILIES = {
     "bugger": ("bugger", "buggered", "buggers"),
     "frick": ("frickin", "fricking"),
     "frig": ("friggin", "frigging"),
+    "arse": ("arse",),
+    "effing": ("effing",),
     "bullshit": (
         "bullshit", "bull shit", "bullshitted", "bullshitter",
         "bullshitters", "bullshitting",
     ),
+    "horseshit": ("horseshit",),
     "shit": ("shit", "shits", "shitting", "shitty"),
+    "apeshit": ("apeshit",),
+    "batshit": ("batshit",),
+    "chickenshit": ("chickenshit",),
     "dipshit": ("dipshit", "dipshits"),
+    "dogshit": ("dogshit",),
     "shit bag": ("shit bag", "shit bags", "shitbag", "shitbags"),
     "shithead": ("shithead", "shitheads"),
     "shithole": ("shithole", "shitholes"),
@@ -112,25 +120,28 @@ PROFANITY_TERM_FAMILIES = {
         "mother fuckers", "mother fucking", "mother fuckin", "mothafucka",
         "mothafuckas", "mothafucker", "mothafuckers",
     ),
-    "ass": ("ass", "asses"),
+    "ass": (
+        "ass", "asses", "half-assed", "kick ass", "kicked ass", "kicking ass",
+    ),
     "asshole": ("asshole", "assholes"),
     "assclown": ("assclown", "assclowns"),
     "asshat": ("asshat", "asshats"),
     "asswipe": ("asswipe", "asswipes"),
     "badass": ("badass", "badasses"),
     "fatass": ("fatass", "fatasses"),
-    "kick ass": ("kick ass", "kicked ass", "kicking ass"),
     "smartass": ("smartass", "smartasses"),
     "wiseass": ("wiseass", "wiseasses"),
     "dumbass": ("dumbass", "dumbasses"),
     "jackass": ("jackass", "jackasses"),
     "bastard": ("bastard", "bastards"),
-    "bitch": ("bitch", "bitches", "bitching", "bitchy"),
-    "son of a bitch": (
+    "bitch": (
+        "bitch", "bitches", "bitching", "bitchy",
         "son of a bitch", "son-of-a-bitch", "sons of bitches", "sons-of-bitches",
     ),
     "piss off": ("piss off", "pissed off", "pisses off", "pissing off"),
+    "screw you": ("screw you",),
     "arsehole": ("arsehole", "arseholes"),
+    "bollocks": ("bollocks",),
     "cunt": ("cunt", "cunts"),
     "dickhead": ("dickhead", "dickheads"),
     "douchebag": ("douchebag", "douchebags"),

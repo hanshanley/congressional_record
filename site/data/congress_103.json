@@ -2005,10 +2005,11 @@
       {
         "term": "damn",
         "leader_hits": 5,
-        "total_hits": 34,
+        "total_hits": 37,
         "variants": [
           "damn",
-          "damned"
+          "damned",
+          "goddamn"
         ],
         "leaders": [
           {
@@ -2060,25 +2061,6 @@
             "chamber": "senate",
             "hits": 2,
             "member_url": "https://bioguide.congress.gov/search/bio/S000522"
-          }
-        ]
-      },
-      {
-        "term": "goddamn",
-        "leader_hits": 3,
-        "total_hits": 3,
-        "variants": [
-          "goddamn"
-        ],
-        "leaders": [
-          {
-            "bioguide": "L000090",
-            "speaker_name": "Mr. LANTOS",
-            "party": "D",
-            "state": "CA",
-            "chamber": "house",
-            "hits": 3,
-            "member_url": "https://bioguide.congress.gov/search/bio/L000090"
           }
         ]
       },
@@ -2212,6 +2194,18 @@
         ]
       },
       {
+        "bioguide": "L000090",
+        "speaker_name": "Mr. LANTOS",
+        "party": "D",
+        "state": "CA",
+        "chamber": "house",
+        "term": "damn",
+        "hits": 3,
+        "variants": [
+          "goddamn"
+        ]
+      },
+      {
         "bioguide": "M000678",
         "speaker_name": "Mr. METZENBAUM",
         "party": "D",
@@ -2235,18 +2229,6 @@
         "variants": [
           "damn",
           "damned"
-        ]
-      },
-      {
-        "bioguide": "L000090",
-        "speaker_name": "Mr. LANTOS",
-        "party": "D",
-        "state": "CA",
-        "chamber": "house",
-        "term": "goddamn",
-        "hits": 3,
-        "variants": [
-          "goddamn"
         ]
       },
       {
@@ -2760,21 +2742,22 @@
       "house": [
         {
           "term": "damn",
-          "leader_hits": 2,
-          "total_hits": 10,
+          "leader_hits": 3,
+          "total_hits": 13,
           "variants": [
             "damn",
-            "damned"
+            "damned",
+            "goddamn"
           ],
           "leaders": [
             {
-              "bioguide": "H000463",
-              "speaker_name": "Mr. HELMS",
-              "party": "R",
-              "state": "NC",
+              "bioguide": "L000090",
+              "speaker_name": "Mr. LANTOS",
+              "party": "D",
+              "state": "CA",
               "chamber": "house",
-              "hits": 2,
-              "member_url": "https://bioguide.congress.gov/search/bio/H000463"
+              "hits": 3,
+              "member_url": "https://bioguide.congress.gov/search/bio/L000090"
             }
           ]
         },
@@ -2832,25 +2815,6 @@
               "chamber": "house",
               "hits": 1,
               "member_url": "https://bioguide.congress.gov/search/bio/M000306"
-            }
-          ]
-        },
-        {
-          "term": "goddamn",
-          "leader_hits": 3,
-          "total_hits": 3,
-          "variants": [
-            "goddamn"
-          ],
-          "leaders": [
-            {
-              "bioguide": "L000090",
-              "speaker_name": "Mr. LANTOS",
-              "party": "D",
-              "state": "CA",
-              "chamber": "house",
-              "hits": 3,
-              "member_url": "https://bioguide.congress.gov/search/bio/L000090"
             }
           ]
         },

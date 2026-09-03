@@ -2683,7 +2683,7 @@
             "profanity_hits": 3,
             "profanity_per_100k": 1.7900295355,
             "favorite_profanity_term": "damn",
-            "favorite_profanity_term_hits": 1,
+            "favorite_profanity_term_hits": 2,
             "member_url": "https://bioguide.congress.gov/search/bio/K000148"
           },
           {
@@ -2969,11 +2969,12 @@
       {
         "term": "damn",
         "leader_hits": 2,
-        "total_hits": 23,
+        "total_hits": 24,
         "variants": [
           "dammit",
           "damn",
-          "damned"
+          "damned",
+          "goddamn"
         ],
         "leaders": [
           {
@@ -3011,6 +3012,15 @@
             "chamber": "senate",
             "hits": 2,
             "member_url": "https://bioguide.congress.gov/search/bio/G000359"
+          },
+          {
+            "bioguide": "K000148",
+            "speaker_name": "Mr. KERRY",
+            "party": "D",
+            "state": "MA",
+            "chamber": "senate",
+            "hits": 2,
+            "member_url": "https://bioguide.congress.gov/search/bio/K000148"
           }
         ]
       },
@@ -3091,25 +3101,6 @@
             "chamber": "senate",
             "hits": 1,
             "member_url": "https://bioguide.congress.gov/search/bio/F000457"
-          }
-        ]
-      },
-      {
-        "term": "goddamn",
-        "leader_hits": 1,
-        "total_hits": 1,
-        "variants": [
-          "goddamn"
-        ],
-        "leaders": [
-          {
-            "bioguide": "K000148",
-            "speaker_name": "Mr. KERRY",
-            "party": "D",
-            "state": "MA",
-            "chamber": "senate",
-            "hits": 1,
-            "member_url": "https://bioguide.congress.gov/search/bio/K000148"
           }
         ]
       },
@@ -3245,6 +3236,19 @@
         "hits": 2,
         "variants": [
           "damn"
+        ]
+      },
+      {
+        "bioguide": "K000148",
+        "speaker_name": "Mr. KERRY",
+        "party": "D",
+        "state": "MA",
+        "chamber": "senate",
+        "term": "damn",
+        "hits": 2,
+        "variants": [
+          "damned",
+          "goddamn"
         ]
       },
       {
@@ -3404,18 +3408,6 @@
         ]
       },
       {
-        "bioguide": "K000148",
-        "speaker_name": "Mr. KERRY",
-        "party": "D",
-        "state": "MA",
-        "chamber": "senate",
-        "term": "damn",
-        "hits": 1,
-        "variants": [
-          "damned"
-        ]
-      },
-      {
         "bioguide": "L000261",
         "speaker_name": "Mr. LEVIN",
         "party": "D",
@@ -3509,18 +3501,6 @@
         "hits": 1,
         "variants": [
           "damn"
-        ]
-      },
-      {
-        "bioguide": "K000148",
-        "speaker_name": "Mr. KERRY",
-        "party": "D",
-        "state": "MA",
-        "chamber": "senate",
-        "term": "goddamn",
-        "hits": 1,
-        "variants": [
-          "goddamn"
         ]
       },
       {
@@ -3702,10 +3682,11 @@
         {
           "term": "damn",
           "leader_hits": 2,
-          "total_hits": 13,
+          "total_hits": 14,
           "variants": [
             "damn",
-            "damned"
+            "damned",
+            "goddamn"
           ],
           "leaders": [
             {
@@ -3734,6 +3715,15 @@
               "chamber": "senate",
               "hits": 2,
               "member_url": "https://bioguide.congress.gov/search/bio/G000359"
+            },
+            {
+              "bioguide": "K000148",
+              "speaker_name": "Mr. KERRY",
+              "party": "D",
+              "state": "MA",
+              "chamber": "senate",
+              "hits": 2,
+              "member_url": "https://bioguide.congress.gov/search/bio/K000148"
             }
           ]
         },
@@ -3812,25 +3802,6 @@
               "chamber": "senate",
               "hits": 1,
               "member_url": "https://bioguide.congress.gov/search/bio/P000603"
-            }
-          ]
-        },
-        {
-          "term": "goddamn",
-          "leader_hits": 1,
-          "total_hits": 1,
-          "variants": [
-            "goddamn"
-          ],
-          "leaders": [
-            {
-              "bioguide": "K000148",
-              "speaker_name": "Mr. KERRY",
-              "party": "D",
-              "state": "MA",
-              "chamber": "senate",
-              "hits": 1,
-              "member_url": "https://bioguide.congress.gov/search/bio/K000148"
             }
           ]
         },
@@ -4827,7 +4798,7 @@
         "profanity_quoted_hits": 0,
         "profanity_terms": "{\"damned\":1,\"goddamn\":1,\"hell of a\":1}",
         "favorite_profanity_term": "damn",
-        "favorite_profanity_term_hits": 1,
+        "favorite_profanity_term_hits": 2,
         "bills_sponsored": 95,
         "bills_passed": 4,
         "bills_enacted": 3,
@@ -6678,7 +6649,7 @@
         "profanity_quoted_hits": 0,
         "profanity_terms": "{\"damned\":1,\"goddamn\":1,\"hell of a\":1}",
         "favorite_profanity_term": "damn",
-        "favorite_profanity_term_hits": 1,
+        "favorite_profanity_term_hits": 2,
         "bills_sponsored": 95,
         "bills_passed": 4,
         "bills_enacted": 3,
@@ -7067,7 +7038,7 @@
         "profanity_quoted_hits": 0,
         "profanity_terms": "{\"damned\":1,\"goddamn\":1,\"hell of a\":1}",
         "favorite_profanity_term": "damn",
-        "favorite_profanity_term_hits": 1,
+        "favorite_profanity_term_hits": 2,
         "bills_sponsored": 95,
         "bills_passed": 4,
         "bills_enacted": 3,
@@ -8041,7 +8012,7 @@
         "profanity_quoted_hits": 0,
         "profanity_terms": "{\"damned\":1,\"goddamn\":1,\"hell of a\":1}",
         "favorite_profanity_term": "damn",
-        "favorite_profanity_term_hits": 1,
+        "favorite_profanity_term_hits": 2,
         "bills_sponsored": 95,
         "bills_passed": 4,
         "bills_enacted": 3,

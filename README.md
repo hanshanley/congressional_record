@@ -517,8 +517,9 @@ Naming individuals is a reputational claim, so the counts are deliberately conse
   medical, and identity terms (the repo's earlier broad list flagged "strips" and "erected").
 * Raw matched forms remain in the audit table, but member “most-used term” and per-term leader
   summaries group explicit inflectional, plural, spacing, spelling, and phrasal variants into
-  documented families (for example, `damn`/`damned` and `fuck`/`fuck you`). Distinct compounds
-  such as `motherfucker` remain separate.
+  documented families (for example, `damn`/`god damn`, `fuck`/`fuck you`, and `ass`/`kick ass`).
+  Distinct lexical compounds such as `motherfucker` and `bullshit` remain separate. Every
+  configured form, including intentional singletons, must be assigned explicitly.
 * The term explorer can rank families by total use or show each family's top member, filtered by
   Congress, party, and chamber. Its state tile map applies the same scope and displays each state's
   most-used family; states without an accepted use remain visibly unclassified.

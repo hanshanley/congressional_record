@@ -2790,12 +2790,14 @@
     "profanity_term_leaders": [
       {
         "term": "damn",
-        "leader_hits": 31,
-        "total_hits": 182,
+        "leader_hits": 32,
+        "total_hits": 185,
         "variants": [
           "dammit",
           "damn",
-          "damned"
+          "damned",
+          "goddammit",
+          "goddamn"
         ],
         "leaders": [
           {
@@ -2804,7 +2806,7 @@
             "party": "R",
             "state": "AZ",
             "chamber": "house",
-            "hits": 31,
+            "hits": 32,
             "member_url": "https://bioguide.congress.gov/search/bio/S001183"
           }
         ]
@@ -2993,44 +2995,6 @@
         ]
       },
       {
-        "term": "goddamn",
-        "leader_hits": 1,
-        "total_hits": 3,
-        "variants": [
-          "goddammit",
-          "goddamn"
-        ],
-        "leaders": [
-          {
-            "bioguide": "D000623",
-            "speaker_name": "Mr. DeSAULNIER",
-            "party": "D",
-            "state": "CA",
-            "chamber": "house",
-            "hits": 1,
-            "member_url": "https://bioguide.congress.gov/search/bio/D000623"
-          },
-          {
-            "bioguide": "M000312",
-            "speaker_name": "Mr. McGOVERN",
-            "party": "D",
-            "state": "MA",
-            "chamber": "house",
-            "hits": 1,
-            "member_url": "https://bioguide.congress.gov/search/bio/M000312"
-          },
-          {
-            "bioguide": "S001183",
-            "speaker_name": "Mr. SCHWEIKERT",
-            "party": "R",
-            "state": "AZ",
-            "chamber": "house",
-            "hits": 1,
-            "member_url": "https://bioguide.congress.gov/search/bio/S001183"
-          }
-        ]
-      },
-      {
         "term": "badass",
         "leader_hits": 1,
         "total_hits": 1,
@@ -3128,10 +3092,11 @@
         "state": "AZ",
         "chamber": "house",
         "term": "damn",
-        "hits": 31,
+        "hits": 32,
         "variants": [
           "dammit",
-          "damn"
+          "damn",
+          "goddammit"
         ]
       },
       {
@@ -3193,10 +3158,11 @@
         "state": "MA",
         "chamber": "house",
         "term": "damn",
-        "hits": 16,
+        "hits": 17,
         "variants": [
           "damn",
-          "damned"
+          "damned",
+          "goddamn"
         ]
       },
       {
@@ -3911,6 +3877,18 @@
         ]
       },
       {
+        "bioguide": "D000623",
+        "speaker_name": "Mr. DeSAULNIER",
+        "party": "D",
+        "state": "CA",
+        "chamber": "house",
+        "term": "damn",
+        "hits": 1,
+        "variants": [
+          "goddamn"
+        ]
+      },
+      {
         "bioguide": "E000297",
         "speaker_name": "Mr. ESPAILLAT",
         "party": "D",
@@ -4271,42 +4249,6 @@
         ]
       },
       {
-        "bioguide": "D000623",
-        "speaker_name": "Mr. DeSAULNIER",
-        "party": "D",
-        "state": "CA",
-        "chamber": "house",
-        "term": "goddamn",
-        "hits": 1,
-        "variants": [
-          "goddamn"
-        ]
-      },
-      {
-        "bioguide": "M000312",
-        "speaker_name": "Mr. McGOVERN",
-        "party": "D",
-        "state": "MA",
-        "chamber": "house",
-        "term": "goddamn",
-        "hits": 1,
-        "variants": [
-          "goddamn"
-        ]
-      },
-      {
-        "bioguide": "S001183",
-        "speaker_name": "Mr. SCHWEIKERT",
-        "party": "R",
-        "state": "AZ",
-        "chamber": "house",
-        "term": "goddamn",
-        "hits": 1,
-        "variants": [
-          "goddammit"
-        ]
-      },
-      {
         "bioguide": "B000944",
         "speaker_name": "Mr. BROWN",
         "party": "D",
@@ -4420,12 +4362,14 @@
       "house": [
         {
           "term": "damn",
-          "leader_hits": 31,
-          "total_hits": 123,
+          "leader_hits": 32,
+          "total_hits": 126,
           "variants": [
             "dammit",
             "damn",
-            "damned"
+            "damned",
+            "goddammit",
+            "goddamn"
           ],
           "leaders": [
             {
@@ -4434,7 +4378,7 @@
               "party": "R",
               "state": "AZ",
               "chamber": "house",
-              "hits": 31,
+              "hits": 32,
               "member_url": "https://bioguide.congress.gov/search/bio/S001183"
             }
           ]
@@ -4609,44 +4553,6 @@
               "chamber": "house",
               "hits": 1,
               "member_url": "https://bioguide.congress.gov/search/bio/R000614"
-            }
-          ]
-        },
-        {
-          "term": "goddamn",
-          "leader_hits": 1,
-          "total_hits": 3,
-          "variants": [
-            "goddammit",
-            "goddamn"
-          ],
-          "leaders": [
-            {
-              "bioguide": "D000623",
-              "speaker_name": "Mr. DeSAULNIER",
-              "party": "D",
-              "state": "CA",
-              "chamber": "house",
-              "hits": 1,
-              "member_url": "https://bioguide.congress.gov/search/bio/D000623"
-            },
-            {
-              "bioguide": "M000312",
-              "speaker_name": "Mr. McGOVERN",
-              "party": "D",
-              "state": "MA",
-              "chamber": "house",
-              "hits": 1,
-              "member_url": "https://bioguide.congress.gov/search/bio/M000312"
-            },
-            {
-              "bioguide": "S001183",
-              "speaker_name": "Mr. SCHWEIKERT",
-              "party": "R",
-              "state": "AZ",
-              "chamber": "house",
-              "hits": 1,
-              "member_url": "https://bioguide.congress.gov/search/bio/S001183"
             }
           ]
         },

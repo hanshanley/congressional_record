@@ -2017,7 +2017,7 @@
           "active_days": 43,
           "profanity_hits": 3,
           "profanity_per_100k": 5.7744499836,
-          "favorite_profanity_term": "damn",
+          "favorite_profanity_term": "ass",
           "favorite_profanity_term_hits": 1,
           "member_url": "https://bioguide.congress.gov/search/bio/R000614"
         },
@@ -2330,7 +2330,7 @@
             "active_days": 43,
             "profanity_hits": 3,
             "profanity_per_100k": 5.7744499836,
-            "favorite_profanity_term": "damn",
+            "favorite_profanity_term": "ass",
             "favorite_profanity_term_hits": 1,
             "member_url": "https://bioguide.congress.gov/search/bio/R000614"
           },
@@ -3051,6 +3051,44 @@
         ]
       },
       {
+        "term": "ass",
+        "leader_hits": 1,
+        "total_hits": 3,
+        "variants": [
+          "ass",
+          "half-assed"
+        ],
+        "leaders": [
+          {
+            "bioguide": "G000359",
+            "speaker_name": "Mr. GRAHAM",
+            "party": "R",
+            "state": "SC",
+            "chamber": "senate",
+            "hits": 1,
+            "member_url": "https://bioguide.congress.gov/search/bio/G000359"
+          },
+          {
+            "bioguide": "R000614",
+            "speaker_name": "Mr. ROY",
+            "party": "R",
+            "state": "TX",
+            "chamber": "house",
+            "hits": 1,
+            "member_url": "https://bioguide.congress.gov/search/bio/R000614"
+          },
+          {
+            "bioguide": "S001150",
+            "speaker_name": "Mr. SCHIFF",
+            "party": "D",
+            "state": "CA",
+            "chamber": "house",
+            "hits": 1,
+            "member_url": "https://bioguide.congress.gov/search/bio/S001150"
+          }
+        ]
+      },
+      {
         "term": "bugger",
         "leader_hits": 2,
         "total_hits": 2,
@@ -3066,34 +3104,6 @@
             "chamber": "house",
             "hits": 2,
             "member_url": "https://bioguide.congress.gov/search/bio/S000364"
-          }
-        ]
-      },
-      {
-        "term": "ass",
-        "leader_hits": 1,
-        "total_hits": 2,
-        "variants": [
-          "ass"
-        ],
-        "leaders": [
-          {
-            "bioguide": "G000359",
-            "speaker_name": "Mr. GRAHAM",
-            "party": "R",
-            "state": "SC",
-            "chamber": "senate",
-            "hits": 1,
-            "member_url": "https://bioguide.congress.gov/search/bio/G000359"
-          },
-          {
-            "bioguide": "S001150",
-            "speaker_name": "Mr. SCHIFF",
-            "party": "D",
-            "state": "CA",
-            "chamber": "house",
-            "hits": 1,
-            "member_url": "https://bioguide.congress.gov/search/bio/S001150"
           }
         ]
       },
@@ -3126,26 +3136,7 @@
         ]
       },
       {
-        "term": "half-assed",
-        "leader_hits": 1,
-        "total_hits": 1,
-        "variants": [
-          "half-assed"
-        ],
-        "leaders": [
-          {
-            "bioguide": "R000614",
-            "speaker_name": "Mr. ROY",
-            "party": "R",
-            "state": "TX",
-            "chamber": "house",
-            "hits": 1,
-            "member_url": "https://bioguide.congress.gov/search/bio/R000614"
-          }
-        ]
-      },
-      {
-        "term": "son of a bitch",
+        "term": "bitch",
         "leader_hits": 1,
         "total_hits": 1,
         "variants": [
@@ -3427,6 +3418,18 @@
         ]
       },
       {
+        "bioguide": "R000614",
+        "speaker_name": "Mr. ROY",
+        "party": "R",
+        "state": "TX",
+        "chamber": "house",
+        "term": "ass",
+        "hits": 1,
+        "variants": [
+          "half-assed"
+        ]
+      },
+      {
         "bioguide": "S001150",
         "speaker_name": "Mr. SCHIFF",
         "party": "D",
@@ -3436,6 +3439,18 @@
         "hits": 1,
         "variants": [
           "ass"
+        ]
+      },
+      {
+        "bioguide": "M000312",
+        "speaker_name": "Mr. McGOVERN",
+        "party": "D",
+        "state": "MA",
+        "chamber": "house",
+        "term": "bitch",
+        "hits": 1,
+        "variants": [
+          "son of a bitch"
         ]
       },
       {
@@ -3727,18 +3742,6 @@
         ]
       },
       {
-        "bioguide": "R000614",
-        "speaker_name": "Mr. ROY",
-        "party": "R",
-        "state": "TX",
-        "chamber": "house",
-        "term": "half-assed",
-        "hits": 1,
-        "variants": [
-          "half-assed"
-        ]
-      },
-      {
         "bioguide": "C001098",
         "speaker_name": "Mr. CRUZ",
         "party": "R",
@@ -3917,18 +3920,6 @@
         "variants": [
           "pissed off"
         ]
-      },
-      {
-        "bioguide": "M000312",
-        "speaker_name": "Mr. McGOVERN",
-        "party": "D",
-        "state": "MA",
-        "chamber": "house",
-        "term": "son of a bitch",
-        "hits": 1,
-        "variants": [
-          "son of a bitch"
-        ]
       }
     ],
     "profanity_term_detail_available": true,
@@ -4014,7 +4005,7 @@
           ]
         },
         {
-          "term": "half-assed",
+          "term": "ass",
           "leader_hits": 1,
           "total_hits": 1,
           "variants": [
@@ -4029,6 +4020,25 @@
               "chamber": "house",
               "hits": 1,
               "member_url": "https://bioguide.congress.gov/search/bio/R000614"
+            }
+          ]
+        },
+        {
+          "term": "bitch",
+          "leader_hits": 1,
+          "total_hits": 1,
+          "variants": [
+            "son of a bitch"
+          ],
+          "leaders": [
+            {
+              "bioguide": "M000312",
+              "speaker_name": "Mr. McGOVERN",
+              "party": "D",
+              "state": "MA",
+              "chamber": "house",
+              "hits": 1,
+              "member_url": "https://bioguide.congress.gov/search/bio/M000312"
             }
           ]
         },
@@ -4048,25 +4058,6 @@
               "chamber": "house",
               "hits": 1,
               "member_url": "https://bioguide.congress.gov/search/bio/G000586"
-            }
-          ]
-        },
-        {
-          "term": "son of a bitch",
-          "leader_hits": 1,
-          "total_hits": 1,
-          "variants": [
-            "son of a bitch"
-          ],
-          "leaders": [
-            {
-              "bioguide": "M000312",
-              "speaker_name": "Mr. McGOVERN",
-              "party": "D",
-              "state": "MA",
-              "chamber": "house",
-              "hits": 1,
-              "member_url": "https://bioguide.congress.gov/search/bio/M000312"
             }
           ]
         }
@@ -8307,7 +8298,7 @@
         "profanity_hits": 3,
         "profanity_quoted_hits": 0,
         "profanity_terms": "{\"damn\":1,\"half-assed\":1,\"hell of a\":1}",
-        "favorite_profanity_term": "damn",
+        "favorite_profanity_term": "ass",
         "favorite_profanity_term_hits": 1,
         "bills_sponsored": 22,
         "bills_passed": 0,

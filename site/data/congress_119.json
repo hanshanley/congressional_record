@@ -2662,12 +2662,14 @@
     "profanity_term_leaders": [
       {
         "term": "damn",
-        "leader_hits": 55,
-        "total_hits": 286,
+        "leader_hits": 56,
+        "total_hits": 289,
         "variants": [
           "dammit",
           "damn",
-          "damned"
+          "damned",
+          "goddamn",
+          "goddamned"
         ],
         "leaders": [
           {
@@ -2676,7 +2678,7 @@
             "party": "D",
             "state": "MA",
             "chamber": "house",
-            "hits": 55,
+            "hits": 56,
             "member_url": "https://bioguide.congress.gov/search/bio/M000312"
           }
         ]
@@ -2747,9 +2749,10 @@
       {
         "term": "ass",
         "leader_hits": 4,
-        "total_hits": 11,
+        "total_hits": 12,
         "variants": [
-          "ass"
+          "ass",
+          "half-assed"
         ],
         "leaders": [
           {
@@ -2943,44 +2946,6 @@
         ]
       },
       {
-        "term": "goddamn",
-        "leader_hits": 1,
-        "total_hits": 3,
-        "variants": [
-          "goddamn",
-          "goddamned"
-        ],
-        "leaders": [
-          {
-            "bioguide": "M000312",
-            "speaker_name": "Mr. McGOVERN",
-            "party": "D",
-            "state": "MA",
-            "chamber": "house",
-            "hits": 1,
-            "member_url": "https://bioguide.congress.gov/search/bio/M000312"
-          },
-          {
-            "bioguide": "M001223",
-            "speaker_name": "Mr. MAGAZINER",
-            "party": "D",
-            "state": "RI",
-            "chamber": "house",
-            "hits": 1,
-            "member_url": "https://bioguide.congress.gov/search/bio/M001223"
-          },
-          {
-            "bioguide": "S001205",
-            "speaker_name": "Ms. SCANLON",
-            "party": "D",
-            "state": "PA",
-            "chamber": "house",
-            "hits": 1,
-            "member_url": "https://bioguide.congress.gov/search/bio/S001205"
-          }
-        ]
-      },
-      {
         "term": "shithole",
         "leader_hits": 2,
         "total_hits": 2,
@@ -3066,25 +3031,6 @@
         ]
       },
       {
-        "term": "half-assed",
-        "leader_hits": 1,
-        "total_hits": 1,
-        "variants": [
-          "half-assed"
-        ],
-        "leaders": [
-          {
-            "bioguide": "D000622",
-            "speaker_name": "Ms. DUCKWORTH",
-            "party": "D",
-            "state": "IL",
-            "chamber": "senate",
-            "hits": 1,
-            "member_url": "https://bioguide.congress.gov/search/bio/D000622"
-          }
-        ]
-      },
-      {
         "term": "jackass",
         "leader_hits": 1,
         "total_hits": 1,
@@ -3138,10 +3084,11 @@
         "state": "MA",
         "chamber": "house",
         "term": "damn",
-        "hits": 55,
+        "hits": 56,
         "variants": [
           "damn",
-          "damned"
+          "damned",
+          "goddamned"
         ]
       },
       {
@@ -3772,6 +3719,19 @@
         ]
       },
       {
+        "bioguide": "S001205",
+        "speaker_name": "Ms. SCANLON",
+        "party": "D",
+        "state": "PA",
+        "chamber": "house",
+        "term": "damn",
+        "hits": 2,
+        "variants": [
+          "damn",
+          "goddamn"
+        ]
+      },
+      {
         "bioguide": "S001218",
         "speaker_name": "Ms. STANSBURY",
         "party": "D",
@@ -3955,6 +3915,18 @@
         "hits": 1,
         "variants": [
           "ass"
+        ]
+      },
+      {
+        "bioguide": "D000622",
+        "speaker_name": "Ms. DUCKWORTH",
+        "party": "D",
+        "state": "IL",
+        "chamber": "senate",
+        "term": "ass",
+        "hits": 1,
+        "variants": [
+          "half-assed"
         ]
       },
       {
@@ -4462,6 +4434,18 @@
         ]
       },
       {
+        "bioguide": "M001223",
+        "speaker_name": "Mr. MAGAZINER",
+        "party": "D",
+        "state": "RI",
+        "chamber": "house",
+        "term": "damn",
+        "hits": 1,
+        "variants": [
+          "goddamned"
+        ]
+      },
+      {
         "bioguide": "M001234",
         "speaker_name": "Ms. MORRISON",
         "party": "D",
@@ -4539,18 +4523,6 @@
         "party": "R",
         "state": "AK",
         "chamber": "senate",
-        "term": "damn",
-        "hits": 1,
-        "variants": [
-          "damn"
-        ]
-      },
-      {
-        "bioguide": "S001205",
-        "speaker_name": "Ms. SCANLON",
-        "party": "D",
-        "state": "PA",
-        "chamber": "house",
         "term": "damn",
         "hits": 1,
         "variants": [
@@ -4699,54 +4671,6 @@
         "hits": 1,
         "variants": [
           "frigging"
-        ]
-      },
-      {
-        "bioguide": "M000312",
-        "speaker_name": "Mr. McGOVERN",
-        "party": "D",
-        "state": "MA",
-        "chamber": "house",
-        "term": "goddamn",
-        "hits": 1,
-        "variants": [
-          "goddamned"
-        ]
-      },
-      {
-        "bioguide": "M001223",
-        "speaker_name": "Mr. MAGAZINER",
-        "party": "D",
-        "state": "RI",
-        "chamber": "house",
-        "term": "goddamn",
-        "hits": 1,
-        "variants": [
-          "goddamned"
-        ]
-      },
-      {
-        "bioguide": "S001205",
-        "speaker_name": "Ms. SCANLON",
-        "party": "D",
-        "state": "PA",
-        "chamber": "house",
-        "term": "goddamn",
-        "hits": 1,
-        "variants": [
-          "goddamn"
-        ]
-      },
-      {
-        "bioguide": "D000622",
-        "speaker_name": "Ms. DUCKWORTH",
-        "party": "D",
-        "state": "IL",
-        "chamber": "senate",
-        "term": "half-assed",
-        "hits": 1,
-        "variants": [
-          "half-assed"
         ]
       },
       {
@@ -5115,11 +5039,13 @@
       "house": [
         {
           "term": "damn",
-          "leader_hits": 55,
-          "total_hits": 145,
+          "leader_hits": 56,
+          "total_hits": 148,
           "variants": [
             "damn",
-            "damned"
+            "damned",
+            "goddamn",
+            "goddamned"
           ],
           "leaders": [
             {
@@ -5128,7 +5054,7 @@
               "party": "D",
               "state": "MA",
               "chamber": "house",
-              "hits": 55,
+              "hits": 56,
               "member_url": "https://bioguide.congress.gov/search/bio/M000312"
             }
           ]
@@ -5318,44 +5244,6 @@
           ]
         },
         {
-          "term": "goddamn",
-          "leader_hits": 1,
-          "total_hits": 3,
-          "variants": [
-            "goddamn",
-            "goddamned"
-          ],
-          "leaders": [
-            {
-              "bioguide": "M000312",
-              "speaker_name": "Mr. McGOVERN",
-              "party": "D",
-              "state": "MA",
-              "chamber": "house",
-              "hits": 1,
-              "member_url": "https://bioguide.congress.gov/search/bio/M000312"
-            },
-            {
-              "bioguide": "M001223",
-              "speaker_name": "Mr. MAGAZINER",
-              "party": "D",
-              "state": "RI",
-              "chamber": "house",
-              "hits": 1,
-              "member_url": "https://bioguide.congress.gov/search/bio/M001223"
-            },
-            {
-              "bioguide": "S001205",
-              "speaker_name": "Ms. SCANLON",
-              "party": "D",
-              "state": "PA",
-              "chamber": "house",
-              "hits": 1,
-              "member_url": "https://bioguide.congress.gov/search/bio/S001205"
-            }
-          ]
-        },
-        {
           "term": "screw you",
           "leader_hits": 1,
           "total_hits": 2,
@@ -5508,9 +5396,10 @@
         {
           "term": "ass",
           "leader_hits": 4,
-          "total_hits": 8,
+          "total_hits": 9,
           "variants": [
-            "ass"
+            "ass",
+            "half-assed"
           ],
           "leaders": [
             {
@@ -5672,25 +5561,6 @@
               "chamber": "senate",
               "hits": 1,
               "member_url": "https://bioguide.congress.gov/search/bio/M001176"
-            }
-          ]
-        },
-        {
-          "term": "half-assed",
-          "leader_hits": 1,
-          "total_hits": 1,
-          "variants": [
-            "half-assed"
-          ],
-          "leaders": [
-            {
-              "bioguide": "D000622",
-              "speaker_name": "Ms. DUCKWORTH",
-              "party": "D",
-              "state": "IL",
-              "chamber": "senate",
-              "hits": 1,
-              "member_url": "https://bioguide.congress.gov/search/bio/D000622"
             }
           ]
         },

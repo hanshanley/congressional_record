@@ -20,6 +20,7 @@ sys.path.insert(0, str(ROOT))
 
 from analysis.speakers import (  # noqa: E402
     LANGUAGE_METRICS,
+    PROFANITY_TERM_FAMILIES,
     incomplete_profanity_term_rows,
     language_member_rates,
     language_timeseries,
@@ -263,20 +264,42 @@ def test_term_leaders_include_ties_and_support_chamber_scope():
 
 def test_term_families_group_phrases_that_use_the_same_base_expletive():
     daily = _daily([
-        ["A", "2025-01-02", "house", "Alpha", "D", "CA", 119, 1, 100, 3, 0, 0, 0],
-        ["B", "2025-01-02", "house", "Beta", "R", "TX", 119, 1, 100, 1, 0, 0, 0],
+        ["A", "2025-01-02", "house", "Alpha", "D", "CA", 119, 1, 100, 6, 0, 0, 0],
+        ["B", "2025-01-02", "house", "Beta", "R", "TX", 119, 1, 100, 4, 0, 0, 0],
     ])
     daily["profanity_terms"] = [
-        '{"fuck":1,"fuck you":1,"fucked up":1}', '{"fucking":1}',
+        '{"fuck":1,"fuck you":1,"fucked up":1,"god damn":1,"kick ass":1,'
+        '"son of a bitch":1}',
+        '{"fucking":1,"damn":1,"ass":1,"bitch":1}',
     ]
 
-    leaders = profanity_term_leaders(daily, 119)
+    leaders = {row["term"]: row for row in profanity_term_leaders(daily, 119)}
 
-    assert len(leaders) == 1
-    assert leaders[0]["term"] == "fuck"
-    assert leaders[0]["leader_hits"] == 3
-    assert leaders[0]["total_hits"] == 4
-    assert leaders[0]["variants"] == ["fuck", "fuck you", "fucked up", "fucking"]
+    assert set(leaders) == {"ass", "bitch", "damn", "fuck"}
+    assert leaders["fuck"]["leader_hits"] == 3
+    assert leaders["fuck"]["total_hits"] == 4
+    assert leaders["fuck"]["variants"] == ["fuck", "fuck you", "fucked up", "fucking"]
+    assert leaders["damn"]["variants"] == ["damn", "god damn"]
+    assert leaders["ass"]["variants"] == ["ass", "kick ass"]
+    assert leaders["bitch"]["variants"] == ["bitch", "son of a bitch"]
+
+
+def test_every_profanity_form_has_an_explicit_display_family():
+    configured = {
+        line.split("\t", 1)[0]
+        for line in (
+            ROOT / "analysis" / "score" / "lexicons" / "profanity.txt"
+        ).read_text(encoding="utf-8").splitlines()
+        if line and not line.startswith("#")
+    }
+    assigned = {
+        form
+        for forms in PROFANITY_TERM_FAMILIES.values()
+        for form in forms
+    }
+
+    assert assigned == configured
+    assert sum(len(forms) for forms in PROFANITY_TERM_FAMILIES.values()) == len(assigned)
 
 
 def test_term_member_counts_preserve_party_chamber_and_state_dimensions():

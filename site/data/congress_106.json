@@ -2653,7 +2653,7 @@
             "active_days": 189,
             "profanity_hits": 1,
             "profanity_per_100k": 0.3622519027,
-            "favorite_profanity_term": "half-assed",
+            "favorite_profanity_term": "ass",
             "favorite_profanity_term_hits": 1,
             "member_url": "https://bioguide.congress.gov/search/bio/D000064"
           }
@@ -2970,10 +2970,11 @@
       {
         "term": "ass",
         "leader_hits": 1,
-        "total_hits": 3,
+        "total_hits": 4,
         "variants": [
           "ass",
-          "asses"
+          "asses",
+          "half-assed"
         ],
         "leaders": [
           {
@@ -2995,25 +2996,6 @@
             "member_url": "https://bioguide.congress.gov/search/bio/B001203"
           },
           {
-            "bioguide": "O000159",
-            "speaker_name": "Mr. OWENS",
-            "party": "D",
-            "state": "NY",
-            "chamber": "house",
-            "hits": 1,
-            "member_url": "https://bioguide.congress.gov/search/bio/O000159"
-          }
-        ]
-      },
-      {
-        "term": "half-assed",
-        "leader_hits": 1,
-        "total_hits": 1,
-        "variants": [
-          "half-assed"
-        ],
-        "leaders": [
-          {
             "bioguide": "D000064",
             "speaker_name": "Mr. DASCHLE",
             "party": "D",
@@ -3021,6 +3003,15 @@
             "chamber": "senate",
             "hits": 1,
             "member_url": "https://bioguide.congress.gov/search/bio/D000064"
+          },
+          {
+            "bioguide": "O000159",
+            "speaker_name": "Mr. OWENS",
+            "party": "D",
+            "state": "NY",
+            "chamber": "house",
+            "hits": 1,
+            "member_url": "https://bioguide.congress.gov/search/bio/O000159"
           }
         ]
       }
@@ -3146,6 +3137,18 @@
         "hits": 1,
         "variants": [
           "ass"
+        ]
+      },
+      {
+        "bioguide": "D000064",
+        "speaker_name": "Mr. DASCHLE",
+        "party": "D",
+        "state": "SD",
+        "chamber": "senate",
+        "term": "ass",
+        "hits": 1,
+        "variants": [
+          "half-assed"
         ]
       },
       {
@@ -3509,18 +3512,6 @@
         ]
       },
       {
-        "bioguide": "D000064",
-        "speaker_name": "Mr. DASCHLE",
-        "party": "D",
-        "state": "SD",
-        "chamber": "senate",
-        "term": "half-assed",
-        "hits": 1,
-        "variants": [
-          "half-assed"
-        ]
-      },
-      {
         "bioguide": "B000589",
         "speaker_name": "Mr. BOEHNER",
         "party": "R",
@@ -3821,7 +3812,7 @@
           ]
         },
         {
-          "term": "half-assed",
+          "term": "ass",
           "leader_hits": 1,
           "total_hits": 1,
           "variants": [

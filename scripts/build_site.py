@@ -182,6 +182,32 @@ function formatRate(value) {
   });
 }
 
+function censorTerm(term) {
+  const [first, ...rest] = String(term).split(' ');
+  let keptFirstLetter = false;
+  const censored = [...first].map(character => {
+    if (!/[A-Za-z]/.test(character)) return character;
+    if (!keptFirstLetter) {
+      keptFirstLetter = true;
+      return character;
+    }
+    return '*';
+  }).join('');
+  return [censored, ...rest].join(' ');
+}
+
+function censoredTermNode(term, detail = '') {
+  const value = String(term);
+  const node = document.createElement('span');
+  node.className = 'censored-term';
+  node.tabIndex = 0;
+  node.textContent = censorTerm(value);
+  node.dataset.term = value;
+  node.setAttribute('aria-label', value);
+  node.title = detail ? `Uncensored term: ${value}. ${detail}` : `Uncensored term: ${value}`;
+  return node;
+}
+
 function spacedLabelIndices(length, maxLabels = 7) {
   if (length <= maxLabels) return [...Array(length).keys()];
   const step = Math.ceil((length - 1) / (maxLabels - 1));
@@ -653,6 +679,8 @@ function renderLanguageTable(language, key) {
         link.href = item.member_url;
         link.textContent = value;
         cell.appendChild(link);
+      } else if (key === 'profanity' && index === 4 && value !== '—') {
+        cell.appendChild(censoredTermNode(value));
       } else {
         cell.textContent = index === 3
           ? String(value).replace(/^./, character => character.toUpperCase())
@@ -888,9 +916,9 @@ function renderTermTable(language, summaries) {
   summaries.forEach((item, index) => {
     const row = document.createElement('tr');
     if (selectedTermView === 'leaders') {
-      const term = document.createElement('span');
-      term.textContent = item.term;
-      if (item.variants.length > 1) term.title = `Grouped forms: ${item.variants.join(', ')}`;
+      const detail = item.variants.length > 1
+        ? `Grouped forms: ${item.variants.join(', ')}` : '';
+      const term = censoredTermNode(item.term, detail);
       const leaders = document.createElement('span');
       item.leaders.forEach((leader, leaderIndex) => {
         if (leaderIndex) leaders.appendChild(document.createTextNode(', '));
@@ -906,10 +934,15 @@ function renderTermTable(language, summaries) {
       appendCell(row, item.total_hits.toLocaleString(), 'num');
     } else {
       appendCell(row, String(index + 1), 'num');
-      appendCell(row, item.term);
+      appendCell(row, censoredTermNode(item.term));
       appendCell(row, item.total_hits.toLocaleString(), 'num');
       appendCell(row, allHits ? `${(100 * item.total_hits / allHits).toFixed(1)}%` : '0.0%', 'num');
-      appendCell(row, item.variants.join(', '));
+      const variants = document.createElement('span');
+      item.variants.forEach((variant, variantIndex) => {
+        if (variantIndex) variants.appendChild(document.createTextNode(', '));
+        variants.appendChild(censoredTermNode(variant));
+      });
+      appendCell(row, variants);
     }
     body.appendChild(row);
   });
@@ -1037,7 +1070,8 @@ function renderTermExplorer(language) {
     `${chamberLabel(selectedTermChamber)}`;
   document.getElementById('term-leaders-note').textContent = available
     ? 'Counts include accepted, unquoted uses by attributed members; inflected, plural, ' +
-      'spacing, and spelling variants are grouped into term families.'
+      'spacing, spelling, and phrasal variants are grouped into term families. ' +
+      'Displayed terms are censored; hover over or focus a term to reveal it.'
     : 'Term-level detail has not been backfilled for this historical scope.';
 }
 """
@@ -1048,6 +1082,32 @@ const select = document.getElementById('congress');
 let loadedCongress = select.value;
 let loadSequence = 0;
 let selectedActivityMetric = 'speech';
+
+function censorTerm(term) {
+  const [first, ...rest] = String(term).split(' ');
+  let keptFirstLetter = false;
+  const censored = [...first].map(character => {
+    if (!/[A-Za-z]/.test(character)) return character;
+    if (!keptFirstLetter) {
+      keptFirstLetter = true;
+      return character;
+    }
+    return '*';
+  }).join('');
+  return [censored, ...rest].join(' ');
+}
+
+function censoredTermNode(term) {
+  const value = String(term);
+  const node = document.createElement('span');
+  node.className = 'censored-term';
+  node.tabIndex = 0;
+  node.textContent = censorTerm(value);
+  node.dataset.term = value;
+  node.setAttribute('aria-label', value);
+  node.title = `Uncensored term: ${value}`;
+  return node;
+}
 
 const activityMetrics = [
   ['speech', 'Speech'],
@@ -1117,9 +1177,13 @@ function renderActivityTable(metric, rows) {
         typeof third === 'number' ? Number(third).toLocaleString() : third, '',
       ];
     }
-    values.forEach((value, index) => row.appendChild(activityCell(
-      value, index === 1 ? item.member_url : '',
-    )));
+    values.forEach((value, index) => {
+      const cell = activityCell(value, index === 1 ? item.member_url : '');
+      if (metric === 'profanity' && index === 4 && value !== '—') {
+        cell.replaceChildren(censoredTermNode(value));
+      }
+      row.appendChild(cell);
+    });
     if (['sponsored', 'passed', 'enacted'].includes(metric)) {
       const target = row.lastChild;
       target.replaceChildren();
@@ -1812,6 +1876,32 @@ def _examples_cell(row: dict) -> _TrustedHTML:
     )
 
 
+def _censored_term_cell(term: str, detail: str = "") -> _TrustedHTML:
+    """Render a censored term whose full value is available on hover and focus."""
+    value = str(term)
+    first, separator, remainder = value.partition(" ")
+    kept_first_letter = False
+    censored_chars = []
+    for character in first:
+        if character.isalpha():
+            if kept_first_letter:
+                censored_chars.append("*")
+                continue
+            kept_first_letter = True
+        censored_chars.append(character)
+    censored = "".join(censored_chars) + (separator + remainder if separator else "")
+    tooltip = f"Uncensored term: {value}"
+    if detail:
+        tooltip += f". {detail}"
+    return _TrustedHTML(
+        '<span class="censored-term" tabindex="0" '
+        f'data-term="{html.escape(value, quote=True)}" '
+        f'aria-label="{html.escape(value, quote=True)}" '
+        f'title="{html.escape(tooltip, quote=True)}">'
+        f"{html.escape(censored)}</span>"
+    )
+
+
 def _table(metric: str, rows: list[dict]) -> str:
     configs = {
         "speech": (
@@ -1850,7 +1940,10 @@ def _table(metric: str, rows: list[dict]) -> str:
              "Quoted (excl.)", "Words"],
             lambda r: [
                 r["rank"], _member_cell(r), r["party"], r["state"],
-                r.get("favorite_profanity_term") or "—",
+                (
+                    _censored_term_cell(r["favorite_profanity_term"])
+                    if r.get("favorite_profanity_term") else "—"
+                ),
                 f"{float(r['profanity_per_100k']):.1f}", _fmt_int(r["profanity_hits"]),
                 _fmt_int(r["profanity_quoted_hits"]), _fmt_int(r["words"]),
             ],
@@ -1893,7 +1986,10 @@ def _language_table(metric: str, rows: list[dict]) -> str:
             row["party"],
             str(row["chamber"]).title(),
             *(
-                [row.get("favorite_profanity_term") or "—"]
+                [
+                    _censored_term_cell(row["favorite_profanity_term"])
+                    if row.get("favorite_profanity_term") else "—"
+                ]
                 if metric == "profanity" else []
             ),
             f"{float(row[metadata['rate']]):.1f}",
@@ -1939,13 +2035,13 @@ def _term_leaders_table(rows: list[dict], *, available: bool) -> str:
         leaders = ", ".join(str(_member_cell(leader)) for leader in row["leaders"])
         parties = ", ".join(sorted({leader["party"] for leader in row["leaders"]}))
         variants = row.get("variants", [])
-        variant_title = (
-            f' title="{html.escape("Grouped forms: " + ", ".join(variants), quote=True)}"'
+        detail = (
+            "Grouped forms: " + ", ".join(variants)
             if len(variants) > 1 else ""
         )
         body.append(
             "<tr>"
-            f"<td{variant_title}>{html.escape(row['term'])}</td>"
+            f"<td>{_censored_term_cell(row['term'], detail)}</td>"
             f"<td>{leaders}</td>"
             f"<td>{html.escape(parties)}</td>"
             f'<td class="num">{_fmt_int(row["leader_hits"])}</td>'
@@ -2031,6 +2127,15 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
                 background:var(--text); color:var(--paper); padding:.55rem .75rem; }}
   .skip-link:focus {{ left:.5rem; }}
   .sub,.definition,.muted {{ color:var(--muted); }}
+  .censored-term {{ position:relative; cursor:help; border-bottom:1px dotted currentColor;
+                    white-space:nowrap; }}
+  .censored-term:focus-visible {{ outline:2px solid var(--blue); outline-offset:2px; }}
+  .censored-term:hover::after,.censored-term:focus::after {{
+    content:attr(data-term); position:absolute; left:0; bottom:calc(100% + .35rem); z-index:5;
+    background:var(--text); color:var(--paper); padding:.3rem .45rem; border-radius:.25rem;
+    font-size:.78rem; font-weight:600; letter-spacing:normal; text-transform:none;
+    white-space:nowrap; box-shadow:0 2px 8px rgb(0 0 0 / 20%);
+  }}
   .hero-deck {{ font-size:1.12rem; max-width:50rem; margin-bottom:3rem; }}
   .section-header {{ margin:4rem 0 1.2rem; }}
   .section-header h2 {{ margin:0; }}
@@ -2219,7 +2324,7 @@ grouped before ranking, as are phrasal forms that use the same base expletive, s
 and “fuck you”; raw forms remain in the downloadable data. “Total uses” is the family’s total
 across all attributed members in that scope. The
 codebook favors precision over completeness and is not an exhaustive list of every possible
-curse word.</p>
+curse word. Displayed terms are censored; hover over or focus a term to reveal it.</p>
 <p class="definition" id="term-leaders-note">{
     "Counts include accepted, unquoted uses by attributed members."
     if language["profanity_term_detail_available"]
@@ -2402,6 +2507,15 @@ passage, enactment, and profanity tables by Congress.">
                 background:var(--text); color:var(--paper); padding:.55rem .75rem; }}
   .skip-link:focus {{ left:.5rem; }}
   .sub,.definition,.muted {{ color:var(--muted); }}
+  .censored-term {{ position:relative; cursor:help; border-bottom:1px dotted currentColor;
+                    white-space:nowrap; }}
+  .censored-term:focus-visible {{ outline:2px solid var(--blue); outline-offset:2px; }}
+  .censored-term:hover::after,.censored-term:focus::after {{
+    content:attr(data-term); position:absolute; left:0; bottom:calc(100% + .35rem); z-index:5;
+    background:var(--text); color:var(--paper); padding:.3rem .45rem; border-radius:.25rem;
+    font-size:.78rem; font-weight:600; letter-spacing:normal; text-transform:none;
+    white-space:nowrap; box-shadow:0 2px 8px rgb(0 0 0 / 20%);
+  }}
   .hero-deck {{ font-size:1.08rem; max-width:48rem; }}
   .toolbar {{ display:flex; justify-content:space-between; gap:1rem; align-items:center;
               margin:2rem 0 1rem; }}

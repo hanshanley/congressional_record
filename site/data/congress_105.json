@@ -1877,7 +1877,7 @@
           "active_days": 68,
           "profanity_hits": 1,
           "profanity_per_100k": 2.1764680277,
-          "favorite_profanity_term": "goddamn",
+          "favorite_profanity_term": "damn",
           "favorite_profanity_term_hits": 1,
           "member_url": "https://bioguide.congress.gov/search/bio/B000169"
         },
@@ -2238,7 +2238,7 @@
             "active_days": 68,
             "profanity_hits": 1,
             "profanity_per_100k": 2.1764680277,
-            "favorite_profanity_term": "goddamn",
+            "favorite_profanity_term": "damn",
             "favorite_profanity_term_hits": 1,
             "member_url": "https://bioguide.congress.gov/search/bio/B000169"
           },
@@ -2853,10 +2853,11 @@
       {
         "term": "damn",
         "leader_hits": 4,
-        "total_hits": 27,
+        "total_hits": 28,
         "variants": [
           "damn",
-          "damned"
+          "damned",
+          "god damn"
         ],
         "leaders": [
           {
@@ -3005,21 +3006,21 @@
         ]
       },
       {
-        "term": "goddamn",
+        "term": "bitch",
         "leader_hits": 1,
         "total_hits": 1,
         "variants": [
-          "god damn"
+          "son of a bitch"
         ],
         "leaders": [
           {
-            "bioguide": "B000169",
-            "speaker_name": "Mr. BARR of Georgia",
+            "bioguide": "D000018",
+            "speaker_name": "Mr. D'AMATO",
             "party": "R",
-            "state": "GA",
-            "chamber": "house",
+            "state": "NY",
+            "chamber": "senate",
             "hits": 1,
-            "member_url": "https://bioguide.congress.gov/search/bio/B000169"
+            "member_url": "https://bioguide.congress.gov/search/bio/D000018"
           }
         ]
       },
@@ -3039,25 +3040,6 @@
             "chamber": "house",
             "hits": 1,
             "member_url": "https://bioguide.congress.gov/search/bio/D000533"
-          }
-        ]
-      },
-      {
-        "term": "son of a bitch",
-        "leader_hits": 1,
-        "total_hits": 1,
-        "variants": [
-          "son of a bitch"
-        ],
-        "leaders": [
-          {
-            "bioguide": "D000018",
-            "speaker_name": "Mr. D'AMATO",
-            "party": "R",
-            "state": "NY",
-            "chamber": "senate",
-            "hits": 1,
-            "member_url": "https://bioguide.congress.gov/search/bio/D000018"
           }
         ]
       }
@@ -3222,6 +3204,18 @@
         ]
       },
       {
+        "bioguide": "D000018",
+        "speaker_name": "Mr. D'AMATO",
+        "party": "R",
+        "state": "NY",
+        "chamber": "senate",
+        "term": "bitch",
+        "hits": 1,
+        "variants": [
+          "son of a bitch"
+        ]
+      },
+      {
         "bioguide": "C000858",
         "speaker_name": "Mr. CRAIG",
         "party": "R",
@@ -3255,6 +3249,18 @@
         "hits": 1,
         "variants": [
           "crappy"
+        ]
+      },
+      {
+        "bioguide": "B000169",
+        "speaker_name": "Mr. BARR of Georgia",
+        "party": "R",
+        "state": "GA",
+        "chamber": "house",
+        "term": "damn",
+        "hits": 1,
+        "variants": [
+          "god damn"
         ]
       },
       {
@@ -3402,18 +3408,6 @@
         ]
       },
       {
-        "bioguide": "B000169",
-        "speaker_name": "Mr. BARR of Georgia",
-        "party": "R",
-        "state": "GA",
-        "chamber": "house",
-        "term": "goddamn",
-        "hits": 1,
-        "variants": [
-          "god damn"
-        ]
-      },
-      {
         "bioguide": "C000994",
         "speaker_name": "Mr. CUNNINGHAM",
         "party": "R",
@@ -3496,18 +3490,6 @@
         "variants": [
           "shit"
         ]
-      },
-      {
-        "bioguide": "D000018",
-        "speaker_name": "Mr. D'AMATO",
-        "party": "R",
-        "state": "NY",
-        "chamber": "senate",
-        "term": "son of a bitch",
-        "hits": 1,
-        "variants": [
-          "son of a bitch"
-        ]
       }
     ],
     "profanity_term_detail_available": true,
@@ -3516,10 +3498,11 @@
         {
           "term": "damn",
           "leader_hits": 4,
-          "total_hits": 20,
+          "total_hits": 21,
           "variants": [
             "damn",
-            "damned"
+            "damned",
+            "god damn"
           ],
           "leaders": [
             {
@@ -3599,25 +3582,6 @@
               "chamber": "house",
               "hits": 1,
               "member_url": "https://bioguide.congress.gov/search/bio/E000268"
-            }
-          ]
-        },
-        {
-          "term": "goddamn",
-          "leader_hits": 1,
-          "total_hits": 1,
-          "variants": [
-            "god damn"
-          ],
-          "leaders": [
-            {
-              "bioguide": "B000169",
-              "speaker_name": "Mr. BARR of Georgia",
-              "party": "R",
-              "state": "GA",
-              "chamber": "house",
-              "hits": 1,
-              "member_url": "https://bioguide.congress.gov/search/bio/B000169"
             }
           ]
         },
@@ -3738,6 +3702,25 @@
           ]
         },
         {
+          "term": "bitch",
+          "leader_hits": 1,
+          "total_hits": 1,
+          "variants": [
+            "son of a bitch"
+          ],
+          "leaders": [
+            {
+              "bioguide": "D000018",
+              "speaker_name": "Mr. D'AMATO",
+              "party": "R",
+              "state": "NY",
+              "chamber": "senate",
+              "hits": 1,
+              "member_url": "https://bioguide.congress.gov/search/bio/D000018"
+            }
+          ]
+        },
+        {
           "term": "crap",
           "leader_hits": 1,
           "total_hits": 1,
@@ -3753,25 +3736,6 @@
               "chamber": "senate",
               "hits": 1,
               "member_url": "https://bioguide.congress.gov/search/bio/C000858"
-            }
-          ]
-        },
-        {
-          "term": "son of a bitch",
-          "leader_hits": 1,
-          "total_hits": 1,
-          "variants": [
-            "son of a bitch"
-          ],
-          "leaders": [
-            {
-              "bioguide": "D000018",
-              "speaker_name": "Mr. D'AMATO",
-              "party": "R",
-              "state": "NY",
-              "chamber": "senate",
-              "hits": 1,
-              "member_url": "https://bioguide.congress.gov/search/bio/D000018"
             }
           ]
         }
@@ -7859,7 +7823,7 @@
         "profanity_hits": 1,
         "profanity_quoted_hits": 0,
         "profanity_terms": "{\"god damn\":1}",
-        "favorite_profanity_term": "goddamn",
+        "favorite_profanity_term": "damn",
         "favorite_profanity_term_hits": 1,
         "bills_sponsored": 25,
         "bills_passed": 2,
