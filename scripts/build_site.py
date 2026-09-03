@@ -883,10 +883,12 @@ function termUsageNode(item) {
   wrapper.className = 'term-usage';
   const count = document.createElement('strong');
   count.textContent = `${Number(item.leader_hits).toLocaleString()}` +
-    `${item.leaders.length > 1 ? ' each' : ''} of ${Number(item.total_hits).toLocaleString()} total`;
+    `${item.leaders.length > 1 ? ' each' : ''} / ${Number(item.total_hits).toLocaleString()} total`;
   const share = item.total_hits ? 100 * item.leader_hits / item.total_hits : 0;
   const detail = document.createElement('small');
-  detail.textContent = `${share.toFixed(1)}% per leading member`;
+  detail.textContent = item.leaders.length > 1
+    ? `${share.toFixed(1)}% each`
+    : `${share.toFixed(1)}% of all uses`;
   const meter = document.createElement('progress');
   meter.max = Math.max(1, Number(item.total_hits));
   meter.value = Number(item.leader_hits);
@@ -907,7 +909,7 @@ function renderTermTable(language, summaries) {
   body.replaceChildren();
   const available = recentTermDetailAvailable(language);
   const headers = selectedTermView === 'leaders'
-    ? ['Term family', 'Member(s) with most uses', 'Party', 'Their use vs all members']
+    ? ['Term family', 'Member(s) with most uses', 'Leader / all uses']
     : ['#', 'Term family', 'Uses', 'Share', 'Grouped forms'];
   headers.forEach(label => {
     const cell = document.createElement('th');
@@ -947,9 +949,12 @@ function renderTermTable(language, summaries) {
         link.textContent = leader.speaker_name;
         leaders.appendChild(link);
       });
+      const parties = document.createElement('small');
+      parties.className = 'party-note';
+      parties.textContent = [...new Set(item.leaders.map(leader => leader.party))].join(' · ');
+      leaders.appendChild(parties);
       appendCell(row, term);
       appendCell(row, leaders);
-      appendCell(row, [...new Set(item.leaders.map(leader => leader.party))].join(', '));
       appendCell(row, termUsageNode(item), 'num');
     } else {
       appendCell(row, String(index + 1), 'num');
@@ -1937,10 +1942,10 @@ def _term_usage_cell(row: dict) -> _TrustedHTML:
     )
     return _TrustedHTML(
         '<div class="term-usage">'
-        f"<strong>{leader_hits:,}{each} of {total_hits:,} total</strong>"
+        f"<strong>{leader_hits:,}{each} / {total_hits:,} total</strong>"
         f'<progress max="{max(1, total_hits)}" value="{leader_hits}" '
         f'aria-label="{html.escape(aria, quote=True)}"></progress>'
-        f"<small>{share:.1f}% per leading member</small>"
+        f"<small>{share:.1f}% {'each' if tied else 'of all uses'}</small>"
         "</div>"
     )
 
@@ -2066,17 +2071,20 @@ def _term_leaders_table(rows: list[dict], *, available: bool) -> str:
     body = []
     if not available:
         body.append(
-            '<tr><td colspan="4" class="muted">'
+            '<tr><td colspan="3" class="muted">'
             "Term-level detail is not available for this historical scope.</td></tr>"
         )
     elif not rows:
         body.append(
-            '<tr><td colspan="4" class="muted">'
+            '<tr><td colspan="3" class="muted">'
             "No accepted term uses were observed in this scope.</td></tr>"
         )
     for row in rows:
-        leaders = ", ".join(str(_member_cell(leader)) for leader in row["leaders"])
         parties = ", ".join(sorted({leader["party"] for leader in row["leaders"]}))
+        leaders = _TrustedHTML(
+            ", ".join(str(_member_cell(leader)) for leader in row["leaders"])
+            + f'<small class="party-note">{html.escape(parties)}</small>'
+        )
         variants = row.get("variants", [])
         detail = (
             "Grouped forms: " + ", ".join(variants)
@@ -2086,7 +2094,6 @@ def _term_leaders_table(rows: list[dict], *, available: bool) -> str:
             "<tr>"
             f"<td>{_censored_term_cell(row['term'], detail)}</td>"
             f"<td>{leaders}</td>"
-            f"<td>{html.escape(parties)}</td>"
             f'<td class="num">{_term_usage_cell(row)}</td>'
             "</tr>"
         )
@@ -2095,7 +2102,7 @@ def _term_leaders_table(rows: list[dict], *, available: bool) -> str:
         "Top congressional users of each observed profanity term</caption>"
         '<thead><tr><th scope="col">Term family</th>'
         '<th scope="col">Member(s) with most uses</th>'
-        '<th scope="col">Party</th><th scope="col">Their use vs all members</th>'
+        '<th scope="col">Leader / all uses</th>'
         f'</tr></thead><tbody>{"".join(body)}</tbody></table>'
     )
 
@@ -2265,7 +2272,7 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
   .error {{ color:#8A1C1C; font-weight:bold; }}
   .table-wrap {{ width:100%; max-width:100%; overflow-x:auto; background:var(--paper);
                  border:1px solid var(--grid); border-radius:.65rem; }}
-  .term-explorer-grid {{ display:grid; grid-template-columns:minmax(0,1fr);
+  .term-explorer-grid {{ display:grid; grid-template-columns:minmax(0,1.45fr) minmax(20rem,.55fr);
                          gap:1rem; align-items:start; }}
   .term-explorer-grid .card {{ margin:0; height:100%; }}
   .term-explorer-grid .table-wrap {{ padding:.45rem 1rem 1rem; }}
@@ -2287,10 +2294,12 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
   tbody tr:last-child td {{ border-bottom:0; }}
   td.num {{ font-variant-numeric:tabular-nums; text-align:right; }}
   td a {{ text-underline-offset:.16em; text-decoration-thickness:.06em; }}
-  #term-leaders-table {{ min-width:45rem; }}
-  #term-leaders-table th:nth-child(2),#term-leaders-table td:nth-child(2) {{ width:38%; }}
-  #term-leaders-table th:last-child,#term-leaders-table td:last-child {{ width:19rem; }}
-  .term-usage {{ display:grid; grid-template-columns:1fr; gap:.18rem; min-width:12rem;
+  #term-leaders-table {{ table-layout:fixed; }}
+  #term-leaders-table th:first-child,#term-leaders-table td:first-child {{ width:18%; }}
+  #term-leaders-table th:last-child,#term-leaders-table td:last-child {{ width:15rem; }}
+  .party-note {{ display:block; margin-top:.2rem; color:var(--muted); font-size:.7rem;
+                 font-weight:750; letter-spacing:.06em; }}
+  .term-usage {{ display:grid; grid-template-columns:1fr; gap:.18rem;
                  text-align:left; }}
   .term-usage strong {{ font-size:.9rem; white-space:nowrap; }}
   .term-usage small {{ color:var(--muted); font-size:.72rem; }}
@@ -2310,6 +2319,10 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
     }}
     .context-panel {{ position:static; }}
     .chart-card {{ padding:.3rem; }}
+    #term-leaders-table th:first-child,#term-leaders-table td:first-child {{ width:22%; }}
+    #term-leaders-table th:last-child,#term-leaders-table td:last-child {{ width:40%; }}
+    #term-leaders-table th,#term-leaders-table td {{ padding:.58rem .42rem; }}
+    .term-usage strong {{ white-space:normal; }}
     #language-tables table {{ font-size:.78rem; table-layout:fixed; }}
     #language-tables th,#language-tables td {{ padding:.32rem .25rem; overflow-wrap:anywhere; }}
     #language-tables th:nth-child(4),#language-tables td:nth-child(4),

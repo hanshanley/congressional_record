@@ -391,9 +391,9 @@ def test_builds_combined_last_five_congresses_payload(store, tmp_path):
     assert "this view opens with\nthe last five Congresses" in page
     assert "damn” and “damned" in page
     assert "Member(s) with most uses" in page
-    assert "Their use vs all members" in page
+    assert "Leader / all uses" in page
     assert " total</strong>" in page
-    assert "% per leading member" in page
+    assert "% of all uses" in page
     assert "not the source of every\nuse in the total" in page
     assert "“fuck”\nand “fuck you”" in page
     assert "Named-member speech coverage begins January 25, 1994" in activity_page
