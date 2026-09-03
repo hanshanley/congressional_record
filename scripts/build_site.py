@@ -881,23 +881,20 @@ function appendCell(row, value, className = '') {
 function termUsageNode(item) {
   const wrapper = document.createElement('div');
   wrapper.className = 'term-usage';
+  const share = item.total_hits ? 100 * item.leader_hits / item.total_hits : 0;
+  const aria = `${Number(item.leader_hits).toLocaleString()} uses by each leading member ` +
+    `out of ${Number(item.total_hits).toLocaleString()} uses by all members`;
+  wrapper.setAttribute('aria-label', aria);
   const count = document.createElement('strong');
   count.textContent = `${Number(item.leader_hits).toLocaleString()}` +
-    `${item.leaders.length > 1 ? ' each' : ''} / ${Number(item.total_hits).toLocaleString()} total`;
-  const share = item.total_hits ? 100 * item.leader_hits / item.total_hits : 0;
+    `${item.leaders.length > 1 ? ' each' : ''}`;
+  const total = document.createElement('span');
+  total.textContent = `/ ${Number(item.total_hits).toLocaleString()}`;
   const detail = document.createElement('small');
   detail.textContent = item.leaders.length > 1
     ? `${share.toFixed(1)}% each`
-    : `${share.toFixed(1)}% of all uses`;
-  const meter = document.createElement('progress');
-  meter.max = Math.max(1, Number(item.total_hits));
-  meter.value = Number(item.leader_hits);
-  meter.setAttribute(
-    'aria-label',
-    `${Number(item.leader_hits).toLocaleString()} uses by each leading member ` +
-      `out of ${Number(item.total_hits).toLocaleString()} uses by all members`,
-  );
-  wrapper.append(count, meter, detail);
+    : `${share.toFixed(1)}%`;
+  wrapper.append(count, total, detail);
   return wrapper;
 }
 
@@ -1941,11 +1938,10 @@ def _term_usage_cell(row: dict) -> _TrustedHTML:
         f"{total_hits:,} uses by all members"
     )
     return _TrustedHTML(
-        '<div class="term-usage">'
-        f"<strong>{leader_hits:,}{each} / {total_hits:,} total</strong>"
-        f'<progress max="{max(1, total_hits)}" value="{leader_hits}" '
-        f'aria-label="{html.escape(aria, quote=True)}"></progress>'
-        f"<small>{share:.1f}% {'each' if tied else 'of all uses'}</small>"
+        f'<div class="term-usage" aria-label="{html.escape(aria, quote=True)}">'
+        f"<strong>{leader_hits:,}{each}</strong>"
+        f"<span>/ {total_hits:,}</span>"
+        f"<small>{share:.1f}%{' each' if tied else ''}</small>"
         "</div>"
     )
 
@@ -2284,11 +2280,11 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
   #state-term-map svg text {{ font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; }}
   .map-legend {{ margin:.5rem 0 0; }}
   #language-tables .card {{ border:0; box-shadow:none; padding:0; margin:0; }}
-  table {{ border-collapse:separate; border-spacing:0; width:100%; font-size:.92rem; }}
-  th,td {{ padding:.72rem .7rem; border-bottom:1px solid var(--grid); text-align:left;
+  table {{ border-collapse:separate; border-spacing:0; width:100%; font-size:.84rem; }}
+  th,td {{ padding:.5rem .6rem; border-bottom:1px solid var(--grid); text-align:left;
            vertical-align:middle; }}
   th {{ position:sticky; top:0; z-index:1; background:var(--paper); color:var(--muted);
-        border-bottom:2px solid var(--grid); white-space:nowrap; font-size:.7rem;
+        border-bottom:2px solid var(--grid); white-space:nowrap; font-size:.64rem;
         font-weight:800; letter-spacing:.06em; text-transform:uppercase; }}
   tbody tr:nth-child(even) {{ background:rgb(234 229 218 / 28%); }}
   tbody tr:hover {{ background:rgb(61 111 140 / 8%); }}
@@ -2297,18 +2293,18 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
   td a {{ text-underline-offset:.16em; text-decoration-thickness:.06em; }}
   #term-leaders-table {{ table-layout:fixed; }}
   #term-leaders-table th:first-child,#term-leaders-table td:first-child {{ width:18%; }}
-  #term-leaders-table th:last-child,#term-leaders-table td:last-child {{ width:15rem; }}
-  .party-note {{ display:block; margin-top:.2rem; color:var(--muted); font-size:.7rem;
-                 font-weight:750; letter-spacing:.06em; }}
-  .term-usage {{ display:grid; grid-template-columns:1fr; gap:.18rem;
-                 text-align:left; }}
-  .term-usage strong {{ font-size:.9rem; white-space:nowrap; }}
-  .term-usage small {{ color:var(--muted); font-size:.72rem; }}
-  .term-usage progress {{ appearance:none; width:100%; height:.38rem; border:0;
-                          border-radius:999px; overflow:hidden; background:var(--soft); }}
-  .term-usage progress::-webkit-progress-bar {{ background:var(--soft); }}
-  .term-usage progress::-webkit-progress-value {{ background:var(--blue); }}
-  .term-usage progress::-moz-progress-bar {{ background:var(--blue); }}
+  #term-leaders-table th:last-child,#term-leaders-table td:last-child {{ width:12rem; }}
+  #term-leaders-table td:nth-child(2) a {{ font-size:.86rem; }}
+  .party-note {{ display:inline; color:var(--muted); font-size:.68rem;
+                 font-weight:750; letter-spacing:.04em; white-space:nowrap; }}
+  .party-note::before {{ content:" · "; }}
+  .term-usage {{ display:flex; align-items:baseline; justify-content:flex-end; gap:.28rem;
+                 text-align:right; white-space:nowrap; }}
+  .term-usage strong {{ font-size:.86rem; }}
+  .term-usage span {{ color:var(--muted); }}
+  .term-usage small {{ color:var(--blue); font-size:.68rem; font-weight:750;
+                       background:rgb(61 111 140 / 10%); border-radius:999px;
+                       padding:.08rem .32rem; }}
   img {{ width:100%; height:auto; }}
   li {{ margin:.4rem 0; }}
   footer {{ margin-top:3rem; color:var(--muted); font-size:.86rem; }}
@@ -2321,9 +2317,9 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
     .context-panel {{ position:static; }}
     .chart-card {{ padding:.3rem; }}
     #term-leaders-table th:first-child,#term-leaders-table td:first-child {{ width:22%; }}
-    #term-leaders-table th:last-child,#term-leaders-table td:last-child {{ width:40%; }}
-    #term-leaders-table th,#term-leaders-table td {{ padding:.58rem .42rem; }}
-    .term-usage strong {{ white-space:normal; }}
+    #term-leaders-table th:last-child,#term-leaders-table td:last-child {{ width:36%; }}
+    #term-leaders-table th,#term-leaders-table td {{ padding:.46rem .35rem; }}
+    .term-usage {{ flex-wrap:wrap; gap:.12rem .24rem; }}
     #language-tables table {{ font-size:.78rem; table-layout:fixed; }}
     #language-tables th,#language-tables td {{ padding:.32rem .25rem; overflow-wrap:anywhere; }}
     #language-tables th:nth-child(4),#language-tables td:nth-child(4),

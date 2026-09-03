@@ -391,8 +391,9 @@ def test_builds_combined_last_five_congresses_payload(store, tmp_path):
     assert "this view opens with\nthe last five Congresses" in page
     assert "Member(s) with most uses" in page
     assert "Leader / all uses" in page
-    assert " total</strong>" in page
-    assert "% of all uses" in page
+    assert 'class="term-usage"' in page
+    assert "</strong><span>/ " in page
+    assert "<progress" not in page
     assert "Related forms are grouped" in page
     assert "term-section-header" in page
     assert 'id="term-leaders-note" hidden>' in page
