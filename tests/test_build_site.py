@@ -344,11 +344,20 @@ def test_profanity_tables_show_each_members_most_used_term(store, tmp_path):
     assert 'class="censored-term"' in page
     assert 'data-term="damn"' in page
     assert 'aria-label="damn"' in page
-    assert ">d***</span>" in page
+    assert ">da*n</span>" in page
     assert "censoredTermNode(item.term" in page
     activity_page = (out / "activity" / "index.html").read_text()
     assert 'data-term="damn"' in activity_page
-    assert ">d***</span>" in activity_page
+    assert ">da*n</span>" in activity_page
+
+
+def test_censored_terms_remain_distinguishable():
+    module = _load_build_site()
+
+    assert ">cr*p</span>" in str(module._censored_term_cell("crap"))
+    assert ">cu*t</span>" in str(module._censored_term_cell("cunt"))
+    assert ">fu*k</span>" in str(module._censored_term_cell("fuck"))
+    assert ">a*s</span>" in str(module._censored_term_cell("ass"))
 
 
 def test_builds_combined_last_five_congresses_payload(store, tmp_path):

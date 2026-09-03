@@ -184,14 +184,13 @@ function formatRate(value) {
 
 function censorTerm(term) {
   const [first, ...rest] = String(term).split(' ');
-  let keptFirstLetter = false;
+  const letterCount = [...first].filter(character => /[A-Za-z]/.test(character)).length;
+  let letterIndex = 0;
   const censored = [...first].map(character => {
     if (!/[A-Za-z]/.test(character)) return character;
-    if (!keptFirstLetter) {
-      keptFirstLetter = true;
-      return character;
-    }
-    return '*';
+    const keep = letterIndex < (letterCount >= 4 ? 2 : 1) || letterIndex === letterCount - 1;
+    letterIndex += 1;
+    return keep ? character : '*';
   }).join('');
   return [censored, ...rest].join(' ');
 }
@@ -1085,14 +1084,13 @@ let selectedActivityMetric = 'speech';
 
 function censorTerm(term) {
   const [first, ...rest] = String(term).split(' ');
-  let keptFirstLetter = false;
+  const letterCount = [...first].filter(character => /[A-Za-z]/.test(character)).length;
+  let letterIndex = 0;
   const censored = [...first].map(character => {
     if (!/[A-Za-z]/.test(character)) return character;
-    if (!keptFirstLetter) {
-      keptFirstLetter = true;
-      return character;
-    }
-    return '*';
+    const keep = letterIndex < (letterCount >= 4 ? 2 : 1) || letterIndex === letterCount - 1;
+    letterIndex += 1;
+    return keep ? character : '*';
   }).join('');
   return [censored, ...rest].join(' ');
 }
@@ -1880,14 +1878,19 @@ def _censored_term_cell(term: str, detail: str = "") -> _TrustedHTML:
     """Render a censored term whose full value is available on hover and focus."""
     value = str(term)
     first, separator, remainder = value.partition(" ")
-    kept_first_letter = False
+    letter_count = sum(character.isalpha() for character in first)
+    letter_index = 0
     censored_chars = []
     for character in first:
         if character.isalpha():
-            if kept_first_letter:
+            keep = (
+                letter_index < (2 if letter_count >= 4 else 1)
+                or letter_index == letter_count - 1
+            )
+            letter_index += 1
+            if not keep:
                 censored_chars.append("*")
                 continue
-            kept_first_letter = True
         censored_chars.append(character)
     censored = "".join(censored_chars) + (separator + remainder if separator else "")
     tooltip = f"Uncensored term: {value}"
