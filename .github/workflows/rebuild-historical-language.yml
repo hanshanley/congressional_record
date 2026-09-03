@@ -102,5 +102,6 @@ jobs:
               -m "Rebuild historical language with v4 codebook" \
               -m "Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>" \
               -m "Copilot-Session: 20de2f9c-02b3-4617-b28a-82ccd88b0490"
+            git pull --rebase origin master
             git push
           fi
