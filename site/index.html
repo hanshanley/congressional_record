@@ -127,7 +127,7 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
   .error { color:#8A1C1C; font-weight:bold; }
   .table-wrap { width:100%; max-width:100%; overflow-x:auto; background:var(--paper);
                  border:1px solid var(--grid); border-radius:.65rem; }
-  .term-explorer-grid { display:grid; grid-template-columns:minmax(0,1.1fr) minmax(24rem,.9fr);
+  .term-explorer-grid { display:grid; grid-template-columns:minmax(0,1fr);
                          gap:1rem; align-items:start; }
   .term-explorer-grid .card { margin:0; height:100%; }
   .term-explorer-grid .table-wrap { padding:.45rem 1rem 1rem; }
@@ -150,7 +150,8 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
   td.num { font-variant-numeric:tabular-nums; text-align:right; }
   td a { text-underline-offset:.16em; text-decoration-thickness:.06em; }
   #term-leaders-table { min-width:45rem; }
-  #term-leaders-table th:last-child,#term-leaders-table td:last-child { width:15rem; }
+  #term-leaders-table th:nth-child(2),#term-leaders-table td:nth-child(2) { width:38%; }
+  #term-leaders-table th:last-child,#term-leaders-table td:last-child { width:19rem; }
   .term-usage { display:grid; grid-template-columns:1fr; gap:.18rem; min-width:12rem;
                  text-align:left; }
   .term-usage strong { font-size:.9rem; white-space:nowrap; }
