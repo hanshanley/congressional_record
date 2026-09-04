@@ -14,9 +14,9 @@ name: Update site
 
 on:
   schedule:
-    # 07:20 UTC daily. GovInfo publishes the previous day's Record overnight;
-    # the script also re-checks a short tail, so a late issue is still picked up.
-    - cron: "20 7 * * *"
+    # Check twice daily. GovInfo publication timing varies, and both updaters
+    # replace a recent date window so late or corrected issues are repaired.
+    - cron: "20 7,19 * * *"
   workflow_dispatch:
     inputs:
       since:
@@ -64,27 +64,51 @@ jobs:
             ${{ inputs.since && format('--since {0}', inputs.since) || '' }} \
             ${{ inputs.until && format('--until {0}', inputs.until) || '' }}
 
+      - name: Refresh current-Congress aggregate language metrics
+        run: |
+          python scripts/update_language.py \
+            ${{ inputs.since && format('--since {0}', inputs.since) || '' }} \
+            ${{ inputs.until && format('--until {0}', inputs.until) || '' }}
+
       - name: Refresh current-Congress bill statuses
         # Official GovInfo Bill Status bulk data is public and requires no key.
         run: python scripts/update_bills.py
-
-      - name: Rebuild the site
-        run: python scripts/build_site.py
 
       - name: Commit refreshed data and site
         id: commit
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/site site
-          if git diff --cached --quiet; then
+          git add data/site
+          data_commit=false
+          if ! git diff --cached --quiet; then
+            git commit \
+              -m "Auto-update: refresh congressional data" \
+              -m "Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>" \
+              -m "Copilot-Session: 20de2f9c-02b3-4617-b28a-82ccd88b0490"
+            data_commit=true
+          fi
+
+          # Rebase data before rendering so a concurrent presentation change
+          # cannot be overwritten by stale generated HTML.
+          git pull --rebase origin master
+          python scripts/build_site.py
+          git add site
+          if ! git diff --cached --quiet; then
+            if [[ "$data_commit" == true ]]; then
+              git commit --amend --no-edit
+            else
+              git commit \
+                -m "Auto-update: refresh congressional site" \
+                -m "Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>" \
+                -m "Copilot-Session: 20de2f9c-02b3-4617-b28a-82ccd88b0490"
+            fi
+          fi
+
+          if [[ "$(git rev-list --count origin/master..HEAD)" -eq 0 ]]; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
             echo "No new Congressional Record data; nothing to publish."
           else
-            git commit \
-              -m "Auto-update: refresh speaker table and site" \
-              -m "Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>" \
-              -m "Copilot-Session: 20de2f9c-02b3-4617-b28a-82ccd88b0490"
             git push
             echo "changed=true" >> "$GITHUB_OUTPUT"
           fi

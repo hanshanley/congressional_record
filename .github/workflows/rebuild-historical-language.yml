@@ -107,7 +107,8 @@ jobs:
           # presentation changes cannot conflict with stale generated HTML.
           git pull --rebase origin master
           python scripts/build_site.py
-          git add site
+          python scripts/update_language.py --reset
+          git add -A data/site site
           if ! git diff --cached --quiet; then
             if [[ "$historical_commit" == true ]]; then
               git commit --amend --no-edit

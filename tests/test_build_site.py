@@ -700,7 +700,8 @@ def test_workflow_installs_every_requirements_file_it_needs():
 def test_workflow_references_scripts_that_exist():
     workflow = (ROOT / ".github" / "workflows" / "update-site.yml").read_text()
     for script in (
-        "scripts/update_speakers.py", "scripts/update_bills.py", "scripts/build_site.py",
+        "scripts/update_speakers.py", "scripts/update_language.py",
+        "scripts/update_bills.py", "scripts/build_site.py",
     ):
         assert script in workflow
         assert (ROOT / script).exists()

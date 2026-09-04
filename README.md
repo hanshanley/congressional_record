@@ -403,14 +403,16 @@ python scripts/update_bills.py
 
 # Speech refresh and site render.
 python scripts/update_speakers.py
+python scripts/update_language.py
 python scripts/build_site.py
 ```
 
-Normalized state is committed as one compact file per Congress:
+Normalized state is committed as compact Parquet tables:
 
 ```text
 data/site/speaker_daily/congress_NNN.parquet
 data/site/bills/congress_NNN.parquet
+data/site/language_daily.parquet
 ```
 
 The site writes `site/data/congresses.json` and `site/data/congress_NNN.json` for direct reuse.
@@ -434,14 +436,16 @@ data/site/bills/congress_NNN.parquet            one row per H.R./S. bill
 ```
 
 The speaker table is an append-only summary. A scheduled job reads its last date, downloads only
-new Congressional Record issues, scores those days, and merges the counts back in. The bill
-updater independently reads official Bill Status metadata and replaces only new or changed
-current-Congress records.
+new Congressional Record issues, scores those days, and merges the counts back in. A separate
+compact daily aggregate table updates the current-Congress portion of the 1873-present party
+series from the same official GovInfo packages. The bill updater independently reads official
+Bill Status metadata and replaces only new or changed current-Congress records.
 
 ```bash
 python scripts/update_speakers.py    # extend the table with newly published days
+python scripts/update_language.py    # refresh current-Congress aggregate trend metrics
 python scripts/update_bills.py       # refresh current-Congress H.R./S. statuses
-python scripts/build_site.py         # render site/ from both committed tables
+python scripts/build_site.py         # render site/ from the committed tables
 ```
 
 `build_site.py` ranks the **sitting Congress** by default (`--congress latest`); pass a number
@@ -451,8 +455,11 @@ The default snapshot timestamp is derived from the newest speech or bill input, 
 inputs produce byte-identical output and no timestamp-only commit. `SOURCE_DATE_EPOCH` and
 `--generated-utc` remain available for an explicit reproducible-build timestamp.
 
-`.github/workflows/update-site.yml` runs the refreshes daily at 07:20 UTC and commits the
-refreshed tables and site. The Margin of Error deployment then publishes that site at
+`.github/workflows/update-site.yml` checks for new data twice daily at 07:20 and 19:20 UTC and
+commits the refreshed tables and site. Each run replaces a seven-day aggregate window and a
+three-day member window, so late or corrected GovInfo issues are repaired rather than appended
+twice. The Margin of Error deployment checks twice daily after those source refreshes and
+publishes the site at
 <https://www.themarginoferror.com/professional_profanity/>. The former GitHub Pages endpoint
 publishes only a redirect to the new address.
 
@@ -472,9 +479,9 @@ To enable it:
    ```
 
 The workflow runs the test suite before it publishes: a scheduled job that silently ships wrong
-numbers is worse than one that fails loudly. It re-checks a few days before the last stored date,
-because GovInfo sometimes publishes an issue late — merging is keyed on
-`(bioguide, date, chamber)`, so recomputing a day repairs it rather than double counting.
+numbers is worse than one that fails loudly. Tests enforce the schedules and updater wiring,
+current-Congress bootstrap behavior, correction lookbacks, full-window replacement, duplicate
+turn suppression, eligibility exclusions, and preservation of historical long-run rows.
 
 ### Embedding it in a blog
 
