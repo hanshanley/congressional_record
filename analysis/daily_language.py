@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from collections import defaultdict
+import json
 from pathlib import Path
 from typing import Iterable, Optional
 
@@ -142,8 +143,6 @@ def merge_long_run_payload(base: dict, daily: pd.DataFrame) -> dict:
         ).fillna(0.0)
 
     replaced_years = set(chamber["year"].astype(int))
-    old_chamber = pd.DataFrame(base["chamber_series"])
-    old_chamber = old_chamber[~old_chamber["year"].isin(replaced_years)]
     chamber_columns = [
         "year",
         "party",
@@ -152,19 +151,14 @@ def merge_long_run_payload(base: dict, daily: pd.DataFrame) -> dict:
         *hit_columns,
         *(metric.rate for metric in HEADLINE_METRICS),
     ]
-    merged_chamber = pd.concat(
-        [old_chamber[chamber_columns], chamber[chamber_columns]],
-        ignore_index=True,
-    ).sort_values(["year", "party", "chamber"])
-
-    aggregate = merged_chamber.groupby(
+    current_aggregate = chamber.groupby(
         ["year", "party"], as_index=False
     )[["words", *hit_columns]].sum()
     for metric in HEADLINE_METRICS:
-        aggregate[metric.rate] = (
+        current_aggregate[metric.rate] = (
             metric.scale
-            * aggregate[metric.raw_count]
-            / aggregate["words"].where(aggregate["words"] > 0)
+            * current_aggregate[metric.raw_count]
+            / current_aggregate["words"].where(current_aggregate["words"] > 0)
         ).fillna(0.0)
     aggregate_columns = [
         "year",
@@ -173,10 +167,29 @@ def merge_long_run_payload(base: dict, daily: pd.DataFrame) -> dict:
         *hit_columns,
         *(metric.rate for metric in HEADLINE_METRICS),
     ]
-
     payload = dict(base)
-    payload["series"] = aggregate[aggregate_columns].to_dict("records")
-    payload["chamber_series"] = merged_chamber[chamber_columns].to_dict("records")
-    payload["first_year"] = int(aggregate["year"].min())
-    payload["last_year"] = int(aggregate["year"].max())
+    current_series = json.loads(
+        current_aggregate[aggregate_columns].to_json(orient="records")
+    )
+    current_chamber_series = json.loads(
+        chamber[chamber_columns].to_json(orient="records")
+    )
+    payload["series"] = sorted(
+        [
+            row for row in base["series"]
+            if int(row["year"]) not in replaced_years
+        ]
+        + current_series,
+        key=lambda row: (row["year"], row["party"]),
+    )
+    payload["chamber_series"] = sorted(
+        [
+            row for row in base["chamber_series"]
+            if int(row["year"]) not in replaced_years
+        ]
+        + current_chamber_series,
+        key=lambda row: (row["year"], row["party"], row["chamber"]),
+    )
+    payload["first_year"] = min(row["year"] for row in payload["series"])
+    payload["last_year"] = max(row["year"] for row in payload["series"])
     return payload

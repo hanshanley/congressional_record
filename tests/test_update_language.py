@@ -229,7 +229,7 @@ def test_daily_metrics_replace_current_year_without_changing_history():
 
     historical = next(row for row in result["series"] if row["year"] == 2023)
     current = next(row for row in result["series"] if row["year"] == 2025)
-    assert historical["words"] == 10
+    assert historical == base["series"][0]
     assert current["words"] == 500
     assert current["formal_courtesy_hits"] == 5
     assert current["formal_courtesy_per_1k"] == 10.0

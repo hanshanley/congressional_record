@@ -42,6 +42,11 @@ def parse_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
     parser.add_argument("--lookback-days", type=int, default=7)
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument(
+        "--rebuild-only",
+        action="store_true",
+        help="Rebuild the long-run payload from existing daily aggregate rows.",
+    )
+    parser.add_argument(
         "--reset",
         action="store_true",
         help="Remove incremental rows after a canonical full historical rebuild.",
@@ -128,6 +133,17 @@ def main(argv: Optional[List[str]] = None) -> int:
         raise SystemExit(f"missing canonical long-run payload: {args.long_run}")
 
     daily = load_daily(args.daily)
+    if args.rebuild_only:
+        if daily is None or daily.empty:
+            raise SystemExit(f"missing daily aggregate state: {args.daily}")
+        base = json.loads(args.long_run.read_text(encoding="utf-8"))
+        payload = merge_long_run_payload(base, daily)
+        args.long_run.write_text(
+            json.dumps(payload, indent=2) + "\n",
+            encoding="utf-8",
+        )
+        return 0
+
     window = resolve_window(args, daily)
     if window is None:
         LOG.info("nothing to do")
