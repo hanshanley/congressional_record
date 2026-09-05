@@ -90,7 +90,7 @@ def fetch_and_score(start: str, end: str, workers: int) -> pd.DataFrame:
     Package discovery probes the public bulk URLs rather than the GovInfo API, so
     the scheduled update needs no API key and no repository secret at all.
     """
-    from analysis.ingest.govinfo_bulk import probe_packages, run_bulk
+    from analysis.ingest.govinfo_bulk import probe_packages, run_incremental_bulk
 
     packages = probe_packages(start, end, workers=workers)
     if not packages:
@@ -100,7 +100,15 @@ def fetch_and_score(start: str, end: str, workers: int) -> pd.DataFrame:
     LOG.info("fetching %d issue(s) %s..%s", len(packages), start, end)
     with tempfile.TemporaryDirectory(prefix="crec-speakers-") as tmp:
         tmp_path = Path(tmp)
-        run_bulk(packages, tmp_path / "bulk", tmp_path, workers=workers)
+        _, deferred = run_incremental_bulk(
+            packages,
+            tmp_path / "bulk",
+            tmp_path,
+            end=end,
+            workers=workers,
+        )
+        if deferred:
+            LOG.warning("deferred %d incomplete package(s): %s", len(deferred), deferred)
         turn_files = sorted((tmp_path / "turns").glob("*.parquet"))
         if not turn_files:
             LOG.warning("no turns parsed from %d package(s)", len(packages))

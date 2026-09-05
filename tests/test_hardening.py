@@ -19,6 +19,7 @@ import datetime as dt  # noqa: E402
 import zipfile  # noqa: E402
 
 import pyarrow.parquet as pq  # noqa: E402
+import pytest  # noqa: E402
 
 from analysis.ingest.govinfo_bulk import (  # noqa: E402
     _package_congress,
@@ -149,6 +150,57 @@ def test_bulk_ingest_incremental_runs_are_additive_and_deduplicated() -> None:
         assert pq.ParquetFile(parquet).metadata.num_rows == 2
     finally:
         shutil.rmtree(root, ignore_errors=True)
+
+
+def test_incremental_bulk_defers_only_recent_incomplete_packages(tmp_path) -> None:
+    from analysis.ingest.govinfo_bulk import run_incremental_bulk
+
+    calls = []
+
+    def runner(packages, bulk_dir, out_dir, *, workers):
+        calls.append(list(packages))
+        if packages == ["CREC-2026-09-04"]:
+            raise RuntimeError("package exposed before archive was complete")
+        return len(packages)
+
+    total, deferred = run_incremental_bulk(
+        [
+            "CREC-2026-08-31",
+            "CREC-2026-09-02",
+            "CREC-2026-09-04",
+        ],
+        tmp_path / "bulk",
+        tmp_path / "out",
+        end="2026-09-05",
+        workers=2,
+        grace_days=2,
+        runner=runner,
+    )
+
+    assert calls == [
+        ["CREC-2026-08-31", "CREC-2026-09-02"],
+        ["CREC-2026-09-04"],
+    ]
+    assert total == 2
+    assert deferred == ["CREC-2026-09-04"]
+
+
+def test_incremental_bulk_keeps_older_package_failures_strict(tmp_path) -> None:
+    from analysis.ingest.govinfo_bulk import run_incremental_bulk
+
+    def runner(packages, bulk_dir, out_dir, *, workers):
+        raise RuntimeError("persistent package failure")
+
+    with pytest.raises(RuntimeError, match="persistent package failure"):
+        run_incremental_bulk(
+            ["CREC-2026-08-31"],
+            tmp_path / "bulk",
+            tmp_path / "out",
+            end="2026-09-05",
+            workers=1,
+            grace_days=2,
+            runner=runner,
+        )
 
 
 def test_validation_sample_is_blinded_and_real_text_preserved() -> None:

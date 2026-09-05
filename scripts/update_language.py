@@ -99,7 +99,7 @@ def fetch_and_score(
     end: str,
     workers: int,
 ) -> Optional[pd.DataFrame]:
-    from analysis.ingest.govinfo_bulk import probe_packages, run_bulk
+    from analysis.ingest.govinfo_bulk import probe_packages, run_incremental_bulk
 
     packages = []
     for window_start, window_end in probe_windows(start, end):
@@ -112,7 +112,15 @@ def fetch_and_score(
     LOG.info("fetching and aggregating %d issue(s) %s..%s", len(packages), start, end)
     with tempfile.TemporaryDirectory(prefix="crec-language-") as tmp:
         tmp_path = Path(tmp)
-        run_bulk(packages, tmp_path / "bulk", tmp_path, workers=workers)
+        _, deferred = run_incremental_bulk(
+            packages,
+            tmp_path / "bulk",
+            tmp_path,
+            end=end,
+            workers=workers,
+        )
+        if deferred:
+            LOG.warning("deferred %d incomplete package(s): %s", len(deferred), deferred)
         turn_files = sorted((tmp_path / "turns").glob("*.parquet"))
         if not turn_files:
             raise RuntimeError(f"{len(packages)} GovInfo packages produced no turn files")

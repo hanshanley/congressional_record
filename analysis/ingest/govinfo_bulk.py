@@ -23,7 +23,7 @@ import tempfile
 import threading
 import zipfile
 from pathlib import Path
-from typing import Any, Dict, Iterator, List, Optional
+from typing import Any, Callable, Dict, Iterator, List, Optional, Tuple
 
 try:  # defusedxml guards against entity-expansion DoS on remote MODS.
     from defusedxml.ElementTree import fromstring as _xml_fromstring
@@ -434,3 +434,50 @@ def run_bulk(
         )
     LOG.info("bulk ingest complete: %d packages, %d turns", len(pkg_list), total)
     return total
+
+
+def run_incremental_bulk(
+    pkg_list: List[str],
+    bulk_dir: Path,
+    out_dir: Path,
+    *,
+    end: str,
+    workers: int = 12,
+    grace_days: int = 2,
+    runner: Optional[Callable[..., int]] = None,
+) -> Tuple[int, List[str]]:
+    """Run an incremental ingest while deferring only brand-new incomplete packages.
+
+    GovInfo may expose a package URL before its archive contains parseable turns.
+    Packages older than ``grace_days`` remain strict and fail the update. Newer
+    packages are attempted individually; an incomplete one is deferred until the
+    next scheduled run, when it is retried and eventually ages into strict mode.
+    """
+    runner = runner or run_bulk
+    final = dt.date.fromisoformat(end)
+    cutoff = final - dt.timedelta(days=max(0, grace_days))
+    stable: List[str] = []
+    recent: List[str] = []
+    for package in sorted(set(pkg_list)):
+        match = _PKG_RE.match(package)
+        if not match:
+            continue
+        package_date = dt.date.fromisoformat(package.removeprefix("CREC-"))
+        (recent if package_date >= cutoff else stable).append(package)
+
+    total = 0
+    if stable:
+        total += runner(stable, bulk_dir, out_dir, workers=workers)
+
+    deferred: List[str] = []
+    for package in recent:
+        try:
+            total += runner([package], bulk_dir, out_dir, workers=workers)
+        except RuntimeError as exc:
+            deferred.append(package)
+            LOG.warning(
+                "deferring newly published package %s until the next update: %s",
+                package,
+                exc,
+            )
+    return total, deferred
