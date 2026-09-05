@@ -21,6 +21,7 @@ import re
 import subprocess
 import tempfile
 import threading
+import time
 import zipfile
 from pathlib import Path
 from typing import Any, Callable, Dict, Iterator, List, Optional, Tuple
@@ -54,6 +55,7 @@ CONTENT_URL = "https://www.govinfo.gov/content/pkg/{pkg}.zip"
 _PKG_RE = re.compile(r"^CREC-\d{4}-\d{2}-\d{2}$")
 _PAGE_MARKER_RE = re.compile(r"\[\[Page [^\]]+\]\]")
 _MIN_DEDUPE_CHARS = 500
+_PROBE_RETRY_DELAYS = (15, 30, 60)
 
 
 def _localname(tag: str) -> str:
@@ -181,6 +183,7 @@ def probe_packages(
     end: str,
     workers: int = 8,
     max_days: int = 400,
+    retry_delays: Tuple[float, ...] = _PROBE_RETRY_DELAYS,
 ) -> List[str]:
     """Return the CREC packages published in ``[start, end]`` without an API key.
 
@@ -231,13 +234,30 @@ def probe_packages(
         return pkg, None
 
     found: List[str] = []
+    pending = days
     unknown: List[str] = []
-    with cf.ThreadPoolExecutor(max_workers=workers) as pool:
-        for pkg, result in pool.map(exists, days):
-            if result is None:
-                unknown.append(pkg)
-            elif result:
-                found.append(result)
+    for attempt in range(len(retry_delays) + 1):
+        unknown = []
+        unknown_days: List[dt.date] = []
+        with cf.ThreadPoolExecutor(max_workers=workers) as pool:
+            for day, (pkg, result) in zip(pending, pool.map(exists, pending)):
+                if result is None:
+                    unknown.append(pkg)
+                    unknown_days.append(day)
+                elif result:
+                    found.append(result)
+        if not unknown:
+            break
+        if attempt >= len(retry_delays):
+            break
+        delay = retry_delays[attempt]
+        LOG.warning(
+            "GovInfo probe was inconclusive for %d package(s); retrying in %s seconds",
+            len(unknown),
+            delay,
+        )
+        time.sleep(delay)
+        pending = unknown_days
     if unknown:
         raise RuntimeError(
             f"could not determine whether {len(unknown)} GovInfo packages exist: "

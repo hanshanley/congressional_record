@@ -744,7 +744,33 @@ def test_probe_fails_loudly_when_govinfo_status_is_unknown():
     result = subprocess.CompletedProcess([], 0, stdout="503", stderr="")
     with patch("analysis.ingest.govinfo_bulk.subprocess.run", return_value=result):
         with pytest.raises(RuntimeError, match="could not determine"):
-            probe_packages("2026-07-20", "2026-07-20", workers=1)
+            probe_packages(
+                "2026-07-20",
+                "2026-07-20",
+                workers=1,
+                retry_delays=(),
+            )
+
+
+def test_probe_retries_transient_govinfo_outage():
+    from analysis.ingest.govinfo_bulk import probe_packages
+
+    responses = iter([
+        subprocess.CompletedProcess([], 0, stdout="502", stderr=""),
+        subprocess.CompletedProcess([], 0, stdout="200", stderr=""),
+    ])
+    with patch(
+        "analysis.ingest.govinfo_bulk.subprocess.run",
+        side_effect=lambda *args, **kwargs: next(responses),
+    ) as run, patch("analysis.ingest.govinfo_bulk.time.sleep") as sleep:
+        assert probe_packages(
+            "2026-07-20",
+            "2026-07-20",
+            workers=1,
+            retry_delays=(15,),
+        ) == ["CREC-2026-07-20"]
+    assert run.call_count == 2
+    sleep.assert_called_once_with(15)
 
 
 def test_probe_distinguishes_published_and_missing_issues():
