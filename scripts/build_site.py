@@ -50,7 +50,7 @@ SITE_DIR = ROOT / "site"
 LONG_RUN_DATA_PATH = ROOT / "data" / "site" / "long_run_language.json"
 LONG_RUN_METRICS_PATH = ROOT / "data" / "processed" / "metrics" / "civility_metrics.parquet"
 PUBLIC_URL = "https://www.themarginoferror.com/professional_profanity/"
-ALL_MEMBER_SCOPE_LABEL = "All available Congresses (1994–present)"
+ALL_MEMBER_SCOPE_LABEL = "1994–present"
 
 CAVEATS = [
     "Speech counts include only remarks attributable to a specific member by Bioguide ID; "
@@ -2410,11 +2410,9 @@ remain separate.</p></div>
 <section class="language" aria-labelledby="language-heading">
 <div class="section-header">
 <div><h2 id="language-heading">Recent language on the floor</h2>
-<p class="sub">Three transparent lexical measures are shown separately: profanity,
-personal hostility or disrespect, and misconduct allegations. They describe language in
-attributed floor remarks and compare Democrats with Republicans; they do not establish intent
-or whether an allegation is true. Named-member results begin in 1994; this view opens with
-the last five Congresses.</p></div>
+<p class="sub">Explore profanity, personal hostility, and misconduct allegations in
+congressional floor remarks. Member-level results cover 1994–present, while historical
+party comparisons extend to 1873.</p></div>
 </div>
 <div class="explorer-controls recent-controls">
 <label>Measure<select id="recent-metric"></select></label>
@@ -2608,7 +2606,7 @@ def _render_activity_html(payload: dict, congresses: list[int]) -> str:
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Congressional member activity and bills</title>
-<meta name="description" content="Exact-value congressional speech, bill sponsorship,
+<meta name="description" content="Congressional speech, bill sponsorship,
 passage, enactment, and profanity tables by Congress.">
 <link rel="canonical" href="{PUBLIC_URL}activity/">
 <style>
@@ -2722,10 +2720,8 @@ passage, enactment, and profanity tables by Congress.">
 <a href="./" aria-current="page">Member activity and bills</a></nav>
 <main id="main-content">
 <h1>Congressional member activity and bills</h1>
-<p class="sub hero-deck">Exact-value tables for attributed speech, sponsored bills, passage,
-enactment, and nonzero profanity rates. Named-member speech coverage begins January 25, 1994;
-“all available Congresses” does not include the 1873–1993 aggregate-only period. The
-language-analysis homepage remains the primary view.</p>
+<p class="sub hero-deck">Explore member speech, bill sponsorship, passage, enactment,
+and profanity by Congress.</p>
 <div class="toolbar">
 <label for="activity-metric">Table<select id="activity-metric">{metric_options}</select></label>
 <label for="congress">Congress<select id="congress">{''.join(options)}</select></label>
