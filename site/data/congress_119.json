@@ -1,7 +1,7 @@
 {
   "congress": 119,
   "label": "Congress 119",
-  "generated_utc": "2026-09-09T12:16:00+00:00",
+  "generated_utc": "2026-09-09T20:27:00+00:00",
   "min_words": 25000,
   "top": 25,
   "coverage": {
@@ -9,7 +9,7 @@
     "speech_last_date": "2026-09-08",
     "speaker_days": 19923,
     "members_with_speech": 541,
-    "bills": 15664,
+    "bills": 15686,
     "members_with_bills": 545,
     "bill_sources": [
       "govinfo"
@@ -7191,10 +7191,10 @@
         "profanity_terms": "{\"ass\":1}",
         "favorite_profanity_term": "ass",
         "favorite_profanity_term_hits": 1,
-        "bills_sponsored": 86,
+        "bills_sponsored": 87,
         "bills_passed": 3,
         "bills_enacted": 0,
-        "passage_share": 0.0348837209,
+        "passage_share": 0.0344827586,
         "enactment_share": 0.0,
         "speaker_name": "Ms. MACE",
         "party": "R",
@@ -7203,6 +7203,12 @@
         "profanity_per_100k": 4.9164208456,
         "member_url": "https://bioguide.congress.gov/search/bio/M000194",
         "examples": [
+          {
+            "bill_id": "119-hr-10319",
+            "label": "HR 10319",
+            "title": "To amend title 5, United States Code, to provide for requirements sensitive Government positions relating to gender dysphoria, and for other purposes.",
+            "url": "https://www.congress.gov/bill/119th-congress/house-bill/10319"
+          },
           {
             "bill_id": "119-hr-10278",
             "label": "HR 10278",
@@ -7214,12 +7220,6 @@
             "label": "HR 10212",
             "title": "PEPTIDES for Veterans Act",
             "url": "https://www.congress.gov/bill/119th-congress/house-bill/10212"
-          },
-          {
-            "bill_id": "119-hr-10145",
-            "label": "HR 10145",
-            "title": "SOUND Pesticide Research Act",
-            "url": "https://www.congress.gov/bill/119th-congress/house-bill/10145"
           }
         ]
       },
@@ -7234,10 +7234,10 @@
         "profanity_terms": "{\"pissed off\":1}",
         "favorite_profanity_term": "piss off",
         "favorite_profanity_term_hits": 1,
-        "bills_sponsored": 85,
+        "bills_sponsored": 86,
         "bills_passed": 2,
         "bills_enacted": 0,
-        "passage_share": 0.0235294118,
+        "passage_share": 0.023255814,
         "enactment_share": 0.0,
         "speaker_name": "Mr. NEGUSE",
         "party": "D",
@@ -7246,6 +7246,12 @@
         "profanity_per_100k": 3.4581733928,
         "member_url": "https://bioguide.congress.gov/search/bio/N000191",
         "examples": [
+          {
+            "bill_id": "119-hr-10320",
+            "label": "HR 10320",
+            "title": "To require Members of Congress to convene and attend town halls in their respective congressional districts, and for other purposes.",
+            "url": "https://www.congress.gov/bill/119th-congress/house-bill/10320"
+          },
           {
             "bill_id": "119-hr-10233",
             "label": "HR 10233",
@@ -7257,17 +7263,54 @@
             "label": "HR 10214",
             "title": "To amend the Public Lands Corps Act of 1993 to modify the cost-sharing requirement for conservation projects carried out by a qualified youth or conservation corps, and for other purposes.",
             "url": "https://www.congress.gov/bill/119th-congress/house-bill/10214"
-          },
-          {
-            "bill_id": "119-hr-10100",
-            "label": "HR 10100",
-            "title": "Screen to Save Act",
-            "url": "https://www.congress.gov/bill/119th-congress/house-bill/10100"
           }
         ]
       },
       {
         "rank": 23,
+        "bioguide": "G000583",
+        "turns": 46,
+        "words": 7366,
+        "active_days": 22,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "profanity_terms": "{}",
+        "favorite_profanity_term": "",
+        "favorite_profanity_term_hits": 0,
+        "bills_sponsored": 80,
+        "bills_passed": 2,
+        "bills_enacted": 0,
+        "passage_share": 0.025,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. GOTTHEIMER",
+        "party": "D",
+        "state": "NJ",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/G000583",
+        "examples": [
+          {
+            "bill_id": "119-hr-10315",
+            "label": "HR 10315",
+            "title": "To direct the Secretary of Education to carry out a grant program to support the establishment and expansion of curricula in artificial intelligence in elementary and secondary schools, and for other purposes.",
+            "url": "https://www.congress.gov/bill/119th-congress/house-bill/10315"
+          },
+          {
+            "bill_id": "119-hr-10314",
+            "label": "HR 10314",
+            "title": "To direct the Secretary of Education to conduct a study on the efforts of States, local educational agencies, and public elementary and secondary schools to educate students about the terrorist attacks of September 11, 2001, and for other purposes.",
+            "url": "https://www.congress.gov/bill/119th-congress/house-bill/10314"
+          },
+          {
+            "bill_id": "119-hr-10112",
+            "label": "HR 10112",
+            "title": "Empowering States to Protect Seniors from Bad Actors Act",
+            "url": "https://www.congress.gov/bill/119th-congress/house-bill/10112"
+          }
+        ]
+      },
+      {
+        "rank": 24,
         "bioguide": "L000570",
         "turns": 58,
         "words": 20518,
@@ -7310,7 +7353,7 @@
         ]
       },
       {
-        "rank": 24,
+        "rank": 25,
         "bioguide": "K000367",
         "turns": 108,
         "words": 108379,
@@ -7349,49 +7392,6 @@
             "label": "S 5052",
             "title": "Lainie Jones Comprehensive Cancer Survivorship Act of 2026",
             "url": "https://www.congress.gov/bill/119th-congress/senate-bill/5052"
-          }
-        ]
-      },
-      {
-        "rank": 25,
-        "bioguide": "S001150",
-        "turns": 127,
-        "words": 116702,
-        "active_days": 65,
-        "profanity_hits": 17,
-        "profanity_quoted_hits": 0,
-        "profanity_terms": "{\"bastard\":1,\"bastards\":1,\"damn\":7,\"damned\":4,\"hell of a\":3,\"pissing off\":1}",
-        "favorite_profanity_term": "damn",
-        "favorite_profanity_term_hits": 11,
-        "bills_sponsored": 79,
-        "bills_passed": 0,
-        "bills_enacted": 0,
-        "passage_share": 0.0,
-        "enactment_share": 0.0,
-        "speaker_name": "Mr. SCHIFF",
-        "party": "D",
-        "state": "CA",
-        "chamber": "senate",
-        "profanity_per_100k": 14.5670168463,
-        "member_url": "https://bioguide.congress.gov/search/bio/S001150",
-        "examples": [
-          {
-            "bill_id": "119-s-5368",
-            "label": "S 5368",
-            "title": "Water Cyber Shield Act of 2026",
-            "url": "https://www.congress.gov/bill/119th-congress/senate-bill/5368"
-          },
-          {
-            "bill_id": "119-s-5324",
-            "label": "S 5324",
-            "title": "Fairness to Freedom Act of 2026",
-            "url": "https://www.congress.gov/bill/119th-congress/senate-bill/5324"
-          },
-          {
-            "bill_id": "119-s-5297",
-            "label": "S 5297",
-            "title": "American Pharmaceutical Security Act",
-            "url": "https://www.congress.gov/bill/119th-congress/senate-bill/5297"
           }
         ]
       }
@@ -7494,11 +7494,11 @@
         "profanity_terms": "{}",
         "favorite_profanity_term": "",
         "favorite_profanity_term_hits": 0,
-        "bills_sponsored": 37,
+        "bills_sponsored": 38,
         "bills_passed": 11,
         "bills_enacted": 4,
-        "passage_share": 0.2972972973,
-        "enactment_share": 0.1081081081,
+        "passage_share": 0.2894736842,
+        "enactment_share": 0.1052631579,
         "speaker_name": "Rep. Begich, Nicholas J. [R-AK-At Large]",
         "party": "R",
         "state": "AK",
@@ -8139,10 +8139,10 @@
         "profanity_terms": "{}",
         "favorite_profanity_term": "",
         "favorite_profanity_term_hits": 0,
-        "bills_sponsored": 27,
+        "bills_sponsored": 28,
         "bills_passed": 6,
         "bills_enacted": 0,
-        "passage_share": 0.2222222222,
+        "passage_share": 0.2142857143,
         "enactment_share": 0.0,
         "speaker_name": "Mr. VALADAO",
         "party": "R",
@@ -8268,10 +8268,10 @@
         "profanity_terms": "{}",
         "favorite_profanity_term": "",
         "favorite_profanity_term_hits": 0,
-        "bills_sponsored": 19,
+        "bills_sponsored": 20,
         "bills_passed": 6,
         "bills_enacted": 0,
-        "passage_share": 0.3157894737,
+        "passage_share": 0.3,
         "enactment_share": 0.0,
         "speaker_name": "Mr. EVANS of Colorado",
         "party": "R",
@@ -8528,11 +8528,11 @@
         "profanity_terms": "{}",
         "favorite_profanity_term": "",
         "favorite_profanity_term_hits": 0,
-        "bills_sponsored": 37,
+        "bills_sponsored": 38,
         "bills_passed": 11,
         "bills_enacted": 4,
-        "passage_share": 0.2972972973,
-        "enactment_share": 0.1081081081,
+        "passage_share": 0.2894736842,
+        "enactment_share": 0.1052631579,
         "speaker_name": "Rep. Begich, Nicholas J. [R-AK-At Large]",
         "party": "R",
         "state": "AK",

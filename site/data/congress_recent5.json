@@ -1,7 +1,7 @@
 {
   "congress": null,
   "label": "Last 5 Congresses (115\u2013119)",
-  "generated_utc": "2026-09-09T12:16:00+00:00",
+  "generated_utc": "2026-09-09T20:27:00+00:00",
   "min_words": 25000,
   "top": 25,
   "coverage": {
@@ -9,7 +9,7 @@
     "speech_last_date": "2026-09-08",
     "speaker_days": 123894,
     "members_with_speech": 896,
-    "bills": 72290,
+    "bills": 72312,
     "members_with_bills": 908,
     "bill_sources": [
       "govinfo"
@@ -9170,6 +9170,49 @@
       },
       {
         "rank": 21,
+        "bioguide": "N000191",
+        "turns": 527,
+        "words": 109644,
+        "active_days": 126,
+        "profanity_hits": 2,
+        "profanity_quoted_hits": 0,
+        "profanity_terms": "{\"damn\":1,\"pissed off\":1}",
+        "favorite_profanity_term": "damn",
+        "favorite_profanity_term_hits": 1,
+        "bills_sponsored": 331,
+        "bills_passed": 19,
+        "bills_enacted": 9,
+        "passage_share": 0.0574018127,
+        "enactment_share": 0.0271903323,
+        "speaker_name": "Mr. NEGUSE",
+        "party": "D",
+        "state": "CO",
+        "chamber": "house",
+        "profanity_per_100k": 1.8240852213,
+        "member_url": "https://bioguide.congress.gov/search/bio/N000191",
+        "examples": [
+          {
+            "bill_id": "119-hr-10320",
+            "label": "HR 10320",
+            "title": "To require Members of Congress to convene and attend town halls in their respective congressional districts, and for other purposes.",
+            "url": "https://www.congress.gov/bill/119th-congress/house-bill/10320"
+          },
+          {
+            "bill_id": "119-hr-10233",
+            "label": "HR 10233",
+            "title": "SMASH 2.0 Act",
+            "url": "https://www.congress.gov/bill/119th-congress/house-bill/10233"
+          },
+          {
+            "bill_id": "119-hr-10214",
+            "label": "HR 10214",
+            "title": "To amend the Public Lands Corps Act of 1993 to modify the cost-sharing requirement for conservation projects carried out by a qualified youth or conservation corps, and for other purposes.",
+            "url": "https://www.congress.gov/bill/119th-congress/house-bill/10214"
+          }
+        ]
+      },
+      {
+        "rank": 22,
         "bioguide": "G000386",
         "turns": 1819,
         "words": 803624,
@@ -9208,49 +9251,6 @@
             "label": "S 4746",
             "title": "American Innovation and Choice Online Act",
             "url": "https://www.congress.gov/bill/119th-congress/senate-bill/4746"
-          }
-        ]
-      },
-      {
-        "rank": 22,
-        "bioguide": "N000191",
-        "turns": 527,
-        "words": 109644,
-        "active_days": 126,
-        "profanity_hits": 2,
-        "profanity_quoted_hits": 0,
-        "profanity_terms": "{\"damn\":1,\"pissed off\":1}",
-        "favorite_profanity_term": "damn",
-        "favorite_profanity_term_hits": 1,
-        "bills_sponsored": 330,
-        "bills_passed": 19,
-        "bills_enacted": 9,
-        "passage_share": 0.0575757576,
-        "enactment_share": 0.0272727273,
-        "speaker_name": "Mr. NEGUSE",
-        "party": "D",
-        "state": "CO",
-        "chamber": "house",
-        "profanity_per_100k": 1.8240852213,
-        "member_url": "https://bioguide.congress.gov/search/bio/N000191",
-        "examples": [
-          {
-            "bill_id": "119-hr-10233",
-            "label": "HR 10233",
-            "title": "SMASH 2.0 Act",
-            "url": "https://www.congress.gov/bill/119th-congress/house-bill/10233"
-          },
-          {
-            "bill_id": "119-hr-10214",
-            "label": "HR 10214",
-            "title": "To amend the Public Lands Corps Act of 1993 to modify the cost-sharing requirement for conservation projects carried out by a qualified youth or conservation corps, and for other purposes.",
-            "url": "https://www.congress.gov/bill/119th-congress/house-bill/10214"
-          },
-          {
-            "bill_id": "119-hr-10100",
-            "label": "HR 10100",
-            "title": "Screen to Save Act",
-            "url": "https://www.congress.gov/bill/119th-congress/house-bill/10100"
           }
         ]
       },
@@ -10428,11 +10428,11 @@
         "profanity_terms": "{\"damn\":1,\"pissed off\":1}",
         "favorite_profanity_term": "damn",
         "favorite_profanity_term_hits": 1,
-        "bills_sponsored": 330,
+        "bills_sponsored": 331,
         "bills_passed": 19,
         "bills_enacted": 9,
-        "passage_share": 0.0575757576,
-        "enactment_share": 0.0272727273,
+        "passage_share": 0.0574018127,
+        "enactment_share": 0.0271903323,
         "speaker_name": "Mr. NEGUSE",
         "party": "D",
         "state": "CO",
@@ -10946,11 +10946,11 @@
         "profanity_terms": "{\"damn\":1,\"pissed off\":1}",
         "favorite_profanity_term": "damn",
         "favorite_profanity_term_hits": 1,
-        "bills_sponsored": 330,
+        "bills_sponsored": 331,
         "bills_passed": 19,
         "bills_enacted": 9,
-        "passage_share": 0.0575757576,
-        "enactment_share": 0.0272727273,
+        "passage_share": 0.0574018127,
+        "enactment_share": 0.0271903323,
         "speaker_name": "Mr. NEGUSE",
         "party": "D",
         "state": "CO",
@@ -11462,11 +11462,11 @@
         "profanity_terms": "{\"damn\":2}",
         "favorite_profanity_term": "damn",
         "favorite_profanity_term_hits": 2,
-        "bills_sponsored": 130,
+        "bills_sponsored": 131,
         "bills_passed": 15,
         "bills_enacted": 7,
-        "passage_share": 0.1153846154,
-        "enactment_share": 0.0538461538,
+        "passage_share": 0.1145038168,
+        "enactment_share": 0.0534351145,
         "speaker_name": "Mr. TAKANO",
         "party": "D",
         "state": "CA",
