@@ -1,7 +1,7 @@
 {
   "congress": 119,
   "label": "Congress 119",
-  "generated_utc": "2026-09-14T20:32:00+00:00",
+  "generated_utc": "2026-09-15T12:32:00+00:00",
   "min_words": 25000,
   "top": 25,
   "coverage": {
@@ -9,7 +9,7 @@
     "speech_last_date": "2026-09-10",
     "speaker_days": 19935,
     "members_with_speech": 541,
-    "bills": 15711,
+    "bills": 15737,
     "members_with_bills": 546,
     "bill_sources": [
       "govinfo"
@@ -7277,10 +7277,10 @@
         "profanity_terms": "{}",
         "favorite_profanity_term": "",
         "favorite_profanity_term_hits": 0,
-        "bills_sponsored": 80,
+        "bills_sponsored": 82,
         "bills_passed": 2,
         "bills_enacted": 0,
-        "passage_share": 0.025,
+        "passage_share": 0.0243902439,
         "enactment_share": 0.0,
         "speaker_name": "Mr. GOTTHEIMER",
         "party": "D",
@@ -7290,22 +7290,22 @@
         "member_url": "https://bioguide.congress.gov/search/bio/G000583",
         "examples": [
           {
+            "bill_id": "119-hr-10363",
+            "label": "HR 10363",
+            "title": "To prohibit discrimination in coffee shops, caf\u00e9s, tea houses, or other informal dining establishments on the ground of religion, race, color, sex, gender identity, sexual orientation, national origin, age, disability, genetic information, or veteran status, and for other purposes.",
+            "url": "https://www.congress.gov/bill/119th-congress/house-bill/10363"
+          },
+          {
+            "bill_id": "119-hr-10362",
+            "label": "HR 10362",
+            "title": "To provide for certain artificial intelligence agent discovery and security standards, and for other purposes.",
+            "url": "https://www.congress.gov/bill/119th-congress/house-bill/10362"
+          },
+          {
             "bill_id": "119-hr-10315",
             "label": "HR 10315",
             "title": "AI LABS Act",
             "url": "https://www.congress.gov/bill/119th-congress/house-bill/10315"
-          },
-          {
-            "bill_id": "119-hr-10314",
-            "label": "HR 10314",
-            "title": "To direct the Secretary of Education to conduct a study on the efforts of States, local educational agencies, and public elementary and secondary schools to educate students about the terrorist attacks of September 11, 2001, and for other purposes.",
-            "url": "https://www.congress.gov/bill/119th-congress/house-bill/10314"
-          },
-          {
-            "bill_id": "119-hr-10112",
-            "label": "HR 10112",
-            "title": "Empowering States to Protect Seniors from Bad Actors Act",
-            "url": "https://www.congress.gov/bill/119th-congress/house-bill/10112"
           }
         ]
       },
@@ -7495,9 +7495,9 @@
         "favorite_profanity_term": "",
         "favorite_profanity_term_hits": 0,
         "bills_sponsored": 38,
-        "bills_passed": 11,
+        "bills_passed": 12,
         "bills_enacted": 4,
-        "passage_share": 0.2894736842,
+        "passage_share": 0.3157894737,
         "enactment_share": 0.1052631579,
         "speaker_name": "Rep. Begich, Nicholas J. [R-AK-At Large]",
         "party": "R",
@@ -7513,16 +7513,16 @@
             "url": "https://www.congress.gov/bill/119th-congress/house-bill/6427"
           },
           {
+            "bill_id": "119-hr-6021",
+            "label": "HR 6021",
+            "title": "Archie Cavanaugh Migratory Bird Treaty Clarification Act",
+            "url": "https://www.congress.gov/bill/119th-congress/house-bill/6021"
+          },
+          {
             "bill_id": "119-hr-5131",
             "label": "HR 5131",
             "title": "Public Lands Military Readiness Act of 2025",
             "url": "https://www.congress.gov/bill/119th-congress/house-bill/5131"
-          },
-          {
-            "bill_id": "119-hr-3903",
-            "label": "HR 3903",
-            "title": "Chugach Alaska Land Exchange Oil Spill Recovery Act of 2025",
-            "url": "https://www.congress.gov/bill/119th-congress/house-bill/3903"
           }
         ]
       },
@@ -8130,6 +8130,49 @@
       },
       {
         "rank": 18,
+        "bioguide": "K000403",
+        "turns": 62,
+        "words": 20847,
+        "active_days": 50,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "profanity_terms": "{}",
+        "favorite_profanity_term": "",
+        "favorite_profanity_term_hits": 0,
+        "bills_sponsored": 34,
+        "bills_passed": 6,
+        "bills_enacted": 0,
+        "passage_share": 0.1764705882,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. KENNEDY of Utah",
+        "party": "R",
+        "state": "UT",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/K000403",
+        "examples": [
+          {
+            "bill_id": "119-hr-8658",
+            "label": "HR 8658",
+            "title": "Indian Health Service Emergency Claims Parity Act",
+            "url": "https://www.congress.gov/bill/119th-congress/house-bill/8658"
+          },
+          {
+            "bill_id": "119-hr-7831",
+            "label": "HR 7831",
+            "title": "License to Drill Act",
+            "url": "https://www.congress.gov/bill/119th-congress/house-bill/7831"
+          },
+          {
+            "bill_id": "119-hr-4684",
+            "label": "HR 4684",
+            "title": "Star-Spangled Summit Act of 2026",
+            "url": "https://www.congress.gov/bill/119th-congress/house-bill/4684"
+          }
+        ]
+      },
+      {
+        "rank": 19,
         "bioguide": "V000129",
         "turns": 18,
         "words": 3645,
@@ -8172,7 +8215,7 @@
         ]
       },
       {
-        "rank": 19,
+        "rank": 20,
         "bioguide": "H001100",
         "turns": 46,
         "words": 8210,
@@ -8215,7 +8258,7 @@
         ]
       },
       {
-        "rank": 20,
+        "rank": 21,
         "bioguide": "S001212",
         "turns": 113,
         "words": 28716,
@@ -8258,7 +8301,7 @@
         ]
       },
       {
-        "rank": 21,
+        "rank": 22,
         "bioguide": "E000300",
         "turns": 25,
         "words": 9079,
@@ -8301,7 +8344,7 @@
         ]
       },
       {
-        "rank": 22,
+        "rank": 23,
         "bioguide": "L000566",
         "turns": 123,
         "words": 13969,
@@ -8344,7 +8387,7 @@
         ]
       },
       {
-        "rank": 23,
+        "rank": 24,
         "bioguide": "C001113",
         "turns": 87,
         "words": 45439,
@@ -8387,7 +8430,7 @@
         ]
       },
       {
-        "rank": 24,
+        "rank": 25,
         "bioguide": "M000934",
         "turns": 193,
         "words": 54416,
@@ -8426,49 +8469,6 @@
             "label": "S 2392",
             "title": "Veterans\u2019 Compensation Cost-of-Living Adjustment Act of 2025",
             "url": "https://www.congress.gov/bill/119th-congress/senate-bill/2392"
-          }
-        ]
-      },
-      {
-        "rank": 25,
-        "bioguide": "M001153",
-        "turns": 114,
-        "words": 51034,
-        "active_days": 35,
-        "profanity_hits": 0,
-        "profanity_quoted_hits": 0,
-        "profanity_terms": "{}",
-        "favorite_profanity_term": "",
-        "favorite_profanity_term_hits": 0,
-        "bills_sponsored": 49,
-        "bills_passed": 5,
-        "bills_enacted": 0,
-        "passage_share": 0.1020408163,
-        "enactment_share": 0.0,
-        "speaker_name": "Ms. MURKOWSKI",
-        "party": "R",
-        "state": "AK",
-        "chamber": "senate",
-        "profanity_per_100k": 0.0,
-        "member_url": "https://bioguide.congress.gov/search/bio/M001153",
-        "examples": [
-          {
-            "bill_id": "119-s-4822",
-            "label": "S 4822",
-            "title": "Saving the OOI Act of 2026",
-            "url": "https://www.congress.gov/bill/119th-congress/senate-bill/4822"
-          },
-          {
-            "bill_id": "119-s-4472",
-            "label": "S 4472",
-            "title": "Accelerating Access to Critical Therapies for ALS Reauthorization Act of 2026",
-            "url": "https://www.congress.gov/bill/119th-congress/senate-bill/4472"
-          },
-          {
-            "bill_id": "119-s-1626",
-            "label": "S 1626",
-            "title": "National Landslide Preparedness Act Reauthorization Act of 2025",
-            "url": "https://www.congress.gov/bill/119th-congress/senate-bill/1626"
           }
         ]
       }
@@ -8529,9 +8529,9 @@
         "favorite_profanity_term": "",
         "favorite_profanity_term_hits": 0,
         "bills_sponsored": 38,
-        "bills_passed": 11,
+        "bills_passed": 12,
         "bills_enacted": 4,
-        "passage_share": 0.2894736842,
+        "passage_share": 0.3157894737,
         "enactment_share": 0.1052631579,
         "speaker_name": "Rep. Begich, Nicholas J. [R-AK-At Large]",
         "party": "R",
