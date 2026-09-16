@@ -1,7 +1,7 @@
 {
   "congress": null,
   "label": "Last 5 Congresses (115\u2013119)",
-  "generated_utc": "2026-09-15T20:16:00+00:00",
+  "generated_utc": "2026-09-16T12:25:00+00:00",
   "min_words": 25000,
   "top": 25,
   "coverage": {
@@ -9,7 +9,7 @@
     "speech_last_date": "2026-09-14",
     "speaker_days": 124010,
     "members_with_speech": 896,
-    "bills": 72374,
+    "bills": 72411,
     "members_with_bills": 909,
     "bill_sources": [
       "govinfo"
@@ -7927,11 +7927,11 @@
         "profanity_terms": "{\"ass\":1,\"crap\":179,\"crappy\":57,\"dammit\":7,\"damn\":82,\"damned\":6,\"fricking\":1,\"go to hell\":1,\"goddammit\":1,\"half-assed\":1,\"hell of a\":39,\"piss off\":1,\"pissed off\":3,\"pisses off\":1,\"screw you\":5,\"what the hell\":26}",
         "favorite_profanity_term": "crap",
         "favorite_profanity_term_hits": 236,
-        "bills_sponsored": 102,
+        "bills_sponsored": 103,
         "bills_passed": 4,
         "bills_enacted": 2,
-        "passage_share": 0.0392156863,
-        "enactment_share": 0.0196078431,
+        "passage_share": 0.0388349515,
+        "enactment_share": 0.0194174757,
         "speaker_name": "Mr. SCHWEIKERT",
         "party": "R",
         "state": "AZ",
@@ -8088,11 +8088,11 @@
         "profanity_terms": "{\"damned\":4,\"hell of a\":6}",
         "favorite_profanity_term": "hell",
         "favorite_profanity_term_hits": 6,
-        "bills_sponsored": 385,
+        "bills_sponsored": 386,
         "bills_passed": 4,
         "bills_enacted": 1,
-        "passage_share": 0.0103896104,
-        "enactment_share": 0.0025974026,
+        "passage_share": 0.0103626943,
+        "enactment_share": 0.0025906736,
         "speaker_name": "Mr. WYDEN",
         "party": "D",
         "state": "OR",
@@ -8664,11 +8664,11 @@
         "profanity_terms": "{\"damned\":1}",
         "favorite_profanity_term": "damn",
         "favorite_profanity_term_hits": 1,
-        "bills_sponsored": 457,
+        "bills_sponsored": 458,
         "bills_passed": 17,
         "bills_enacted": 2,
-        "passage_share": 0.0371991247,
-        "enactment_share": 0.0043763676,
+        "passage_share": 0.0371179039,
+        "enactment_share": 0.0043668122,
         "speaker_name": "Ms. NORTON",
         "party": "D",
         "state": "DC",
@@ -8676,6 +8676,12 @@
         "profanity_per_100k": 0.5923117929,
         "member_url": "https://bioguide.congress.gov/search/bio/N000147",
         "examples": [
+          {
+            "bill_id": "119-hr-10396",
+            "label": "HR 10396",
+            "title": "To prohibit the use of Federal funds to install new permanent fencing around the United States Capitol, any of the Capitol Buildings, or any portion of the Capitol Grounds.",
+            "url": "https://www.congress.gov/bill/119th-congress/house-bill/10396"
+          },
           {
             "bill_id": "119-hr-10172",
             "label": "HR 10172",
@@ -8687,12 +8693,6 @@
             "label": "HR 10062",
             "title": "Promoting National Service and Reducing Unemployment Act",
             "url": "https://www.congress.gov/bill/119th-congress/house-bill/10062"
-          },
-          {
-            "bill_id": "119-hr-10035",
-            "label": "HR 10035",
-            "title": "Protecting Independent Contractors from Discrimination Act of 2026",
-            "url": "https://www.congress.gov/bill/119th-congress/house-bill/10035"
           }
         ]
       },
@@ -8922,11 +8922,11 @@
         "profanity_terms": "{}",
         "favorite_profanity_term": "",
         "favorite_profanity_term_hits": 0,
-        "bills_sponsored": 412,
+        "bills_sponsored": 413,
         "bills_passed": 19,
         "bills_enacted": 6,
-        "passage_share": 0.0461165049,
-        "enactment_share": 0.0145631068,
+        "passage_share": 0.0460048426,
+        "enactment_share": 0.014527845,
         "speaker_name": "Ms. CORTEZ MASTO",
         "party": "D",
         "state": "NV",
@@ -8934,6 +8934,12 @@
         "profanity_per_100k": 0.0,
         "member_url": "https://bioguide.congress.gov/search/bio/C001113",
         "examples": [
+          {
+            "bill_id": "119-s-5395",
+            "label": "S 5395",
+            "title": "A bill to amend the Internal Revenue Code of 1986 to exclude from gross income any compensatory damages with respect to sexual assault claims, and for other purposes.",
+            "url": "https://www.congress.gov/bill/119th-congress/senate-bill/5395"
+          },
           {
             "bill_id": "119-s-5329",
             "label": "S 5329",
@@ -8945,12 +8951,6 @@
             "label": "S 5328",
             "title": "Empowering States to Serve Veterans Act",
             "url": "https://www.congress.gov/bill/119th-congress/senate-bill/5328"
-          },
-          {
-            "bill_id": "119-s-5327",
-            "label": "S 5327",
-            "title": "Constructing the Path to Suicide Prevention Act",
-            "url": "https://www.congress.gov/bill/119th-congress/senate-bill/5327"
           }
         ]
       },
@@ -8965,11 +8965,11 @@
         "profanity_terms": "{\"damned\":4,\"hell of a\":6}",
         "favorite_profanity_term": "hell",
         "favorite_profanity_term_hits": 6,
-        "bills_sponsored": 385,
+        "bills_sponsored": 386,
         "bills_passed": 4,
         "bills_enacted": 1,
-        "passage_share": 0.0103896104,
-        "enactment_share": 0.0025974026,
+        "passage_share": 0.0103626943,
+        "enactment_share": 0.0025906736,
         "speaker_name": "Mr. WYDEN",
         "party": "D",
         "state": "OR",
@@ -8977,6 +8977,12 @@
         "profanity_per_100k": 1.4613559045,
         "member_url": "https://bioguide.congress.gov/search/bio/W000779",
         "examples": [
+          {
+            "bill_id": "119-s-5402",
+            "label": "S 5402",
+            "title": "A bill to extend authorizations for aquatic ecosystem restoration projects, multi-benefit watershed health projects, and WaterSMART grants, and for other purposes.",
+            "url": "https://www.congress.gov/bill/119th-congress/senate-bill/5402"
+          },
           {
             "bill_id": "119-s-5275",
             "label": "S 5275",
@@ -8988,12 +8994,6 @@
             "label": "S 5081",
             "title": "Congressional Trade Powers Reform Act of 2026",
             "url": "https://www.congress.gov/bill/119th-congress/senate-bill/5081"
-          },
-          {
-            "bill_id": "119-s-5040",
-            "label": "S 5040",
-            "title": "A bill to amend the Internal Revenue Code of 1986 to impose limitations on high-income taxpayers with large retirement account balances.",
-            "url": "https://www.congress.gov/bill/119th-congress/senate-bill/5040"
           }
         ]
       },
@@ -9180,11 +9180,11 @@
         "profanity_terms": "{\"pissed off\":1}",
         "favorite_profanity_term": "piss off",
         "favorite_profanity_term_hits": 1,
-        "bills_sponsored": 334,
+        "bills_sponsored": 335,
         "bills_passed": 7,
         "bills_enacted": 3,
-        "passage_share": 0.0209580838,
-        "enactment_share": 0.0089820359,
+        "passage_share": 0.0208955224,
+        "enactment_share": 0.0089552239,
         "speaker_name": "Mrs. GILLIBRAND",
         "party": "D",
         "state": "NY",
@@ -9192,6 +9192,12 @@
         "profanity_per_100k": 0.9706381946,
         "member_url": "https://bioguide.congress.gov/search/bio/G000555",
         "examples": [
+          {
+            "bill_id": "119-s-5397",
+            "label": "S 5397",
+            "title": "A bill to repeal section 338 of the Tariff Act of 1930.",
+            "url": "https://www.congress.gov/bill/119th-congress/senate-bill/5397"
+          },
           {
             "bill_id": "119-s-5394",
             "label": "S 5394",
@@ -9203,12 +9209,6 @@
             "label": "S 5393",
             "title": "A bill to amend the Fair Labor Standards Act of 1938 to prohibit employers from paying employees in the garment industry by piece rate, to require manufacturers and contractors in the garment industry to register with the Department of Labor, and for other purposes.",
             "url": "https://www.congress.gov/bill/119th-congress/senate-bill/5393"
-          },
-          {
-            "bill_id": "119-s-5386",
-            "label": "S 5386",
-            "title": "A bill to amend the Fair Labor Standards Act of 1938 to provide for increased criminal and civil penalties for wage theft, and for other purposes.",
-            "url": "https://www.congress.gov/bill/119th-congress/senate-bill/5386"
           }
         ]
       },
@@ -10386,11 +10386,11 @@
         "profanity_terms": "{}",
         "favorite_profanity_term": "",
         "favorite_profanity_term_hits": 0,
-        "bills_sponsored": 412,
+        "bills_sponsored": 413,
         "bills_passed": 19,
         "bills_enacted": 6,
-        "passage_share": 0.0461165049,
-        "enactment_share": 0.0145631068,
+        "passage_share": 0.0460048426,
+        "enactment_share": 0.014527845,
         "speaker_name": "Ms. CORTEZ MASTO",
         "party": "D",
         "state": "NV",
@@ -11551,11 +11551,11 @@
         "profanity_terms": "{\"ass\":1,\"crap\":179,\"crappy\":57,\"dammit\":7,\"damn\":82,\"damned\":6,\"fricking\":1,\"go to hell\":1,\"goddammit\":1,\"half-assed\":1,\"hell of a\":39,\"piss off\":1,\"pissed off\":3,\"pisses off\":1,\"screw you\":5,\"what the hell\":26}",
         "favorite_profanity_term": "crap",
         "favorite_profanity_term_hits": 236,
-        "bills_sponsored": 102,
+        "bills_sponsored": 103,
         "bills_passed": 4,
         "bills_enacted": 2,
-        "passage_share": 0.0392156863,
-        "enactment_share": 0.0196078431,
+        "passage_share": 0.0388349515,
+        "enactment_share": 0.0194174757,
         "speaker_name": "Mr. SCHWEIKERT",
         "party": "R",
         "state": "AZ",
@@ -11827,11 +11827,11 @@
         "profanity_terms": "{\"crap\":1,\"dammit\":1,\"damn\":12,\"damned\":4,\"hell of a\":2,\"pissed off\":5,\"what the hell\":12}",
         "favorite_profanity_term": "damn",
         "favorite_profanity_term_hits": 17,
-        "bills_sponsored": 283,
+        "bills_sponsored": 284,
         "bills_passed": 14,
         "bills_enacted": 4,
-        "passage_share": 0.0494699647,
-        "enactment_share": 0.0141342756,
+        "passage_share": 0.0492957746,
+        "enactment_share": 0.014084507,
         "speaker_name": "Mr. SCHATZ",
         "party": "D",
         "state": "HI",
@@ -12034,11 +12034,11 @@
         "profanity_terms": "{\"crap\":2,\"damn\":3}",
         "favorite_profanity_term": "damn",
         "favorite_profanity_term_hits": 3,
-        "bills_sponsored": 171,
+        "bills_sponsored": 172,
         "bills_passed": 13,
         "bills_enacted": 1,
-        "passage_share": 0.0760233918,
-        "enactment_share": 0.0058479532,
+        "passage_share": 0.0755813953,
+        "enactment_share": 0.0058139535,
         "speaker_name": "Mr. LAWLER",
         "party": "R",
         "state": "NY",

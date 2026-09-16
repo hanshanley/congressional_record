@@ -1,7 +1,7 @@
 {
   "congress": 119,
   "label": "Congress 119",
-  "generated_utc": "2026-09-15T20:16:00+00:00",
+  "generated_utc": "2026-09-16T12:25:00+00:00",
   "min_words": 25000,
   "top": 25,
   "coverage": {
@@ -9,7 +9,7 @@
     "speech_last_date": "2026-09-14",
     "speaker_days": 20039,
     "members_with_speech": 541,
-    "bills": 15748,
+    "bills": 15785,
     "members_with_bills": 546,
     "bill_sources": [
       "govinfo"
@@ -5919,10 +5919,10 @@
         "profanity_terms": "{\"crap\":81,\"crappy\":4,\"damn\":23,\"damned\":4,\"fricking\":1,\"hell of a\":10,\"piss off\":1,\"pissed off\":1,\"pisses off\":1,\"screw you\":1,\"what the hell\":14}",
         "favorite_profanity_term": "crap",
         "favorite_profanity_term_hits": 85,
-        "bills_sponsored": 32,
+        "bills_sponsored": 33,
         "bills_passed": 1,
         "bills_enacted": 0,
-        "passage_share": 0.03125,
+        "passage_share": 0.0303030303,
         "enactment_share": 0.0,
         "speaker_name": "Mr. SCHWEIKERT",
         "party": "R",
@@ -6195,7 +6195,7 @@
         "profanity_terms": "{\"crap\":2,\"damn\":7,\"what the hell\":2}",
         "favorite_profanity_term": "damn",
         "favorite_profanity_term_hits": 7,
-        "bills_sponsored": 57,
+        "bills_sponsored": 59,
         "bills_passed": 0,
         "bills_enacted": 0,
         "passage_share": 0.0,
@@ -6616,10 +6616,10 @@
         "profanity_terms": "{\"crap\":1,\"damn\":2}",
         "favorite_profanity_term": "damn",
         "favorite_profanity_term_hits": 2,
-        "bills_sponsored": 113,
+        "bills_sponsored": 114,
         "bills_passed": 6,
         "bills_enacted": 0,
-        "passage_share": 0.0530973451,
+        "passage_share": 0.0526315789,
         "enactment_share": 0.0,
         "speaker_name": "Mr. LAWLER",
         "party": "R",
@@ -6628,6 +6628,12 @@
         "profanity_per_100k": 13.1475151196,
         "member_url": "https://bioguide.congress.gov/search/bio/L000599",
         "examples": [
+          {
+            "bill_id": "119-hr-10379",
+            "label": "HR 10379",
+            "title": "To establish certain requirements with respect to congressional districts in each State, and for other purposes.",
+            "url": "https://www.congress.gov/bill/119th-congress/house-bill/10379"
+          },
           {
             "bill_id": "119-hr-10165",
             "label": "HR 10165",
@@ -6639,12 +6645,6 @@
             "label": "HR 10096",
             "title": "Task Force on the Impact of the Affordable Housing Crisis Act of 2026",
             "url": "https://www.congress.gov/bill/119th-congress/house-bill/10096"
-          },
-          {
-            "bill_id": "119-hr-10053",
-            "label": "HR 10053",
-            "title": "Public Service Homeownership Assistance Act",
-            "url": "https://www.congress.gov/bill/119th-congress/house-bill/10053"
           }
         ]
       },
@@ -6659,10 +6659,10 @@
         "profanity_terms": "{}",
         "favorite_profanity_term": "",
         "favorite_profanity_term_hits": 0,
-        "bills_sponsored": 107,
+        "bills_sponsored": 108,
         "bills_passed": 5,
         "bills_enacted": 0,
-        "passage_share": 0.046728972,
+        "passage_share": 0.0462962963,
         "enactment_share": 0.0,
         "speaker_name": "Ms. CORTEZ MASTO",
         "party": "D",
@@ -6671,6 +6671,12 @@
         "profanity_per_100k": 0.0,
         "member_url": "https://bioguide.congress.gov/search/bio/C001113",
         "examples": [
+          {
+            "bill_id": "119-s-5395",
+            "label": "S 5395",
+            "title": "A bill to amend the Internal Revenue Code of 1986 to exclude from gross income any compensatory damages with respect to sexual assault claims, and for other purposes.",
+            "url": "https://www.congress.gov/bill/119th-congress/senate-bill/5395"
+          },
           {
             "bill_id": "119-s-5329",
             "label": "S 5329",
@@ -6682,12 +6688,6 @@
             "label": "S 5328",
             "title": "Empowering States to Serve Veterans Act",
             "url": "https://www.congress.gov/bill/119th-congress/senate-bill/5328"
-          },
-          {
-            "bill_id": "119-s-5327",
-            "label": "S 5327",
-            "title": "Constructing the Path to Suicide Prevention Act",
-            "url": "https://www.congress.gov/bill/119th-congress/senate-bill/5327"
           }
         ]
       },
@@ -6703,9 +6703,9 @@
         "favorite_profanity_term": "",
         "favorite_profanity_term_hits": 0,
         "bills_sponsored": 104,
-        "bills_passed": 3,
+        "bills_passed": 4,
         "bills_enacted": 0,
-        "passage_share": 0.0288461538,
+        "passage_share": 0.0384615385,
         "enactment_share": 0.0,
         "speaker_name": "Mr. STEUBE",
         "party": "R",
@@ -7046,10 +7046,10 @@
         "profanity_terms": "{\"damned\":1}",
         "favorite_profanity_term": "damn",
         "favorite_profanity_term_hits": 1,
-        "bills_sponsored": 94,
+        "bills_sponsored": 95,
         "bills_passed": 1,
         "bills_enacted": 0,
-        "passage_share": 0.0106382979,
+        "passage_share": 0.0105263158,
         "enactment_share": 0.0,
         "speaker_name": "Ms. NORTON",
         "party": "D",
@@ -7058,6 +7058,12 @@
         "profanity_per_100k": 2.6822595354,
         "member_url": "https://bioguide.congress.gov/search/bio/N000147",
         "examples": [
+          {
+            "bill_id": "119-hr-10396",
+            "label": "HR 10396",
+            "title": "To prohibit the use of Federal funds to install new permanent fencing around the United States Capitol, any of the Capitol Buildings, or any portion of the Capitol Grounds.",
+            "url": "https://www.congress.gov/bill/119th-congress/house-bill/10396"
+          },
           {
             "bill_id": "119-hr-10172",
             "label": "HR 10172",
@@ -7069,12 +7075,6 @@
             "label": "HR 10062",
             "title": "Promoting National Service and Reducing Unemployment Act",
             "url": "https://www.congress.gov/bill/119th-congress/house-bill/10062"
-          },
-          {
-            "bill_id": "119-hr-10035",
-            "label": "HR 10035",
-            "title": "Protecting Independent Contractors from Discrimination Act of 2026",
-            "url": "https://www.congress.gov/bill/119th-congress/house-bill/10035"
           }
         ]
       },
@@ -7555,6 +7555,49 @@
       },
       {
         "rank": 4,
+        "bioguide": "P000048",
+        "turns": 25,
+        "words": 9738,
+        "active_days": 18,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "profanity_terms": "{}",
+        "favorite_profanity_term": "",
+        "favorite_profanity_term_hits": 0,
+        "bills_sponsored": 55,
+        "bills_passed": 11,
+        "bills_enacted": 0,
+        "passage_share": 0.2,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. PFLUGER",
+        "party": "R",
+        "state": "TX",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/P000048",
+        "examples": [
+          {
+            "bill_id": "119-hr-9616",
+            "label": "HR 9616",
+            "title": "EMRTAI Authorization Act of 2026",
+            "url": "https://www.congress.gov/bill/119th-congress/house-bill/9616"
+          },
+          {
+            "bill_id": "119-hr-7084",
+            "label": "HR 7084",
+            "title": "Defending American Property Abroad Act of 2026",
+            "url": "https://www.congress.gov/bill/119th-congress/house-bill/7084"
+          },
+          {
+            "bill_id": "119-hr-7022",
+            "label": "HR 7022",
+            "title": "Mystic Alerts Act",
+            "url": "https://www.congress.gov/bill/119th-congress/house-bill/7022"
+          }
+        ]
+      },
+      {
+        "rank": 5,
         "bioguide": "C001098",
         "turns": 92,
         "words": 28953,
@@ -7593,49 +7636,6 @@
             "label": "S 2503",
             "title": "ROTOR Act",
             "url": "https://www.congress.gov/bill/119th-congress/senate-bill/2503"
-          }
-        ]
-      },
-      {
-        "rank": 5,
-        "bioguide": "P000048",
-        "turns": 25,
-        "words": 9738,
-        "active_days": 18,
-        "profanity_hits": 0,
-        "profanity_quoted_hits": 0,
-        "profanity_terms": "{}",
-        "favorite_profanity_term": "",
-        "favorite_profanity_term_hits": 0,
-        "bills_sponsored": 55,
-        "bills_passed": 10,
-        "bills_enacted": 0,
-        "passage_share": 0.1818181818,
-        "enactment_share": 0.0,
-        "speaker_name": "Mr. PFLUGER",
-        "party": "R",
-        "state": "TX",
-        "chamber": "house",
-        "profanity_per_100k": 0.0,
-        "member_url": "https://bioguide.congress.gov/search/bio/P000048",
-        "examples": [
-          {
-            "bill_id": "119-hr-7084",
-            "label": "HR 7084",
-            "title": "Defending American Property Abroad Act of 2026",
-            "url": "https://www.congress.gov/bill/119th-congress/house-bill/7084"
-          },
-          {
-            "bill_id": "119-hr-7022",
-            "label": "HR 7022",
-            "title": "Mystic Alerts Act",
-            "url": "https://www.congress.gov/bill/119th-congress/house-bill/7022"
-          },
-          {
-            "bill_id": "119-hr-6409",
-            "label": "HR 6409",
-            "title": "FENCES Act",
-            "url": "https://www.congress.gov/bill/119th-congress/house-bill/6409"
           }
         ]
       },
@@ -7770,6 +7770,49 @@
       },
       {
         "rank": 9,
+        "bioguide": "M001215",
+        "turns": 103,
+        "words": 19617,
+        "active_days": 44,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "profanity_terms": "{}",
+        "favorite_profanity_term": "",
+        "favorite_profanity_term_hits": 0,
+        "bills_sponsored": 50,
+        "bills_passed": 8,
+        "bills_enacted": 0,
+        "passage_share": 0.16,
+        "enactment_share": 0.0,
+        "speaker_name": "Mrs. MILLER-MEEKS",
+        "party": "R",
+        "state": "IA",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/M001215",
+        "examples": [
+          {
+            "bill_id": "119-hr-9615",
+            "label": "HR 9615",
+            "title": "BRACE Act",
+            "url": "https://www.congress.gov/bill/119th-congress/house-bill/9615"
+          },
+          {
+            "bill_id": "119-hr-7266",
+            "label": "HR 7266",
+            "title": "Rural and Municipal Utility Cybersecurity Act",
+            "url": "https://www.congress.gov/bill/119th-congress/house-bill/7266"
+          },
+          {
+            "bill_id": "119-hr-6703",
+            "label": "HR 6703",
+            "title": "Lower Health Care Premiums for All Americans Act",
+            "url": "https://www.congress.gov/bill/119th-congress/house-bill/6703"
+          }
+        ]
+      },
+      {
+        "rank": 10,
         "bioguide": "W000816",
         "turns": 269,
         "words": 20695,
@@ -7812,7 +7855,7 @@
         ]
       },
       {
-        "rank": 10,
+        "rank": 11,
         "bioguide": "W000812",
         "turns": 90,
         "words": 11269,
@@ -7855,7 +7898,7 @@
         ]
       },
       {
-        "rank": 11,
+        "rank": 12,
         "bioguide": "C001053",
         "turns": 178,
         "words": 27471,
@@ -7898,7 +7941,7 @@
         ]
       },
       {
-        "rank": 12,
+        "rank": 13,
         "bioguide": "S001198",
         "turns": 112,
         "words": 48950,
@@ -7937,49 +7980,6 @@
             "label": "S 423",
             "title": "PRO Veterans Act of 2025",
             "url": "https://www.congress.gov/bill/119th-congress/senate-bill/423"
-          }
-        ]
-      },
-      {
-        "rank": 13,
-        "bioguide": "M001215",
-        "turns": 103,
-        "words": 19617,
-        "active_days": 44,
-        "profanity_hits": 0,
-        "profanity_quoted_hits": 0,
-        "profanity_terms": "{}",
-        "favorite_profanity_term": "",
-        "favorite_profanity_term_hits": 0,
-        "bills_sponsored": 50,
-        "bills_passed": 7,
-        "bills_enacted": 0,
-        "passage_share": 0.14,
-        "enactment_share": 0.0,
-        "speaker_name": "Mrs. MILLER-MEEKS",
-        "party": "R",
-        "state": "IA",
-        "chamber": "house",
-        "profanity_per_100k": 0.0,
-        "member_url": "https://bioguide.congress.gov/search/bio/M001215",
-        "examples": [
-          {
-            "bill_id": "119-hr-7266",
-            "label": "HR 7266",
-            "title": "Rural and Municipal Utility Cybersecurity Act",
-            "url": "https://www.congress.gov/bill/119th-congress/house-bill/7266"
-          },
-          {
-            "bill_id": "119-hr-6703",
-            "label": "HR 6703",
-            "title": "Lower Health Care Premiums for All Americans Act",
-            "url": "https://www.congress.gov/bill/119th-congress/house-bill/6703"
-          },
-          {
-            "bill_id": "119-hr-4707",
-            "label": "HR 4707",
-            "title": "To designate the facility of the United States Postal Service located at 1019 Avenue H in Fort Madison, Iowa, as the Martin L. Graber Post Office.",
-            "url": "https://www.congress.gov/bill/119th-congress/house-bill/4707"
           }
         ]
       },
@@ -8028,6 +8028,49 @@
       },
       {
         "rank": 15,
+        "bioguide": "E000300",
+        "turns": 25,
+        "words": 9079,
+        "active_days": 17,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "profanity_terms": "{}",
+        "favorite_profanity_term": "",
+        "favorite_profanity_term_hits": 0,
+        "bills_sponsored": 20,
+        "bills_passed": 7,
+        "bills_enacted": 0,
+        "passage_share": 0.35,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. EVANS of Colorado",
+        "party": "R",
+        "state": "CO",
+        "chamber": "house",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/E000300",
+        "examples": [
+          {
+            "bill_id": "119-hr-8005",
+            "label": "HR 8005",
+            "title": "Stop Pills That Kill Act",
+            "url": "https://www.congress.gov/bill/119th-congress/house-bill/8005"
+          },
+          {
+            "bill_id": "119-hr-7574",
+            "label": "HR 7574",
+            "title": "ELO Realignment and Strategic Engagement Reform Act of 2026",
+            "url": "https://www.congress.gov/bill/119th-congress/house-bill/7574"
+          },
+          {
+            "bill_id": "119-hr-6387",
+            "label": "HR 6387",
+            "title": "FIRE Act",
+            "url": "https://www.congress.gov/bill/119th-congress/house-bill/6387"
+          }
+        ]
+      },
+      {
+        "rank": 16,
         "bioguide": "L000599",
         "turns": 116,
         "words": 22818,
@@ -8037,10 +8080,10 @@
         "profanity_terms": "{\"crap\":1,\"damn\":2}",
         "favorite_profanity_term": "damn",
         "favorite_profanity_term_hits": 2,
-        "bills_sponsored": 113,
+        "bills_sponsored": 114,
         "bills_passed": 6,
         "bills_enacted": 0,
-        "passage_share": 0.0530973451,
+        "passage_share": 0.0526315789,
         "enactment_share": 0.0,
         "speaker_name": "Mr. LAWLER",
         "party": "R",
@@ -8070,7 +8113,7 @@
         ]
       },
       {
-        "rank": 16,
+        "rank": 17,
         "bioguide": "E000295",
         "turns": 219,
         "words": 70077,
@@ -8113,7 +8156,7 @@
         ]
       },
       {
-        "rank": 17,
+        "rank": 18,
         "bioguide": "B001321",
         "turns": 41,
         "words": 6673,
@@ -8156,7 +8199,7 @@
         ]
       },
       {
-        "rank": 18,
+        "rank": 19,
         "bioguide": "K000403",
         "turns": 64,
         "words": 21819,
@@ -8199,7 +8242,7 @@
         ]
       },
       {
-        "rank": 19,
+        "rank": 20,
         "bioguide": "V000129",
         "turns": 18,
         "words": 3645,
@@ -8242,7 +8285,7 @@
         ]
       },
       {
-        "rank": 20,
+        "rank": 21,
         "bioguide": "H001100",
         "turns": 46,
         "words": 8210,
@@ -8285,7 +8328,7 @@
         ]
       },
       {
-        "rank": 21,
+        "rank": 22,
         "bioguide": "S001212",
         "turns": 113,
         "words": 28716,
@@ -8328,11 +8371,11 @@
         ]
       },
       {
-        "rank": 22,
-        "bioguide": "E000300",
-        "turns": 25,
-        "words": 9079,
-        "active_days": 17,
+        "rank": 23,
+        "bioguide": "B001306",
+        "turns": 18,
+        "words": 4016,
+        "active_days": 16,
         "profanity_hits": 0,
         "profanity_quoted_hits": 0,
         "profanity_terms": "{}",
@@ -8343,35 +8386,35 @@
         "bills_enacted": 0,
         "passage_share": 0.3,
         "enactment_share": 0.0,
-        "speaker_name": "Mr. EVANS of Colorado",
+        "speaker_name": "Mr. BALDERSON",
         "party": "R",
-        "state": "CO",
+        "state": "OH",
         "chamber": "house",
         "profanity_per_100k": 0.0,
-        "member_url": "https://bioguide.congress.gov/search/bio/E000300",
+        "member_url": "https://bioguide.congress.gov/search/bio/B001306",
         "examples": [
           {
-            "bill_id": "119-hr-7574",
-            "label": "HR 7574",
-            "title": "ELO Realignment and Strategic Engagement Reform Act of 2026",
-            "url": "https://www.congress.gov/bill/119th-congress/house-bill/7574"
+            "bill_id": "119-hr-9332",
+            "label": "HR 9332",
+            "title": "Load Forecasting Enhancement Act",
+            "url": "https://www.congress.gov/bill/119th-congress/house-bill/9332"
           },
           {
-            "bill_id": "119-hr-6387",
-            "label": "HR 6387",
-            "title": "FIRE Act",
-            "url": "https://www.congress.gov/bill/119th-congress/house-bill/6387"
+            "bill_id": "119-hr-3747",
+            "label": "HR 3747",
+            "title": "Accelerating Access to Dementia and Alzheimer\u2019s Provider Training Act",
+            "url": "https://www.congress.gov/bill/119th-congress/house-bill/3747"
           },
           {
-            "bill_id": "119-hr-3628",
-            "label": "HR 3628",
-            "title": "State Planning for Reliability and Affordability Act",
-            "url": "https://www.congress.gov/bill/119th-congress/house-bill/3628"
+            "bill_id": "119-hr-3616",
+            "label": "HR 3616",
+            "title": "Reliable Power Act",
+            "url": "https://www.congress.gov/bill/119th-congress/house-bill/3616"
           }
         ]
       },
       {
-        "rank": 23,
+        "rank": 24,
         "bioguide": "L000566",
         "turns": 123,
         "words": 13969,
@@ -8414,7 +8457,7 @@
         ]
       },
       {
-        "rank": 24,
+        "rank": 25,
         "bioguide": "C001113",
         "turns": 87,
         "words": 45439,
@@ -8424,10 +8467,10 @@
         "profanity_terms": "{}",
         "favorite_profanity_term": "",
         "favorite_profanity_term_hits": 0,
-        "bills_sponsored": 107,
+        "bills_sponsored": 108,
         "bills_passed": 5,
         "bills_enacted": 0,
-        "passage_share": 0.046728972,
+        "passage_share": 0.0462962963,
         "enactment_share": 0.0,
         "speaker_name": "Ms. CORTEZ MASTO",
         "party": "D",
@@ -8453,49 +8496,6 @@
             "label": "S 546",
             "title": "Technical Correction to the Shoshone-Paiute Tribes of the Duck Valley Reservation Water Rights Settlement Act of 2025",
             "url": "https://www.congress.gov/bill/119th-congress/senate-bill/546"
-          }
-        ]
-      },
-      {
-        "rank": 25,
-        "bioguide": "M000934",
-        "turns": 193,
-        "words": 54416,
-        "active_days": 64,
-        "profanity_hits": 0,
-        "profanity_quoted_hits": 0,
-        "profanity_terms": "{}",
-        "favorite_profanity_term": "",
-        "favorite_profanity_term_hits": 0,
-        "bills_sponsored": 70,
-        "bills_passed": 5,
-        "bills_enacted": 2,
-        "passage_share": 0.0714285714,
-        "enactment_share": 0.0285714286,
-        "speaker_name": "Mr. MORAN",
-        "party": "R",
-        "state": "KS",
-        "chamber": "senate",
-        "profanity_per_100k": 0.0,
-        "member_url": "https://bioguide.congress.gov/search/bio/M000934",
-        "examples": [
-          {
-            "bill_id": "119-s-3436",
-            "label": "S 3436",
-            "title": "Caring for Veterans and Strengthening National Security Act",
-            "url": "https://www.congress.gov/bill/119th-congress/senate-bill/3436"
-          },
-          {
-            "bill_id": "119-s-2393",
-            "label": "S 2393",
-            "title": "Fiscal Year 2025 Veterans Affairs Major Medical Facility Authorization Act",
-            "url": "https://www.congress.gov/bill/119th-congress/senate-bill/2393"
-          },
-          {
-            "bill_id": "119-s-2392",
-            "label": "S 2392",
-            "title": "Veterans\u2019 Compensation Cost-of-Living Adjustment Act of 2025",
-            "url": "https://www.congress.gov/bill/119th-congress/senate-bill/2392"
           }
         ]
       }
@@ -9390,10 +9390,10 @@
         "profanity_terms": "{\"crap\":81,\"crappy\":4,\"damn\":23,\"damned\":4,\"fricking\":1,\"hell of a\":10,\"piss off\":1,\"pissed off\":1,\"pisses off\":1,\"screw you\":1,\"what the hell\":14}",
         "favorite_profanity_term": "crap",
         "favorite_profanity_term_hits": 85,
-        "bills_sponsored": 32,
+        "bills_sponsored": 33,
         "bills_passed": 1,
         "bills_enacted": 0,
-        "passage_share": 0.03125,
+        "passage_share": 0.0303030303,
         "enactment_share": 0.0,
         "speaker_name": "Mr. SCHWEIKERT",
         "party": "R",
@@ -9413,10 +9413,10 @@
         "profanity_terms": "{\"crap\":1,\"dammit\":1,\"damn\":12,\"damned\":3,\"pissed off\":5,\"what the hell\":11}",
         "favorite_profanity_term": "damn",
         "favorite_profanity_term_hits": 16,
-        "bills_sponsored": 42,
+        "bills_sponsored": 43,
         "bills_passed": 1,
         "bills_enacted": 0,
-        "passage_share": 0.0238095238,
+        "passage_share": 0.023255814,
         "enactment_share": 0.0,
         "speaker_name": "Mr. SCHATZ",
         "party": "D",
@@ -9712,7 +9712,7 @@
         "profanity_terms": "{\"crap\":2,\"damn\":7,\"what the hell\":2}",
         "favorite_profanity_term": "damn",
         "favorite_profanity_term_hits": 7,
-        "bills_sponsored": 57,
+        "bills_sponsored": 59,
         "bills_passed": 0,
         "bills_enacted": 0,
         "passage_share": 0.0,
