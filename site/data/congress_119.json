@@ -1,7 +1,7 @@
 {
   "congress": 119,
   "label": "Congress 119",
-  "generated_utc": "2026-09-18T12:16:00+00:00",
+  "generated_utc": "2026-09-18T20:31:00+00:00",
   "min_words": 25000,
   "top": 25,
   "coverage": {
@@ -9,7 +9,7 @@
     "speech_last_date": "2026-09-17",
     "speaker_days": 20190,
     "members_with_speech": 541,
-    "bills": 15906,
+    "bills": 15931,
     "members_with_bills": 547,
     "bill_sources": [
       "govinfo"
@@ -5862,10 +5862,10 @@
         "profanity_terms": "{\"badass\":1,\"bullshit\":1,\"damn\":14,\"damned\":1,\"hell of a\":3,\"shit\":1,\"what the hell\":5}",
         "favorite_profanity_term": "damn",
         "favorite_profanity_term_hits": 15,
-        "bills_sponsored": 98,
+        "bills_sponsored": 99,
         "bills_passed": 2,
         "bills_enacted": 0,
-        "passage_share": 0.0204081633,
+        "passage_share": 0.0202020202,
         "enactment_share": 0.0,
         "speaker_name": "Mr. MERKLEY",
         "party": "D",
@@ -5908,10 +5908,10 @@
         "profanity_terms": "{\"ass\":4,\"hell of a\":1,\"screw you\":1}",
         "favorite_profanity_term": "ass",
         "favorite_profanity_term_hits": 4,
-        "bills_sponsored": 89,
+        "bills_sponsored": 91,
         "bills_passed": 1,
         "bills_enacted": 0,
-        "passage_share": 0.0112359551,
+        "passage_share": 0.010989011,
         "enactment_share": 0.0,
         "speaker_name": "Mr. BOOKER",
         "party": "D",
@@ -6069,10 +6069,10 @@
         "profanity_terms": "{\"damned\":6}",
         "favorite_profanity_term": "damn",
         "favorite_profanity_term_hits": 6,
-        "bills_sponsored": 65,
+        "bills_sponsored": 66,
         "bills_passed": 1,
         "bills_enacted": 0,
-        "passage_share": 0.0153846154,
+        "passage_share": 0.0151515152,
         "enactment_share": 0.0,
         "speaker_name": "Mr. WELCH",
         "party": "D",
@@ -6092,10 +6092,10 @@
         "profanity_terms": "{\"damned\":1,\"go to hell\":1,\"hell of a\":1}",
         "favorite_profanity_term": "hell",
         "favorite_profanity_term_hits": 2,
-        "bills_sponsored": 95,
+        "bills_sponsored": 96,
         "bills_passed": 4,
         "bills_enacted": 0,
-        "passage_share": 0.0421052632,
+        "passage_share": 0.0416666667,
         "enactment_share": 0.0,
         "speaker_name": "Mr. PADILLA",
         "party": "D",
@@ -6138,7 +6138,7 @@
         "profanity_terms": "{\"what the hell\":1}",
         "favorite_profanity_term": "hell",
         "favorite_profanity_term_hits": 1,
-        "bills_sponsored": 35,
+        "bills_sponsored": 38,
         "bills_passed": 0,
         "bills_enacted": 0,
         "passage_share": 0.0,
@@ -6253,7 +6253,7 @@
         "profanity_terms": "{\"bastard\":1,\"bastards\":1,\"damn\":7,\"damned\":4,\"hell of a\":3,\"pissing off\":1}",
         "favorite_profanity_term": "damn",
         "favorite_profanity_term_hits": 11,
-        "bills_sponsored": 79,
+        "bills_sponsored": 82,
         "bills_passed": 0,
         "bills_enacted": 0,
         "passage_share": 0.0,
@@ -6276,11 +6276,11 @@
         "profanity_terms": "{\"ass\":1,\"damn\":6,\"damned\":2,\"hell of a\":2,\"piss off\":1,\"what the hell\":4}",
         "favorite_profanity_term": "damn",
         "favorite_profanity_term_hits": 8,
-        "bills_sponsored": 68,
+        "bills_sponsored": 69,
         "bills_passed": 3,
         "bills_enacted": 2,
-        "passage_share": 0.0441176471,
-        "enactment_share": 0.0294117647,
+        "passage_share": 0.0434782609,
+        "enactment_share": 0.0289855072,
         "speaker_name": "Mr. KENNEDY",
         "party": "R",
         "state": "LA",
@@ -6370,10 +6370,10 @@
         "profanity_terms": "{\"what the hell\":1}",
         "favorite_profanity_term": "hell",
         "favorite_profanity_term_hits": 1,
-        "bills_sponsored": 147,
+        "bills_sponsored": 149,
         "bills_passed": 1,
         "bills_enacted": 0,
-        "passage_share": 0.0068027211,
+        "passage_share": 0.0067114094,
         "enactment_share": 0.0,
         "speaker_name": "Mr. SCOTT of Florida",
         "party": "R",
@@ -6383,22 +6383,22 @@
         "member_url": "https://bioguide.congress.gov/search/bio/S001217",
         "examples": [
           {
+            "bill_id": "119-s-5442",
+            "label": "S 5442",
+            "title": "A bill to amend the Congressional Budget Act of 1974 to provide that any estimate prepared by the Congressional Budget Office or the Joint Committee on Taxation shall include costs relating to servicing the public debt, and for other purposes.",
+            "url": "https://www.congress.gov/bill/119th-congress/senate-bill/5442"
+          },
+          {
+            "bill_id": "119-s-5427",
+            "label": "S 5427",
+            "title": "A bill to require annual reports on the implementation of the strategic plan to counter illicit cross-border tunnel operations.",
+            "url": "https://www.congress.gov/bill/119th-congress/senate-bill/5427"
+          },
+          {
             "bill_id": "119-s-5377",
             "label": "S 5377",
             "title": "A bill to amend the Congressional Budget and Impoundment Control Act of 1974 to establish certain procedures for consideration of appropriation bills, and for other purposes.",
             "url": "https://www.congress.gov/bill/119th-congress/senate-bill/5377"
-          },
-          {
-            "bill_id": "119-s-5315",
-            "label": "S 5315",
-            "title": "Trade Deficit Elimination Act of 2026",
-            "url": "https://www.congress.gov/bill/119th-congress/senate-bill/5315"
-          },
-          {
-            "bill_id": "119-s-5230",
-            "label": "S 5230",
-            "title": "Make SWAPs Efficient Act of 2026",
-            "url": "https://www.congress.gov/bill/119th-congress/senate-bill/5230"
           }
         ]
       },
@@ -6458,9 +6458,9 @@
         "favorite_profanity_term_hits": 0,
         "bills_sponsored": 126,
         "bills_passed": 3,
-        "bills_enacted": 0,
+        "bills_enacted": 1,
         "passage_share": 0.0238095238,
-        "enactment_share": 0.0,
+        "enactment_share": 0.0079365079,
         "speaker_name": "Mrs. BLACKBURN",
         "party": "R",
         "state": "TN",
@@ -6587,9 +6587,9 @@
         "favorite_profanity_term_hits": 0,
         "bills_sponsored": 121,
         "bills_passed": 10,
-        "bills_enacted": 1,
+        "bills_enacted": 2,
         "passage_share": 0.0826446281,
-        "enactment_share": 0.0082644628,
+        "enactment_share": 0.0165289256,
         "speaker_name": "Mr. CRUZ",
         "party": "R",
         "state": "TX",
@@ -6791,6 +6791,49 @@
       },
       {
         "rank": 11,
+        "bioguide": "C001075",
+        "turns": 190,
+        "words": 78063,
+        "active_days": 71,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "profanity_terms": "{}",
+        "favorite_profanity_term": "",
+        "favorite_profanity_term_hits": 0,
+        "bills_sponsored": 103,
+        "bills_passed": 4,
+        "bills_enacted": 1,
+        "passage_share": 0.0388349515,
+        "enactment_share": 0.0097087379,
+        "speaker_name": "Mr. CASSIDY",
+        "party": "R",
+        "state": "LA",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/C001075",
+        "examples": [
+          {
+            "bill_id": "119-s-5421",
+            "label": "S 5421",
+            "title": "A bill to amend the Internal Revenue Code of 1986 to eliminate the State opt-in requirement for the qualified elementary and secondary education scholarship credit.",
+            "url": "https://www.congress.gov/bill/119th-congress/senate-bill/5421"
+          },
+          {
+            "bill_id": "119-s-5420",
+            "label": "S 5420",
+            "title": "A bill to amend the Internal Revenue Code of 1986 to increase the qualified elementary and secondary education scholarships credit limit for married taxpayers filing a joint return.",
+            "url": "https://www.congress.gov/bill/119th-congress/senate-bill/5420"
+          },
+          {
+            "bill_id": "119-s-5258",
+            "label": "S 5258",
+            "title": "PREFERRED Screening Act",
+            "url": "https://www.congress.gov/bill/119th-congress/senate-bill/5258"
+          }
+        ]
+      },
+      {
+        "rank": 12,
         "bioguide": "B001277",
         "turns": 181,
         "words": 125907,
@@ -6829,49 +6872,6 @@
             "label": "S 5311",
             "title": "Cabin Air Safety Act of 2026",
             "url": "https://www.congress.gov/bill/119th-congress/senate-bill/5311"
-          }
-        ]
-      },
-      {
-        "rank": 12,
-        "bioguide": "C001075",
-        "turns": 190,
-        "words": 78063,
-        "active_days": 71,
-        "profanity_hits": 0,
-        "profanity_quoted_hits": 0,
-        "profanity_terms": "{}",
-        "favorite_profanity_term": "",
-        "favorite_profanity_term_hits": 0,
-        "bills_sponsored": 101,
-        "bills_passed": 4,
-        "bills_enacted": 1,
-        "passage_share": 0.0396039604,
-        "enactment_share": 0.0099009901,
-        "speaker_name": "Mr. CASSIDY",
-        "party": "R",
-        "state": "LA",
-        "chamber": "senate",
-        "profanity_per_100k": 0.0,
-        "member_url": "https://bioguide.congress.gov/search/bio/C001075",
-        "examples": [
-          {
-            "bill_id": "119-s-5258",
-            "label": "S 5258",
-            "title": "PREFERRED Screening Act",
-            "url": "https://www.congress.gov/bill/119th-congress/senate-bill/5258"
-          },
-          {
-            "bill_id": "119-s-5062",
-            "label": "S 5062",
-            "title": "FAIR DME Appeals Act",
-            "url": "https://www.congress.gov/bill/119th-congress/senate-bill/5062"
-          },
-          {
-            "bill_id": "119-s-5038",
-            "label": "S 5038",
-            "title": "Special Education Administration Protection Act",
-            "url": "https://www.congress.gov/bill/119th-congress/senate-bill/5038"
           }
         ]
       },
@@ -6929,10 +6929,10 @@
         "profanity_terms": "{\"badass\":1,\"bullshit\":1,\"damn\":14,\"damned\":1,\"hell of a\":3,\"shit\":1,\"what the hell\":5}",
         "favorite_profanity_term": "damn",
         "favorite_profanity_term_hits": 15,
-        "bills_sponsored": 98,
+        "bills_sponsored": 99,
         "bills_passed": 2,
         "bills_enacted": 0,
-        "passage_share": 0.0204081633,
+        "passage_share": 0.0202020202,
         "enactment_share": 0.0,
         "speaker_name": "Mr. MERKLEY",
         "party": "D",
@@ -6941,6 +6941,12 @@
         "profanity_per_100k": 9.1285403815,
         "member_url": "https://bioguide.congress.gov/search/bio/M001176",
         "examples": [
+          {
+            "bill_id": "119-s-5440",
+            "label": "S 5440",
+            "title": "A bill to transfer certain Federal land into trust for the benefit of the Confederated Tribes of the Grand Ronde Community of Oregon, and for other purposes.",
+            "url": "https://www.congress.gov/bill/119th-congress/senate-bill/5440"
+          },
           {
             "bill_id": "119-s-5362",
             "label": "S 5362",
@@ -6952,17 +6958,54 @@
             "label": "S 5357",
             "title": "TABOO Act",
             "url": "https://www.congress.gov/bill/119th-congress/senate-bill/5357"
-          },
-          {
-            "bill_id": "119-s-5319",
-            "label": "S 5319",
-            "title": "Nurse Overtime and Patient Safety Act",
-            "url": "https://www.congress.gov/bill/119th-congress/senate-bill/5319"
           }
         ]
       },
       {
         "rank": 15,
+        "bioguide": "P000145",
+        "turns": 257,
+        "words": 146394,
+        "active_days": 111,
+        "profanity_hits": 3,
+        "profanity_quoted_hits": 2,
+        "profanity_terms": "{\"damned\":1,\"go to hell\":1,\"hell of a\":1}",
+        "favorite_profanity_term": "hell",
+        "favorite_profanity_term_hits": 2,
+        "bills_sponsored": 96,
+        "bills_passed": 4,
+        "bills_enacted": 0,
+        "passage_share": 0.0416666667,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. PADILLA",
+        "party": "D",
+        "state": "CA",
+        "chamber": "senate",
+        "profanity_per_100k": 2.0492643141,
+        "member_url": "https://bioguide.congress.gov/search/bio/P000145",
+        "examples": [
+          {
+            "bill_id": "119-s-5433",
+            "label": "S 5433",
+            "title": "A bill to authorize the Federal Wildland Firefighter Health and Wellbeing Program, a comprehensive initiative to improve the health of Federal wildland firefighters, and for other purposes.",
+            "url": "https://www.congress.gov/bill/119th-congress/senate-bill/5433"
+          },
+          {
+            "bill_id": "119-s-5352",
+            "label": "S 5352",
+            "title": "Desalination Reauthorization Act",
+            "url": "https://www.congress.gov/bill/119th-congress/senate-bill/5352"
+          },
+          {
+            "bill_id": "119-s-5309",
+            "label": "S 5309",
+            "title": "COWS Act of 2026",
+            "url": "https://www.congress.gov/bill/119th-congress/senate-bill/5309"
+          }
+        ]
+      },
+      {
+        "rank": 16,
         "bioguide": "B001299",
         "turns": 56,
         "words": 29220,
@@ -7001,49 +7044,6 @@
             "label": "S 5172",
             "title": "Kidd\u2019s Stuttering Act",
             "url": "https://www.congress.gov/bill/119th-congress/senate-bill/5172"
-          }
-        ]
-      },
-      {
-        "rank": 16,
-        "bioguide": "P000145",
-        "turns": 257,
-        "words": 146394,
-        "active_days": 111,
-        "profanity_hits": 3,
-        "profanity_quoted_hits": 2,
-        "profanity_terms": "{\"damned\":1,\"go to hell\":1,\"hell of a\":1}",
-        "favorite_profanity_term": "hell",
-        "favorite_profanity_term_hits": 2,
-        "bills_sponsored": 95,
-        "bills_passed": 4,
-        "bills_enacted": 0,
-        "passage_share": 0.0421052632,
-        "enactment_share": 0.0,
-        "speaker_name": "Mr. PADILLA",
-        "party": "D",
-        "state": "CA",
-        "chamber": "senate",
-        "profanity_per_100k": 2.0492643141,
-        "member_url": "https://bioguide.congress.gov/search/bio/P000145",
-        "examples": [
-          {
-            "bill_id": "119-s-5352",
-            "label": "S 5352",
-            "title": "Desalination Reauthorization Act",
-            "url": "https://www.congress.gov/bill/119th-congress/senate-bill/5352"
-          },
-          {
-            "bill_id": "119-s-5309",
-            "label": "S 5309",
-            "title": "COWS Act of 2026",
-            "url": "https://www.congress.gov/bill/119th-congress/senate-bill/5309"
-          },
-          {
-            "bill_id": "119-s-5304",
-            "label": "S 5304",
-            "title": "Fairness for Farm Workers Act",
-            "url": "https://www.congress.gov/bill/119th-congress/senate-bill/5304"
           }
         ]
       },
@@ -7092,6 +7092,49 @@
       },
       {
         "rank": 18,
+        "bioguide": "B001288",
+        "turns": 421,
+        "words": 221978,
+        "active_days": 41,
+        "profanity_hits": 6,
+        "profanity_quoted_hits": 0,
+        "profanity_terms": "{\"ass\":4,\"hell of a\":1,\"screw you\":1}",
+        "favorite_profanity_term": "ass",
+        "favorite_profanity_term_hits": 4,
+        "bills_sponsored": 91,
+        "bills_passed": 1,
+        "bills_enacted": 0,
+        "passage_share": 0.010989011,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. BOOKER",
+        "party": "D",
+        "state": "NJ",
+        "chamber": "senate",
+        "profanity_per_100k": 2.7029705647,
+        "member_url": "https://bioguide.congress.gov/search/bio/B001288",
+        "examples": [
+          {
+            "bill_id": "119-s-5431",
+            "label": "S 5431",
+            "title": "A bill to remove college cost as a barrier to every student having access to a well-prepared and diverse educator workforce, and for other purposes.",
+            "url": "https://www.congress.gov/bill/119th-congress/senate-bill/5431"
+          },
+          {
+            "bill_id": "119-s-5430",
+            "label": "S 5430",
+            "title": "A bill to provide for research and improvement of cardiovascular health among the South Asian population of the United States, and for other purposes.",
+            "url": "https://www.congress.gov/bill/119th-congress/senate-bill/5430"
+          },
+          {
+            "bill_id": "119-s-5410",
+            "label": "S 5410",
+            "title": "A bill to amend the Public Health Service Act to establish the Firefighter PFAS Injury Compensation Program, and for other purposes.",
+            "url": "https://www.congress.gov/bill/119th-congress/senate-bill/5410"
+          }
+        ]
+      },
+      {
+        "rank": 19,
         "bioguide": "C001095",
         "turns": 98,
         "words": 27803,
@@ -7101,11 +7144,11 @@
         "profanity_terms": "{\"ass\":1}",
         "favorite_profanity_term": "ass",
         "favorite_profanity_term_hits": 1,
-        "bills_sponsored": 90,
+        "bills_sponsored": 91,
         "bills_passed": 1,
         "bills_enacted": 1,
-        "passage_share": 0.0111111111,
-        "enactment_share": 0.0111111111,
+        "passage_share": 0.010989011,
+        "enactment_share": 0.010989011,
         "speaker_name": "Mr. COTTON",
         "party": "R",
         "state": "AR",
@@ -7113,6 +7156,12 @@
         "profanity_per_100k": 3.5967341654,
         "member_url": "https://bioguide.congress.gov/search/bio/C001095",
         "examples": [
+          {
+            "bill_id": "119-s-5422",
+            "label": "S 5422",
+            "title": "A bill to amend the John D. Dingell, Jr. Conservation, Management, and Recreation Act to designate as a component of the National Heritage Area System the Arkansas Delta National Heritage Area in the State of Arkansas, and for other purposes.",
+            "url": "https://www.congress.gov/bill/119th-congress/senate-bill/5422"
+          },
           {
             "bill_id": "119-s-5083",
             "label": "S 5083",
@@ -7124,55 +7173,6 @@
             "label": "S 4984",
             "title": "Restoration of Employment Choice for Adults with Disabilities Act",
             "url": "https://www.congress.gov/bill/119th-congress/senate-bill/4984"
-          },
-          {
-            "bill_id": "119-s-4939",
-            "label": "S 4939",
-            "title": "Countering CCP Act",
-            "url": "https://www.congress.gov/bill/119th-congress/senate-bill/4939"
-          }
-        ]
-      },
-      {
-        "rank": 19,
-        "bioguide": "B001288",
-        "turns": 421,
-        "words": 221978,
-        "active_days": 41,
-        "profanity_hits": 6,
-        "profanity_quoted_hits": 0,
-        "profanity_terms": "{\"ass\":4,\"hell of a\":1,\"screw you\":1}",
-        "favorite_profanity_term": "ass",
-        "favorite_profanity_term_hits": 4,
-        "bills_sponsored": 89,
-        "bills_passed": 1,
-        "bills_enacted": 0,
-        "passage_share": 0.0112359551,
-        "enactment_share": 0.0,
-        "speaker_name": "Mr. BOOKER",
-        "party": "D",
-        "state": "NJ",
-        "chamber": "senate",
-        "profanity_per_100k": 2.7029705647,
-        "member_url": "https://bioguide.congress.gov/search/bio/B001288",
-        "examples": [
-          {
-            "bill_id": "119-s-5410",
-            "label": "S 5410",
-            "title": "A bill to amend the Public Health Service Act to establish the Firefighter PFAS Injury Compensation Program, and for other purposes.",
-            "url": "https://www.congress.gov/bill/119th-congress/senate-bill/5410"
-          },
-          {
-            "bill_id": "119-s-5376",
-            "label": "S 5376",
-            "title": "FITNESS Act",
-            "url": "https://www.congress.gov/bill/119th-congress/senate-bill/5376"
-          },
-          {
-            "bill_id": "119-s-5365",
-            "label": "S 5365",
-            "title": "Community Mental Wellness Worker Training Act",
-            "url": "https://www.congress.gov/bill/119th-congress/senate-bill/5365"
           }
         ]
       },
@@ -7350,6 +7350,49 @@
       },
       {
         "rank": 24,
+        "bioguide": "S001150",
+        "turns": 127,
+        "words": 116702,
+        "active_days": 65,
+        "profanity_hits": 17,
+        "profanity_quoted_hits": 0,
+        "profanity_terms": "{\"bastard\":1,\"bastards\":1,\"damn\":7,\"damned\":4,\"hell of a\":3,\"pissing off\":1}",
+        "favorite_profanity_term": "damn",
+        "favorite_profanity_term_hits": 11,
+        "bills_sponsored": 82,
+        "bills_passed": 0,
+        "bills_enacted": 0,
+        "passage_share": 0.0,
+        "enactment_share": 0.0,
+        "speaker_name": "Mr. SCHIFF",
+        "party": "D",
+        "state": "CA",
+        "chamber": "senate",
+        "profanity_per_100k": 14.5670168463,
+        "member_url": "https://bioguide.congress.gov/search/bio/S001150",
+        "examples": [
+          {
+            "bill_id": "119-s-5439",
+            "label": "S 5439",
+            "title": "A bill to direct the Secretary of Agriculture to improve safety standards for wildland firefighters.",
+            "url": "https://www.congress.gov/bill/119th-congress/senate-bill/5439"
+          },
+          {
+            "bill_id": "119-s-5432",
+            "label": "S 5432",
+            "title": "A bill to amend the Richard B. Russell National School Lunch Act to authorize the Secretary of Agriculture to make grants to certain institutions of higher education to provide free meals to low-income students, and for other purposes.",
+            "url": "https://www.congress.gov/bill/119th-congress/senate-bill/5432"
+          },
+          {
+            "bill_id": "119-s-5429",
+            "label": "S 5429",
+            "title": "A bill to amend the Food and Nutrition Act of 2008 to allow benefits under the supplemental nutrition assistance program to be used to purchase on-campus meals.",
+            "url": "https://www.congress.gov/bill/119th-congress/senate-bill/5429"
+          }
+        ]
+      },
+      {
+        "rank": 25,
         "bioguide": "L000570",
         "turns": 58,
         "words": 20518,
@@ -7388,49 +7431,6 @@
             "label": "S 5278",
             "title": "GHOST Act",
             "url": "https://www.congress.gov/bill/119th-congress/senate-bill/5278"
-          }
-        ]
-      },
-      {
-        "rank": 25,
-        "bioguide": "K000367",
-        "turns": 109,
-        "words": 108561,
-        "active_days": 69,
-        "profanity_hits": 1,
-        "profanity_quoted_hits": 0,
-        "profanity_terms": "{\"pissed off\":1}",
-        "favorite_profanity_term": "piss off",
-        "favorite_profanity_term_hits": 1,
-        "bills_sponsored": 79,
-        "bills_passed": 3,
-        "bills_enacted": 0,
-        "passage_share": 0.0379746835,
-        "enactment_share": 0.0,
-        "speaker_name": "Ms. KLOBUCHAR",
-        "party": "D",
-        "state": "MN",
-        "chamber": "senate",
-        "profanity_per_100k": 0.9211411096,
-        "member_url": "https://bioguide.congress.gov/search/bio/K000367",
-        "examples": [
-          {
-            "bill_id": "119-s-5285",
-            "label": "S 5285",
-            "title": "Visitable Inclusive Tax credits for Accessible Living (VITAL) Act",
-            "url": "https://www.congress.gov/bill/119th-congress/senate-bill/5285"
-          },
-          {
-            "bill_id": "119-s-5241",
-            "label": "S 5241",
-            "title": "A bill to designate the facility of the United States Postal Service located at 200 1st Avenue Southeast in Austin, Minnesota, as the \"John Madden Memorial Post Office\".",
-            "url": "https://www.congress.gov/bill/119th-congress/senate-bill/5241"
-          },
-          {
-            "bill_id": "119-s-5052",
-            "label": "S 5052",
-            "title": "Lainie Jones Comprehensive Cancer Survivorship Act of 2026",
-            "url": "https://www.congress.gov/bill/119th-congress/senate-bill/5052"
           }
         ]
       }
@@ -7621,9 +7621,9 @@
         "favorite_profanity_term_hits": 0,
         "bills_sponsored": 121,
         "bills_passed": 10,
-        "bills_enacted": 1,
+        "bills_enacted": 2,
         "passage_share": 0.0826446281,
-        "enactment_share": 0.0082644628,
+        "enactment_share": 0.0165289256,
         "speaker_name": "Mr. CRUZ",
         "party": "R",
         "state": "TX",
@@ -8049,11 +8049,11 @@
         "profanity_terms": "{\"damn\":1}",
         "favorite_profanity_term": "damn",
         "favorite_profanity_term_hits": 1,
-        "bills_sponsored": 56,
+        "bills_sponsored": 57,
         "bills_passed": 7,
         "bills_enacted": 3,
-        "passage_share": 0.125,
-        "enactment_share": 0.0535714286,
+        "passage_share": 0.1228070175,
+        "enactment_share": 0.0526315789,
         "speaker_name": "Mr. SULLIVAN",
         "party": "R",
         "state": "AK",
@@ -8653,11 +8653,11 @@
         "profanity_terms": "{\"damn\":1}",
         "favorite_profanity_term": "damn",
         "favorite_profanity_term_hits": 1,
-        "bills_sponsored": 56,
+        "bills_sponsored": 57,
         "bills_passed": 7,
         "bills_enacted": 3,
-        "passage_share": 0.125,
-        "enactment_share": 0.0535714286,
+        "passage_share": 0.1228070175,
+        "enactment_share": 0.0526315789,
         "speaker_name": "Mr. SULLIVAN",
         "party": "R",
         "state": "AK",
@@ -8687,6 +8687,43 @@
       },
       {
         "rank": 5,
+        "bioguide": "C001098",
+        "turns": 95,
+        "words": 29893,
+        "active_days": 44,
+        "profanity_hits": 0,
+        "profanity_quoted_hits": 0,
+        "profanity_terms": "{}",
+        "favorite_profanity_term": "",
+        "favorite_profanity_term_hits": 0,
+        "bills_sponsored": 121,
+        "bills_passed": 10,
+        "bills_enacted": 2,
+        "passage_share": 0.0826446281,
+        "enactment_share": 0.0165289256,
+        "speaker_name": "Mr. CRUZ",
+        "party": "R",
+        "state": "TX",
+        "chamber": "senate",
+        "profanity_per_100k": 0.0,
+        "member_url": "https://bioguide.congress.gov/search/bio/C001098",
+        "examples": [
+          {
+            "bill_id": "119-s-146",
+            "label": "S 146",
+            "title": "TAKE IT DOWN Act",
+            "url": "https://www.congress.gov/bill/119th-congress/senate-bill/146"
+          },
+          {
+            "bill_id": "119-s-32",
+            "label": "S 32",
+            "title": "LACA",
+            "url": "https://www.congress.gov/bill/119th-congress/senate-bill/32"
+          }
+        ]
+      },
+      {
+        "rank": 6,
         "bioguide": "M000934",
         "turns": 193,
         "words": 54416,
@@ -8723,7 +8760,7 @@
         ]
       },
       {
-        "rank": 6,
+        "rank": 7,
         "bioguide": "K000393",
         "turns": 203,
         "words": 115497,
@@ -8733,11 +8770,11 @@
         "profanity_terms": "{\"ass\":1,\"damn\":6,\"damned\":2,\"hell of a\":2,\"piss off\":1,\"what the hell\":4}",
         "favorite_profanity_term": "damn",
         "favorite_profanity_term_hits": 8,
-        "bills_sponsored": 68,
+        "bills_sponsored": 69,
         "bills_passed": 3,
         "bills_enacted": 2,
-        "passage_share": 0.0441176471,
-        "enactment_share": 0.0294117647,
+        "passage_share": 0.0434782609,
+        "enactment_share": 0.0289855072,
         "speaker_name": "Mr. KENNEDY",
         "party": "R",
         "state": "LA",
@@ -8760,7 +8797,7 @@
         ]
       },
       {
-        "rank": 7,
+        "rank": 8,
         "bioguide": "V000135",
         "turns": 0,
         "words": 0,
@@ -8797,7 +8834,7 @@
         ]
       },
       {
-        "rank": 8,
+        "rank": 9,
         "bioguide": "B001319",
         "turns": 97,
         "words": 35596,
@@ -8834,7 +8871,7 @@
         ]
       },
       {
-        "rank": 9,
+        "rank": 10,
         "bioguide": "C001078",
         "turns": 9,
         "words": 2519,
@@ -8871,38 +8908,38 @@
         ]
       },
       {
-        "rank": 10,
-        "bioguide": "C001098",
-        "turns": 95,
-        "words": 29893,
-        "active_days": 44,
+        "rank": 11,
+        "bioguide": "B001243",
+        "turns": 158,
+        "words": 85496,
+        "active_days": 79,
         "profanity_hits": 0,
         "profanity_quoted_hits": 0,
         "profanity_terms": "{}",
         "favorite_profanity_term": "",
         "favorite_profanity_term_hits": 0,
-        "bills_sponsored": 121,
-        "bills_passed": 10,
+        "bills_sponsored": 126,
+        "bills_passed": 3,
         "bills_enacted": 1,
-        "passage_share": 0.0826446281,
-        "enactment_share": 0.0082644628,
-        "speaker_name": "Mr. CRUZ",
+        "passage_share": 0.0238095238,
+        "enactment_share": 0.0079365079,
+        "speaker_name": "Mrs. BLACKBURN",
         "party": "R",
-        "state": "TX",
+        "state": "TN",
         "chamber": "senate",
         "profanity_per_100k": 0.0,
-        "member_url": "https://bioguide.congress.gov/search/bio/C001098",
+        "member_url": "https://bioguide.congress.gov/search/bio/B001243",
         "examples": [
           {
-            "bill_id": "119-s-146",
-            "label": "S 146",
-            "title": "TAKE IT DOWN Act",
-            "url": "https://www.congress.gov/bill/119th-congress/senate-bill/146"
+            "bill_id": "119-s-307",
+            "label": "S 307",
+            "title": "Prison Staff Safety Enhancement Act",
+            "url": "https://www.congress.gov/bill/119th-congress/senate-bill/307"
           }
         ]
       },
       {
-        "rank": 11,
+        "rank": 12,
         "bioguide": "C001075",
         "turns": 190,
         "words": 78063,
@@ -8912,11 +8949,11 @@
         "profanity_terms": "{}",
         "favorite_profanity_term": "",
         "favorite_profanity_term_hits": 0,
-        "bills_sponsored": 101,
+        "bills_sponsored": 103,
         "bills_passed": 4,
         "bills_enacted": 1,
-        "passage_share": 0.0396039604,
-        "enactment_share": 0.0099009901,
+        "passage_share": 0.0388349515,
+        "enactment_share": 0.0097087379,
         "speaker_name": "Mr. CASSIDY",
         "party": "R",
         "state": "LA",
@@ -8933,7 +8970,7 @@
         ]
       },
       {
-        "rank": 12,
+        "rank": 13,
         "bioguide": "C001095",
         "turns": 98,
         "words": 27803,
@@ -8943,11 +8980,11 @@
         "profanity_terms": "{\"ass\":1}",
         "favorite_profanity_term": "ass",
         "favorite_profanity_term_hits": 1,
-        "bills_sponsored": 90,
+        "bills_sponsored": 91,
         "bills_passed": 1,
         "bills_enacted": 1,
-        "passage_share": 0.0111111111,
-        "enactment_share": 0.0111111111,
+        "passage_share": 0.010989011,
+        "enactment_share": 0.010989011,
         "speaker_name": "Mr. COTTON",
         "party": "R",
         "state": "AR",
@@ -8964,7 +9001,7 @@
         ]
       },
       {
-        "rank": 13,
+        "rank": 14,
         "bioguide": "E000295",
         "turns": 219,
         "words": 70077,
@@ -8995,7 +9032,7 @@
         ]
       },
       {
-        "rank": 14,
+        "rank": 15,
         "bioguide": "S001232",
         "turns": 42,
         "words": 9275,
@@ -9026,7 +9063,7 @@
         ]
       },
       {
-        "rank": 15,
+        "rank": 16,
         "bioguide": "P000595",
         "turns": 104,
         "words": 47300,
@@ -9057,7 +9094,7 @@
         ]
       },
       {
-        "rank": 16,
+        "rank": 17,
         "bioguide": "M001198",
         "turns": 87,
         "words": 37404,
@@ -9088,7 +9125,7 @@
         ]
       },
       {
-        "rank": 17,
+        "rank": 18,
         "bioguide": "L000575",
         "turns": 136,
         "words": 77010,
@@ -9119,7 +9156,7 @@
         ]
       },
       {
-        "rank": 18,
+        "rank": 19,
         "bioguide": "D000622",
         "turns": 64,
         "words": 29956,
@@ -9150,7 +9187,7 @@
         ]
       },
       {
-        "rank": 19,
+        "rank": 20,
         "bioguide": "C001088",
         "turns": 101,
         "words": 43533,
@@ -9181,7 +9218,7 @@
         ]
       },
       {
-        "rank": 20,
+        "rank": 21,
         "bioguide": "K000377",
         "turns": 62,
         "words": 37152,
@@ -9212,7 +9249,7 @@
         ]
       },
       {
-        "rank": 21,
+        "rank": 22,
         "bioguide": "T000468",
         "turns": 39,
         "words": 6349,
@@ -9243,7 +9280,7 @@
         ]
       },
       {
-        "rank": 22,
+        "rank": 23,
         "bioguide": "T000476",
         "turns": 146,
         "words": 44301,
@@ -9274,7 +9311,7 @@
         ]
       },
       {
-        "rank": 23,
+        "rank": 24,
         "bioguide": "A000375",
         "turns": 194,
         "words": 31953,
@@ -9305,7 +9342,7 @@
         ]
       },
       {
-        "rank": 24,
+        "rank": 25,
         "bioguide": "D000618",
         "turns": 59,
         "words": 13064,
@@ -9332,37 +9369,6 @@
             "label": "S 1020",
             "title": "A bill to require the Federal Energy Regulatory Commission to extend the time period during which licensees are required to commence construction of certain hydropower projects.",
             "url": "https://www.congress.gov/bill/119th-congress/senate-bill/1020"
-          }
-        ]
-      },
-      {
-        "rank": 25,
-        "bioguide": "S000522",
-        "turns": 53,
-        "words": 18391,
-        "active_days": 19,
-        "profanity_hits": 0,
-        "profanity_quoted_hits": 0,
-        "profanity_terms": "{}",
-        "favorite_profanity_term": "",
-        "favorite_profanity_term_hits": 0,
-        "bills_sponsored": 45,
-        "bills_passed": 5,
-        "bills_enacted": 1,
-        "passage_share": 0.1111111111,
-        "enactment_share": 0.0222222222,
-        "speaker_name": "Mr. SMITH of New Jersey",
-        "party": "R",
-        "state": "NJ",
-        "chamber": "house",
-        "profanity_per_100k": 0.0,
-        "member_url": "https://bioguide.congress.gov/search/bio/S000522",
-        "examples": [
-          {
-            "bill_id": "119-hr-2170",
-            "label": "HR 2170",
-            "title": "To name the Department of Veterans Affairs community-based outpatient clinic in Toms River, New Jersey, the Leonard G. 'Bud' Lomell, VA Clinic, and for other purposes.",
-            "url": "https://www.congress.gov/bill/119th-congress/house-bill/2170"
           }
         ]
       }
@@ -9517,7 +9523,7 @@
         "profanity_terms": "{\"bastard\":1,\"bastards\":1,\"damn\":7,\"damned\":4,\"hell of a\":3,\"pissing off\":1}",
         "favorite_profanity_term": "damn",
         "favorite_profanity_term_hits": 11,
-        "bills_sponsored": 79,
+        "bills_sponsored": 82,
         "bills_passed": 0,
         "bills_enacted": 0,
         "passage_share": 0.0,
@@ -9540,11 +9546,11 @@
         "profanity_terms": "{\"ass\":1,\"damn\":6,\"damned\":2,\"hell of a\":2,\"piss off\":1,\"what the hell\":4}",
         "favorite_profanity_term": "damn",
         "favorite_profanity_term_hits": 8,
-        "bills_sponsored": 68,
+        "bills_sponsored": 69,
         "bills_passed": 3,
         "bills_enacted": 2,
-        "passage_share": 0.0441176471,
-        "enactment_share": 0.0294117647,
+        "passage_share": 0.0434782609,
+        "enactment_share": 0.0289855072,
         "speaker_name": "Mr. KENNEDY",
         "party": "R",
         "state": "LA",
@@ -9678,10 +9684,10 @@
         "profanity_terms": "{\"badass\":1,\"bullshit\":1,\"damn\":14,\"damned\":1,\"hell of a\":3,\"shit\":1,\"what the hell\":5}",
         "favorite_profanity_term": "damn",
         "favorite_profanity_term_hits": 15,
-        "bills_sponsored": 98,
+        "bills_sponsored": 99,
         "bills_passed": 2,
         "bills_enacted": 0,
-        "passage_share": 0.0204081633,
+        "passage_share": 0.0202020202,
         "enactment_share": 0.0,
         "speaker_name": "Mr. MERKLEY",
         "party": "D",
@@ -9770,7 +9776,7 @@
         "profanity_terms": "{\"damn\":1,\"piss off\":1,\"pissed off\":1}",
         "favorite_profanity_term": "piss off",
         "favorite_profanity_term_hits": 2,
-        "bills_sponsored": 52,
+        "bills_sponsored": 53,
         "bills_passed": 0,
         "bills_enacted": 0,
         "passage_share": 0.0,
@@ -9931,7 +9937,7 @@
         "profanity_terms": "{\"pissed off\":2}",
         "favorite_profanity_term": "piss off",
         "favorite_profanity_term_hits": 2,
-        "bills_sponsored": 35,
+        "bills_sponsored": 36,
         "bills_passed": 0,
         "bills_enacted": 0,
         "passage_share": 0.0,
