@@ -1,15 +1,15 @@
 {
   "congress": null,
   "label": "Last 5 Congresses (115\u2013119)",
-  "generated_utc": "2026-09-17T20:28:00+00:00",
+  "generated_utc": "2026-09-18T12:16:00+00:00",
   "min_words": 25000,
   "top": 25,
   "coverage": {
     "speech_first_date": "2017-01-04",
-    "speech_last_date": "2026-09-15",
-    "speaker_days": 124135,
+    "speech_last_date": "2026-09-17",
+    "speaker_days": 124161,
     "members_with_speech": 896,
-    "bills": 72499,
+    "bills": 72532,
     "members_with_bills": 909,
     "bill_sources": [
       "govinfo"
@@ -275,26 +275,26 @@
       {
         "period": "2026",
         "party": "D",
-        "words": 2560822,
-        "turns": 7650,
-        "profanity_hits": 142,
+        "words": 2571802,
+        "turns": 7687,
+        "profanity_hits": 143,
         "hostility_hits": 100,
-        "misconduct_hits": 793,
-        "profanity_per_100k": 5.5450945048,
-        "hostility_per_100k": 3.9049961301,
-        "misconduct_per_100k": 30.9666193121
+        "misconduct_hits": 795,
+        "profanity_per_100k": 5.5603036315,
+        "hostility_per_100k": 3.8883242178,
+        "misconduct_per_100k": 30.9121775316
       },
       {
         "period": "2026",
         "party": "R",
-        "words": 2403255,
-        "turns": 9988,
+        "words": 2410650,
+        "turns": 10048,
         "profanity_hits": 99,
         "hostility_hits": 25,
         "misconduct_hits": 240,
-        "profanity_per_100k": 4.1194130461,
-        "hostility_per_100k": 1.0402558197,
-        "misconduct_per_100k": 9.9864558692
+        "profanity_per_100k": 4.1067761807,
+        "hostility_per_100k": 1.0370646921,
+        "misconduct_per_100k": 9.9558210441
       }
     ],
     "chamber_series": [
@@ -783,14 +783,14 @@
         "period": "2026",
         "party": "D",
         "chamber": "senate",
-        "words": 1201738,
-        "turns": 2190,
-        "profanity_hits": 47,
+        "words": 1212718,
+        "turns": 2227,
+        "profanity_hits": 48,
         "hostility_hits": 66,
-        "misconduct_hits": 487,
-        "profanity_per_100k": 3.9110022318,
-        "hostility_per_100k": 5.4920456872,
-        "misconduct_per_100k": 40.5246401462
+        "misconduct_hits": 489,
+        "profanity_per_100k": 3.9580512535,
+        "hostility_per_100k": 5.4423204735,
+        "misconduct_per_100k": 40.3226471447
       },
       {
         "period": "2026",
@@ -809,14 +809,14 @@
         "period": "2026",
         "party": "R",
         "chamber": "senate",
-        "words": 1119039,
-        "turns": 3540,
+        "words": 1126434,
+        "turns": 3600,
         "profanity_hits": 29,
         "hostility_hits": 13,
         "misconduct_hits": 114,
-        "profanity_per_100k": 2.5915093218,
-        "hostility_per_100k": 1.1617110753,
-        "misconduct_per_100k": 10.1873125065
+        "profanity_per_100k": 2.5744961533,
+        "hostility_per_100k": 1.1540844825,
+        "misconduct_per_100k": 10.1204331545
       }
     ],
     "members": {
@@ -1905,7 +1905,7 @@
       {
         "term": "damn",
         "leader_hits": 103,
-        "total_hits": 747,
+        "total_hits": 748,
         "variants": [
           "dammit",
           "damn",
@@ -3796,6 +3796,18 @@
         ]
       },
       {
+        "bioguide": "C000127",
+        "speaker_name": "Ms. CANTWELL",
+        "party": "D",
+        "state": "WA",
+        "chamber": "senate",
+        "term": "damn",
+        "hits": 2,
+        "variants": [
+          "damn"
+        ]
+      },
+      {
         "bioguide": "C001093",
         "speaker_name": "Mr. COLLINS of Georgia",
         "party": "R",
@@ -5041,18 +5053,6 @@
         "hits": 1,
         "variants": [
           "damned"
-        ]
-      },
-      {
-        "bioguide": "C000127",
-        "speaker_name": "Ms. CANTWELL",
-        "party": "D",
-        "state": "WA",
-        "chamber": "senate",
-        "term": "damn",
-        "hits": 1,
-        "variants": [
-          "damn"
         ]
       },
       {
@@ -7185,7 +7185,7 @@
         {
           "term": "damn",
           "leader_hits": 34,
-          "total_hits": 324,
+          "total_hits": 325,
           "variants": [
             "dammit",
             "damn",
@@ -7611,31 +7611,31 @@
     },
     "parties": {
       "D": {
-        "words": 40648233,
-        "profanity_hits": 764,
+        "words": 40659213,
+        "profanity_hits": 765,
         "hostility_hits": 1034,
-        "misconduct_hits": 6436,
-        "profanity_per_100k": 1.8795404956471293,
-        "hostility_per_100k": 2.543776011124518,
-        "misconduct_per_100k": 15.833406583749902
+        "misconduct_hits": 6438,
+        "profanity_per_100k": 1.8814923938640917,
+        "hostility_per_100k": 2.543089065693426,
+        "misconduct_per_100k": 15.834049714636631
       },
       "R": {
-        "words": 39248562,
+        "words": 39255957,
         "profanity_hits": 824,
         "hostility_hits": 668,
         "misconduct_hits": 3195,
-        "profanity_per_100k": 2.0994399743868324,
-        "hostility_per_100k": 1.7019731831194223,
-        "misconduct_per_100k": 8.140425628842147
+        "profanity_per_100k": 2.0990444838728552,
+        "hostility_per_100k": 1.70165256702314,
+        "misconduct_per_100k": 8.138892143172054
       }
     },
     "highlights": [
       {
         "key": "profanity",
         "label": "Profanity",
-        "democratic_rate": 1.8795404956471293,
-        "republican_rate": 2.0994399743868324,
-        "difference": -0.21989947873970306,
+        "democratic_rate": 1.8814923938640917,
+        "republican_rate": 2.0990444838728552,
+        "difference": -0.21755209000876352,
         "higher_party": "Republicans",
         "leader_name": "Mr. SCHWEIKERT",
         "leader_rate": 51.05577377447509,
@@ -7663,9 +7663,9 @@
       {
         "key": "hostility",
         "label": "Personal hostility / disrespect",
-        "democratic_rate": 2.543776011124518,
-        "republican_rate": 1.7019731831194223,
-        "difference": 0.8418028280050958,
+        "democratic_rate": 2.543089065693426,
+        "republican_rate": 1.70165256702314,
+        "difference": 0.841436498670286,
         "higher_party": "Democrats",
         "leader_name": "Mr. JEFFRIES",
         "leader_rate": 44.70672389127325,
@@ -7693,9 +7693,9 @@
       {
         "key": "misconduct",
         "label": "Misconduct allegations",
-        "democratic_rate": 15.833406583749902,
-        "republican_rate": 8.140425628842147,
-        "difference": 7.692980954907755,
+        "democratic_rate": 15.834049714636631,
+        "republican_rate": 8.138892143172054,
+        "difference": 7.695157571464577,
         "higher_party": "Democrats",
         "leader_name": "Mr. SCHIFF",
         "leader_rate": 148.35204736199628,
@@ -7735,9 +7735,9 @@
       {
         "rank": 1,
         "bioguide": "D000563",
-        "turns": 6466,
-        "words": 2262725,
-        "active_days": 1239,
+        "turns": 6469,
+        "words": 2264433,
+        "active_days": 1240,
         "profanity_hits": 18,
         "profanity_quoted_hits": 3,
         "profanity_terms": "{\"damn\":12,\"damned\":5,\"effing\":1}",
@@ -7752,15 +7752,15 @@
         "party": "D",
         "state": "IL",
         "chamber": "senate",
-        "profanity_per_100k": 0.7955009999,
+        "profanity_per_100k": 0.7949009752,
         "member_url": "https://bioguide.congress.gov/search/bio/D000563"
       },
       {
         "rank": 2,
         "bioguide": "S000148",
-        "turns": 10188,
-        "words": 1949724,
-        "active_days": 1289,
+        "turns": 10190,
+        "words": 1951007,
+        "active_days": 1290,
         "profanity_hits": 47,
         "profanity_quoted_hits": 7,
         "profanity_terms": "{\"crap\":1,\"damn\":26,\"damned\":7,\"go to hell\":2,\"hell of a\":1,\"screw you\":1,\"what the hell\":9}",
@@ -7775,7 +7775,7 @@
         "party": "D",
         "state": "NY",
         "chamber": "senate",
-        "profanity_per_100k": 2.4105976025,
+        "profanity_per_100k": 2.4090123716,
         "member_url": "https://bioguide.congress.gov/search/bio/S000148"
       },
       {
@@ -7827,9 +7827,9 @@
       {
         "rank": 5,
         "bioguide": "T000250",
-        "turns": 6368,
-        "words": 1237169,
-        "active_days": 1110,
+        "turns": 6396,
+        "words": 1238119,
+        "active_days": 1111,
         "profanity_hits": 0,
         "profanity_quoted_hits": 0,
         "profanity_terms": "{}",
@@ -7942,9 +7942,9 @@
       {
         "rank": 10,
         "bioguide": "G000386",
-        "turns": 1821,
-        "words": 804658,
-        "active_days": 809,
+        "turns": 1822,
+        "words": 804931,
+        "active_days": 810,
         "profanity_hits": 0,
         "profanity_quoted_hits": 0,
         "profanity_terms": "{}",
@@ -8011,9 +8011,9 @@
       {
         "rank": 13,
         "bioguide": "B001261",
-        "turns": 2361,
-        "words": 750719,
-        "active_days": 677,
+        "turns": 2366,
+        "words": 751838,
+        "active_days": 678,
         "profanity_hits": 3,
         "profanity_quoted_hits": 0,
         "profanity_terms": "{\"bastards\":3}",
@@ -8028,7 +8028,7 @@
         "party": "R",
         "state": "WY",
         "chamber": "senate",
-        "profanity_per_100k": 0.3996169006,
+        "profanity_per_100k": 0.3990221298,
         "member_url": "https://bioguide.congress.gov/search/bio/B001261"
       },
       {
@@ -8172,9 +8172,9 @@
       {
         "rank": 20,
         "bioguide": "L000575",
-        "turns": 726,
-        "words": 592740,
-        "active_days": 341,
+        "turns": 727,
+        "words": 593551,
+        "active_days": 342,
         "profanity_hits": 3,
         "profanity_quoted_hits": 0,
         "profanity_terms": "{\"fucking\":2,\"motherfucker\":1}",
@@ -8189,7 +8189,7 @@
         "party": "R",
         "state": "OK",
         "chamber": "senate",
-        "profanity_per_100k": 0.5061241016,
+        "profanity_per_100k": 0.5054325576,
         "member_url": "https://bioguide.congress.gov/search/bio/L000575"
       },
       {
@@ -8484,9 +8484,9 @@
       {
         "rank": 5,
         "bioguide": "B001288",
-        "turns": 748,
-        "words": 448593,
-        "active_days": 188,
+        "turns": 762,
+        "words": 451946,
+        "active_days": 189,
         "profanity_hits": 7,
         "profanity_quoted_hits": 0,
         "profanity_terms": "{\"ass\":4,\"damn\":1,\"hell of a\":1,\"screw you\":1}",
@@ -8501,7 +8501,7 @@
         "party": "D",
         "state": "NJ",
         "chamber": "senate",
-        "profanity_per_100k": 1.5604345141,
+        "profanity_per_100k": 1.5488576069,
         "member_url": "https://bioguide.congress.gov/search/bio/B001288",
         "examples": [
           {
@@ -8613,9 +8613,9 @@
       {
         "rank": 8,
         "bioguide": "D000563",
-        "turns": 6466,
-        "words": 2262725,
-        "active_days": 1239,
+        "turns": 6469,
+        "words": 2264433,
+        "active_days": 1240,
         "profanity_hits": 18,
         "profanity_quoted_hits": 3,
         "profanity_terms": "{\"damn\":12,\"damned\":5,\"effing\":1}",
@@ -8630,7 +8630,7 @@
         "party": "D",
         "state": "IL",
         "chamber": "senate",
-        "profanity_per_100k": 0.7955009999,
+        "profanity_per_100k": 0.7949009752,
         "member_url": "https://bioguide.congress.gov/search/bio/D000563",
         "examples": [
           {
@@ -9258,9 +9258,9 @@
       {
         "rank": 23,
         "bioguide": "G000386",
-        "turns": 1821,
-        "words": 804658,
-        "active_days": 809,
+        "turns": 1822,
+        "words": 804931,
+        "active_days": 810,
         "profanity_hits": 0,
         "profanity_quoted_hits": 0,
         "profanity_terms": "{}",
@@ -9475,9 +9475,9 @@
       {
         "rank": 3,
         "bioguide": "G000386",
-        "turns": 1821,
-        "words": 804658,
-        "active_days": 809,
+        "turns": 1822,
+        "words": 804931,
+        "active_days": 810,
         "profanity_hits": 0,
         "profanity_quoted_hits": 0,
         "profanity_terms": "{}",
@@ -9956,11 +9956,11 @@
         "profanity_terms": "{\"damn\":1}",
         "favorite_profanity_term": "damn",
         "favorite_profanity_term_hits": 1,
-        "bills_sponsored": 118,
+        "bills_sponsored": 120,
         "bills_passed": 25,
         "bills_enacted": 6,
-        "passage_share": 0.2118644068,
-        "enactment_share": 0.0508474576,
+        "passage_share": 0.2083333333,
+        "enactment_share": 0.05,
         "speaker_name": "Mr. HILL of Arkansas",
         "party": "R",
         "state": "AR",
@@ -10595,9 +10595,9 @@
       {
         "rank": 4,
         "bioguide": "G000386",
-        "turns": 1821,
-        "words": 804658,
-        "active_days": 809,
+        "turns": 1822,
+        "words": 804931,
+        "active_days": 810,
         "profanity_hits": 0,
         "profanity_quoted_hits": 0,
         "profanity_terms": "{}",
@@ -11197,9 +11197,9 @@
       {
         "rank": 18,
         "bioguide": "T000250",
-        "turns": 6368,
-        "words": 1237169,
-        "active_days": 1110,
+        "turns": 6396,
+        "words": 1238119,
+        "active_days": 1111,
         "profanity_hits": 0,
         "profanity_quoted_hits": 0,
         "profanity_terms": "{}",
@@ -11248,11 +11248,11 @@
         "profanity_terms": "{}",
         "favorite_profanity_term": "",
         "favorite_profanity_term_hits": 0,
-        "bills_sponsored": 160,
+        "bills_sponsored": 161,
         "bills_passed": 12,
         "bills_enacted": 8,
-        "passage_share": 0.075,
-        "enactment_share": 0.05,
+        "passage_share": 0.0745341615,
+        "enactment_share": 0.049689441,
         "speaker_name": "Mr. KHANNA",
         "party": "D",
         "state": "CA",
@@ -12080,11 +12080,11 @@
         "profanity_terms": "{\"damn\":4}",
         "favorite_profanity_term": "damn",
         "favorite_profanity_term_hits": 4,
-        "bills_sponsored": 128,
+        "bills_sponsored": 129,
         "bills_passed": 3,
         "bills_enacted": 1,
-        "passage_share": 0.0234375,
-        "enactment_share": 0.0078125,
+        "passage_share": 0.023255814,
+        "enactment_share": 0.007751938,
         "speaker_name": "Mr. CASTEN",
         "party": "D",
         "state": "IL",
