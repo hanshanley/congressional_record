@@ -82,10 +82,7 @@ jobs:
           git add data/site
           data_commit=false
           if ! git diff --cached --quiet; then
-            git commit \
-              -m "Auto-update: refresh congressional data" \
-              -m "Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>" \
-              -m "Copilot-Session: 20de2f9c-02b3-4617-b28a-82ccd88b0490"
+            git commit -m "Auto-update: refresh congressional data"
             data_commit=true
           fi
 
@@ -98,10 +95,7 @@ jobs:
             if [[ "$data_commit" == true ]]; then
               git commit --amend --no-edit
             else
-              git commit \
-                -m "Auto-update: refresh congressional site" \
-                -m "Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>" \
-                -m "Copilot-Session: 20de2f9c-02b3-4617-b28a-82ccd88b0490"
+              git commit -m "Auto-update: refresh congressional site"
             fi
           fi
 

@@ -2,10 +2,10 @@
 
 Downloads each day's package zip from ``www.govinfo.gov/content/pkg/<pkg>.zip``
 (not the rate-limited api.govinfo.gov), parses the package-level ``mods.xml`` for
-every granule's class/chamber/party, extracts each granule's HTML transcript,
-segments it into speaker turns, and writes unified turn parquet — then deletes the
-zip to bound disk use. Downloads and ingest both run in the thread pool; only the
-per-congress parquet writes are serialized (under a lock).
+every granule's class/chamber/party, extracts HTML transcripts or section PDFs for
+PDF-only issues, segments them into speaker turns, and writes unified turn parquet
+— then deletes the zip to bound disk use. Downloads and ingest both run in the
+thread pool; only the per-congress parquet writes are serialized (under a lock).
 """
 
 from __future__ import annotations
@@ -53,6 +53,7 @@ CONTENT_URL = "https://www.govinfo.gov/content/pkg/{pkg}.zip"
 # GovInfo CREC package ids are exactly CREC-YYYY-MM-DD; validate before building
 # URLs / filesystem paths from them (defense-in-depth).
 _PKG_RE = re.compile(r"^CREC-\d{4}-\d{2}-\d{2}$")
+_TURN_PACKAGE_PREFIX_LENGTH = len("crec:CREC-YYYY-MM-DD-")
 _PAGE_MARKER_RE = re.compile(r"\[\[Page [^\]]+\]\]")
 _MIN_DEDUPE_CHARS = 500
 _PROBE_RETRY_DELAYS = (15, 30, 60)
@@ -152,6 +153,12 @@ def _turns_from_zip(zip_bytes: bytes, pkg: str) -> Iterator[Dict[str, Any]]:
     if not congress:
         return
     htm_names = {n.rsplit("/", 1)[-1][:-4]: n for n in names if n.endswith(".htm")}
+    if not htm_names:
+        from analysis.ingest.govinfo_pdf import turns_from_pdfs
+
+        LOG.info("%s has no HTML transcripts; ingesting section PDFs", pkg)
+        yield from turns_from_pdfs(z, gmap, pkg, date, congress)
+        return
     seen_fingerprints: set[str] = set()
 
     for gid, info in gmap.items():
@@ -313,6 +320,9 @@ def run_bulk(
     temp_paths: Dict[int, Path] = {}
     final_paths: Dict[int, Path] = {}
     seen_ids: Dict[int, set[str]] = {}
+    replaced_pdf_ids: Dict[int, set[str]] = {}
+    html_packages: Dict[int, set[str]] = {}
+    requested_prefixes = {f"crec:{pkg}-" for pkg in pkg_list}
     lock = threading.Lock()
     total = 0
     package_results: List[Dict[str, Any]] = []
@@ -331,12 +341,32 @@ def run_bulk(
             tmp = Path(tmp_name)
             w = pq.ParquetWriter(tmp, ARROW_SCHEMA, compression="zstd")
             existing_ids: set[str] = set()
+            replaced_pdf_ids[congress] = set()
+            html_packages[congress] = set()
             if final.exists():
                 existing = pq.ParquetFile(final)
                 for batch in existing.iter_batches(batch_size=50_000):
-                    w.write_batch(batch)
                     turn_id_col = batch.schema.get_field_index("turn_id")
-                    existing_ids.update(batch.column(turn_id_col).to_pylist())
+                    ids = batch.column(turn_id_col).to_pylist()
+                    # PDF turns are provisional: a re-fetch replaces them, and
+                    # later HTML must not be appended alongside the same speech.
+                    keep = [
+                        not (
+                            "#pdf-" in tid
+                            and tid[:_TURN_PACKAGE_PREFIX_LENGTH] in requested_prefixes
+                        )
+                        for tid in ids
+                    ]
+                    retained = batch.filter(pa.array(keep, type=pa.bool_()))
+                    w.write_batch(retained)
+                    existing_ids.update(tid for tid, retain in zip(ids, keep) if retain)
+                    replaced_pdf_ids[congress].update(
+                        tid for tid, retain in zip(ids, keep) if not retain
+                    )
+                    html_packages[congress].update(
+                        tid[:_TURN_PACKAGE_PREFIX_LENGTH] for tid in ids
+                        if tid.startswith("crec:CREC-") and "#pdf-" not in tid
+                    )
             writers[congress] = w
             temp_paths[congress] = tmp
             final_paths[congress] = final
@@ -360,6 +390,8 @@ def run_bulk(
                     fresh = []
                     for row in rows:
                         turn_id = row["turn_id"]
+                        if "#pdf-" in turn_id and f"crec:{pkg}-" in html_packages[c]:
+                            continue
                         if turn_id in seen_ids[c]:
                             continue
                         seen_ids[c].add(turn_id)
@@ -378,8 +410,15 @@ def run_bulk(
             return {
                 "package_id": pkg,
                 "status": "ok" if parsed else "empty_or_unparsed",
-                "turns": sum(len(rows) for rows in fresh_by_c.values()),
+                "turns": sum(
+                    row["turn_id"] not in replaced_pdf_ids[c]
+                    for c, rows in fresh_by_c.items() for row in rows
+                ),
                 "parsed_turns": parsed,
+                "pdf_turns": sum(
+                    "#pdf-" in row["turn_id"]
+                    for rows in rows_by_c.values() for row in rows
+                ),
             }
         finally:
             try:
@@ -405,6 +444,11 @@ def run_bulk(
         if failures:
             raise RuntimeError(
                 f"{len(failures)} GovInfo packages failed or produced no parsed turns"
+                + ": "
+                + ", ".join(
+                    f"{result['package_id']} ({result['status']})"
+                    for result in failures
+                )
             )
         succeeded = True
     finally:
@@ -443,6 +487,10 @@ def run_bulk(
             "failed_or_empty_packages": [
                 result for result in package_results if result["status"] != "ok"
             ],
+            "pdf_packages": sorted(
+                result["package_id"] for result in package_results
+                if result.get("pdf_turns", 0)
+            ),
             "new_turns": total,
             "published": succeeded,
             "outputs": outputs,

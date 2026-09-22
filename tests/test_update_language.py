@@ -247,3 +247,10 @@ def test_daily_workflow_updates_every_data_surface_before_building():
         "scripts/build_site.py"
     )
     assert "git pull --rebase origin master" in workflow
+
+
+def test_daily_workflow_does_not_inject_author_trailers():
+    root = Path(__file__).resolve().parents[1]
+    workflow = (root / ".github" / "workflows" / "update-site.yml").read_text()
+    assert "Co-authored-by:" not in workflow
+    assert "Copilot-Session:" not in workflow

@@ -467,6 +467,16 @@ publishes only a redirect to the new address.
 bill statuses both come from public GovInfo bulk URLs. The Congress.gov API key is used only for
 the one-time local seed of Congresses 103-107.
 
+**PDF-only Record issues are ingested too.** When an archive has no HTML transcripts, the bulk
+ingester extracts its section PDFs in column order rather than dropping the day. Speaker
+segmentation and scoring use the same rules as the HTML path. Because these preliminary issues
+can lack member-level MODS, the fallback resolves names against the public
+`unitedstates/congress-legislators` current and historical rosters, restricted to the issue date
+and chamber (including dated party changes). Ambiguous names remain unattributed; they are not
+guessed. PDF-derived turn IDs contain `#pdf-`, coverage manifests list `pdf_packages`, and later
+HTML replaces PDF turns rather than double-counting them. Image-only or unrecognized PDFs fail
+explicitly instead of publishing empty scores; this fallback does not perform OCR.
+
 To enable it:
 
 1. **Settings → Pages → Source: GitHub Actions.**
