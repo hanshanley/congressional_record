@@ -79,6 +79,13 @@ METRIC_DEFINITIONS = {
     "enacted": "Sponsored bills with an assigned public or private law number.",
     "profanity": "Unquoted curated profanity hits per 100,000 attributed words.",
 }
+ACTIVITY_NUMERIC_COLUMNS = {
+    "speech": [0, 5, 6, 7],
+    "sponsored": [0, 4, 5, 6],
+    "passed": [0, 4, 5, 6],
+    "enacted": [0, 4, 5, 6],
+    "profanity": [0, 5, 6, 7, 8],
+}
 
 LANGUAGE_MEMBER_TOP = 8
 
@@ -103,6 +110,8 @@ let selectedTermParty = 'all';
 let selectedTermChamber = 'all';
 let showAllTerms = false;
 const TERM_INITIAL_ROWS = 12;
+const termLeaderDescription = document.getElementById('term-leaders-description')
+  .textContent.trim().replace(/\s+/g, ' ');
 let currentLanguage = null;
 let currentLongRun = null;
 
@@ -913,6 +922,9 @@ function partyBadges(parties) {
 function renderTermTable(language, summaries) {
   const table = document.getElementById('term-leaders-table');
   table.dataset.view = selectedTermView;
+  table.closest('.term-explorer-grid').dataset.view = selectedTermView;
+  table.querySelector('caption').textContent = selectedTermView === 'leaders'
+    ? 'Leading members by term' : 'Term frequency and share of accepted uses';
   const head = table.querySelector('thead tr');
   const body = document.querySelector('#term-leaders-table tbody');
   head.replaceChildren();
@@ -921,10 +933,13 @@ function renderTermTable(language, summaries) {
   const headers = selectedTermView === 'leaders'
     ? ['Term', 'Member(s) with most uses', 'Leader / all uses']
     : ['#', 'Term', 'Uses', 'Share'];
-  headers.forEach(label => {
+  const numericColumns = selectedTermView === 'leaders' ? [2] : [0, 2, 3];
+  headers.forEach((label, index) => {
     const cell = document.createElement('th');
     cell.scope = 'col';
     cell.textContent = label;
+    if (numericColumns.includes(index)) cell.classList.add('num');
+    if (selectedTermView === 'frequency' && index === 0) cell.classList.add('rank');
     head.appendChild(cell);
   });
   if (!available) {
@@ -964,12 +979,12 @@ function renderTermTable(language, summaries) {
       appendCell(row, leaders);
       appendCell(row, termUsageNode(item), 'num');
     } else {
-      appendCell(row, String(index + 1), 'num');
+      appendCell(row, String(index + 1), 'num rank');
       const detail = item.variants.length > 1
         ? `Grouped forms: ${item.variants.join(', ')}` : '';
       appendCell(row, censoredTermNode(item.term, detail));
-      appendCell(row, item.total_hits.toLocaleString(), 'num');
-      appendCell(row, allHits ? `${(100 * item.total_hits / allHits).toFixed(1)}%` : '0.0%', 'num');
+      appendCell(row, item.total_hits.toLocaleString(), 'num count');
+      appendCell(row, allHits ? `${(100 * item.total_hits / allHits).toFixed(1)}%` : '0.0%', 'num share');
     }
     body.appendChild(row);
   });
@@ -1055,19 +1070,21 @@ function renderStateMap(language, records) {
 }
 
 function renderTermExplorer(language) {
-  syncSelect(
-    document.getElementById('term-view'),
-    [
-      {key: 'leaders', label: 'Compare leading member(s) with everyone'},
-      {key: 'frequency', label: 'Most-used terms'},
-    ],
-    selectedTermView,
-    key => {
-      selectedTermView = key;
-      updateHash({termView: key});
+  document.querySelectorAll('#term-view button').forEach(button => {
+    button.setAttribute('aria-pressed', String(button.dataset.view === selectedTermView));
+    button.onclick = () => {
+      selectedTermView = button.dataset.view;
+      updateHash({termView: selectedTermView});
       renderTermExplorer(currentLanguage);
-    },
-  );
+    };
+  });
+  document.getElementById('term-leaders-heading').textContent = selectedTermView === 'leaders'
+    ? 'Who uses each term the most?' : 'Most-used terms';
+  document.getElementById('term-leaders-description').textContent = selectedTermView === 'leaders'
+    ? termLeaderDescription
+    : 'Terms ranked by accepted, unquoted uses in the selected scope. ' +
+      'Share is each term’s percentage of those uses. Related forms are grouped; ' +
+      'hover over or focus a censored term to reveal it.';
   syncSelect(
     document.getElementById('term-party'),
     [
@@ -1156,7 +1173,9 @@ const activityMetrics = [
 
 function selectActivityMetric(metric) {
   selectedActivityMetric = metric;
-  document.getElementById('activity-metric').value = metric;
+  document.querySelectorAll('#activity-metric button').forEach(button => {
+    button.setAttribute('aria-pressed', String(button.dataset.metric === metric));
+  });
   document.querySelectorAll('#leaderboards .card').forEach(card => {
     card.hidden = card.id !== metric;
   });
@@ -1216,6 +1235,7 @@ function renderActivityTable(metric, rows) {
     }
     values.forEach((value, index) => {
       const cell = activityCell(value, index === 1 ? item.member_url : '');
+      if (activityNumericColumns[metric].includes(index)) cell.classList.add('num');
       if (metric === 'profanity' && index === 4 && value !== '—') {
         cell.replaceChildren(censoredTermNode(value));
       }
@@ -1278,9 +1298,9 @@ const activityState = new URLSearchParams(location.hash.slice(1));
 if (activityMetrics.some(([metric]) => metric === activityState.get('table'))) {
   selectedActivityMetric = activityState.get('table');
 }
-document.getElementById('activity-metric').addEventListener(
-  'change', event => selectActivityMetric(event.target.value)
-);
+document.querySelectorAll('#activity-metric button').forEach(button => {
+  button.addEventListener('click', () => selectActivityMetric(button.dataset.metric));
+});
 selectActivityMetric(selectedActivityMetric);
 const requestedCongress = activityState.get('congress');
 if (requestedCongress && [...select.options].some(option => option.value === requestedCongress)
@@ -2021,14 +2041,18 @@ def _table(metric: str, rows: list[dict]) -> str:
         ),
     }
     headers, values = configs[metric]
-    head = "".join(f'<th scope="col">{html.escape(label)}</th>' for label in headers)
+    numeric = ACTIVITY_NUMERIC_COLUMNS[metric]
+    head = "".join(
+        f'<th scope="col" class="{"num" if index in numeric else ""}">{html.escape(label)}</th>'
+        for index, label in enumerate(headers)
+    )
     body = []
     for row in rows:
         cells = values(row)
         body.append(
             "<tr>"
             + "".join(
-                f"<td class=\"{'num' if index == 0 or index >= len(cells) - 3 else ''}\">"
+                f"<td class=\"{'num' if index in numeric else ''}\">"
                 f"{cell if isinstance(cell, _TrustedHTML) else html.escape(str(cell))}"
                 "</td>"
                 for index, cell in enumerate(cells)
@@ -2126,7 +2150,7 @@ def _term_leaders_table(rows: list[dict], *, available: bool) -> str:
         "Top congressional users of each observed profanity term</caption>"
         '<thead><tr><th scope="col">Term</th>'
         '<th scope="col">Member(s) with most uses</th>'
-        '<th scope="col">Leader / all uses</th>'
+        '<th scope="col" class="num">Leader / all uses</th>'
         f'</tr></thead><tbody>{"".join(body)}</tbody></table>'
         '<button id="term-row-toggle" class="term-row-toggle" type="button" '
         'aria-controls="term-leaders-table" aria-expanded="false" hidden></button>'
@@ -2198,12 +2222,13 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
         margin:.1rem 0 .5rem; }}
   h3 {{ font-size:1.12rem; margin:0 0 .3rem; }}
   a {{ color:var(--blue); }}
-  nav {{ display:flex; gap:.35rem; align-items:center; border-bottom:1px solid var(--grid);
-         padding-bottom:.9rem; }}
-  nav a {{ color:var(--muted); text-decoration:none; padding:.4rem .7rem;
+  nav {{ display:flex; gap:1.4rem; align-items:center; border-bottom:1px solid var(--grid); }}
+  nav a {{ color:var(--muted); text-decoration:none; padding:.65rem 0 .7rem;
+           border-bottom:2px solid transparent; margin-bottom:-1px;
            font-size:.88rem; font-weight:650; }}
-  nav a:hover {{ background:var(--soft); color:var(--text); }}
-  nav a[aria-current="page"] {{ color:var(--paper); background:var(--text); }}
+  nav a:hover {{ color:var(--text); }}
+  nav a[aria-current="page"] {{ color:var(--text); border-bottom-color:var(--text); }}
+  nav a:focus-visible {{ outline:2px solid var(--blue); outline-offset:4px; }}
   .skip-link {{ position:absolute; left:-9999px; top:.5rem; z-index:10;
                 background:var(--text); color:var(--paper); padding:.55rem .75rem; }}
   .skip-link:focus {{ left:.5rem; }}
@@ -2230,7 +2255,11 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
   .explorer-controls {{ display:grid; grid-template-columns:repeat(2,minmax(12rem,18rem));
                         gap:.75rem; margin:1rem 0 1.2rem; }}
   .recent-controls {{ grid-template-columns:2fr 1fr 1fr 1fr; }}
-  .term-controls {{ grid-template-columns:2fr 1fr 1fr; }}
+  .term-toolbar {{ display:flex; align-items:flex-end; flex-wrap:wrap; gap:1.5rem;
+                   margin:1rem 0 1.25rem; }}
+  .term-controls {{ grid-template-columns:repeat(2,minmax(0,12rem)); margin:0; }}
+  .term-controls select {{ min-width:0; }}
+  .term-toolbar .tab-row {{ margin:0; }}
   .explorer-controls label {{ display:grid; gap:.3rem; color:var(--muted);
                               font-size:.72rem; font-weight:800; letter-spacing:.08em;
                               text-transform:uppercase; }}
@@ -2243,13 +2272,14 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
   .overview {{ margin:1.25rem 0 2.5rem; }}
   .overview-intro {{ max-width:48rem; margin-bottom:1.5rem; }}
   .overview-intro p {{ color:var(--muted); margin:.35rem 0; }}
-  .tab-row {{ display:flex; gap:.4rem; flex-wrap:wrap; margin:.85rem 0; }}
-  .tab-button {{ appearance:none; border:1px solid var(--grid); background:transparent;
-                 color:var(--muted); padding:.52rem .8rem;
-                 font:inherit; font-size:.84rem; font-weight:700; cursor:pointer; }}
-  .tab-button:hover {{ color:var(--text); border-color:var(--muted); }}
+  .tab-row {{ display:flex; gap:.35rem 1.25rem; flex-wrap:wrap; margin:.85rem 0; }}
+  .tab-button {{ appearance:none; border:0; border-bottom:2px solid transparent;
+                 background:transparent; color:var(--muted); padding:.65rem 0;
+                 font:inherit; font-size:.86rem; font-weight:700; cursor:pointer; }}
+  .tab-button:hover {{ color:var(--text); }}
+  .tab-button:focus-visible {{ outline:2px solid var(--blue); outline-offset:4px; }}
   .tab-button[aria-selected="true"],.tab-button[aria-pressed="true"] {{
-    color:var(--paper); background:var(--text); border-color:var(--text);
+    color:var(--text); border-bottom-color:var(--text);
   }}
   .focus-panel {{ background:var(--paper); border:1px solid var(--grid);
                   padding:1rem 1.2rem; }}
@@ -2309,8 +2339,9 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
                  border:1px solid var(--grid); }}
   .term-explorer-grid {{ display:grid; grid-template-columns:minmax(0,1.45fr) minmax(20rem,.55fr);
                          gap:1rem; align-items:start; }}
-  .term-explorer-grid .card {{ margin:0; height:100%; }}
-  .term-explorer-grid .table-wrap {{ padding:.45rem 1rem 1rem; }}
+  .term-explorer-grid[data-view="frequency"] {{ grid-template-columns:repeat(2,minmax(0,1fr)); }}
+  .term-explorer-grid .card {{ margin:0; }}
+  .term-explorer-grid .table-wrap {{ padding:.6rem .85rem .8rem; }}
   .state-map-card figcaption {{ margin:0 0 .75rem; }}
   .state-map-card figcaption strong {{ display:block; font-family:var(--serif); font-size:1.35rem; }}
   #state-term-map svg {{ display:block; width:100%; height:auto; }}
@@ -2326,7 +2357,7 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
   tbody tr:nth-child(even) {{ background:rgb(234 229 218 / 28%); }}
   tbody tr:hover {{ background:rgb(61 111 140 / 8%); }}
   tbody tr:last-child td {{ border-bottom:0; }}
-  td.num {{ font-variant-numeric:tabular-nums; text-align:right; }}
+  th.num,td.num {{ font-variant-numeric:tabular-nums; text-align:right; }}
   td a {{ text-underline-offset:.16em; text-decoration-thickness:.06em; }}
   #term-leaders-table {{ table-layout:fixed; }}
   #term-leaders-table[data-view="leaders"] th:first-child,
@@ -2334,13 +2365,26 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
   #term-leaders-table[data-view="leaders"] th:last-child,
   #term-leaders-table[data-view="leaders"] td:last-child {{ width:12rem; }}
   #term-leaders-table[data-view="leaders"] td:first-child,
-  #term-leaders-table[data-view="totals"] td:nth-child(2) {{ font-size:.82rem; }}
-  #term-leaders-table[data-view="totals"] th:first-child,
-  #term-leaders-table[data-view="totals"] td:first-child {{ width:2.5rem; }}
-  #term-leaders-table[data-view="totals"] th:nth-child(3),
-  #term-leaders-table[data-view="totals"] td:nth-child(3),
-  #term-leaders-table[data-view="totals"] th:last-child,
-  #term-leaders-table[data-view="totals"] td:last-child {{ width:4.4rem; }}
+  #term-leaders-table[data-view="frequency"] td:nth-child(2) {{ font-size:.86rem; }}
+  #term-leaders-table[data-view="frequency"] .rank {{
+    width:2.5rem; color:var(--muted); font-size:.72rem; font-weight:400;
+  }}
+  #term-leaders-table[data-view="frequency"] th:nth-child(3),
+  #term-leaders-table[data-view="frequency"] td:nth-child(3) {{ width:5.25rem; }}
+  #term-leaders-table[data-view="frequency"] th:last-child,
+  #term-leaders-table[data-view="frequency"] td:last-child {{ width:5rem; }}
+  #term-leaders-table[data-view="frequency"] th {{ border-bottom-width:1px; }}
+  #term-leaders-table[data-view="frequency"] td {{
+    padding:.48rem .6rem; border-bottom-color:rgb(216 211 201 / 55%);
+  }}
+  #term-leaders-table[data-view="frequency"] tbody tr:nth-child(even) {{ background:transparent; }}
+  #term-leaders-table[data-view="frequency"] tbody tr:hover {{ background:rgb(61 111 140 / 4%); }}
+  #term-leaders-table[data-view="frequency"] td:nth-child(2),
+  #term-leaders-table[data-view="frequency"] .count {{ font-weight:600; }}
+  #term-leaders-table[data-view="frequency"] .share {{ color:var(--muted); font-size:.78rem; }}
+  #term-leaders-table[data-view="frequency"] .censored-term {{
+    white-space:normal; overflow-wrap:anywhere;
+  }}
   #term-leaders-table td:nth-child(2) a {{ color:var(--text); font-size:.84rem;
                                           font-weight:650; text-decoration:none; }}
   #term-leaders-table td:nth-child(2) a:hover {{ color:var(--blue);
@@ -2356,11 +2400,12 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
                  text-align:right; white-space:nowrap; }}
   .term-usage strong {{ font-size:.88rem; }}
   .term-usage span {{ color:var(--muted); font-size:.76rem; }}
-  .term-row-toggle {{ display:block; margin:.8rem auto .25rem; border:1px solid var(--grid);
-                      background:var(--paper); color:var(--blue);
-                      padding:.45rem .9rem; font:inherit; font-size:.76rem; font-weight:750;
-                      cursor:pointer; }}
-  .term-row-toggle:hover {{ border-color:var(--blue); background:rgb(61 111 140 / 7%); }}
+  .term-row-toggle {{ display:block; margin:.8rem 0 .2rem; border:0;
+                      background:transparent; color:var(--muted);
+                      padding:.25rem 0; font:inherit; font-size:.78rem; font-weight:600;
+                      text-decoration:underline; text-underline-offset:.2em; cursor:pointer; }}
+  .term-row-toggle:hover {{ color:var(--blue); }}
+  .term-row-toggle:focus-visible {{ outline:2px solid var(--blue); outline-offset:4px; }}
   .term-row-toggle[hidden] {{ display:none; }}
   img {{ width:100%; height:auto; }}
   li {{ margin:.4rem 0; }}
@@ -2371,11 +2416,21 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
     .overview-intro,.methodology-grid,.recent-shell,.term-explorer-grid {{
       grid-template-columns:1fr;
     }}
+    .term-toolbar {{ display:grid; gap:.85rem; }}
+    .term-explorer-grid[data-view="frequency"] {{ grid-template-columns:1fr; }}
     .context-panel {{ position:static; }}
     .chart-card {{ padding:.3rem; }}
-    #term-leaders-table th:first-child,#term-leaders-table td:first-child {{ width:22%; }}
-    #term-leaders-table th:last-child,#term-leaders-table td:last-child {{ width:36%; }}
+    #term-leaders-table[data-view="leaders"] th:first-child,
+    #term-leaders-table[data-view="leaders"] td:first-child {{ width:22%; }}
+    #term-leaders-table[data-view="leaders"] th:last-child,
+    #term-leaders-table[data-view="leaders"] td:last-child {{ width:36%; }}
+    #term-leaders-table[data-view="frequency"] .rank {{ width:2rem; }}
+    #term-leaders-table[data-view="frequency"] th:nth-child(3),
+    #term-leaders-table[data-view="frequency"] td:nth-child(3),
+    #term-leaders-table[data-view="frequency"] th:last-child,
+    #term-leaders-table[data-view="frequency"] td:last-child {{ width:4rem; }}
     #term-leaders-table th,#term-leaders-table td {{ padding:.46rem .35rem; }}
+    #term-leaders-table[data-view="frequency"] td {{ padding:.46rem .35rem; }}
     .term-usage {{ flex-wrap:wrap; gap:.12rem .24rem; }}
     #language-tables table {{ font-size:.78rem; table-layout:fixed; }}
     #language-tables th,#language-tables td {{ padding:.32rem .25rem; overflow-wrap:anywhere; }}
@@ -2446,7 +2501,7 @@ party comparisons extend to 1873.</p></div>
 <div class="section-header term-section-header">
 <div><p class="eyebrow" id="term-leaders-scope">{html.escape(language['scope_label'])} · House + Senate</p>
 <h2 id="term-leaders-heading">Who uses each term the most?</h2>
-<p class="sub">Shows the member or tied members with the most accepted, unquoted uses of each
+<p class="sub" id="term-leaders-description">Shows the member or tied members with the most accepted, unquoted uses of each
 grouped term. “Total” includes all attributed members; “each” applies to every member in a tie.
 Related forms are grouped, while raw matches remain in the downloadable data. Terms are censored;
 hover over or focus one to reveal it.</p>
@@ -2457,10 +2512,17 @@ hover over or focus one to reveal it.</p>
     else "Term-level detail has not been backfilled for this historical scope."
 }</p></div>
 </div>
+<div class="term-toolbar">
+<div id="term-view" class="tab-row" role="group" aria-label="Term view">
+<button type="button" class="tab-button" data-view="leaders"
+ aria-pressed="true" aria-controls="term-leaders-table">Member leaders</button>
+<button type="button" class="tab-button" data-view="frequency"
+ aria-pressed="false" aria-controls="term-leaders-table">Term frequency</button>
+</div>
 <div class="explorer-controls term-controls">
-<label>Table<select id="term-view"></select></label>
 <label>Party<select id="term-party"></select></label>
 <label>Chamber<select id="term-chamber"></select></label>
+</div>
 </div>
 <div class="term-explorer-grid">
 <div class="card table-wrap">{_term_leaders_table(
@@ -2580,8 +2642,10 @@ def _render_activity_html(payload: dict, congresses: list[int]) -> str:
         ("enacted", "Whose sponsored bills become law"),
         ("profanity", "Who uses profanity at the highest rate"),
     ]
-    metric_options = "".join(
-        f'<option value="{metric}">{html.escape(label)}</option>'
+    metric_buttons = "".join(
+        f'<button type="button" class="tab-button" data-metric="{metric}" '
+        f'aria-pressed="{"true" if metric == "speech" else "false"}" '
+        f'aria-controls="{metric}">{html.escape(label)}</button>'
         for metric, label in (
             ("speech", "Speech"),
             ("sponsored", "Sponsored bills"),
@@ -2622,16 +2686,17 @@ passage, enactment, and profanity tables by Congress.">
           margin:0 auto; padding:1.4rem 1.25rem 4rem; max-width:74rem; line-height:1.55; }}
   h1,h2 {{ font-family:var(--serif); }}
   nav,select,button,table,.eyebrow,.controls,footer {{ font-family:var(--sans); }}
-  h1 {{ font-size:clamp(2.4rem,5vw,4.2rem); line-height:1; letter-spacing:-.04em;
-        margin:2.4rem 0 1rem; }}
+  h1 {{ font-size:clamp(2rem,3.4vw,3.2rem); line-height:1.1; letter-spacing:-.035em;
+        margin:2rem 0 .8rem; text-wrap:balance; }}
   h2 {{ font-size:1.7rem; margin:.1rem 0 .3rem; }}
   a {{ color:var(--blue); }}
-  nav {{ display:flex; gap:.35rem; align-items:center; border-bottom:1px solid var(--grid);
-         padding-bottom:.9rem; }}
-  nav a {{ color:var(--muted); text-decoration:none; padding:.4rem .7rem;
+  nav {{ display:flex; gap:1.4rem; align-items:center; border-bottom:1px solid var(--grid); }}
+  nav a {{ color:var(--muted); text-decoration:none; padding:.65rem 0 .7rem;
+           border-bottom:2px solid transparent; margin-bottom:-1px;
            font-size:.88rem; font-weight:650; }}
-  nav a:hover {{ background:var(--soft); color:var(--text); }}
-  nav a[aria-current="page"] {{ color:var(--paper); background:var(--text); }}
+  nav a:hover {{ color:var(--text); }}
+  nav a[aria-current="page"] {{ color:var(--text); border-bottom-color:var(--text); }}
+  nav a:focus-visible {{ outline:2px solid var(--blue); outline-offset:4px; }}
   .skip-link {{ position:absolute; left:-9999px; top:.5rem; z-index:10;
                 background:var(--text); color:var(--paper); padding:.55rem .75rem; }}
   .skip-link:focus {{ left:.5rem; }}
@@ -2645,21 +2710,22 @@ passage, enactment, and profanity tables by Congress.">
     font-size:.78rem; font-weight:600; letter-spacing:normal; text-transform:none;
     white-space:nowrap; box-shadow:0 2px 8px rgb(0 0 0 / 20%);
   }}
-  .hero-deck {{ font-size:1.08rem; max-width:48rem; }}
-  .toolbar {{ display:flex; justify-content:space-between; gap:1rem; align-items:center;
-              margin:2rem 0 1rem; }}
+  .hero-deck {{ font-size:1rem; max-width:48rem; margin:0; line-height:1.65; }}
+  .toolbar {{ display:flex; flex-wrap:wrap; gap:1.5rem 2rem; align-items:flex-end;
+              margin:1.8rem 0 1.25rem; }}
   .toolbar label {{ display:grid; gap:.3rem; color:var(--muted); font-size:.72rem;
                     font-weight:800; letter-spacing:.08em; text-transform:uppercase; }}
   .toolbar select {{ color:var(--text); text-transform:none; letter-spacing:normal;
-                     font-weight:650; min-width:12rem; }}
+                     font-weight:650; min-width:0; width:13rem; max-width:100%; }}
   select {{ font:inherit; padding:.6rem 2.2rem .6rem .8rem; background:var(--paper);
             border:1px solid var(--grid); }}
-  .tab-row {{ display:flex; gap:.4rem; flex-wrap:wrap; margin:.9rem 0 1.2rem; }}
-  .tab-button {{ appearance:none; border:1px solid var(--grid); background:transparent;
-                 color:var(--muted); padding:.52rem .8rem;
-                 font:inherit; font-size:.84rem; font-weight:700; cursor:pointer; }}
-  .tab-button[aria-pressed="true"] {{ color:var(--paper); background:var(--text);
-                                     border-color:var(--text); }}
+  .tab-row {{ display:flex; gap:.35rem 1.25rem; flex-wrap:wrap; margin:0; }}
+  .tab-button {{ appearance:none; border:0; border-bottom:2px solid transparent;
+                 background:transparent; color:var(--muted); padding:.65rem 0;
+                 font:inherit; font-size:.86rem; font-weight:700; cursor:pointer; }}
+  .tab-button:hover {{ color:var(--text); }}
+  .tab-button:focus-visible {{ outline:2px solid var(--blue); outline-offset:4px; }}
+  .tab-button[aria-pressed="true"] {{ color:var(--text); border-bottom-color:var(--text); }}
   .warning {{ background:#FFF3CD; border-left:4px solid #C7922B; padding:.8rem 1rem; margin:1rem 0; }}
   .error {{ color:#8A1C1C; font-weight:bold; }}
   .card {{ background:var(--paper); border:1px solid var(--grid);
@@ -2673,6 +2739,7 @@ passage, enactment, and profanity tables by Congress.">
   .table-wrap {{ overflow-x:auto; border:1px solid var(--grid);
                  background:var(--paper); }}
   table {{ border-collapse:separate; border-spacing:0; width:100%; font-size:.92rem; }}
+  table th:first-child,table td:first-child {{ width:2.75rem; color:var(--muted); }}
   th,td {{ padding:.72rem .7rem; border-bottom:1px solid var(--grid); text-align:left;
            vertical-align:middle; }}
   th {{ position:sticky; top:0; z-index:1; background:var(--paper); color:var(--muted);
@@ -2681,15 +2748,18 @@ passage, enactment, and profanity tables by Congress.">
   tbody tr:nth-child(even) {{ background:rgb(234 229 218 / 28%); }}
   tbody tr:hover {{ background:rgb(61 111 140 / 8%); }}
   tbody tr:last-child td {{ border-bottom:0; }}
-  td.num {{ font-variant-numeric:tabular-nums; text-align:right; }}
+  th.num,td.num {{ font-variant-numeric:tabular-nums; text-align:right; }}
   td a {{ text-underline-offset:.16em; text-decoration-thickness:.06em; }}
   li {{ margin:.4rem 0; }}
   footer {{ margin-top:3rem; color:var(--muted); font-size:.86rem; }}
   @media (max-width:44rem) {{
     body {{ padding:1.5rem .75rem 3rem; }}
-    .toolbar {{ display:block; }}
-    .toolbar label {{ display:grid; margin-top:.75rem; }}
+    .toolbar {{ display:grid; gap:1rem; }}
+    .toolbar label {{ max-width:16rem; }}
     table {{ table-layout:fixed; font-size:.78rem; }}
+    table th:first-child,table td:first-child {{ width:2rem; }}
+    table[data-metric="speech"] th:nth-child(6),
+    table[data-metric="speech"] td:nth-child(6) {{ width:7rem; }}
     th,td {{ padding:.36rem .28rem; overflow-wrap:normal; }}
     table[data-metric="speech"] th:nth-child(3),table[data-metric="speech"] td:nth-child(3),
     table[data-metric="speech"] th:nth-child(4),table[data-metric="speech"] td:nth-child(4),
@@ -2721,11 +2791,12 @@ passage, enactment, and profanity tables by Congress.">
 <nav aria-label="Primary"><a href="../">The Language of Congress</a>
 <a href="./" aria-current="page">Member activity and bills</a></nav>
 <main id="main-content">
-<h1>Congressional member activity and bills</h1>
+<h1>Member activity &amp; bills</h1>
 <p class="sub hero-deck">Explore member speech, bill sponsorship, passage, enactment,
 and profanity by Congress.</p>
 <div class="toolbar">
-<label for="activity-metric">Table<select id="activity-metric">{metric_options}</select></label>
+<div id="activity-metric" class="tab-row" role="group" aria-label="Activity measure">
+{metric_buttons}</div>
 <label for="congress">Congress<select id="congress">{''.join(options)}</select></label>
 </div>
 <div id="coverage-warning" class="warning" {'hidden' if not warning else ''}>{html.escape(warning)}</div>
@@ -2736,7 +2807,9 @@ and profanity by Congress.</p>
 <footer id="coverage">Speech coverage {html.escape(payload['coverage']['speech_first_date'])}
 to {html.escape(payload['coverage']['speech_last_date'])}; {_fmt_int(payload['coverage']['bills'])}
 H.R./S. bill records. Site data snapshot: {html.escape(payload['generated_utc'])}.</footer>
-<script>{ACTIVITY_JS}</script>
+<script>
+const activityNumericColumns = {_script_json(ACTIVITY_NUMERIC_COLUMNS)};
+{ACTIVITY_JS}</script>
 </body>
 </html>
 """

@@ -18,6 +18,7 @@ from unittest.mock import patch
 
 import pandas as pd
 import pytest
+from bs4 import BeautifulSoup
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
@@ -345,6 +346,16 @@ def test_profanity_tables_show_each_members_most_used_term(store, tmp_path):
     assert "renderTermExplorer(language)" in page
     assert "recentTermDetailAvailable" in page
     assert 'id="term-view"' in page
+    view_switch = BeautifulSoup(page, "html.parser").find(id="term-view")
+    assert view_switch.name == "div"
+    assert view_switch.get("role") == "group"
+    assert [button.get_text() for button in view_switch.find_all("button")] == [
+        "Member leaders", "Term frequency",
+    ]
+    assert 'data-view="totals"' not in page
+    assert '#term-leaders-table[data-view="frequency"] .rank' in page
+    assert "th.num,td.num" in page
+    assert 'id="term-leaders-description"' in page
     assert 'id="term-party"' in page
     assert 'id="term-chamber"' in page
     assert 'id="state-term-map"' in page
@@ -504,6 +515,17 @@ def test_payload_and_html_expose_selector_aware_language_graphs(store, tmp_path)
     assert "Who sponsors the most bills" in activity_page
     assert "The Language of Congress" in activity_page
     assert 'id="activity-metric"' in activity_page
+    activity_document = BeautifulSoup(activity_page, "html.parser")
+    assert activity_document.h1.get_text() == "Member activity & bills"
+    activity_switch = activity_document.find(id="activity-metric")
+    assert activity_switch.get("role") == "group"
+    assert len(activity_switch.find_all("button")) == 5
+    assert activity_document.select_one("select#activity-metric") is None
+    assert "<label>Table" not in page
+    assert '>Table<select' not in activity_page
+    assert "clamp(2rem,3.4vw,3.2rem)" in activity_page
+    assert "table th:first-child,table td:first-child { width:2rem; }" in activity_page
+    assert "const activityNumericColumns" in activity_page
     assert "selectActivityMetric" in activity_page
     assert "activityMetrics" in activity_page
     assert 'id="leaderboards"' in activity_page
@@ -515,6 +537,17 @@ def test_payload_and_html_expose_selector_aware_language_graphs(store, tmp_path)
         'href="https://www.themarginoferror.com/'
         'professional_profanity/activity/"'
     ) in activity_redirect
+
+
+def test_activity_headers_share_the_client_numeric_column_mapping():
+    module = _load_build_site()
+    for metric, columns in module.ACTIVITY_NUMERIC_COLUMNS.items():
+        table = BeautifulSoup(module._table(metric, []), "html.parser")
+        headers = table.find_all("th")
+        assert [
+            index for index, header in enumerate(headers)
+            if "num" in header.get("class", [])
+        ] == columns
 
 
 def test_nonselected_extension_only_congress_does_not_break_charts(store, tmp_path):
