@@ -73,6 +73,10 @@ def test_html_to_text_preserves_non_spoken_bullets_and_their_contents() -> None:
     assert "\u2211Mr. SECOND. Submitted.\u2211" in text
     assert "Mr. FIRST. Spoken." in text
     assert "Mr. THIRD. Spoken again." in text
+    closed = html_to_text(
+        "<pre><bullet>Submitted.</bullet>\nMr. THIRD. Spoken again.</pre>"
+    )
+    assert closed == "\u2211Submitted.\u2211\nMr. THIRD. Spoken again.\n"
 
 
 def test_parse_mods_fields() -> None:

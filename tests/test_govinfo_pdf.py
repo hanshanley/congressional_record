@@ -272,6 +272,33 @@ def test_pdf_columns_wrapping_and_publication_headers(monkeypatch):
     assert all("#pdf-" in r["turn_id"] for r in rows)
 
 
+def test_pdf_capitalized_continuation_line_does_not_end_a_speech(monkeypatch):
+    _mock_roster(monkeypatch)
+    data = _pdf([[
+        (53, 210, "Mr. SMITH. I ask to enter this into the", 8),
+        (45, 221, "RECORD.", 8),
+        (53, 232, "The rest of my floor remarks continues.", 8),
+    ]])
+    rows = list(_section_turns(data, "CREC-2026-09-16-house", "2026-09-16", 119, "house"))
+    eligible = [r for r in rows if r["bioguide"]]
+    assert len(eligible) == 1
+    assert "RECORD." in eligible[0]["text"]
+    assert "floor remarks continues." in eligible[0]["text"]
+
+
+def test_pdf_editorial_subheading_preserves_the_current_floor_speaker(monkeypatch):
+    _mock_roster(monkeypatch)
+    data = _pdf([[
+        (53, 210, "Mr. SMITH. First topic.", 8),
+        (122, 228, "IRAN", 6),
+        (53, 244, "My floor remarks continue.", 8),
+    ]])
+    rows = list(_section_turns(data, "CREC-2026-09-16-senate", "2026-09-16", 119, "senate"))
+    eligible = [r for r in rows if r["bioguide"]]
+    assert len(eligible) == 1
+    assert eligible[0]["text"] == "First topic. My floor remarks continue."
+
+
 def test_pdf_section_boundaries_and_insertions_end_member_attribution(monkeypatch):
     _mock_roster(monkeypatch)
     data = _pdf([[

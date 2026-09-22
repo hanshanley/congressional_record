@@ -26,7 +26,7 @@ LOG = logging.getLogger("analysis.ingest.govinfo_pdf")
 _COLUMNS = ((40, 219), (219, 396), (396, 572))
 _GUTTERS = ((218, 221), (395, 398))
 _TIME_MARKER = re.compile(r"^b\s+\d{4}$")
-_HEADING = re.compile(r"^[A-Z0-9][A-Z0-9 .,'\u2019\u2014\u2013()/-]{5,}$")
+_HEADING = re.compile(r"^[A-Z0-9][A-Z0-9 .,'\u2019\u2014\u2013()/-]{1,}$")
 _ROLLCALL = re.compile(r"^\[(?:Roll No\.|Rollcall Vote No\.)\s*\d+", re.I)
 _HYPHENATED_WORD = re.compile(r"\b[A-Za-z]+(?:-[A-Za-z]+)+\b")
 
@@ -113,7 +113,7 @@ def _paragraphs(data: bytes, chamber: str, label: str) -> list[_Paragraph]:
                         f"{label}: non-columnar layout on page {page_number}", kind="layout",
                     ))
                     continue
-                for (left, _), lines in zip(_COLUMNS, lines_by_column):
+                for (left, right), lines in zip(_COLUMNS, lines_by_column):
                     previous_top = None
                     for line in lines:
                         text = _plain(re.sub(r"\s+", " ", line["text"]).strip())
@@ -124,10 +124,13 @@ def _paragraphs(data: bytes, chamber: str, label: str) -> list[_Paragraph]:
                             paragraphs.append(_Paragraph("", kind="boundary"))
                             continue
                         is_direct, is_printed = _line_style(line, left)
-                        heading = bool(_HEADING.fullmatch(text))
+                        heading = (
+                            bool(_HEADING.fullmatch(text))
+                            and abs((line["x0"] + line["x1"]) / 2 - (left + right) / 2) <= 4
+                        )
                         if heading:
                             flush()
-                            paragraphs.append(_Paragraph(text, kind="boundary"))
+                            paragraphs.append(_Paragraph(text, kind="heading"))
                             previous_top = line["top"]
                             continue
                         if (
@@ -192,6 +195,8 @@ def _section_turns(
         current.clear()
 
     for paragraph in paragraphs:
+        if paragraph.kind == "heading":
+            continue
         if paragraph.kind == "layout":
             yield from flush()
             if not printing and chamber in {"house", "senate"}:

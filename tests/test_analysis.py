@@ -294,6 +294,33 @@ def test_material_printed_by_unanimous_consent_is_not_attributed() -> None:
     assert not turns[1]["bioguide"]
 
 
+def test_indented_inserted_letter_is_not_scored_as_floor_remarks():
+    turns = list(build_turns(
+        "Mr. SMITH. I include the following letter in the Record.\n\n"
+        "                         September 14, 2026.\n"
+        "     Dear Committee Members:\n"
+        "       Printed letter, not spoken floor remarks.\n",
+        [{"name": "Smith, Member", "bioguide": "S1", "party": "D", "state": "CA"}],
+        "CREC-2026-09-16-pt1-PgH1", "2026-09-16", 119, "house",
+    ))
+    assert len(turns) == 2
+    assert turns[0]["text"] == "I include the following letter in the Record."
+    assert turns[0]["bioguide"] == "S1"
+    assert turns[1]["is_procedural"] and not turns[1]["bioguide"]
+
+
+def test_single_centered_editorial_heading_does_not_hide_floor_remarks():
+    turns = list(build_turns(
+        "Mr. SMITH. First topic.\n\n"
+        "                             Next Topic\n\n"
+        "  My floor remarks continue.\n",
+        [{"name": "Smith, Member", "bioguide": "S1", "party": "D", "state": "CA"}],
+        "CREC-2026-09-16-pt1-PgH1", "2026-09-16", 119, "house",
+    ))
+    assert len(turns) == 1
+    assert turns[0]["text"].endswith("My floor remarks continue.")
+
+
 def test_fuzzy_keyword_matching() -> None:
     from analysis.score.scorers import morph_variants, plural_variants
     # morphological variants for single words

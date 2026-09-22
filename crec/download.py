@@ -33,6 +33,7 @@ def html_to_text(html: str) -> str:
     CREC HTML wraps the transcript in a ``<pre>`` block; fall back to full text
     extraction if that structure is missing.
     """
+    html = re.sub(r"</bullet\s*>", NON_SPOKEN_MARKER, html, flags=re.IGNORECASE)
     soup = BeautifulSoup(html, "html.parser")
     # GovInfo uses paired, unclosed <bullet> tags for statements not spoken
     # on the Senate floor. get_text() alone silently discards that distinction.

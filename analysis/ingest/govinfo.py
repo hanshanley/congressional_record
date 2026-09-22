@@ -70,6 +70,9 @@ _INSERTED_MATERIAL_RE = re.compile(
     r"|The text of\b[\s\S]{0,300}?\bis as follows:"
     r")"
 )
+_INDENTED_MATERIAL_RE = re.compile(
+    r"(?m)^[ \t]{5,}\S[^\n]*\n(?:[ \t]*\n)?[ \t]{5,}\S"
+)
 
 # Standard CREC transcript header lines to drop before segmenting.
 _HEADER_LINE = re.compile(
@@ -235,9 +238,13 @@ def non_spoken_sections(text: str, initial: bool = False) -> Iterator[Tuple[str,
 
 def _split_inserted_material(body: str) -> Tuple[str, str]:
     """Split spoken remarks from standardized material printed into the Record."""
-    match = _INSERTED_MATERIAL_RE.search(body)
-    if not match:
+    matches = [
+        match for pattern in (_INSERTED_MATERIAL_RE, _INDENTED_MATERIAL_RE)
+        if (match := pattern.search(body)) is not None
+    ]
+    if not matches:
         return body, ""
+    match = min(matches, key=lambda found: found.start())
     return body[:match.start()].rstrip(), body[match.start():].lstrip()
 
 
