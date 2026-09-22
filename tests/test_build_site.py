@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import re
 import subprocess
 import sys
 import zipfile
@@ -156,6 +157,13 @@ def test_build_writes_html_json_and_figures(store, tmp_path):
                 "figures/leaderboard.png", "figures/trend.png",
                 "figures/language_trends.png", "figures/language_members.png"):
         assert (out / rel).exists(), rel
+    for rel in ("index.html", "activity/index.html"):
+        document = (out / rel).read_text()
+        radii = re.findall(r"border(?:-[a-z]+)*-radius\s*:\s*([^;}]+)", document)
+        assert radii and all(value.strip() == "0" for value in radii), rel
+        assert "*,*::before,*::after" in document
+        rect_radii = re.findall(r"\b(?:rx|ry)\s*:\s*([0-9.]+)", document)
+        assert all(float(value) == 0 for value in rect_radii), rel
 
 
 def test_legacy_leaderboard_dates_use_selected_congress_scope(store, tmp_path):

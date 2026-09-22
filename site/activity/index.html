@@ -12,7 +12,7 @@ passage, enactment, and profanity tables by Congress.">
            --grid:#D8D3C9; --blue:#3D6F8C; --paper:#FFFEFA; --soft:#EAE5DA;
            --serif:Georgia,'Times New Roman',serif;
            --sans:Arial,Helvetica,sans-serif; }
-  * { box-sizing:border-box; }
+  *,*::before,*::after { box-sizing:border-box; border-radius:0; }
   body { background:var(--bg); color:var(--text);
           font-family:var(--sans);
           margin:0 auto; padding:1.4rem 1.25rem 4rem; max-width:74rem; line-height:1.55; }
@@ -24,7 +24,7 @@ passage, enactment, and profanity tables by Congress.">
   a { color:var(--blue); }
   nav { display:flex; gap:.35rem; align-items:center; border-bottom:1px solid var(--grid);
          padding-bottom:.9rem; }
-  nav a { color:var(--muted); text-decoration:none; padding:.4rem .7rem; border-radius:999px;
+  nav a { color:var(--muted); text-decoration:none; padding:.4rem .7rem;
            font-size:.88rem; font-weight:650; }
   nav a:hover { background:var(--soft); color:var(--text); }
   nav a[aria-current="page"] { color:var(--paper); background:var(--text); }
@@ -37,7 +37,7 @@ passage, enactment, and profanity tables by Congress.">
   .censored-term:focus-visible { outline:2px solid var(--blue); outline-offset:2px; }
   .censored-term:hover::after,.censored-term:focus::after {
     content:attr(data-term); position:absolute; left:0; bottom:calc(100% + .35rem); z-index:5;
-    background:var(--text); color:var(--paper); padding:.3rem .45rem; border-radius:.25rem;
+    background:var(--text); color:var(--paper); padding:.3rem .45rem;
     font-size:.78rem; font-weight:600; letter-spacing:normal; text-transform:none;
     white-space:nowrap; box-shadow:0 2px 8px rgb(0 0 0 / 20%);
   }
@@ -49,24 +49,24 @@ passage, enactment, and profanity tables by Congress.">
   .toolbar select { color:var(--text); text-transform:none; letter-spacing:normal;
                      font-weight:650; min-width:12rem; }
   select { font:inherit; padding:.6rem 2.2rem .6rem .8rem; background:var(--paper);
-            border:1px solid var(--grid); border-radius:.45rem; }
+            border:1px solid var(--grid); }
   .tab-row { display:flex; gap:.4rem; flex-wrap:wrap; margin:.9rem 0 1.2rem; }
   .tab-button { appearance:none; border:1px solid var(--grid); background:transparent;
-                 color:var(--muted); border-radius:999px; padding:.52rem .8rem;
+                 color:var(--muted); padding:.52rem .8rem;
                  font:inherit; font-size:.84rem; font-weight:700; cursor:pointer; }
   .tab-button[aria-pressed="true"] { color:var(--paper); background:var(--text);
                                      border-color:var(--text); }
   .warning { background:#FFF3CD; border-left:4px solid #C7922B; padding:.8rem 1rem; margin:1rem 0; }
   .error { color:#8A1C1C; font-weight:bold; }
-  .card { background:var(--paper); border:1px solid var(--grid); border-radius:.65rem;
-           padding:1.2rem; margin:0 0 2rem; box-shadow:0 12px 35px rgb(40 34 24 / 6%); }
-  .notes { background:var(--paper); border:1px solid var(--grid); border-radius:.45rem;
+  .card { background:var(--paper); border:1px solid var(--grid);
+           padding:1.2rem; margin:0 0 2rem; }
+  .notes { background:var(--paper); border:1px solid var(--grid);
             padding:.75rem 1rem; margin:1rem 0; }
   .notes summary { cursor:pointer; font-weight:750; }
   .sr-only { position:absolute !important; width:1px !important; height:1px !important;
               padding:0 !important; margin:-1px !important; overflow:hidden !important;
               clip:rect(0,0,0,0) !important; white-space:nowrap !important; border:0 !important; }
-  .table-wrap { overflow-x:auto; border:1px solid var(--grid); border-radius:.55rem;
+  .table-wrap { overflow-x:auto; border:1px solid var(--grid);
                  background:var(--paper); }
   table { border-collapse:separate; border-spacing:0; width:100%; font-size:.92rem; }
   th,td { padding:.72rem .7rem; border-bottom:1px solid var(--grid); text-align:left;

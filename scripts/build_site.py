@@ -624,7 +624,7 @@ function renderMemberPanel(language, key) {
       'data-party': row.party || 'other',
     });
     const bar = svgNode('rect', {
-      x: margin.left, y: py + 5, width: Math.max(1, barWidth), height: 23, rx: 2,
+      x: margin.left, y: py + 5, width: Math.max(1, barWidth), height: 23, rx: 0,
       fill: chartColors[row.party] || chartColors.other,
       'data-party': row.party || 'other',
     });
@@ -1020,7 +1020,7 @@ function renderStateMap(language, records) {
     const shade = winner ? shades[Math.min(5, Math.max(1, Math.ceil(ratio * 5)))] : shades[0];
     const group = svgNode('g', {transform: `translate(${column * 78 + 10} ${row * 75 + 18})`});
     const tile = svgNode('rect', {
-      width: 70, height: 67, rx: 7, fill: shade, stroke: '#FFFEFA', 'stroke-width': 2,
+      width: 70, height: 67, rx: 0, fill: shade, stroke: '#FFFEFA', 'stroke-width': 2,
     });
     const tooltip = winner
       ? `${state}: ${winner.terms.join(' / ')} (${winner.hits.toLocaleString()} uses)`
@@ -2184,7 +2184,7 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
            --paper:#FFFEFA; --soft:#EAE5DA;
            --serif:Georgia,'Times New Roman',serif;
            --sans:Arial,Helvetica,sans-serif; }}
-  * {{ box-sizing:border-box; }}
+  *,*::before,*::after {{ box-sizing:border-box; border-radius:0; }}
   body {{ background:var(--bg); color:var(--text);
           font-family:var(--sans);
           margin:0 auto; padding:1.4rem 1.25rem 4rem; max-width:74rem; line-height:1.55; }}
@@ -2200,7 +2200,7 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
   a {{ color:var(--blue); }}
   nav {{ display:flex; gap:.35rem; align-items:center; border-bottom:1px solid var(--grid);
          padding-bottom:.9rem; }}
-  nav a {{ color:var(--muted); text-decoration:none; padding:.4rem .7rem; border-radius:999px;
+  nav a {{ color:var(--muted); text-decoration:none; padding:.4rem .7rem;
            font-size:.88rem; font-weight:650; }}
   nav a:hover {{ background:var(--soft); color:var(--text); }}
   nav a[aria-current="page"] {{ color:var(--paper); background:var(--text); }}
@@ -2213,7 +2213,7 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
   .censored-term:focus-visible {{ outline:2px solid var(--blue); outline-offset:2px; }}
   .censored-term:hover::after,.censored-term:focus::after {{
     content:attr(data-term); position:absolute; left:0; bottom:calc(100% + .35rem); z-index:5;
-    background:var(--text); color:var(--paper); padding:.3rem .45rem; border-radius:.25rem;
+    background:var(--text); color:var(--paper); padding:.3rem .45rem;
     font-size:.78rem; font-weight:600; letter-spacing:normal; text-transform:none;
     white-space:nowrap; box-shadow:0 2px 8px rgb(0 0 0 / 20%);
   }}
@@ -2223,7 +2223,7 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
   .section-header p {{ margin:.25rem 0 0; max-width:52rem; }}
   .term-section-header p {{ max-width:70rem; }}
   select {{ font:inherit; padding:.6rem 2.2rem .6rem .8rem; background:var(--paper);
-            border:1px solid var(--grid); border-radius:.45rem; }}
+            border:1px solid var(--grid); }}
   .explorer-controls {{ display:grid; grid-template-columns:repeat(2,minmax(12rem,18rem));
                         gap:.75rem; margin:1rem 0 1.2rem; }}
   .recent-controls {{ grid-template-columns:2fr 1fr 1fr 1fr; }}
@@ -2242,22 +2242,22 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
   .overview-intro p {{ color:var(--muted); margin:.35rem 0; }}
   .tab-row {{ display:flex; gap:.4rem; flex-wrap:wrap; margin:.85rem 0; }}
   .tab-button {{ appearance:none; border:1px solid var(--grid); background:transparent;
-                 color:var(--muted); border-radius:999px; padding:.52rem .8rem;
+                 color:var(--muted); padding:.52rem .8rem;
                  font:inherit; font-size:.84rem; font-weight:700; cursor:pointer; }}
   .tab-button:hover {{ color:var(--text); border-color:var(--muted); }}
   .tab-button[aria-selected="true"],.tab-button[aria-pressed="true"] {{
     color:var(--paper); background:var(--text); border-color:var(--text);
   }}
-  .focus-panel {{ background:var(--paper); border:1px solid var(--grid); border-radius:.65rem;
-                  padding:1rem 1.2rem; box-shadow:0 12px 35px rgb(40 34 24 / 6%); }}
+  .focus-panel {{ background:var(--paper); border:1px solid var(--grid);
+                  padding:1rem 1.2rem; }}
   .recent-shell {{ display:grid; grid-template-columns:minmax(0,1fr) 18rem; gap:1rem;
                    align-items:start; }}
-  .context-panel {{ background:var(--text); color:var(--paper); border-radius:.65rem;
+  .context-panel {{ background:var(--text); color:var(--paper);
                     padding:1.1rem; position:sticky; top:1rem; }}
   .context-panel .eyebrow {{ color:#B9B5AD; }}
   .context-panel h3 {{ color:var(--paper); font-size:1.45rem; }}
   .party-rates {{ display:grid; grid-template-columns:1fr 1fr; gap:.5rem; }}
-  .party-rate {{ border-radius:.35rem; padding:.55rem .6rem; font-size:.78rem; }}
+  .party-rate {{ padding:.55rem .6rem; font-size:.78rem; }}
   .party-rate b {{ display:block; font-size:1.45rem; line-height:1; margin-bottom:.2rem; }}
   .party-rate.democratic {{ color:{theme.BLUE}; background:{theme.tint(theme.BLUE, 0.88)}; }}
   .party-rate.republican {{ color:{theme.ACCENT}; background:{theme.tint(theme.ACCENT, 0.88)}; }}
@@ -2268,13 +2268,13 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
   .eyebrow {{ text-transform:uppercase; letter-spacing:.12em; font-size:.7rem; font-weight:800;
               color:var(--muted); margin:0 0 .35rem; }}
   .methodology {{ background:var(--paper); border:1px solid var(--grid); margin:1rem 0;
-                  padding:.75rem 1rem; border-radius:.45rem; }}
+                  padding:.75rem 1rem; }}
   .methodology summary {{ cursor:pointer; font-weight:bold; }}
   .methodology-grid {{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr));
                        gap:1rem; margin-top:.8rem; }}
   .methodology-grid p {{ margin:.2rem 0; color:var(--muted); }}
   .chart-card {{ background:var(--paper); border:1px solid var(--grid); margin:1rem 0;
-                 padding:.75rem; border-radius:.65rem; }}
+                 padding:.75rem; }}
   .chart-card figcaption {{ color:var(--muted); font-size:.9rem; padding:.3rem .35rem 0; }}
   .interactive-chart {{ display:grid; gap:1rem; }}
   .mini-chart {{ position:relative; border-top:1px solid var(--grid); padding:.75rem .25rem 0;
@@ -2288,12 +2288,12 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
                    margin:.3rem 0 0; }}
   .chart-toggle {{ display:inline-flex; align-items:center; gap:.35rem; border:1px solid var(--grid);
                    background:var(--paper); color:var(--text); font:inherit; padding:.25rem .5rem;
-                   cursor:pointer; border-radius:999px; }}
+                   cursor:pointer; }}
   .chart-toggle[aria-pressed="false"] {{ opacity:.45; text-decoration:line-through; }}
   .chart-toggle:focus-visible {{ outline:2px solid var(--blue); outline-offset:2px; }}
   .chart-legend i {{ width:1rem; height:.25rem; display:inline-block; }}
   .chart-tooltip {{ position:absolute; z-index:2; max-width:18rem; pointer-events:none;
-                    background:var(--text); color:var(--paper); border-radius:.2rem;
+                    background:var(--text); color:var(--paper);
                     padding:.45rem .55rem; font: .82rem/1.35 var(--sans);
                     box-shadow:0 2px 8px rgb(0 0 0 / 20%); }}
   .data-mark {{ cursor:pointer; transition:opacity .12s ease, filter .12s ease; }}
@@ -2303,7 +2303,7 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
               clip:rect(0,0,0,0) !important; white-space:nowrap !important; border:0 !important; }}
   .error {{ color:#8A1C1C; font-weight:bold; }}
   .table-wrap {{ width:100%; max-width:100%; overflow-x:auto; background:var(--paper);
-                 border:1px solid var(--grid); border-radius:.65rem; }}
+                 border:1px solid var(--grid); }}
   .term-explorer-grid {{ display:grid; grid-template-columns:minmax(0,1.45fr) minmax(20rem,.55fr);
                          gap:1rem; align-items:start; }}
   .term-explorer-grid .card {{ margin:0; height:100%; }}
@@ -2344,7 +2344,7 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
                                                  text-decoration:underline; }}
   .party-badges {{ display:inline-flex; gap:.2rem; margin-left:.38rem; vertical-align:.08em; }}
   .party-badge {{ display:inline-grid; place-items:center; min-width:1.35rem; height:1.35rem;
-                  border-radius:999px; font-size:.58rem; font-weight:850; line-height:1; }}
+                  font-size:.58rem; font-weight:850; line-height:1; }}
   .party-d {{ color:#315D77; background:#DFEAF0; }}
   .party-r {{ color:#8E3828; background:#F2E2DE; }}
   .party-i {{ color:#356443; background:#E1ECE4; }}
@@ -2354,7 +2354,7 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
   .term-usage strong {{ font-size:.88rem; }}
   .term-usage span {{ color:var(--muted); font-size:.76rem; }}
   .term-row-toggle {{ display:block; margin:.8rem auto .25rem; border:1px solid var(--grid);
-                      border-radius:999px; background:var(--paper); color:var(--blue);
+                      background:var(--paper); color:var(--blue);
                       padding:.45rem .9rem; font:inherit; font-size:.76rem; font-weight:750;
                       cursor:pointer; }}
   .term-row-toggle:hover {{ border-color:var(--blue); background:rgb(61 111 140 / 7%); }}
@@ -2614,7 +2614,7 @@ passage, enactment, and profanity tables by Congress.">
            --grid:#D8D3C9; --blue:{theme.BLUE}; --paper:#FFFEFA; --soft:#EAE5DA;
            --serif:Georgia,'Times New Roman',serif;
            --sans:Arial,Helvetica,sans-serif; }}
-  * {{ box-sizing:border-box; }}
+  *,*::before,*::after {{ box-sizing:border-box; border-radius:0; }}
   body {{ background:var(--bg); color:var(--text);
           font-family:var(--sans);
           margin:0 auto; padding:1.4rem 1.25rem 4rem; max-width:74rem; line-height:1.55; }}
@@ -2626,7 +2626,7 @@ passage, enactment, and profanity tables by Congress.">
   a {{ color:var(--blue); }}
   nav {{ display:flex; gap:.35rem; align-items:center; border-bottom:1px solid var(--grid);
          padding-bottom:.9rem; }}
-  nav a {{ color:var(--muted); text-decoration:none; padding:.4rem .7rem; border-radius:999px;
+  nav a {{ color:var(--muted); text-decoration:none; padding:.4rem .7rem;
            font-size:.88rem; font-weight:650; }}
   nav a:hover {{ background:var(--soft); color:var(--text); }}
   nav a[aria-current="page"] {{ color:var(--paper); background:var(--text); }}
@@ -2639,7 +2639,7 @@ passage, enactment, and profanity tables by Congress.">
   .censored-term:focus-visible {{ outline:2px solid var(--blue); outline-offset:2px; }}
   .censored-term:hover::after,.censored-term:focus::after {{
     content:attr(data-term); position:absolute; left:0; bottom:calc(100% + .35rem); z-index:5;
-    background:var(--text); color:var(--paper); padding:.3rem .45rem; border-radius:.25rem;
+    background:var(--text); color:var(--paper); padding:.3rem .45rem;
     font-size:.78rem; font-weight:600; letter-spacing:normal; text-transform:none;
     white-space:nowrap; box-shadow:0 2px 8px rgb(0 0 0 / 20%);
   }}
@@ -2651,24 +2651,24 @@ passage, enactment, and profanity tables by Congress.">
   .toolbar select {{ color:var(--text); text-transform:none; letter-spacing:normal;
                      font-weight:650; min-width:12rem; }}
   select {{ font:inherit; padding:.6rem 2.2rem .6rem .8rem; background:var(--paper);
-            border:1px solid var(--grid); border-radius:.45rem; }}
+            border:1px solid var(--grid); }}
   .tab-row {{ display:flex; gap:.4rem; flex-wrap:wrap; margin:.9rem 0 1.2rem; }}
   .tab-button {{ appearance:none; border:1px solid var(--grid); background:transparent;
-                 color:var(--muted); border-radius:999px; padding:.52rem .8rem;
+                 color:var(--muted); padding:.52rem .8rem;
                  font:inherit; font-size:.84rem; font-weight:700; cursor:pointer; }}
   .tab-button[aria-pressed="true"] {{ color:var(--paper); background:var(--text);
                                      border-color:var(--text); }}
   .warning {{ background:#FFF3CD; border-left:4px solid #C7922B; padding:.8rem 1rem; margin:1rem 0; }}
   .error {{ color:#8A1C1C; font-weight:bold; }}
-  .card {{ background:var(--paper); border:1px solid var(--grid); border-radius:.65rem;
-           padding:1.2rem; margin:0 0 2rem; box-shadow:0 12px 35px rgb(40 34 24 / 6%); }}
-  .notes {{ background:var(--paper); border:1px solid var(--grid); border-radius:.45rem;
+  .card {{ background:var(--paper); border:1px solid var(--grid);
+           padding:1.2rem; margin:0 0 2rem; }}
+  .notes {{ background:var(--paper); border:1px solid var(--grid);
             padding:.75rem 1rem; margin:1rem 0; }}
   .notes summary {{ cursor:pointer; font-weight:750; }}
   .sr-only {{ position:absolute !important; width:1px !important; height:1px !important;
               padding:0 !important; margin:-1px !important; overflow:hidden !important;
               clip:rect(0,0,0,0) !important; white-space:nowrap !important; border:0 !important; }}
-  .table-wrap {{ overflow-x:auto; border:1px solid var(--grid); border-radius:.55rem;
+  .table-wrap {{ overflow-x:auto; border:1px solid var(--grid);
                  background:var(--paper); }}
   table {{ border-collapse:separate; border-spacing:0; width:100%; font-size:.92rem; }}
   th,td {{ padding:.72rem .7rem; border-bottom:1px solid var(--grid); text-align:left;
