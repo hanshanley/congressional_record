@@ -299,6 +299,23 @@ def test_pdf_editorial_subheading_preserves_the_current_floor_speaker(monkeypatc
     assert eligible[0]["text"] == "First topic. My floor remarks continue."
 
 
+def test_pdf_stage_direction_ends_the_previous_members_speech(monkeypatch):
+    _mock_roster(monkeypatch)
+    monkeypatch.setattr("analysis.ingest.govinfo_pdf._paragraphs", lambda *_: [
+        _Paragraph("Mr. SMITH. My remarks.", direct=True),
+        _Paragraph(
+            "(Ms. JONES asked and was given permission to address the House for 1 minute.)"
+        ),
+        _Paragraph("Ms. JONES. My separate remarks.", direct=True),
+    ])
+    rows = list(_section_turns(b"layout covered separately", "CREC-2026-09-16-house",
+                               "2026-09-16", 119, "house"))
+    assert [(r["bioguide"], r["text"]) for r in rows if r["bioguide"]] == [
+        ("S1", "My remarks."), ("J1", "My separate remarks."),
+    ]
+    assert any(r["is_procedural"] and "permission" in r["text"] for r in rows)
+
+
 def test_pdf_section_boundaries_and_insertions_end_member_attribution(monkeypatch):
     _mock_roster(monkeypatch)
     data = _pdf([[

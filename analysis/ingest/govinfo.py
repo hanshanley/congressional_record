@@ -58,7 +58,17 @@ _SPEAKER_RE = re.compile(
 )
 _PROCEDURAL_SPEAKER = re.compile(r"^(the\s+)?(speaker|presiding|president|acting|chief|clerk|chair)", re.IGNORECASE)
 _PAGE_MARKER_RE = re.compile(r"\[\[Page [^\]]+\]\]")
+_TIME_MARKER_RE = re.compile(r"\{time\}\s*\d{4}")
 NON_SPOKEN_SUBCLASSES = {"SADDITIONAL", "HADDSPONSORS"}
+_EDITORIAL_NOTE_RE = re.compile(
+    r"={3,}[ \t]*NOTE[ \t]*={3,}[\s\S]*?={3,}[ \t]*END NOTE[ \t]*={3,}"
+)
+_EDITORIAL_HEADING_RE = re.compile(
+    r"(?m)^[ \t]{10,}[A-Z][A-Z0-9 .,'\u2019\u2014\u2013()/-]{1,}[ \t]*$"
+)
+_STAGE_DIRECTION_RE = re.compile(
+    rf"(?m)^[ \t]*\({_MEMBER_MARKER}\s+asked and was given permission\b[^)]*\)"
+)
 
 # Standard Record formulas that introduce printed bills, amendments, exhibits, or
 # other material that was inserted into the Record rather than spoken on the floor.
@@ -236,6 +246,19 @@ def non_spoken_sections(text: str, initial: bool = False) -> Iterator[Tuple[str,
         yield section, initial ^ bool(index % 2)
 
 
+def is_stage_direction(text: str) -> bool:
+    return bool(_STAGE_DIRECTION_RE.fullmatch(text.strip()))
+
+
+def _stage_sections(text: str) -> Iterator[Tuple[str, bool]]:
+    cursor = 0
+    for match in _STAGE_DIRECTION_RE.finditer(text):
+        yield text[cursor:match.start()], False
+        yield match.group(), True
+        cursor = match.end()
+    yield text[cursor:], False
+
+
 def _split_inserted_material(body: str) -> Tuple[str, str]:
     """Split spoken remarks from standardized material printed into the Record."""
     matches = [
@@ -265,13 +288,18 @@ def build_turns(
     segmentation and party attribution stay identical. ``members`` is a list of
     normalized dicts with keys ``party``/``bioguide``/``name``/``state``.
     """
-    text = strip_page_markers(text)
+    text = strip_page_markers(
+        _TIME_MARKER_RE.sub(
+            "", _EDITORIAL_HEADING_RE.sub("", _EDITORIAL_NOTE_RE.sub("", text))
+        )
+    )
     index = _index_members(members)
     sections = non_spoken_sections(text) if chamber == "senate" else [(text, False)]
     segments = (
-        (marker, body, submitted)
+        (marker, body, submitted or stage)
         for section, submitted in sections
-        for marker, body in _segment(section)
+        for part, stage in _stage_sections(section)
+        for marker, body in _segment(part)
     )
     for i, (marker, body, submitted) in enumerate(segments):
         if not body:

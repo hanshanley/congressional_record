@@ -16,6 +16,7 @@ from analysis.ingest.govinfo import (
     _SPEAKER_RE,
     _split_inserted_material,
     build_turns,
+    is_stage_direction,
     non_spoken_sections,
 )
 from analysis.ingest.legislators import members_on
@@ -221,6 +222,12 @@ def _section_turns(
             submitted = is_submitted
             text = text.strip()
             if not text:
+                continue
+            if is_stage_direction(text):
+                yield from flush()
+                attributed = False
+                printing = True
+                current.append(text)
                 continue
             if submitted:
                 current.append(text)

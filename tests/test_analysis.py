@@ -195,11 +195,45 @@ def test_wrapped_member_references_are_not_floor_markers():
 
 def test_page_labels_are_not_counted_as_speech():
     rows = list(build_turns(
-        "Mr. SMITH. First words.\n[[Page H123]]\nLast words.",
+        "Mr. SMITH. First words.\n[[Page H123]]\n{time} 1040\nLast words.",
         [], "CREC-2026-09-16-pt1-PgH1", "2026-09-16", 119, "house",
     ))
     assert rows[0]["word_count"] == 4
     assert "Page" not in rows[0]["text"]
+    assert "1040" not in rows[0]["text"]
+
+
+def test_editorial_notes_and_headings_are_not_scored_as_speech():
+    turns = list(build_turns(
+        "Mr. SMITH. Before.\n\n"
+        "                  COMMITTEE ON THE JUDICIARY\n\n"
+        "  After.\n"
+        "========================= NOTE =========================\n"
+        "Mr. JONES. An editorial correction, not a floor speech.\n"
+        "========================= END NOTE =========================",
+        [], "CREC-2026-09-16-pt1-PgH1", "2026-09-16", 119, "house",
+    ))
+    assert len(turns) == 1
+    assert turns[0]["word_count"] == 2
+    assert "correction" not in turns[0]["text"]
+    assert "COMMITTEE" not in turns[0]["text"]
+
+
+def test_stage_directions_are_not_charged_to_the_preceding_member():
+    members = [
+        {"name": "Smith, Member", "bioguide": "S1", "party": "D", "state": "CA"},
+        {"name": "Jones, Member", "bioguide": "J1", "party": "R", "state": "TX"},
+    ]
+    rows = list(build_turns(
+        "Mr. SMITH. My remarks.\n"
+        "(Ms. JONES asked and was given permission to address the House for 1 minute.)\n"
+        "Ms. JONES. My separate remarks.",
+        members, "CREC-2026-09-16-pt1-PgH1", "2026-09-16", 119, "house",
+    ))
+    assert [(r["bioguide"], r["text"]) for r in rows if r["bioguide"]] == [
+        ("S1", "My remarks."), ("J1", "My separate remarks."),
+    ]
+    assert any(r["is_procedural"] and "permission" in r["text"] for r in rows)
 
 
 def test_president_pro_tempore_marker_is_procedural() -> None:

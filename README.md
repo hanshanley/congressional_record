@@ -481,8 +481,10 @@ HTML and manifest ingestion also use the dated roster when a direct speaker's MO
 missing or incomplete; usable MODS identities are retained and ambiguous matches are not guessed.
 Both representations exclude Senate non-spoken statements: HTML `<bullet>` markers are preserved
 and interpreted like the PDF's printed bullet symbols. `SADDITIONAL` statements and
-`HADDSPONSORS` lists are also excluded by metadata. Printed page labels do not count as speech,
-and HTML and typographic PDF quotation marks receive the same quotation exclusion.
+`HADDSPONSORS` lists are also excluded by metadata. Printed page labels and clock times do not count as speech,
+editorial notes and permission-to-speak annotations are not attributed to members, and HTML and
+typographic PDF quotation marks receive the same quotation exclusion. PDF editorial subheadings
+do not interrupt the current speaker; inserted letters and other printed blocks remain excluded.
 Re-ingesting an issue replaces its stored turns so corrected attribution and eligibility take
 effect without duplicating the issue. Previously downloaded plain text that already lost its
 `<bullet>` markers must be fetched again with `--overwrite` before rescoring; the scheduled bulk
