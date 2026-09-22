@@ -50,7 +50,10 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
   .section-header { margin:4rem 0 1.2rem; }
   .section-header h2 { margin:0; }
   .section-header p { margin:.25rem 0 0; max-width:52rem; }
-  .term-section-header p { max-width:70rem; }
+  .term-section-header > div { display:grid; gap:.8rem; }
+  .term-section-header h2 { margin:0; line-height:1.12; }
+  .term-section-header p { max-width:70rem; margin:0; }
+  .term-section-header .sub { line-height:1.65; }
   select { font:inherit; padding:.6rem 2.2rem .6rem .8rem; background:var(--paper);
             border:1px solid var(--grid); }
   .explorer-controls { display:grid; grid-template-columns:repeat(2,minmax(12rem,18rem));
@@ -275,8 +278,7 @@ party comparisons extend to 1873.</p></div>
 <p class="sub">Shows the member or tied members with the most accepted, unquoted uses of each
 grouped term. “Total” includes all attributed members; “each” applies to every member in a tie.
 Related forms are grouped, while raw matches remain in the downloadable data. Terms are censored;
-hover over or focus one to reveal it. The conservative codebook favors precision over
-exhaustiveness.</p>
+hover over or focus one to reveal it.</p>
 <p class="definition" id="term-leaders-note" hidden></p></div>
 </div>
 <div class="explorer-controls term-controls">

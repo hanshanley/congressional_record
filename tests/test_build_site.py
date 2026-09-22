@@ -419,6 +419,12 @@ def test_builds_combined_last_five_congresses_payload(store, tmp_path):
     assert "row.hidden = !showAllTerms" in page
     assert "Related forms are grouped" in page
     assert "term-section-header" in page
+    assert ".term-section-header > div { display:grid; gap:.8rem; }" in page
+    assert ".term-section-header h2 { margin:0; line-height:1.12; }" in page
+    assert ".term-section-header p { max-width:70rem; margin:0; }" in page
+    assert ".term-section-header .sub { line-height:1.65; }" in page
+    assert "The conservative codebook" not in page
+    assert "precision over exhaustiveness" not in " ".join(page.split())
     assert 'id="term-leaders-note" hidden>' in page
     assert "Explore member speech, bill sponsorship, passage, enactment" in activity_page
     assert "aggregate-only period" not in activity_page
