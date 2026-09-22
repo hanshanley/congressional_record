@@ -165,6 +165,15 @@ def test_build_writes_html_json_and_figures(store, tmp_path):
         assert "*,*::before,*::after" in document
         rect_radii = re.findall(r"\b(?:rx|ry)\s*:\s*([0-9.]+)", document)
         assert all(float(value) == 0 for value in rect_radii), rel
+        control_style = re.search(r"\.tab-button\s*\{([^}]+)\}", document).group(1)
+        assert "border:1px solid var(--muted)" in control_style, rel
+        assert "background:var(--paper)" in control_style, rel
+        assert "cursor:pointer" in control_style, rel
+        selected_style = re.search(
+            r'\.tab-button\[aria-pressed="true"\]\s*\{([^}]+)\}', document,
+        ).group(1)
+        assert "background:var(--text)" in selected_style, rel
+        assert "color:var(--paper)" in selected_style, rel
 
 
 def test_legacy_leaderboard_dates_use_selected_congress_scope(store, tmp_path):

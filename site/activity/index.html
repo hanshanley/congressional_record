@@ -51,13 +51,15 @@ passage, enactment, and profanity tables by Congress.">
                      font-weight:650; min-width:0; width:13rem; max-width:100%; }
   select { font:inherit; padding:.6rem 2.2rem .6rem .8rem; background:var(--paper);
             border:1px solid var(--grid); }
-  .tab-row { display:flex; gap:.35rem 1.25rem; flex-wrap:wrap; margin:0; }
-  .tab-button { appearance:none; border:0; border-bottom:2px solid transparent;
-                 background:transparent; color:var(--muted); padding:.65rem 0;
+  .tab-row { display:flex; gap:.5rem; flex-wrap:wrap; margin:0; }
+  .tab-button { appearance:none; border:1px solid var(--muted);
+                 background:var(--paper); color:var(--text); padding:.55rem .8rem;
                  font:inherit; font-size:.86rem; font-weight:700; cursor:pointer; }
-  .tab-button:hover { color:var(--text); }
-  .tab-button:focus-visible { outline:2px solid var(--blue); outline-offset:4px; }
-  .tab-button[aria-pressed="true"] { color:var(--text); border-bottom-color:var(--text); }
+  .tab-button:hover { background:var(--soft); border-color:var(--text); }
+  .tab-button:focus-visible { outline:2px solid var(--blue); outline-offset:2px; }
+  .tab-button[aria-pressed="true"] {
+    color:var(--paper); background:var(--text); border-color:var(--text);
+  }
   .warning { background:#FFF3CD; border-left:4px solid #C7922B; padding:.8rem 1rem; margin:1rem 0; }
   .error { color:#8A1C1C; font-weight:bold; }
   .card { background:var(--paper); border:1px solid var(--grid);
