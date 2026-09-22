@@ -11,9 +11,9 @@ import pytest
 
 from analysis.ingest import legislators
 from analysis.ingest import govinfo_bulk
-from analysis.ingest.govinfo import build_turns
+from analysis.ingest.govinfo import _index_members, build_turns, iter_granule_turns
 from analysis.ingest.govinfo_bulk import _turns_from_zip, run_bulk
-from analysis.ingest.govinfo_pdf import _paragraphs, _section_turns
+from analysis.ingest.govinfo_pdf import _Paragraph, _paragraphs, _section_turns
 
 
 def _legislator(bioguide, surname, state, *, chamber="rep", party="Democrat", **term):
@@ -88,11 +88,12 @@ def test_pdf_roster_handles_aliases_and_term_boundaries(monkeypatch):
     assert legislators.members_on("2027-01-03", "house")[0]["party"] == "Republican"
 
 
-def _archive(pkg, files):
+def _archive(pkg, files, *, metadata=None):
     buffer = io.BytesIO()
     related = "".join(
         f'<relatedItem type="constituent" ID="id-{pkg}-{section}">'
         f"<extension><granuleClass>{section.upper()}</granuleClass>"
+        f"{(metadata or {}).get(section, '')}"
         "</extension></relatedItem>"
         for section in ("house", "senate")
     )
@@ -182,6 +183,7 @@ def test_html_archive_does_not_invoke_pdf_fallback(monkeypatch):
         pytest.fail("HTML should take precedence over duplicate PDF renditions")
 
     monkeypatch.setattr(govinfo_pdf, "turns_from_pdfs", fail)
+    _mock_roster(monkeypatch)
     pkg = "CREC-2026-09-16"
     rows = list(_turns_from_zip(_archive(pkg, {
         f"html/{pkg}-house.htm": "<pre>Mr. SMITH. HTML remarks.</pre>",
@@ -235,10 +237,14 @@ def _pdf(pages, *, width=612, height=792):
 
 
 def _mock_roster(monkeypatch):
-    monkeypatch.setattr("analysis.ingest.govinfo_pdf.members_on", lambda *_: [
+    members = [
         {"bioguide": "S1", "name": "Smith, Member", "party": "D", "state": "CA"},
         {"bioguide": "J1", "name": "Jones, Member", "party": "R", "state": "TX"},
-    ])
+    ]
+    monkeypatch.setattr("analysis.ingest.govinfo_pdf.members_on", lambda *_: members)
+    monkeypatch.setattr(
+        "analysis.ingest.govinfo._dated_member_index", lambda *_: _index_members(members),
+    )
 
 
 def test_pdf_columns_wrapping_and_publication_headers(monkeypatch):
@@ -369,3 +375,160 @@ def test_pdf_bulk_archive_scores_both_update_surfaces(tmp_path, monkeypatch):
     assert set(speakers["bioguide"]) == {"S1", "J1"}
     assert set(aggregate["chamber"]) == {"house", "senate"}
     assert aggregate["words"].sum() == speakers["words"].sum() == 8
+
+
+def test_html_and_pdf_share_attribution_eligibility_and_scores(tmp_path, monkeypatch):
+    from analysis.daily_language import aggregate_turn_files
+    from analysis.ingest.schema import ARROW_SCHEMA
+    from analysis.speakers import speaker_counts
+    import pyarrow as pa
+    from pandas.testing import assert_frame_equal
+
+    pkg = "CREC-2026-09-16"
+    rosters = {
+        "house": [
+            {"bioguide": "V000139", "name": "Van Epps, Matt", "party": "R", "state": "TN"},
+            {"bioguide": "M001232", "name": "McClain Delaney, April", "party": "D", "state": "MD"},
+        ],
+        "senate": [
+            {"bioguide": "S000148", "name": "Schumer, Charles", "party": "D", "state": "NY"},
+            {"bioguide": "B001305", "name": "Budd, Ted", "party": "R", "state": "NC"},
+            {"bioguide": "H001104", "name": "Husted, Jon", "party": "R", "state": "OH"},
+        ],
+    }
+    monkeypatch.setattr(
+        "analysis.ingest.govinfo._dated_member_index",
+        lambda date, chamber: _index_members(rosters[chamber]),
+    )
+    monkeypatch.setattr(
+        "analysis.ingest.govinfo_pdf.members_on", lambda date, chamber: rosters[chamber],
+    )
+    house = (
+        "Mr. VAN EPPS. I thank my colleague. [[Page H1]] He said ``damn''.\n"
+        "Mrs. MCCLAIN DELANEY. I thank my colleague."
+    )
+    senate = (
+        "<bullet>Mr. BUDD. Submitted remarks.\n"
+        "Mr. HUSTED. Another member quoted in the submission.<bullet>\n"
+        "Mr. SCHUMER. I thank my colleague."
+    )
+    monkeypatch.setattr(
+        "analysis.ingest.govinfo_pdf._paragraphs",
+        lambda data, chamber, label: (
+            [
+                _Paragraph(
+                    text.replace("[[Page H1]]", "")
+                    .replace("``", "\u2018\u2018").replace("''", "\u2019\u2019"),
+                    direct=True,
+                )
+                for text in house.splitlines()
+            ]
+            if chamber == "house" else [
+                _Paragraph("\u2211 Mr. BUDD. Submitted remarks."),
+                _Paragraph("Mr. HUSTED. Another member quoted in the submission.", direct=True),
+                _Paragraph("\u2211"),
+                _Paragraph("Mr. SCHUMER. I thank my colleague.", direct=True),
+            ]
+        ),
+    )
+    html_rows = list(_turns_from_zip(_archive(pkg, {
+        f"html/{pkg}-house.htm": f"<pre>{house}</pre>",
+        f"html/{pkg}-senate.htm": f"<pre>{senate}</pre>",
+    }, metadata={
+        "house": '<congMember><name type="parsed">Mrs. McCLAIN DELANEY</name></congMember>',
+    }), pkg))
+    pdf_rows = list(_turns_from_zip(_archive(pkg, {
+        f"pdf/{pkg}-house.pdf": b"layout covered separately",
+        f"pdf/{pkg}-senate.pdf": b"layout covered separately",
+    }), pkg))
+    paths = []
+    for name, rows in [("html", html_rows), ("pdf", pdf_rows)]:
+        eligible = {r["bioguide"] for r in rows if r["bioguide"] and not r["is_procedural"]}
+        assert eligible == {"V000139", "M001232", "S000148"}
+        assert all(not r["bioguide"] for r in rows if r["is_procedural"])
+        path = tmp_path / f"{name}.parquet"
+        pq.write_table(pa.Table.from_pylist(rows, schema=ARROW_SCHEMA), path)
+        paths.append(path)
+    assert_frame_equal(speaker_counts([paths[0]]), speaker_counts([paths[1]]))
+    assert_frame_equal(aggregate_turn_files([paths[0]]), aggregate_turn_files([paths[1]]))
+
+
+@pytest.mark.parametrize("chamber,subclass", [
+    ("senate", "SADDITIONAL"), ("house", "HADDSPONSORS"),
+])
+def test_bulk_and_manifest_honor_submitted_metadata_without_bullets(
+    tmp_path, monkeypatch, chamber, subclass,
+):
+    from crec.download import html_to_text
+
+    def no_lookup(*args):
+        pytest.fail("submitted material must not trigger a roster lookup")
+
+    monkeypatch.setattr("analysis.ingest.govinfo._dated_member_index", no_lookup)
+    pkg = "CREC-2026-09-16"
+    html = "<pre>Mr. BUDD. Submitted remarks.</pre>"
+    metadata = f"<subGranuleClass>{subclass}</subGranuleClass>"
+    data = _archive(pkg, {f"html/{pkg}-{chamber}.htm": html}, metadata={chamber: metadata})
+    bulk_rows = list(_turns_from_zip(data, pkg))
+    (tmp_path / "speech.txt").write_text(html_to_text(html))
+    (tmp_path / "speech.xml").write_text(
+        f"<mods><relatedItem><extension><granuleClass>{chamber.upper()}</granuleClass>"
+        f"{metadata}</extension></relatedItem></mods>"
+    )
+    manifest_rows = list(iter_granule_turns({
+        "txt_path": "speech.txt", "mods_path": "speech.xml",
+        "granuleId": f"{pkg}-{chamber}", "dateIssued": "2026-09-16",
+        "congress": 119, "granuleClass": chamber.upper(),
+    }, tmp_path))
+    assert bulk_rows == manifest_rows
+    assert len(bulk_rows) == 1
+    assert bulk_rows[0]["is_procedural"] and not bulk_rows[0]["bioguide"]
+
+
+def test_manifest_recovers_missing_identity_and_retains_bullet_exclusions(tmp_path, monkeypatch):
+    from crec.download import html_to_text
+
+    _mock_roster(monkeypatch)
+    (tmp_path / "speech.txt").write_text(html_to_text(
+        "<pre>Mr. SMITH. Floor remarks.\n"
+        "<bullet>Ms. JONES. Submitted remarks.<bullet></pre>"
+    ))
+    (tmp_path / "speech.xml").write_text(
+        "<mods><relatedItem><extension><granuleClass>SENATE</granuleClass>"
+        "</extension></relatedItem></mods>"
+    )
+    rows = list(iter_granule_turns({
+        "txt_path": "speech.txt", "mods_path": "speech.xml",
+        "granuleId": "CREC-2026-09-16-senate", "dateIssued": "2026-09-16",
+        "congress": 119, "granuleClass": "SENATE",
+    }, tmp_path))
+    assert [r["bioguide"] for r in rows] == ["S1", ""]
+    assert rows[1]["is_procedural"]
+
+
+def test_bulk_refresh_repairs_existing_html_rows_without_dropping_other_days(tmp_path, monkeypatch):
+    bulk, out = tmp_path / "bulk", tmp_path / "out"
+    bulk.mkdir()
+    packages = ["CREC-2026-09-15", "CREC-2026-09-16"]
+    corrected = False
+
+    def rows(data, pkg):
+        member = {"name": "Smith, Member", "bioguide": "S1", "party": "D", "state": "CA"}
+        yield from build_turns(
+            "Mr. SMITH. Same speech.", [member] if corrected else [],
+            f"{pkg}-house", pkg.removeprefix("CREC-"), 119, "house",
+        )
+
+    monkeypatch.setattr(govinfo_bulk, "_turns_from_zip", rows)
+    for pkg in packages:
+        (bulk / f"{pkg}.zip").write_bytes(_archive(pkg, {}))
+    assert run_bulk(packages, bulk, out, workers=1) == 2
+    corrected = True
+    pkg = packages[1]
+    (bulk / f"{pkg}.zip").write_bytes(_archive(pkg, {}))
+    assert run_bulk([pkg], bulk, out, workers=1) == 0
+    stored = pq.read_table(out / "turns" / "govinfo_bulk_119.parquet").to_pylist()
+    by_date = {r["date"]: r for r in stored}
+    assert len(stored) == 2
+    assert by_date["2026-09-15"]["bioguide"] == ""
+    assert by_date["2026-09-16"]["bioguide"] == "S1"

@@ -13,6 +13,7 @@ from .api import GovInfoClient, GovInfoError
 from .metadata import parse_mods
 
 LOG = logging.getLogger("crec.download")
+NON_SPOKEN_MARKER = "\u2211"
 
 # GovInfo package/granule ids are dot/dash/underscore alphanumerics. Enforce this
 # before using them to build filesystem paths so a malicious or malformed id
@@ -33,6 +34,11 @@ def html_to_text(html: str) -> str:
     extraction if that structure is missing.
     """
     soup = BeautifulSoup(html, "html.parser")
+    # GovInfo uses paired, unclosed <bullet> tags for statements not spoken
+    # on the Senate floor. get_text() alone silently discards that distinction.
+    for bullet in soup.find_all("bullet"):
+        bullet.insert_before(NON_SPOKEN_MARKER)
+        bullet.unwrap()
     pre = soup.find("pre")
     text = pre.get_text() if pre else soup.get_text()
     # Normalize whitespace: strip trailing spaces, collapse runs of 2+ blank

@@ -23,6 +23,7 @@ import tempfile
 import threading
 import time
 import zipfile
+from functools import partial
 from pathlib import Path
 from typing import Any, Callable, Dict, Iterator, List, Optional, Tuple
 
@@ -43,6 +44,9 @@ from analysis.ingest.govinfo import (
     normalize_members,
     _congress_from_row,
     _strip_header,
+    NON_SPOKEN_SUBCLASSES,
+    roster_member,
+    strip_page_markers,
 )
 from crec.download import html_to_text
 from crec.metadata import parse_members
@@ -54,7 +58,6 @@ CONTENT_URL = "https://www.govinfo.gov/content/pkg/{pkg}.zip"
 # URLs / filesystem paths from them (defense-in-depth).
 _PKG_RE = re.compile(r"^CREC-\d{4}-\d{2}-\d{2}$")
 _TURN_PACKAGE_PREFIX_LENGTH = len("crec:CREC-YYYY-MM-DD-")
-_PAGE_MARKER_RE = re.compile(r"\[\[Page [^\]]+\]\]")
 _MIN_DEDUPE_CHARS = 500
 _PROBE_RETRY_DELAYS = (15, 30, 60)
 
@@ -90,15 +93,18 @@ def parse_package_mods(mods_bytes: bytes) -> Dict[str, Dict[str, Any]]:
         gid = rid[3:] if rid.startswith("id-") else rid
         if not gid:
             continue
-        gclass = chamber = None
+        gclass = subclass = chamber = None
         for c in node.iter():
             ln = _localname(c.tag)
             if ln == "granuleClass" and c.text:
                 gclass = c.text.strip()
+            elif ln == "subGranuleClass" and c.text:
+                subclass = c.text.strip()
             elif ln == "chamber" and c.text:
                 chamber = c.text.strip()
         out[gid] = {
             "granuleClass": gclass,
+            "subGranuleClass": subclass,
             "chamber": chamber,
             "members": _members_of(node),
         }
@@ -124,7 +130,7 @@ def _package_congress(mods_bytes: bytes) -> int:
 
 def _turn_fingerprint(turn: Dict[str, Any]) -> str:
     """Stable fingerprint for long turns duplicated across overlapping granules."""
-    text = _PAGE_MARKER_RE.sub(" ", turn.get("text") or "")
+    text = strip_page_markers(turn.get("text") or "")
     normalized = " ".join(text.split())
     if len(normalized) < _MIN_DEDUPE_CHARS:
         return ""
@@ -175,7 +181,12 @@ def _turns_from_zip(zip_bytes: bytes, pkg: str) -> Iterator[Dict[str, Any]]:
         chamber = normalize_chamber(info.get("granuleClass") or info.get("chamber"))
         # Same segmentation + attribution as the manifest-based path.
         for turn in build_turns(
-            text, info.get("members", []), gid, date, congress, chamber
+            text, info.get("members", []), gid, date, congress, chamber,
+            member_lookup=(
+                partial(roster_member, date, chamber)
+                if chamber in {"house", "senate"} else None
+            ),
+            non_spoken=info.get("subGranuleClass") in NON_SPOKEN_SUBCLASSES,
         ):
             fingerprint = _turn_fingerprint(turn)
             if fingerprint:
@@ -305,14 +316,14 @@ def run_bulk(
 ) -> int:
     """Download packages and atomically merge their turns into per-Congress Parquet.
 
-    Existing output is copied into a temporary replacement and retained by ``turn_id``.
-    This makes partial/incremental invocations additive instead of truncating prior data.
+    Unrequested issues are retained; requested issues replace their previous turns,
+    so corrected metadata and parsing rules repair existing data too.
     The replacements are published only if the run completes without an exception.
     """
     bulk_dir.mkdir(parents=True, exist_ok=True)
     turns_dir = out_dir / "turns"
     turns_dir.mkdir(parents=True, exist_ok=True)
-    pkg_list = [p for p in pkg_list if _PKG_RE.match(p)]
+    pkg_list = list(dict.fromkeys(p for p in pkg_list if _PKG_RE.match(p)))
 
     # Temporary Parquet writers per congress (serialized via lock). Existing data is
     # copied into each replacement before newly downloaded turns are appended.
@@ -320,7 +331,7 @@ def run_bulk(
     temp_paths: Dict[int, Path] = {}
     final_paths: Dict[int, Path] = {}
     seen_ids: Dict[int, set[str]] = {}
-    replaced_pdf_ids: Dict[int, set[str]] = {}
+    replaced_ids: Dict[int, set[str]] = {}
     html_packages: Dict[int, set[str]] = {}
     requested_prefixes = {f"crec:{pkg}-" for pkg in pkg_list}
     lock = threading.Lock()
@@ -341,26 +352,23 @@ def run_bulk(
             tmp = Path(tmp_name)
             w = pq.ParquetWriter(tmp, ARROW_SCHEMA, compression="zstd")
             existing_ids: set[str] = set()
-            replaced_pdf_ids[congress] = set()
+            replaced_ids[congress] = set()
             html_packages[congress] = set()
             if final.exists():
                 existing = pq.ParquetFile(final)
                 for batch in existing.iter_batches(batch_size=50_000):
                     turn_id_col = batch.schema.get_field_index("turn_id")
                     ids = batch.column(turn_id_col).to_pylist()
-                    # PDF turns are provisional: a re-fetch replaces them, and
-                    # later HTML must not be appended alongside the same speech.
+                    # Re-fetching an issue repairs its rows without retaining
+                    # stale identities, eligibility flags, or PDF representations.
                     keep = [
-                        not (
-                            "#pdf-" in tid
-                            and tid[:_TURN_PACKAGE_PREFIX_LENGTH] in requested_prefixes
-                        )
+                        tid[:_TURN_PACKAGE_PREFIX_LENGTH] not in requested_prefixes
                         for tid in ids
                     ]
                     retained = batch.filter(pa.array(keep, type=pa.bool_()))
                     w.write_batch(retained)
                     existing_ids.update(tid for tid, retain in zip(ids, keep) if retain)
-                    replaced_pdf_ids[congress].update(
+                    replaced_ids[congress].update(
                         tid for tid, retain in zip(ids, keep) if not retain
                     )
                     html_packages[congress].update(
@@ -372,6 +380,17 @@ def run_bulk(
             final_paths[congress] = final
             seen_ids[congress] = existing_ids
         return w
+
+    def retain_existing_html(congress: int, prefix: str) -> None:
+        for batch in pq.ParquetFile(final_paths[congress]).iter_batches(batch_size=50_000):
+            ids = batch.column(batch.schema.get_field_index("turn_id")).to_pylist()
+            keep = [
+                tid.startswith(prefix) and "#pdf-" not in tid and tid not in seen_ids[congress]
+                for tid in ids
+            ]
+            if any(keep):
+                get_writer(congress).write_batch(batch.filter(pa.array(keep, type=pa.bool_())))
+                seen_ids[congress].update(tid for tid, retain in zip(ids, keep) if retain)
 
     def process(pkg: str) -> Dict[str, Any]:
         zp = bulk_dir / f"{pkg}.zip"
@@ -387,11 +406,17 @@ def run_bulk(
             with lock:
                 for c, rows in rows_by_c.items():
                     get_writer(c)
+                    prefix = f"crec:{pkg}-"
+                    if (
+                        prefix in html_packages[c]
+                        and all("#pdf-" in row["turn_id"] for row in rows)
+                    ):
+                        retain_existing_html(c, prefix)
+                        LOG.info("retaining existing HTML for %s instead of PDF fallback", pkg)
+                        continue
                     fresh = []
                     for row in rows:
                         turn_id = row["turn_id"]
-                        if "#pdf-" in turn_id and f"crec:{pkg}-" in html_packages[c]:
-                            continue
                         if turn_id in seen_ids[c]:
                             continue
                         seen_ids[c].add(turn_id)
@@ -411,7 +436,7 @@ def run_bulk(
                 "package_id": pkg,
                 "status": "ok" if parsed else "empty_or_unparsed",
                 "turns": sum(
-                    row["turn_id"] not in replaced_pdf_ids[c]
+                    row["turn_id"] not in replaced_ids[c]
                     for c, rows in fresh_by_c.items() for row in rows
                 ),
                 "parsed_turns": parsed,

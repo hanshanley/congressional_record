@@ -114,6 +114,94 @@ def test_build_turns_rejects_ambiguous_surname_and_uses_state() -> None:
     assert turns[2]["party"] == "other" and not turns[2]["bioguide"]
 
 
+def test_missing_identity_fallback_preserves_metadata_and_ambiguity():
+    members = [
+        {"name": "Known, Member", "bioguide": "K1", "party": "D", "state": "CA"},
+        {"name": "Delaney, Member", "bioguide": "", "party": "", "state": ""},
+        {"name": "Smith, First", "bioguide": "S1", "party": "D", "state": "CA"},
+        {"name": "Smith, Second", "bioguide": "S2", "party": "R", "state": "TX"},
+    ]
+    calls = []
+
+    def lookup(marker):
+        calls.append(marker)
+        return {
+            "name": marker, "bioguide": "F1", "party": "R", "state": "MD",
+        }
+
+    rows = list(build_turns(
+        "Mr. KNOWN. Known identity.\n"
+        "Mrs. MCCLAIN DELANEY. Incomplete identity.\n"
+        "Mr. VAN EPPS. Missing identity.\n"
+        "Mr. SMITH. Ambiguous identity.\n"
+        "The SPEAKER. Procedural.\n",
+        members, "CREC-2026-09-16-pt1-PgH1", "2026-09-16", 119, "house",
+        member_lookup=lookup,
+    ))
+    assert calls == ["Mrs. MCCLAIN DELANEY", "Mr. VAN EPPS"]
+    assert [r["bioguide"] for r in rows] == ["K1", "F1", "F1", "", ""]
+    assert rows[0]["party"] == "D"
+    assert rows[-1]["is_procedural"]
+
+
+def test_non_spoken_senate_sections_cannot_be_attributed():
+    members = [
+        {"name": "Smith, Member", "bioguide": "S1", "party": "D", "state": "CA"},
+        {"name": "Jones, Member", "bioguide": "J1", "party": "R", "state": "TX"},
+    ]
+    rows = list(build_turns(
+        "Mr. SMITH. Before.\n"
+        "\u2211 Mr. JONES. Submitted.\nMr. SMITH. Quoted in submission.\u2211\n"
+        "Mr. SMITH. After.\n",
+        members, "CREC-2026-09-16-pt1-PgS1", "2026-09-16", 119, "senate",
+    ))
+    assert [r["text"] for r in rows if r["bioguide"]] == ["Before.", "After."]
+    excluded = [r for r in rows if r["is_procedural"]]
+    assert len(excluded) == 2
+    assert all(not r["bioguide"] and r["party"] == "other" for r in excluded)
+    assert len({r["turn_id"] for r in rows}) == len(rows)
+
+
+def test_non_spoken_classification_never_looks_up_a_member():
+    def lookup(marker):
+        raise AssertionError("submitted statements must not trigger roster lookup")
+
+    rows = list(build_turns(
+        "Mr. SMITH. Submitted without surviving bullet markup.",
+        [], "CREC-2026-09-16-pt1-PgS1", "2026-09-16", 119, "senate",
+        member_lookup=lookup, non_spoken=True,
+    ))
+    assert len(rows) == 1
+    assert rows[0]["is_procedural"] and not rows[0]["bioguide"]
+
+
+def test_wrapped_member_references_are_not_floor_markers():
+    calls = []
+
+    def lookup(marker):
+        calls.append(marker)
+        return {"bioguide": "W1", "name": marker, "party": "R", "state": "TX"}
+
+    rows = list(build_turns(
+        "ADDITIONAL SPONSORS\nMr. Weber of Texas.\nH.R. 381: Other names.\n"
+        "Mr. McCONNELL. Actual floor remarks.\n",
+        [], "CREC-2026-09-16-pt1-PgH1", "2026-09-16", 119, "house",
+        member_lookup=lookup,
+    ))
+    assert calls == ["Mr. McCONNELL"]
+    assert rows[0]["speaker_name"] == "" and not rows[0]["bioguide"]
+    assert rows[1]["speaker_name"] == "Mr. McCONNELL"
+
+
+def test_page_labels_are_not_counted_as_speech():
+    rows = list(build_turns(
+        "Mr. SMITH. First words.\n[[Page H123]]\nLast words.",
+        [], "CREC-2026-09-16-pt1-PgH1", "2026-09-16", 119, "house",
+    ))
+    assert rows[0]["word_count"] == 4
+    assert "Page" not in rows[0]["text"]
+
+
 def test_president_pro_tempore_marker_is_procedural() -> None:
     turns = list(build_turns(
         "The PRESIDENT pro tempore. The Senate will come to order.",

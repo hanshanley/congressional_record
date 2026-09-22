@@ -1,4 +1,4 @@
-"""Dated member identities for Record PDFs that lack member-level MODS."""
+"""Dated member identities for Record text with missing member-level MODS."""
 
 from __future__ import annotations
 

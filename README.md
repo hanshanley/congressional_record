@@ -477,6 +477,17 @@ guessed. PDF-derived turn IDs contain `#pdf-`, coverage manifests list `pdf_pack
 HTML replaces PDF turns rather than double-counting them. Image-only or unrecognized PDFs fail
 explicitly instead of publishing empty scores; this fallback does not perform OCR.
 
+HTML and manifest ingestion also use the dated roster when a direct speaker's MODS identity is
+missing or incomplete; usable MODS identities are retained and ambiguous matches are not guessed.
+Both representations exclude Senate non-spoken statements: HTML `<bullet>` markers are preserved
+and interpreted like the PDF's printed bullet symbols. `SADDITIONAL` statements and
+`HADDSPONSORS` lists are also excluded by metadata. Printed page labels do not count as speech,
+and HTML and typographic PDF quotation marks receive the same quotation exclusion.
+Re-ingesting an issue replaces its stored turns so corrected attribution and eligibility take
+effect without duplicating the issue. Previously downloaded plain text that already lost its
+`<bullet>` markers must be fetched again with `--overwrite` before rescoring; the scheduled bulk
+updaters always download fresh source archives.
+
 To enable it:
 
 1. **Settings → Pages → Source: GitHub Actions.**

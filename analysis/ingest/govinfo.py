@@ -19,8 +19,9 @@ import logging
 import os
 import tempfile
 import re
+from functools import lru_cache, partial
 from pathlib import Path
-from typing import Any, Dict, Iterator, List, Optional, Tuple
+from typing import Any, Callable, Dict, Iterator, List, Optional, Tuple
 
 from analysis.ingest.schema import (
     congress_from_year,
@@ -28,6 +29,8 @@ from analysis.ingest.schema import (
     write_turns_parquet,
 )
 from analysis.normalize.parties import normalize_party
+from analysis.ingest.legislators import members_on
+from crec.download import NON_SPOKEN_MARKER
 from crec.metadata import parse_mods
 
 LOG = logging.getLogger("analysis.ingest.govinfo")
@@ -54,6 +57,8 @@ _SPEAKER_RE = re.compile(
     rf"(?m)^[ \t]*({_MEMBER_MARKER}|{_PROCEDURAL_MARKER})\.\s",
 )
 _PROCEDURAL_SPEAKER = re.compile(r"^(the\s+)?(speaker|presiding|president|acting|chief|clerk|chair)", re.IGNORECASE)
+_PAGE_MARKER_RE = re.compile(r"\[\[Page [^\]]+\]\]")
+NON_SPOKEN_SUBCLASSES = {"SADDITIONAL", "HADDSPONSORS"}
 
 # Standard Record formulas that introduce printed bills, amendments, exhibits, or
 # other material that was inserted into the Record rather than spoken on the floor.
@@ -101,6 +106,24 @@ def _strip_header(text: str) -> str:
     while i < len(lines) and (not lines[i].strip() or _HEADER_LINE.match(lines[i])):
         i += 1
     return "\n".join(lines[i:]).strip()
+
+
+def strip_page_markers(text: str) -> str:
+    return _PAGE_MARKER_RE.sub(" ", text)
+
+
+def _is_floor_marker(marker: str) -> bool:
+    if _PROCEDURAL_SPEAKER.match(marker):
+        return True
+    match = re.match(rf"(?:Mr|Mrs|Ms|Miss)\.\s+({_SURNAME})", marker)
+    if not match:
+        return False
+    # Direct speakers use capitals (including McCONNELL/DeFAZIO). A wrapped
+    # reference such as "Mr. Weber of Texas." in a sponsor list is not a turn.
+    surname = re.sub(
+        r"\b[A-Z][a-z]{1,2}(?=[A-Z]{2})", lambda part: part.group().upper(), match[1],
+    )
+    return surname.isupper()
 
 
 def _surname(name: str) -> str:
@@ -171,11 +194,12 @@ def _index_members(members: List[Dict[str, str]]) -> Dict[str, List[Dict[str, st
     return idx
 
 
-def _match_member(marker: str, index: Dict[str, List[Dict[str, str]]]) -> Dict[str, str]:
-    """Resolve a marker by surname plus state; reject ambiguous surname-only matches."""
+def _member_candidates(
+    marker: str, index: Dict[str, List[Dict[str, str]]],
+) -> List[Dict[str, str]]:
     sn = _speaker_surname(marker)
     if not sn:
-        return {}
+        return []
     candidates = index.get(sn) or index.get(sn.split()[-1], [])
     state = _speaker_state(marker)
     if state:
@@ -184,7 +208,29 @@ def _match_member(marker: str, index: Dict[str, List[Dict[str, str]]]) -> Dict[s
     unique = {
         (m.get("bioguide") or m.get("name") or str(id(m))): m for m in candidates
     }
-    return next(iter(unique.values())) if len(unique) == 1 else {}
+    return list(unique.values())
+
+
+def _match_member(marker: str, index: Dict[str, List[Dict[str, str]]]) -> Dict[str, str]:
+    """Resolve a marker by surname plus state; reject ambiguous surname-only matches."""
+    candidates = _member_candidates(marker, index)
+    return candidates[0] if len(candidates) == 1 else {}
+
+
+@lru_cache(maxsize=128)
+def _dated_member_index(date: str, chamber: str) -> Dict[str, List[Dict[str, str]]]:
+    return _index_members(members_on(date, chamber))
+
+
+def roster_member(date: str, chamber: str, marker: str) -> Dict[str, str]:
+    """Resolve missing MODS identities using the same dated roster as PDF ingest."""
+    return _match_member(marker, _dated_member_index(date, chamber))
+
+
+def non_spoken_sections(text: str, initial: bool = False) -> Iterator[Tuple[str, bool]]:
+    """Retain the state of paired Senate non-spoken markers across text chunks."""
+    for index, section in enumerate(text.split(NON_SPOKEN_MARKER)):
+        yield section, initial ^ bool(index % 2)
 
 
 def _split_inserted_material(body: str) -> Tuple[str, str]:
@@ -202,6 +248,9 @@ def build_turns(
     date: str,
     congress: int,
     chamber: str,
+    *,
+    member_lookup: Optional[Callable[[str], Dict[str, str]]] = None,
+    non_spoken: bool = False,
 ) -> Iterator[Dict[str, Any]]:
     """Segment a granule's (header-stripped) text into unified turn dicts.
 
@@ -209,17 +258,30 @@ def build_turns(
     segmentation and party attribution stay identical. ``members`` is a list of
     normalized dicts with keys ``party``/``bioguide``/``name``/``state``.
     """
+    text = strip_page_markers(text)
     index = _index_members(members)
-    for i, (marker, body) in enumerate(_segment(text)):
+    sections = non_spoken_sections(text) if chamber == "senate" else [(text, False)]
+    segments = (
+        (marker, body, submitted)
+        for section, submitted in sections
+        for marker, body in _segment(section)
+    )
+    for i, (marker, body, submitted) in enumerate(segments):
         if not body:
             continue
-        procedural = bool(marker) and bool(_PROCEDURAL_SPEAKER.match(marker))
+        procedural = (
+            non_spoken or submitted
+            or (bool(marker) and bool(_PROCEDURAL_SPEAKER.match(marker)))
+        )
         inserted = ""
         if not procedural:
             body, inserted = _split_inserted_material(body)
         info: Dict[str, str] = {}
         if marker and not procedural:
-            info = _match_member(marker, index)
+            candidates = _member_candidates(marker, index)
+            info = candidates[0] if len(candidates) == 1 else {}
+            if member_lookup and len(candidates) <= 1 and not info.get("bioguide"):
+                info = member_lookup(marker)
         if body:
             party = normalize_party(info.get("party")) if info else "other"
             yield {
@@ -284,7 +346,10 @@ def _segment(text: str) -> List[Tuple[str, str]]:
 
     Any preamble before the first marker is returned with an empty speaker.
     """
-    marks = list(_SPEAKER_RE.finditer(text))
+    marks = [
+        match for match in _SPEAKER_RE.finditer(text)
+        if _is_floor_marker(match[1])
+    ]
     if not marks:
         return [("", text.strip())]
     segments: List[Tuple[str, str]] = []
@@ -305,14 +370,22 @@ def iter_granule_turns(row: Dict[str, Any], data_dir: Path) -> Iterator[Dict[str
     if not txt_path.exists():
         return
     text = _strip_header(txt_path.read_text(encoding="utf-8", errors="replace"))
-    members = _members_from_mods(mods_path.read_bytes()) if mods_path.exists() else []
+    metadata = parse_mods(mods_path.read_bytes()) if mods_path.exists() else {}
+    members = normalize_members(metadata.get("members", []))
 
     date = (row.get("dateIssued") or "").strip()
     congress = _congress_from_row(row)
     if congress <= 0:  # unparseable date -> skip rather than form a spurious congress-0 group
         return
     chamber = normalize_chamber(row.get("granuleClass") or row.get("chamber"))
-    yield from build_turns(text, members, row["granuleId"], date, congress, chamber)
+    yield from build_turns(
+        text, members, row["granuleId"], date, congress, chamber,
+        member_lookup=(
+            partial(roster_member, date, chamber)
+            if chamber in {"house", "senate"} else None
+        ),
+        non_spoken=metadata.get("subGranuleClass") in NON_SPOKEN_SUBCLASSES,
+    )
 
 
 def _iter_manifest(

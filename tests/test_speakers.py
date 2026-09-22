@@ -55,6 +55,18 @@ def test_mask_quotations_splits_spoken_from_quoted():
     assert spoken.rstrip().endswith("yesterday.")
 
 
+@pytest.mark.parametrize("opening,closing", [
+    ("``", "''"), ("\u2018\u2018", "\u2019\u2019"), ("\u201c", "\u201d"),
+])
+def test_html_and_pdf_quote_styles_are_masked_identically(opening, closing):
+    text = f"I said {opening}this is damn hard{closing} yesterday."
+    spoken, quoted = mask_quotations(text)
+    assert len(spoken) == len(text)
+    assert spoken.split() == ["I", "said", "yesterday."]
+    assert quoted == "this is damn hard"
+    assert mask_quotations(f"{opening}an unmatched damn quote")[1] == ""
+
+
 def test_text_without_quotes_is_returned_unchanged():
     text = "This is damn hard."
     assert mask_quotations(text) == (text, "")

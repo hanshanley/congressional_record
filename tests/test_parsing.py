@@ -63,6 +63,18 @@ def test_html_to_text() -> None:
     assert out.endswith("\n")
 
 
+def test_html_to_text_preserves_non_spoken_bullets_and_their_contents() -> None:
+    text = html_to_text(
+        "<pre>Mr. FIRST. Spoken.\n"
+        "<bullet>Mr. SECOND. Submitted.<bullet>\n"
+        "Mr. THIRD. Spoken again.</pre>"
+    )
+    assert text.count("\u2211") == 2
+    assert "\u2211Mr. SECOND. Submitted.\u2211" in text
+    assert "Mr. FIRST. Spoken." in text
+    assert "Mr. THIRD. Spoken again." in text
+
+
 def test_parse_mods_fields() -> None:
     meta = parse_mods(SAMPLE_MODS.encode("utf-8"))
     assert meta["granuleClass"] == "HOUSE"

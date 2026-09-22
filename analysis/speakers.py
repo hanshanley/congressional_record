@@ -62,9 +62,14 @@ LANGUAGE_METRICS = {
     },
 }
 
-# The Record wraps quotations in TeX-style doubled backticks / apostrophes. The
-# length cap stops a stray unmatched opener from swallowing a whole speech.
-_QUOTE_RE = re.compile(r"``(.{0,4000}?)''", re.S)
+# HTML uses TeX-style quotes; PDFs use typographic quotes. Keep the same
+# bounded exclusion for both so a stray opener cannot swallow a whole speech.
+_QUOTE_RE = re.compile(
+    r"``(.{0,4000}?)''"
+    r"|\u2018\u2018(.{0,4000}?)\u2019\u2019"
+    r"|\u201c(.{0,4000}?)\u201d",
+    re.S,
+)
 
 _READ_COLS = [
     "turn_id", "source", "date", "congress", "chamber", "party", "state",
@@ -245,12 +250,12 @@ def mask_quotations(text: str) -> Tuple[str, str]:
     Quoted regions are replaced by spaces rather than removed so that any
     character offsets and word boundaries either side stay intact.
     """
-    if not text or "``" not in text:
+    if not text or not any(mark in text for mark in ("``", "\u2018\u2018", "\u201c")):
         return text, ""
     quoted_parts: List[str] = []
     spans: List[Tuple[int, int]] = []
     for match in _QUOTE_RE.finditer(text):
-        quoted_parts.append(match.group(1))
+        quoted_parts.append(next(part for part in match.groups() if part is not None))
         spans.append(match.span())
     if not spans:
         return text, ""
