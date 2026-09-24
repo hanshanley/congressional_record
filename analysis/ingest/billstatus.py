@@ -573,13 +573,16 @@ def update_bill_status(
     *,
     full: bool = False,
     allow_missing_listings_for: Sequence[int] = (),
+    allow_stale_listings_for: Sequence[int] = (),
     client: Optional[GovInfoBulkClient] = None,
     workers: int = 8,
 ) -> BillStatusUpdate:
     """Discover, fetch, merge, and atomically save one or more Congresses.
 
     A 404 while discovering a Congress listed in ``allow_missing_listings_for``
-    is treated as no data. Other HTTP, download, and parsing failures propagate.
+    is treated as no data. A retry-exhausted listing failure for a Congress in
+    ``allow_stale_listings_for`` preserves already-stored data for that Congress.
+    Other HTTP, download, and parsing failures propagate.
     """
     normalized = tuple(validate_congress(value) for value in congresses)
     if not normalized:
@@ -595,8 +598,15 @@ def update_bill_status(
         raise ValueError("duplicate optional Congresses are not allowed")
     if not set(optional).issubset(normalized):
         raise ValueError("optional Congresses must be update targets")
-    if full and optional:
-        raise ValueError("full updates cannot allow missing listings")
+    stale = tuple(
+        validate_congress(value) for value in allow_stale_listings_for
+    )
+    if len(set(stale)) != len(stale):
+        raise ValueError("duplicate stale Congresses are not allowed")
+    if not set(stale).issubset(normalized):
+        raise ValueError("stale Congresses must be update targets")
+    if full and (optional or stale):
+        raise ValueError("full updates cannot allow unavailable listings")
 
     client = client or GovInfoBulkClient()
     existing = load_bills(output_path)
@@ -624,6 +634,11 @@ def update_bill_status(
     selected: list[BillStatusFile] = []
     discovered_count = 0
     for congress in normalized:
+        congress_existing = (
+            None
+            if existing is None
+            else existing[existing["congress"] == congress].reset_index(drop=True)
+        )
         try:
             discovered = discover_bill_files(congress, client=client)
         except GovInfoNotFoundError:
@@ -634,12 +649,22 @@ def update_bill_status(
                 congress,
             )
             continue
+        except RetryableBillStatusError as exc:
+            if (
+                congress not in stale
+                or congress_existing is None
+                or congress_existing.empty
+            ):
+                raise
+            LOG.warning(
+                "GovInfo listing for Congress %d is temporarily unavailable; "
+                "preserving %d stored bills: %s",
+                congress,
+                len(congress_existing),
+                exc,
+            )
+            continue
         discovered_count += len(discovered)
-        congress_existing = (
-            None
-            if existing is None
-            else existing[existing["congress"] == congress].reset_index(drop=True)
-        )
         selected.extend(
             changed_bill_files(discovered, congress_existing, full=full)
         )

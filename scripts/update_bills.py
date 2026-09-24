@@ -142,6 +142,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
                 if args.routine and len(congresses) > 1
                 else ()
             ),
+            allow_stale_listings_for=congresses if args.routine else (),
             workers=args.workers,
         )
     except Exception as exc:  # noqa: BLE001 - CLI must return a clear nonzero status

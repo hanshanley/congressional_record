@@ -24,6 +24,7 @@ from analysis.ingest.billstatus import (  # noqa: E402
     BillStatusError,
     GovInfoNotFoundError,
     GovInfoBulkClient,
+    RetryableBillStatusError,
     bill_type_zip_url,
     discover_bill_files,
     parse_bill_type_zip,
@@ -409,6 +410,47 @@ def test_optional_listing_does_not_hide_parser_errors(tmp_path: Path):
             (120,),
             tmp_path / "bills",
             allow_missing_listings_for=(120,),
+            client=client,
+        )
+
+
+def test_scheduled_update_preserves_existing_data_during_listing_outage(
+    tmp_path: Path,
+):
+    store = tmp_path / "bills"
+    existing = parse_bill_xml(
+        _bill_xml(title="Committed data"),
+        source_url=_url("hr", 1),
+    )
+    save_bills(pd.DataFrame([existing]), store)
+    listing = f"{BASE_URL}/119/hr/"
+    client = FakeClient(
+        {listing: RetryableBillStatusError("GovInfo returned HTTP 500")}
+    )
+
+    result = update_bill_status(
+        (119,),
+        store,
+        allow_stale_listings_for=(119,),
+        client=client,
+    )
+
+    assert result.discovered == result.selected == result.fetched == 0
+    assert result.written == ()
+    assert result.bills.iloc[0]["title"] == "Committed data"
+
+
+def test_listing_outage_still_fails_without_existing_data(tmp_path: Path):
+    listing = f"{BASE_URL}/119/hr/"
+    client = FakeClient(
+        {listing: RetryableBillStatusError("GovInfo returned HTTP 500")}
+    )
+
+    with pytest.raises(RetryableBillStatusError):
+        update_bill_status(
+            (119,),
+            tmp_path / "bills",
+            allow_stale_listings_for=(119,),
             client=client,
         )
 
