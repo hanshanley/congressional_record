@@ -10,6 +10,7 @@ import sys
 import zipfile
 from html import escape
 from pathlib import Path
+from types import SimpleNamespace
 
 import pandas as pd
 import pytest
@@ -455,6 +456,91 @@ def test_listing_outage_still_fails_without_existing_data(tmp_path: Path):
         )
 
 
+def test_rollover_skips_retryable_outage_for_unpublished_incoming_congress(
+    tmp_path: Path,
+):
+    store = tmp_path / "bills"
+    outgoing = parse_bill_xml(
+        _bill_xml(title="Outgoing Congress"),
+        source_url=_url("hr", 1),
+    )
+    save_bills(pd.DataFrame([outgoing]), store)
+    incoming_listing = f"{BASE_URL}/120/hr/"
+    client = FakeClient(
+        {
+            f"{BASE_URL}/119/hr/": _listing(
+                (("BILLSTATUS-119hr1.xml", "03-Aug-2026 14:00"),)
+            ),
+            f"{BASE_URL}/119/s/": _listing(()),
+            incoming_listing: RetryableBillStatusError(
+                "GovInfo returned HTTP 500"
+            ),
+        }
+    )
+
+    result = update_bill_status(
+        (119, 120),
+        store,
+        allow_missing_listings_for=(120,),
+        allow_stale_listings_for=(119, 120),
+        client=client,
+    )
+
+    assert result.discovered == 1
+    assert result.selected == result.fetched == 0
+    assert result.written == ()
+    assert incoming_listing in client.requested
+    assert f"{BASE_URL}/120/s/" not in client.requested
+
+
+def test_stale_listing_allowance_does_not_hide_parser_errors(tmp_path: Path):
+    store = tmp_path / "bills"
+    existing = parse_bill_xml(
+        _bill_xml(title="Committed data"),
+        source_url=_url("hr", 1),
+    )
+    save_bills(pd.DataFrame([existing]), store)
+    client = FakeClient({f"{BASE_URL}/119/hr/": b"<not-xml"})
+
+    with pytest.raises(BillStatusError, match="malformed or unsafe XML"):
+        update_bill_status(
+            (119,),
+            store,
+            allow_stale_listings_for=(119,),
+            client=client,
+        )
+
+
+def test_stale_listing_allowance_does_not_hide_bill_download_failures(
+    tmp_path: Path,
+):
+    store = tmp_path / "bills"
+    existing = parse_bill_xml(
+        _bill_xml(title="Committed data"),
+        source_url=_url("hr", 1),
+        source_updated_at="2026-08-01T10:00:00",
+    )
+    save_bills(pd.DataFrame([existing]), store)
+    bill_url = _url("hr", 1)
+    client = FakeClient(
+        {
+            f"{BASE_URL}/119/hr/": _listing(
+                (("BILLSTATUS-119hr1.xml", "03-Aug-2026 14:00"),)
+            ),
+            f"{BASE_URL}/119/s/": _listing(()),
+            bill_url: RetryableBillStatusError("GovInfo download failed"),
+        }
+    )
+
+    with pytest.raises(RetryableBillStatusError, match="download failed"):
+        update_bill_status(
+            (119,),
+            store,
+            allow_stale_listings_for=(119,),
+            client=client,
+        )
+
+
 def test_replacement_is_idempotent_across_repeated_updates(tmp_path: Path):
     store = tmp_path / "bills"
     bill_url = _url("hr", 1)
@@ -526,6 +612,68 @@ def test_no_argument_cli_uses_rollover_targets(monkeypatch):
 
     assert update.congresses_for(routine_args) == (119, 120)
     assert update.congresses_for(explicit_args) == (120,)
+
+
+def test_routine_cli_enables_only_scheduled_listing_fallbacks(monkeypatch):
+    update = _load_update_script()
+    captured = {}
+
+    def fake_update(congresses, output, **kwargs):
+        captured.update(
+            congresses=congresses,
+            output=output,
+            **kwargs,
+        )
+        return SimpleNamespace(
+            discovered=0,
+            selected=0,
+            fetched=0,
+            written=(),
+        )
+
+    monkeypatch.setattr(update, "update_bill_status", fake_update)
+
+    assert update.main([]) == 0
+    assert captured["congresses"] == (119,)
+    assert captured["allow_missing_listings_for"] == ()
+    assert captured["allow_stale_listings_for"] == (119,)
+
+    assert update.main(["--congress", "119"]) == 0
+    assert captured["congresses"] == (119,)
+    assert captured["allow_missing_listings_for"] == ()
+    assert captured["allow_stale_listings_for"] == ()
+
+
+def test_rollover_cli_allows_unpublished_incoming_congress(monkeypatch):
+    update = _load_update_script()
+    real_date = dt.date
+    captured = {}
+
+    class RolloverDate(real_date):
+        @classmethod
+        def today(cls):
+            return cls(2027, 1, 2)
+
+    def fake_update(congresses, output, **kwargs):
+        captured.update(
+            congresses=congresses,
+            output=output,
+            **kwargs,
+        )
+        return SimpleNamespace(
+            discovered=0,
+            selected=0,
+            fetched=0,
+            written=(),
+        )
+
+    monkeypatch.setattr(update.dt, "date", RolloverDate)
+    monkeypatch.setattr(update, "update_bill_status", fake_update)
+
+    assert update.main([]) == 0
+    assert captured["congresses"] == (119, 120)
+    assert captured["allow_missing_listings_for"] == (120,)
+    assert captured["allow_stale_listings_for"] == (119, 120)
 
 
 @pytest.mark.parametrize(

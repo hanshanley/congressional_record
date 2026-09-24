@@ -650,6 +650,14 @@ def update_bill_status(
             )
             continue
         except RetryableBillStatusError as exc:
+            if congress in optional:
+                LOG.warning(
+                    "GovInfo listing for optional Congress %d is temporarily "
+                    "unavailable; treating it as not published yet: %s",
+                    congress,
+                    exc,
+                )
+                continue
             if (
                 congress not in stale
                 or congress_existing is None
