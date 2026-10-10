@@ -1,5 +1,8 @@
 # Congressional Record Transcripts
 
+For non-profanity scoring calculations, limitations, a critique, and a proposed
+replacement, see the [non-profanity scoring README](docs/NON_PROFANITY_README.md).
+
 A small, resumable pipeline that downloads **speech/section-level transcripts** from the
 U.S. **Congressional Record** (the daily record of proceedings in the House and Senate) and
 stores each as a plain-text file plus structured metadata.
