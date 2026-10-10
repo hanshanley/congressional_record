@@ -93,8 +93,8 @@ def _plot_by_party(ax, g: pd.DataFrame, col: str, parties=("D", "R"), *,
         charts.line(ax, sub["year"], sub[col], color=theme.PARTY_COLORS[party],
                     label=theme.PARTY_LABELS[party], **line_kw)
         ends.append((party, sub["year"].iloc[-1], float(sub[col].iloc[-1])))
+    charts.fit_time_axis(ax, right_padding=0.13 if label_ends else 0.0)
     if label_ends and ends:
-        ax.margins(x=0.13)  # headroom for the end-of-line party labels
         _place_end_labels(ax, ends)
 
 

@@ -255,6 +255,11 @@ def test_last50_figures_filter_years_without_changing_rates(tmp_path, monkeypatc
         fig.canvas.draw()
         renderer = fig.canvas.get_renderer()
         for axis in fig.axes:
+            years = [float(year) for line in axis.lines for year in line.get_xdata()]
+            first, last = min(years), max(years)
+            left, right = axis.get_xlim()
+            assert abs(left - (first - 0.01 * (last - first))) < 1e-8
+            assert right > last
             boxes = [label.get_window_extent(renderer)
                      for label in axis.get_xticklabels() if label.get_visible()]
             boxes.sort(key=lambda box: box.x0)
@@ -388,6 +393,14 @@ def test_site_language_trends_draws_both_party_series(monkeypatch, tmp_path) -> 
     fig = captured["fig"]
     assert [axis.get_title() for axis in fig.axes] == ["Profanity", "Slurs"]
     assert all(len(axis.lines) == 2 for axis in fig.axes)
+    from matplotlib.dates import date2num
+    expected_limits = (
+        date2num(pd.Timestamp("2025-01-01")),
+        date2num(pd.Timestamp("2025-02-01")),
+    )
+    first, last = expected_limits
+    assert all(axis.get_xlim() == (first - 0.01 * (last - first),
+                                   last + 0.01 * (last - first)) for axis in fig.axes)
     import matplotlib.pyplot as plt
     plt.close(fig)
 
@@ -402,6 +415,17 @@ def test_site_language_trends_draws_both_party_series(monkeypatch, tmp_path) -> 
     )
     assert [axis.get_title() for axis in captured["fig"].axes] == ["Profanity"]
     plt.close(captured["fig"])
+
+
+def test_time_axis_keeps_a_single_period_visible() -> None:
+    import matplotlib.pyplot as plt
+
+    fig, ax = charts.new_figure()
+    charts.line(ax, [2025], [1.0], color=theme.PARTY_COLORS["D"])
+    charts.fit_time_axis(ax, right_padding=0.13)
+    assert ax.get_xlim() == (2024.5, 2025.5)
+    assert ax.lines[0].get_ydata().tolist() == [1.0]
+    plt.close(fig)
 
 
 if __name__ == "__main__":

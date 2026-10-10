@@ -1978,6 +1978,7 @@ def _chart_trend(series: pd.DataFrame, figs: Path) -> Path:
             linewidth=style["linewidth"],
             markersize=style["markersize"],
         )
+    charts.fit_time_axis(ax)
     ax.xaxis.set_major_locator(MaxNLocator(integer=True))
     charts.style_axes(
         ax,

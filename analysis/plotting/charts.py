@@ -8,6 +8,7 @@ project looks consistent with minimal boilerplate.
 
 from __future__ import annotations
 
+import math
 from pathlib import Path
 from typing import Tuple
 
@@ -44,6 +45,18 @@ def line(ax, xs, ys, color: str, label: str | None = None, linewidth: float = 2.
     """Draw one Substack-style series. ``marker=None`` gives a clean, markerless line."""
     ax.plot(xs, ys, color=color, linewidth=linewidth, marker=marker, markersize=markersize,
             markeredgecolor=theme.active_color("BG"), markeredgewidth=0.8, label=label, linestyle=linestyle)
+
+
+def fit_time_axis(ax, *, right_padding: float = 0.0) -> None:
+    """Keep endpoints visible with minimal padding, plus room for right-hand labels."""
+    first, last = ax.dataLim.intervalx
+    if not (math.isfinite(first) and math.isfinite(last)):
+        return
+    if first == last:
+        ax.set_xlim(first - 0.5, last + 0.5)
+    else:
+        span = last - first
+        ax.set_xlim(first - 0.01 * span, last + max(0.01, right_padding) * span)
 
 
 def end_label(ax, x, y, text: str, color: str, **kwargs) -> None:

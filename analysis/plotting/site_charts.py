@@ -95,6 +95,7 @@ def language_trends(
                 linewidth=2.3,
                 markersize=4,
             )
+        charts.fit_time_axis(ax)
         charts.style_axes(
             ax,
             metric["label"],
