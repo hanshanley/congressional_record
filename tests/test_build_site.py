@@ -452,6 +452,18 @@ def test_language_section_navigation_and_controls_remain_accessible(store, tmp_p
         assert control.find_parent("label").get_text(strip=True)
     assert document.select_one("#members #language-highlight")
     assert document.select_one("#terms .reading-note")
+    assert not document.select(".section-nav span, .section-head > .kicker")
+    for selector, content in (
+        (".chart-notes", ".source-note"),
+        (".congress-summary", "#language-highlight"),
+        (".state-map-details", "#state-term-map"),
+        (".term-notes", ".reading-note"),
+        (".data-notes", "#coverage"),
+    ):
+        details = document.select_one(selector)
+        assert details.name == "details" and not details.has_attr("open")
+        assert details.find("summary").get_text(strip=True)
+        assert details.select_one(content)
 
 
 def test_builds_combined_last_five_congresses_payload(store, tmp_path):
@@ -483,7 +495,7 @@ def test_builds_combined_last_five_congresses_payload(store, tmp_path):
     assert "Last 5 Congresses (115–119) · House + Senate" in page
     assert '<option value="all">1994–present</option>' in page
     assert "Member-level results cover 1994–present" in page
-    assert "party comparisons extend to 1873" in page
+    assert "Democratic and Republican floor language since 1873." in page
     assert "Member(s) with most uses" in page
     assert "Leader / all uses" in page
     assert '<th scope="col">Term</th>' in page

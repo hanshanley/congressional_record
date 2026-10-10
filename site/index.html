@@ -175,49 +175,49 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
     .site-footer { grid-template-columns:1fr; }
   }
 
-  .language-page .feature-header { grid-template-columns:1.1fr 1fr; gap:2rem 4rem;
-                                  padding:clamp(2rem,4vw,3.5rem) 0 2rem; border:0; }
+  .language-page .feature-header { grid-template-columns:1fr; gap:.85rem;
+                                  padding:clamp(2rem,4vw,3rem) 0 1.75rem; border:0; }
   .language-page .feature-header > .feature-intro { grid-column:1; }
-  .language-page .feature-header > .feature-summary { grid-column:2; align-self:end; }
-  .language-page h1 { max-width:14ch; font-size:clamp(3rem,4.8vw,4.5rem); line-height:1.02;
+  .language-page .feature-header > .feature-summary { grid-column:1; }
+  .language-page h1 { max-width:28ch; font-size:clamp(2.6rem,4.5vw,3.8rem); line-height:1.06;
                        text-wrap:balance; }
-  .language-page .dek { margin:0; max-width:32rem; font-size:clamp(1.15rem,1.7vw,1.4rem);
+  .language-page .dek { margin:0; max-width:42rem; font-size:1.15rem;
                         font-style:normal; line-height:1.45; }
-  .language-page .byline { display:flex; flex-wrap:wrap; gap:.3rem 1.25rem; margin-top:1.2rem;
+  .language-page .byline { display:flex; flex-wrap:wrap; gap:.3rem 1.25rem; margin-top:.75rem;
                           padding:0; border:0; font-size:.62rem; color:var(--muted); }
   .language-page .byline p { margin:0; }
-  .language-page .feature-nav { margin:0; padding:.8rem 0; border-block:1px solid var(--hair); }
-  .section-nav { display:grid; grid-template-columns:repeat(3,minmax(0,1fr));
-                 gap:2rem; margin:0; padding:1.15rem 0; border-bottom:1px solid var(--ink); }
-  .section-nav a { display:block; text-decoration:none;
-                   font-size:1.08rem; }
-  .section-nav a span { display:block; margin-bottom:.35rem; color:var(--signal-dark);
-                        font-family:var(--mono); font-size:.65rem; }
+  .page-navigation { display:flex; flex-wrap:wrap; justify-content:space-between;
+                     gap:.75rem 2rem; padding:.85rem 0; border-bottom:1px solid var(--rule); }
+  .language-page .feature-nav { margin:0; padding:0; border:0; }
+  .language-page .feature-nav > span { display:none; }
+  .section-nav { display:flex; flex-wrap:wrap; gap:.75rem 1.5rem; margin:0; padding:0; }
+  .section-nav a { text-decoration:none; color:var(--muted); font-family:var(--sans);
+                   font-size:.78rem; }
   .section-nav a:hover { text-decoration:underline; }
-  .language-page .feature-section { padding-top:clamp(2rem,4vw,3.5rem);
+  .language-page .feature-section { padding-top:clamp(2rem,4vw,3rem);
                                     scroll-margin-top:1.5rem; }
-  .language-page .feature-section ~ .feature-section { margin-top:2.5rem;
-                                                     border-top:1px solid var(--rule); }
+  .language-page .feature-section ~ .feature-section { margin-top:3rem;
+                                                     border-top:1px solid var(--hair); }
   .language-page .section-head { display:block; margin-bottom:1.5rem; padding:0; border:0; }
-  .language-page .section-head > .kicker { margin:0 0 .75rem; }
-  .language-page .section-head > div { display:grid; grid-template-columns:1.1fr 1fr;
-                                     gap:.5rem 4rem; align-items:end; }
-  .language-page h2 { font-size:clamp(1.9rem,3vw,2.75rem); line-height:1.12; text-wrap:balance; }
-  .language-page .section-dek { margin:0; max-width:38rem; color:var(--muted);
-                              font-size:1rem; line-height:1.5; }
+  .language-page .section-head > div { display:grid; grid-template-columns:1fr;
+                                     gap:.5rem; }
+  .language-page h2 { font-size:clamp(1.7rem,2.5vw,2.15rem); line-height:1.12; text-wrap:balance; }
+  .language-page .section-dek { margin:0; max-width:44rem; color:var(--muted);
+                              font-size:.95rem; line-height:1.5; }
   .language-page .section-head .eyebrow { grid-column:1 / -1; margin:0;
                                        font-size:.6rem; }
   .language-page .term-section-header .definition { grid-column:1 / -1; margin:.5rem 0 0; }
   .explorer-controls { display:grid; grid-template-columns:repeat(2,minmax(12rem,16rem));
                        gap:1.25rem 2rem; margin:0 0 1.5rem; padding:1rem 0;
-                       border-block:1px solid var(--hair); }
-  .long-run-controls { grid-template-columns:minmax(0,1.2fr) minmax(0,.7fr) minmax(0,1.4fr); }
+                       border:0; }
+  .long-run-controls { grid-template-columns:repeat(2,minmax(0,14rem)); }
+  .language-page select { border-bottom-color:var(--rule); font-size:1rem; }
   .control-note { align-self:center; max-width:30rem; margin:0; color:var(--muted);
                   font-size:.88rem; line-height:1.45; }
   .recent-controls { grid-template-columns:2fr 1fr 1fr 1.2fr; }
   .term-toolbar { display:flex; align-items:flex-end; justify-content:space-between;
                   flex-wrap:wrap; gap:1.25rem 2.5rem; margin:0 0 1.25rem;
-                  padding:1rem 0; border-block:1px solid var(--hair); }
+                  padding:1rem 0; border:0; }
   .term-controls { grid-template-columns:repeat(2,minmax(0,12rem)); margin:0;
                    padding:0; border:0; }
   .term-toolbar .tab-row { border:0; }
@@ -225,7 +225,7 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
   .source-note { max-width:52rem; margin:1rem 0 0; font-size:.88rem; font-style:italic; }
   .recent-shell { display:grid; gap:1.5rem; }
   .context-panel { display:grid; grid-template-columns:1fr .9fr 1.3fr; gap:2rem;
-                   padding:1.25rem 0; border-top:1px solid var(--hair); align-items:start; }
+                   padding:1rem 0 1.5rem; align-items:start; }
   .context-panel .eyebrow { margin:0 0 .5rem; font-size:.6rem; }
   .context-panel h3 { margin:0; font-size:1.4rem; letter-spacing:-.03em; }
   .party-rates { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
@@ -249,8 +249,10 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
   .methodology-grid p { margin:.2rem 0; color:var(--muted); font-size:.95rem; }
   .mini-chart { position:relative; min-width:0; display:grid;
                 grid-template-columns:minmax(0,1fr) auto; gap:.5rem 1rem; }
-  .mini-chart-heading h3 { font-size:1.4rem; letter-spacing:-.03em; }
-  .mini-chart-heading p { max-width:46rem; margin:.15rem 0 .5rem; }
+  .mini-chart-heading h3 { font-size:1.15rem; letter-spacing:-.02em; }
+  .mini-chart-heading p { max-width:46rem; margin:.15rem 0 .5rem; font-size:.85rem; }
+  .chart-definition { max-width:46rem; margin:.25rem 0 .75rem; color:var(--muted); }
+  .chart-definition summary { cursor:pointer; font-size:.82rem; }
   .mini-chart > svg { grid-column:1 / -1; display:block; width:100%; height:auto;
                      overflow:visible; }
   .mini-chart svg text { font-family:var(--mono); }
@@ -272,11 +274,11 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
   #language-tables h3 { font-size:1.6rem; letter-spacing:-.03em; }
   #language-tables .definition { max-width:46rem; margin:.2rem 0 1.25rem; }
   #language-tables table { font-size:.9rem; }
-  .term-explorer-grid { display:grid; grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);
-                        gap:clamp(1.5rem,3vw,3rem); align-items:start; }
-  .term-explorer-grid[data-view="frequency"] { grid-template-columns:minmax(0,1.4fr) minmax(0,1fr); }
+  .term-explorer-grid { display:grid; grid-template-columns:1fr; gap:1.25rem; }
+  .term-explorer-grid[data-view="frequency"] { grid-template-columns:1fr; }
   .term-explorer-grid .card { margin:0; }
-  .state-map-card { padding:1.25rem; background:var(--paper-deep); }
+  .state-map-card { max-width:48rem; padding:1rem 0; }
+  .language-page .table-wrap { border-top:1px solid var(--rule); }
   .state-map-card figcaption { margin:0 0 1rem; color:var(--muted); font-size:.92rem;
                                line-height:1.45; }
   .state-map-card figcaption strong { display:block; margin-bottom:.2rem; color:var(--ink);
@@ -319,7 +321,9 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
                      text-decoration-color:var(--signal); text-underline-offset:.25em; }
   .term-row-toggle:hover { color:var(--ink); }
   .term-row-toggle[hidden] { display:none; }
-  .language-page .methodology { margin:1.5rem 0 0; border-color:var(--hair); }
+  .language-page .notes { margin:1rem 0 0; border:0; }
+  .language-page .notes summary { color:var(--muted); font-size:.62rem; }
+  .language-page .notes[open] > summary { color:var(--ink); }
   .language-page .coverage-note { max-width:60rem; margin:1.5rem 0 0; line-height:1.7; }
   .reading-note { max-width:52rem; margin:.75rem 0 0; color:var(--muted); font-size:.88rem; }
   noscript img { width:100%; margin-top:1.5rem; }
@@ -327,10 +331,7 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
     html { scroll-behavior:smooth; }
   }
   @media (min-width:761px) and (max-width:1000px) {
-    .language-page .feature-header,.language-page .section-head > div { gap:1.25rem 2rem; }
     .term-explorer-grid,.term-explorer-grid[data-view="frequency"] { grid-template-columns:1fr; }
-    .state-map-card { display:grid; grid-template-columns:1fr 1.4fr; gap:2rem; align-items:center; }
-    .state-map-card figcaption { margin:0; }
   }
   @media (max-width:760px) {
     .language-page .feature-header { grid-template-columns:1fr; gap:1.25rem; padding:2rem 0; }
@@ -338,9 +339,8 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
     .language-page .feature-header > .feature-summary { grid-column:1; }
     .language-page h1 { max-width:16ch; font-size:clamp(2.5rem,9vw,3.5rem); }
     .language-page .section-head > div { grid-template-columns:1fr; gap:.75rem; }
-    .section-nav { gap:.75rem; }
-    .section-nav a { display:block; font-size:.92rem; line-height:1.3; }
-    .section-nav a span { display:block; margin-bottom:.35rem; }
+    .page-navigation { gap:.85rem; }
+    .section-nav { gap:.75rem 1.25rem; }
     .explorer-controls,.recent-controls,.term-controls { grid-template-columns:1fr 1fr; }
     .long-run-controls .control-note { grid-column:1 / -1; }
     .methodology-grid,.recent-shell,.term-explorer-grid,
@@ -391,48 +391,49 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
 <h1>The Language of Congress</h1>
 </div>
 <div class="feature-summary">
-<p class="dek">A record of how Congress speaks. Explore 150 years of floor language,
-then look closer at the members and words behind the trends.</p>
+<p class="dek">How Congress speaks, from historical trends to individual members.</p>
 <div class="byline">
 <p>By Hans W. A. Hanley</p>
 <p>Updated through October 9, 2026</p>
 </div>
 </div>
 </header>
+<div class="page-navigation">
 <nav class="feature-nav" aria-label="Dashboard pages"><span>Pages</span><a href="./" aria-current="page">The Language of Congress</a><a href="activity/">Member Activity &amp; Bills</a></nav>
 <nav class="section-nav" aria-label="Explore the language of Congress">
-<a href="#history"><span>01 / Since 1873</span>The long-run picture</a>
-<a href="#members"><span>02 / Since 1994</span>Members &amp; recent trends</a>
-<a href="#terms"><span>03 / The vocabulary</span>Terms &amp; states</a>
+<a href="#history">Historical trends</a>
+<a href="#members">Members</a>
+<a href="#terms">Vocabulary</a>
 </nav>
+</div>
 <section id="history" class="feature-section overview" aria-labelledby="overview-heading">
 <header class="section-head">
-<p class="kicker">01 · 1873–present</p>
 <div><h2 id="overview-heading">The long-run picture</h2>
-<p class="section-dek">Compare Democratic and Republican floor language across the historical
-record. Each measure counts a different kind of language, not an overall civility score.</p></div>
+<p class="section-dek">Democratic and Republican floor language since 1873.</p></div>
 </header>
 <div class="explorer-controls long-run-controls">
 <label>Measure<select id="long-run-metric"></select></label>
 <label>Chamber<select id="long-run-chamber"></select></label>
-<p class="control-note">Rates per 1,000 words. Select a party in the legend to hide or show
-its series; hover over or focus a point for the underlying counts.</p>
 </div>
 <div id="long-run-chart" class="focus-panel"
  aria-label="Interactive long-run Democratic and Republican language chart"></div>
+<details class="notes chart-notes">
+<summary>Sources and how to read the chart</summary>
+<p class="control-note">Rates per 1,000 words. Each measure counts a different kind of
+language, not an overall civility score. Select a party in the legend to hide or show
+its series; hover over or focus a point for the underlying counts.</p>
 <p class="definition source-note">Stanford Hein Congressional Record through 2017 and GovInfo CREC from 2017 onward; House and Senate floor language, Democrats and Republicans.</p>
+</details>
 </section>
 <div id="coverage-warning" class="warning" hidden></div>
 <p id="dashboard-error" class="error" role="alert" hidden></p>
 <section id="members" class="feature-section language" aria-labelledby="language-heading">
 <header class="section-head">
-<p class="kicker">02 · 1994–present</p>
 <div><h2 id="language-heading">Recent language on the floor</h2>
-<p class="section-dek">Switch between trends, member rankings, and exact values.
-Member-level results cover 1994–present; historical party comparisons extend to 1873.</p></div>
+<p class="section-dek">Member-level results cover 1994–present.</p></div>
 </header>
 <div class="explorer-controls recent-controls">
-<label>Congress<select id="congress"><option value="all">1994–present</option><option value="congresses">Congress congresses</option></select></label>
+<label>Congress<select id="congress"><option value="all">1994–present</option><option value="recent5" selected>Last 5 Congresses</option><option value="119">Congress 119</option><option value="118">Congress 118</option><option value="117">Congress 117</option><option value="116">Congress 116</option><option value="115">Congress 115</option><option value="114">Congress 114</option><option value="113">Congress 113</option><option value="112">Congress 112</option><option value="111">Congress 111</option><option value="110">Congress 110</option><option value="109">Congress 109</option><option value="108">Congress 108</option><option value="107">Congress 107</option><option value="106">Congress 106</option><option value="105">Congress 105</option><option value="104">Congress 104</option><option value="103">Congress 103</option></select></label>
 <label>Measure<select id="recent-metric"></select></label>
 <label>Chamber<select id="recent-chamber"></select></label>
 <label>View<select id="recent-view"></select></label>
@@ -442,9 +443,12 @@ Member-level results cover 1994–present; historical party comparisons extend t
 <div id="recent-visual" class="focus-panel"></div>
 <div id="language-tables" class="focus-panel" hidden><section class="card" id="profanity-table"><h3>Highest profanity rates</h3><p class="definition">Unquoted matches from a narrow, curated profanity list. “Most-used term” is the most frequent unquoted match, not a claim of preference. Only members with a nonzero rate and enough words are included.</p><div class="table-wrap"><table data-language-metric="profanity"><caption class="sr-only">Profanity member rates</caption><thead><tr><th scope="col">#</th><th scope="col">Member</th><th scope="col">Party</th><th scope="col">Chamber</th><th scope="col">Most-used term</th><th scope="col">Per 100k</th><th scope="col">Hits</th><th scope="col">Words</th></tr></thead><tbody><tr><td class="num">1</td><td class=""><a href="https://bioguide.congress.gov/search/bio/S001183">Mr. SCHWEIKERT</a></td><td class="">R</td><td class="">House</td><td class="num"><span class="censored-term" tabindex="0" data-term="crap" aria-label="crap" title="Uncensored term: crap">cr*p</span></td><td class="num">51.1</td><td class="num">411</td><td class="num">805,002</td></tr><tr><td class="num">2</td><td class=""><a href="https://bioguide.congress.gov/search/bio/F000476">Mr. FROST</a></td><td class="">D</td><td class="">House</td><td class="num"><span class="censored-term" tabindex="0" data-term="damn" aria-label="damn" title="Uncensored term: damn">da*n</span></td><td class="num">41.0</td><td class="num">12</td><td class="num">29,296</td></tr><tr><td class="num">3</td><td class=""><a href="https://bioguide.congress.gov/search/bio/K000380">Mr. KILDEE</a></td><td class="">D</td><td class="">House</td><td class="num"><span class="censored-term" tabindex="0" data-term="fuck" aria-label="fuck" title="Uncensored term: fuck">fu*k</span></td><td class="num">27.0</td><td class="num">18</td><td class="num">66,786</td></tr><tr><td class="num">4</td><td class=""><a href="https://bioguide.congress.gov/search/bio/B001223">Mr. BOWMAN</a></td><td class="">D</td><td class="">House</td><td class="num"><span class="censored-term" tabindex="0" data-term="damn" aria-label="damn" title="Uncensored term: damn">da*n</span></td><td class="num">24.1</td><td class="num">7</td><td class="num">29,086</td></tr><tr><td class="num">5</td><td class=""><a href="https://bioguide.congress.gov/search/bio/M000312">Mr. McGOVERN</a></td><td class="">D</td><td class="">House</td><td class="num"><span class="censored-term" tabindex="0" data-term="hell" aria-label="hell" title="Uncensored term: hell">he*l</span></td><td class="num">23.6</td><td class="num">232</td><td class="num">983,548</td></tr><tr><td class="num">6</td><td class=""><a href="https://bioguide.congress.gov/search/bio/G000359">Mr. GRAHAM</a></td><td class="">R</td><td class="">Senate</td><td class="num"><span class="censored-term" tabindex="0" data-term="damn" aria-label="damn" title="Uncensored term: damn">da*n</span></td><td class="num">20.5</td><td class="num">44</td><td class="num">214,155</td></tr><tr><td class="num">7</td><td class=""><a href="https://bioguide.congress.gov/search/bio/R000614">Mr. ROY</a></td><td class="">R</td><td class="">House</td><td class="num"><span class="censored-term" tabindex="0" data-term="damn" aria-label="damn" title="Uncensored term: damn">da*n</span></td><td class="num">16.0</td><td class="num">89</td><td class="num">555,617</td></tr><tr><td class="num">8</td><td class=""><a href="https://bioguide.congress.gov/search/bio/G000585">Mr. GOMEZ</a></td><td class="">D</td><td class="">House</td><td class="num"><span class="censored-term" tabindex="0" data-term="hell" aria-label="hell" title="Uncensored term: hell">he*l</span></td><td class="num">14.6</td><td class="num">4</td><td class="num">27,470</td></tr></tbody></table></div></section><section class="card" id="hostility-table"><h3>Highest personal hostility / disrespect rates</h3><p class="definition">Curated personal attack and disrespect terms. Only members with a nonzero rate and enough words are included.</p><div class="table-wrap"><table data-language-metric="hostility"><caption class="sr-only">Personal hostility / disrespect member rates</caption><thead><tr><th scope="col">#</th><th scope="col">Member</th><th scope="col">Party</th><th scope="col">Chamber</th><th scope="col">Per 100k</th><th scope="col">Hits</th><th scope="col">Words</th></tr></thead><tbody><tr><td class="num">1</td><td class=""><a href="https://bioguide.congress.gov/search/bio/J000294">Mr. JEFFRIES</a></td><td class="">D</td><td class="">House</td><td class="num">44.3</td><td class="num">65</td><td class="num">146,630</td></tr><tr><td class="num">2</td><td class=""><a href="https://bioguide.congress.gov/search/bio/B001304">Mr. BROWN of Maryland</a></td><td class="">D</td><td class="">House</td><td class="num">31.2</td><td class="num">12</td><td class="num">38,490</td></tr><tr><td class="num">3</td><td class=""><a href="https://bioguide.congress.gov/search/bio/W000802">Mr. WHITEHOUSE</a></td><td class="">D</td><td class="">Senate</td><td class="num">29.4</td><td class="num">220</td><td class="num">749,375</td></tr><tr><td class="num">4</td><td class=""><a href="https://bioguide.congress.gov/search/bio/G000574">Mr. GALLEGO</a></td><td class="">D</td><td class="">Senate</td><td class="num">17.2</td><td class="num">9</td><td class="num">52,465</td></tr><tr><td class="num">5</td><td class=""><a href="https://bioguide.congress.gov/search/bio/O000086">Mr. OWENS</a></td><td class="">R</td><td class="">House</td><td class="num">14.7</td><td class="num">6</td><td class="num">40,736</td></tr><tr><td class="num">6</td><td class=""><a href="https://bioguide.congress.gov/search/bio/G000595">Mr. GOOD of Virginia</a></td><td class="">R</td><td class="">House</td><td class="num">13.9</td><td class="num">12</td><td class="num">86,052</td></tr><tr><td class="num">7</td><td class=""><a href="https://bioguide.congress.gov/search/bio/Y000033">Mr. YOUNG</a></td><td class="">R</td><td class="">House</td><td class="num">11.8</td><td class="num">5</td><td class="num">42,473</td></tr><tr><td class="num">8</td><td class=""><a href="https://bioguide.congress.gov/search/bio/S001197">Mr. SASSE</a></td><td class="">R</td><td class="">Senate</td><td class="num">11.6</td><td class="num">12</td><td class="num">103,486</td></tr></tbody></table></div></section><section class="card" id="misconduct-table"><h3>Highest misconduct allegations rates</h3><p class="definition">Curated language alleging corruption, abuse, or other misconduct. Only members with a nonzero rate and enough words are included.</p><div class="table-wrap"><table data-language-metric="misconduct"><caption class="sr-only">Misconduct allegations member rates</caption><thead><tr><th scope="col">#</th><th scope="col">Member</th><th scope="col">Party</th><th scope="col">Chamber</th><th scope="col">Per 100k</th><th scope="col">Hits</th><th scope="col">Words</th></tr></thead><tbody><tr><td class="num">1</td><td class=""><a href="https://bioguide.congress.gov/search/bio/S001150">Mr. SCHIFF</a></td><td class="">D</td><td class="">Senate</td><td class="num">148.1</td><td class="num">429</td><td class="num">289,600</td></tr><tr><td class="num">2</td><td class=""><a href="https://bioguide.congress.gov/search/bio/D000627">Mrs. DEMINGS</a></td><td class="">D</td><td class="">House</td><td class="num">120.9</td><td class="num">65</td><td class="num">53,775</td></tr><tr><td class="num">3</td><td class=""><a href="https://bioguide.congress.gov/search/bio/J000294">Mr. JEFFRIES</a></td><td class="">D</td><td class="">House</td><td class="num">93.4</td><td class="num">137</td><td class="num">146,630</td></tr><tr><td class="num">4</td><td class=""><a href="https://bioguide.congress.gov/search/bio/G000587">Ms. GARCIA of Texas</a></td><td class="">D</td><td class="">House</td><td class="num">80.9</td><td class="num">69</td><td class="num">85,274</td></tr><tr><td class="num">5</td><td class=""><a href="https://bioguide.congress.gov/search/bio/S001214">Mr. STEUBE</a></td><td class="">R</td><td class="">House</td><td class="num">71.6</td><td class="num">18</td><td class="num">25,133</td></tr><tr><td class="num">6</td><td class=""><a href="https://bioguide.congress.gov/search/bio/K000394">Mr. KIM</a></td><td class="">D</td><td class="">Senate</td><td class="num">70.5</td><td class="num">44</td><td class="num">62,415</td></tr><tr><td class="num">7</td><td class=""><a href="https://bioguide.congress.gov/search/bio/S001230">Mr. SUBRAMANYAM</a></td><td class="">D</td><td class="">House</td><td class="num">64.3</td><td class="num">33</td><td class="num">51,346</td></tr><tr><td class="num">8</td><td class=""><a href="https://bioguide.congress.gov/search/bio/L000582">Mr. LIEU</a></td><td class="">D</td><td class="">House</td><td class="num">61.7</td><td class="num">23</td><td class="num">37,270</td></tr></tbody></table></div></section></div>
 </div>
+</div>
+<details class="notes congress-summary">
+<summary>Party comparison and leading members</summary>
 <aside id="language-highlight" class="context-panel"
  aria-label="Selected Congress language summary"></aside>
-</div>
+</details>
 <details class="notes methodology">
 <summary>Methodology and limitations</summary>
 <div class="methodology-grid">
@@ -458,11 +462,10 @@ Member-level results cover 1994–present; historical party comparisons extend t
 </section>
 <section id="terms" class="feature-section language" aria-labelledby="term-leaders-heading">
 <header class="section-head term-section-header">
-<p class="kicker">03 · Terms</p>
 <div><p class="eyebrow" id="term-leaders-scope">Last 5 Congresses (115–119) · House + Senate</p>
 <h2 id="term-leaders-heading">Who uses each term the most?</h2>
-<p class="section-dek" id="term-leaders-description">Explore the most-used profanity terms and
-the members who use them. Related forms are grouped; only accepted, unquoted uses count.</p>
+<p class="section-dek" id="term-leaders-description">Profanity by term and member.
+Related forms are grouped; only accepted, unquoted uses count.</p>
 <p class="definition" id="term-leaders-note" hidden></p></div>
 </header>
 <div class="term-toolbar">
@@ -479,21 +482,28 @@ the members who use them. Related forms are grouped; only accepted, unquoted use
 </div>
 <div class="term-explorer-grid">
 <div class="card table-wrap"><table id="term-leaders-table" data-view="leaders"><caption class="sr-only">Top congressional users of each observed profanity term</caption><thead><tr><th scope="col">Term</th><th scope="col">Member(s) with most uses</th><th scope="col" class="num">Leader / all uses</th></tr></thead><tbody><tr><td><span class="censored-term" tabindex="0" data-term="damn" aria-label="damn" title="Uncensored term: damn. Grouped forms: dammit, damn, damned, god damn, goddammit, goddamn, goddamned">da*n</span></td><td><a href="https://bioguide.congress.gov/search/bio/M000312">Mr. McGOVERN</a><span class="party-badges"><span class="party-badge party-d">D</span></span></td><td class="num"><div class="term-usage" aria-label="103 uses by the leading member out of 756 uses by all members"><strong>103</strong><span>/ 756 total</span></div></td></tr><tr><td><span class="censored-term" tabindex="0" data-term="hell" aria-label="hell" title="Uncensored term: hell. Grouped forms: go to hell, hell of a, what the hell">he*l</span></td><td><a href="https://bioguide.congress.gov/search/bio/M000312">Mr. McGOVERN</a><span class="party-badges"><span class="party-badge party-d">D</span></span></td><td class="num"><div class="term-usage" aria-label="108 uses by the leading member out of 339 uses by all members"><strong>108</strong><span>/ 339 total</span></div></td></tr><tr><td><span class="censored-term" tabindex="0" data-term="crap" aria-label="crap" title="Uncensored term: crap. Grouped forms: crap, crappy">cr*p</span></td><td><a href="https://bioguide.congress.gov/search/bio/S001183">Mr. SCHWEIKERT</a><span class="party-badges"><span class="party-badge party-r">R</span></span></td><td class="num"><div class="term-usage" aria-label="236 uses by the leading member out of 337 uses by all members"><strong>236</strong><span>/ 337 total</span></div></td></tr><tr><td><span class="censored-term" tabindex="0" data-term="ass" aria-label="ass" title="Uncensored term: ass. Grouped forms: ass, asses, half-assed, kick ass">a*s</span></td><td><a href="https://bioguide.congress.gov/search/bio/G000359">Mr. GRAHAM</a><span class="party-badges"><span class="party-badge party-r">R</span></span></td><td class="num"><div class="term-usage" aria-label="5 uses by the leading member out of 32 uses by all members"><strong>5</strong><span>/ 32 total</span></div></td></tr><tr><td><span class="censored-term" tabindex="0" data-term="piss off" aria-label="piss off" title="Uncensored term: piss off. Grouped forms: piss off, pissed off, pisses off, pissing off">pi*s off</span></td><td><a href="https://bioguide.congress.gov/search/bio/S001183">Mr. SCHWEIKERT</a><span class="party-badges"><span class="party-badge party-r">R</span></span>, <a href="https://bioguide.congress.gov/search/bio/S001194">Mr. SCHATZ</a><span class="party-badges"><span class="party-badge party-d">D</span></span></td><td class="num"><div class="term-usage" aria-label="5 uses by each leading member out of 31 uses by all members"><strong>5 each</strong><span>/ 31 total</span></div></td></tr><tr><td><span class="censored-term" tabindex="0" data-term="fuck" aria-label="fuck" title="Uncensored term: fuck. Grouped forms: fuck, fuck you, fucking">fu*k</span></td><td><a href="https://bioguide.congress.gov/search/bio/K000380">Mr. KILDEE</a><span class="party-badges"><span class="party-badge party-d">D</span></span></td><td class="num"><div class="term-usage" aria-label="13 uses by the leading member out of 26 uses by all members"><strong>13</strong><span>/ 26 total</span></div></td></tr><tr><td><span class="censored-term" tabindex="0" data-term="bastard" aria-label="bastard" title="Uncensored term: bastard. Grouped forms: bastard, bastards">ba****d</span></td><td><a href="https://bioguide.congress.gov/search/bio/B001261">Mr. BARRASSO</a><span class="party-badges"><span class="party-badge party-r">R</span></span>, <a href="https://bioguide.congress.gov/search/bio/R000614">Mr. ROY</a><span class="party-badges"><span class="party-badge party-r">R</span></span>, <a href="https://bioguide.congress.gov/search/bio/T000476">Mr. TILLIS</a><span class="party-badges"><span class="party-badge party-r">R</span></span></td><td class="num"><div class="term-usage" aria-label="3 uses by each leading member out of 21 uses by all members"><strong>3 each</strong><span>/ 21 total</span></div></td></tr><tr><td><span class="censored-term" tabindex="0" data-term="screw you" aria-label="screw you" title="Uncensored term: screw you">sc**w you</span></td><td><a href="https://bioguide.congress.gov/search/bio/S001183">Mr. SCHWEIKERT</a><span class="party-badges"><span class="party-badge party-r">R</span></span></td><td class="num"><div class="term-usage" aria-label="5 uses by the leading member out of 10 uses by all members"><strong>5</strong><span>/ 10 total</span></div></td></tr><tr><td><span class="censored-term" tabindex="0" data-term="frig" aria-label="frig" title="Uncensored term: frig. Grouped forms: friggin, frigging">fr*g</span></td><td><a href="https://bioguide.congress.gov/search/bio/R000614">Mr. ROY</a><span class="party-badges"><span class="party-badge party-r">R</span></span></td><td class="num"><div class="term-usage" aria-label="3 uses by the leading member out of 9 uses by all members"><strong>3</strong><span>/ 9 total</span></div></td></tr><tr><td><span class="censored-term" tabindex="0" data-term="bullshit" aria-label="bullshit" title="Uncensored term: bullshit">bu*****t</span></td><td><a href="https://bioguide.congress.gov/search/bio/G000578">Mr. GAETZ</a><span class="party-badges"><span class="party-badge party-r">R</span></span>, <a href="https://bioguide.congress.gov/search/bio/M000312">Mr. McGOVERN</a><span class="party-badges"><span class="party-badge party-d">D</span></span>, <a href="https://bioguide.congress.gov/search/bio/S001218">Ms. STANSBURY</a><span class="party-badges"><span class="party-badge party-d">D</span></span></td><td class="num"><div class="term-usage" aria-label="2 uses by each leading member out of 9 uses by all members"><strong>2 each</strong><span>/ 9 total</span></div></td></tr><tr><td><span class="censored-term" tabindex="0" data-term="shit" aria-label="shit" title="Uncensored term: shit. Grouped forms: shit, shitting">sh*t</span></td><td><a href="https://bioguide.congress.gov/search/bio/C001091">Mr. CASTRO of Texas</a><span class="party-badges"><span class="party-badge party-d">D</span></span></td><td class="num"><div class="term-usage" aria-label="3 uses by the leading member out of 7 uses by all members"><strong>3</strong><span>/ 7 total</span></div></td></tr><tr><td><span class="censored-term" tabindex="0" data-term="bitch" aria-label="bitch" title="Uncensored term: bitch. Grouped forms: bitch, son of a bitch">bi**h</span></td><td><a href="https://bioguide.congress.gov/search/bio/K000380">Mr. KILDEE</a><span class="party-badges"><span class="party-badge party-d">D</span></span></td><td class="num"><div class="term-usage" aria-label="2 uses by the leading member out of 5 uses by all members"><strong>2</strong><span>/ 5 total</span></div></td></tr><tr><td><span class="censored-term" tabindex="0" data-term="frick" aria-label="frick" title="Uncensored term: frick">fr**k</span></td><td><a href="https://bioguide.congress.gov/search/bio/R000614">Mr. ROY</a><span class="party-badges"><span class="party-badge party-r">R</span></span>, <a href="https://bioguide.congress.gov/search/bio/S000510">Mr. SMITH of Washington</a><span class="party-badges"><span class="party-badge party-d">D</span></span>, <a href="https://bioguide.congress.gov/search/bio/S001183">Mr. SCHWEIKERT</a><span class="party-badges"><span class="party-badge party-r">R</span></span>, <a href="https://bioguide.congress.gov/search/bio/S001218">Ms. STANSBURY</a><span class="party-badges"><span class="party-badge party-d">D</span></span></td><td class="num"><div class="term-usage" aria-label="1 use by each leading member out of 4 uses by all members"><strong>1 each</strong><span>/ 4 total</span></div></td></tr><tr><td><span class="censored-term" tabindex="0" data-term="motherfucker" aria-label="motherfucker" title="Uncensored term: motherfucker">mo*********r</span></td><td><a href="https://bioguide.congress.gov/search/bio/K000380">Mr. KILDEE</a><span class="party-badges"><span class="party-badge party-d">D</span></span></td><td class="num"><div class="term-usage" aria-label="2 uses by the leading member out of 3 uses by all members"><strong>2</strong><span>/ 3 total</span></div></td></tr><tr><td><span class="censored-term" tabindex="0" data-term="shithole" aria-label="shithole" title="Uncensored term: shithole">sh*****e</span></td><td><a href="https://bioguide.congress.gov/search/bio/K000384">Mr. KAINE</a><span class="party-badges"><span class="party-badge party-d">D</span></span></td><td class="num"><div class="term-usage" aria-label="2 uses by the leading member out of 3 uses by all members"><strong>2</strong><span>/ 3 total</span></div></td></tr><tr><td><span class="censored-term" tabindex="0" data-term="badass" aria-label="badass" title="Uncensored term: badass">ba***s</span></td><td><a href="https://bioguide.congress.gov/search/bio/G000061">Mr. MIKE GARCIA of California</a><span class="party-badges"><span class="party-badge party-r">R</span></span>, <a href="https://bioguide.congress.gov/search/bio/M001176">Mr. MERKLEY</a><span class="party-badges"><span class="party-badge party-d">D</span></span>, <a href="https://bioguide.congress.gov/search/bio/S001208">Ms. SLOTKIN</a><span class="party-badges"><span class="party-badge party-d">D</span></span></td><td class="num"><div class="term-usage" aria-label="1 use by each leading member out of 3 uses by all members"><strong>1 each</strong><span>/ 3 total</span></div></td></tr><tr><td><span class="censored-term" tabindex="0" data-term="effing" aria-label="effing" title="Uncensored term: effing">ef***g</span></td><td><a href="https://bioguide.congress.gov/search/bio/B001277">Mr. BLUMENTHAL</a><span class="party-badges"><span class="party-badge party-d">D</span></span>, <a href="https://bioguide.congress.gov/search/bio/D000563">Mr. DURBIN</a><span class="party-badges"><span class="party-badge party-d">D</span></span>, <a href="https://bioguide.congress.gov/search/bio/K000367">Ms. KLOBUCHAR</a><span class="party-badges"><span class="party-badge party-d">D</span></span></td><td class="num"><div class="term-usage" aria-label="1 use by each leading member out of 3 uses by all members"><strong>1 each</strong><span>/ 3 total</span></div></td></tr><tr><td><span class="censored-term" tabindex="0" data-term="bugger" aria-label="bugger" title="Uncensored term: bugger">bu***r</span></td><td><a href="https://bioguide.congress.gov/search/bio/S000364">Mr. SHIMKUS</a><span class="party-badges"><span class="party-badge party-r">R</span></span></td><td class="num"><div class="term-usage" aria-label="2 uses by the leading member out of 2 uses by all members"><strong>2</strong><span>/ 2 total</span></div></td></tr><tr><td><span class="censored-term" tabindex="0" data-term="asshole" aria-label="asshole" title="Uncensored term: asshole. Grouped forms: asshole, assholes">as****e</span></td><td><a href="https://bioguide.congress.gov/search/bio/D000618">Mr. DAINES</a><span class="party-badges"><span class="party-badge party-r">R</span></span>, <a href="https://bioguide.congress.gov/search/bio/R000606">Mr. RASKIN</a><span class="party-badges"><span class="party-badge party-d">D</span></span></td><td class="num"><div class="term-usage" aria-label="1 use by each leading member out of 2 uses by all members"><strong>1 each</strong><span>/ 2 total</span></div></td></tr><tr><td><span class="censored-term" tabindex="0" data-term="batshit" aria-label="batshit" title="Uncensored term: batshit">ba****t</span></td><td><a href="https://bioguide.congress.gov/search/bio/M000312">Mr. McGOVERN</a><span class="party-badges"><span class="party-badge party-d">D</span></span></td><td class="num"><div class="term-usage" aria-label="1 use by the leading member out of 1 uses by all members"><strong>1</strong><span>/ 1 total</span></div></td></tr><tr><td><span class="censored-term" tabindex="0" data-term="jackass" aria-label="jackass" title="Uncensored term: jackass">ja****s</span></td><td><a href="https://bioguide.congress.gov/search/bio/C001056">Mr. CORNYN</a><span class="party-badges"><span class="party-badge party-r">R</span></span></td><td class="num"><div class="term-usage" aria-label="1 use by the leading member out of 1 uses by all members"><strong>1</strong><span>/ 1 total</span></div></td></tr></tbody></table><button id="term-row-toggle" class="term-row-toggle" type="button" aria-controls="term-leaders-table" aria-expanded="false" hidden></button></div>
+<details class="notes state-map-details">
+<summary>Explore the state map</summary>
 <figure class="card state-map-card">
 <figcaption><strong>Most-used term by state</strong>
 The leading grouped term among attributed members from each state in the selected scope.</figcaption>
 <div id="state-term-map"></div>
 </figure>
+</details>
 </div>
+<details class="notes term-notes">
+<summary>How to read the term table</summary>
 <p class="reading-note">“Total” includes all attributed members; “each” applies to every member
 in a tie. Terms are censored—hover over or focus one to reveal it. Raw matches remain in
 the downloadable data. The Congress selector above applies to this section too.</p>
+</details>
 </section>
-<details class="notes"><summary>Data notes and exclusions</summary><ul><li>Speech counts include only remarks attributable to a specific member by Bioguide ID; procedural speech, submitted Extensions of Remarks, and material printed into the Record are excluded. Named-member coverage begins January 25, 1994; the separate long-run party charts use the Stanford Hein corpus back to 1873.</li><li>Profanity uses a conservative, hand-curated list rather than an exhaustive dictionary. Passages marked as quotations are excluded from a member&#x27;s rate and retained as a separate audit count.</li><li>A member&#x27;s most-used profanity term is the most frequent accepted, unquoted surface form in the selected period; alphabetical order breaks ties. It does not imply personal preference.</li><li>The Congressional Record is lightly edited rather than verbatim, and source metadata can be corrected after publication.</li></ul></details>
+<details class="notes data-notes"><summary>Data notes, coverage, and exclusions</summary><ul><li>Speech counts include only remarks attributable to a specific member by Bioguide ID; procedural speech, submitted Extensions of Remarks, and material printed into the Record are excluded. Named-member coverage begins January 25, 1994; the separate long-run party charts use the Stanford Hein corpus back to 1873.</li><li>Profanity uses a conservative, hand-curated list rather than an exhaustive dictionary. Passages marked as quotations are excluded from a member&#x27;s rate and retained as a separate audit count.</li><li>A member&#x27;s most-used profanity term is the most frequent accepted, unquoted surface form in the selected period; alphabetical order breaks ties. It does not imply personal preference.</li><li>The Congressional Record is lightly edited rather than verbatim, and source metadata can be corrected after publication.</li></ul>
 <p id="coverage" class="coverage-note">Speech coverage 2017-01-04
 to 2026-10-09. Newest Congressional Record date:
 2026-10-09. Site data snapshot:
 2026-10-09T00:00:00+00:00. <a href="activity/">Open member activity and bill tables.</a></p>
+</details>
 </article>
 </main>
 <footer class="site-footer">
@@ -692,8 +702,19 @@ function addPanelHeading(wrapper, metric, detail) {
   title.textContent = metric.label;
   const subtitle = document.createElement('p');
   subtitle.className = 'definition';
-  subtitle.textContent = [metric.definition, detail].filter(Boolean).join(' ');
+  subtitle.textContent = detail || '';
   heading.append(title, subtitle);
+  if (metric.definition) {
+    const definition = document.createElement('details');
+    definition.className = 'chart-definition';
+    const summary = document.createElement('summary');
+    summary.textContent = 'What this measure counts';
+    const text = document.createElement('p');
+    text.className = 'definition';
+    text.textContent = metric.definition;
+    definition.append(summary, text);
+    heading.appendChild(definition);
+  }
   wrapper.appendChild(heading);
 }
 

@@ -282,8 +282,19 @@ function addPanelHeading(wrapper, metric, detail) {
   title.textContent = metric.label;
   const subtitle = document.createElement('p');
   subtitle.className = 'definition';
-  subtitle.textContent = [metric.definition, detail].filter(Boolean).join(' ');
+  subtitle.textContent = detail || '';
   heading.append(title, subtitle);
+  if (metric.definition) {
+    const definition = document.createElement('details');
+    definition.className = 'chart-definition';
+    const summary = document.createElement('summary');
+    summary.textContent = 'What this measure counts';
+    const text = document.createElement('p');
+    text.className = 'definition';
+    text.textContent = metric.definition;
+    definition.append(summary, text);
+    heading.appendChild(definition);
+  }
   wrapper.appendChild(heading);
 }
 
@@ -1491,49 +1502,49 @@ HOUSE_CSS = """
 """
 
 MAIN_CSS = """
-  .language-page .feature-header { grid-template-columns:1.1fr 1fr; gap:2rem 4rem;
-                                  padding:clamp(2rem,4vw,3.5rem) 0 2rem; border:0; }
+  .language-page .feature-header { grid-template-columns:1fr; gap:.85rem;
+                                  padding:clamp(2rem,4vw,3rem) 0 1.75rem; border:0; }
   .language-page .feature-header > .feature-intro { grid-column:1; }
-  .language-page .feature-header > .feature-summary { grid-column:2; align-self:end; }
-  .language-page h1 { max-width:14ch; font-size:clamp(3rem,4.8vw,4.5rem); line-height:1.02;
+  .language-page .feature-header > .feature-summary { grid-column:1; }
+  .language-page h1 { max-width:28ch; font-size:clamp(2.6rem,4.5vw,3.8rem); line-height:1.06;
                        text-wrap:balance; }
-  .language-page .dek { margin:0; max-width:32rem; font-size:clamp(1.15rem,1.7vw,1.4rem);
+  .language-page .dek { margin:0; max-width:42rem; font-size:1.15rem;
                         font-style:normal; line-height:1.45; }
-  .language-page .byline { display:flex; flex-wrap:wrap; gap:.3rem 1.25rem; margin-top:1.2rem;
+  .language-page .byline { display:flex; flex-wrap:wrap; gap:.3rem 1.25rem; margin-top:.75rem;
                           padding:0; border:0; font-size:.62rem; color:var(--muted); }
   .language-page .byline p { margin:0; }
-  .language-page .feature-nav { margin:0; padding:.8rem 0; border-block:1px solid var(--hair); }
-  .section-nav { display:grid; grid-template-columns:repeat(3,minmax(0,1fr));
-                 gap:2rem; margin:0; padding:1.15rem 0; border-bottom:1px solid var(--ink); }
-  .section-nav a { display:block; text-decoration:none;
-                   font-size:1.08rem; }
-  .section-nav a span { display:block; margin-bottom:.35rem; color:var(--signal-dark);
-                        font-family:var(--mono); font-size:.65rem; }
+  .page-navigation { display:flex; flex-wrap:wrap; justify-content:space-between;
+                     gap:.75rem 2rem; padding:.85rem 0; border-bottom:1px solid var(--rule); }
+  .language-page .feature-nav { margin:0; padding:0; border:0; }
+  .language-page .feature-nav > span { display:none; }
+  .section-nav { display:flex; flex-wrap:wrap; gap:.75rem 1.5rem; margin:0; padding:0; }
+  .section-nav a { text-decoration:none; color:var(--muted); font-family:var(--sans);
+                   font-size:.78rem; }
   .section-nav a:hover { text-decoration:underline; }
-  .language-page .feature-section { padding-top:clamp(2rem,4vw,3.5rem);
+  .language-page .feature-section { padding-top:clamp(2rem,4vw,3rem);
                                     scroll-margin-top:1.5rem; }
-  .language-page .feature-section ~ .feature-section { margin-top:2.5rem;
-                                                     border-top:1px solid var(--rule); }
+  .language-page .feature-section ~ .feature-section { margin-top:3rem;
+                                                     border-top:1px solid var(--hair); }
   .language-page .section-head { display:block; margin-bottom:1.5rem; padding:0; border:0; }
-  .language-page .section-head > .kicker { margin:0 0 .75rem; }
-  .language-page .section-head > div { display:grid; grid-template-columns:1.1fr 1fr;
-                                     gap:.5rem 4rem; align-items:end; }
-  .language-page h2 { font-size:clamp(1.9rem,3vw,2.75rem); line-height:1.12; text-wrap:balance; }
-  .language-page .section-dek { margin:0; max-width:38rem; color:var(--muted);
-                              font-size:1rem; line-height:1.5; }
+  .language-page .section-head > div { display:grid; grid-template-columns:1fr;
+                                     gap:.5rem; }
+  .language-page h2 { font-size:clamp(1.7rem,2.5vw,2.15rem); line-height:1.12; text-wrap:balance; }
+  .language-page .section-dek { margin:0; max-width:44rem; color:var(--muted);
+                              font-size:.95rem; line-height:1.5; }
   .language-page .section-head .eyebrow { grid-column:1 / -1; margin:0;
                                        font-size:.6rem; }
   .language-page .term-section-header .definition { grid-column:1 / -1; margin:.5rem 0 0; }
   .explorer-controls { display:grid; grid-template-columns:repeat(2,minmax(12rem,16rem));
                        gap:1.25rem 2rem; margin:0 0 1.5rem; padding:1rem 0;
-                       border-block:1px solid var(--hair); }
-  .long-run-controls { grid-template-columns:minmax(0,1.2fr) minmax(0,.7fr) minmax(0,1.4fr); }
+                       border:0; }
+  .long-run-controls { grid-template-columns:repeat(2,minmax(0,14rem)); }
+  .language-page select { border-bottom-color:var(--rule); font-size:1rem; }
   .control-note { align-self:center; max-width:30rem; margin:0; color:var(--muted);
                   font-size:.88rem; line-height:1.45; }
   .recent-controls { grid-template-columns:2fr 1fr 1fr 1.2fr; }
   .term-toolbar { display:flex; align-items:flex-end; justify-content:space-between;
                   flex-wrap:wrap; gap:1.25rem 2.5rem; margin:0 0 1.25rem;
-                  padding:1rem 0; border-block:1px solid var(--hair); }
+                  padding:1rem 0; border:0; }
   .term-controls { grid-template-columns:repeat(2,minmax(0,12rem)); margin:0;
                    padding:0; border:0; }
   .term-toolbar .tab-row { border:0; }
@@ -1541,7 +1552,7 @@ MAIN_CSS = """
   .source-note { max-width:52rem; margin:1rem 0 0; font-size:.88rem; font-style:italic; }
   .recent-shell { display:grid; gap:1.5rem; }
   .context-panel { display:grid; grid-template-columns:1fr .9fr 1.3fr; gap:2rem;
-                   padding:1.25rem 0; border-top:1px solid var(--hair); align-items:start; }
+                   padding:1rem 0 1.5rem; align-items:start; }
   .context-panel .eyebrow { margin:0 0 .5rem; font-size:.6rem; }
   .context-panel h3 { margin:0; font-size:1.4rem; letter-spacing:-.03em; }
   .party-rates { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
@@ -1565,8 +1576,10 @@ MAIN_CSS = """
   .methodology-grid p { margin:.2rem 0; color:var(--muted); font-size:.95rem; }
   .mini-chart { position:relative; min-width:0; display:grid;
                 grid-template-columns:minmax(0,1fr) auto; gap:.5rem 1rem; }
-  .mini-chart-heading h3 { font-size:1.4rem; letter-spacing:-.03em; }
-  .mini-chart-heading p { max-width:46rem; margin:.15rem 0 .5rem; }
+  .mini-chart-heading h3 { font-size:1.15rem; letter-spacing:-.02em; }
+  .mini-chart-heading p { max-width:46rem; margin:.15rem 0 .5rem; font-size:.85rem; }
+  .chart-definition { max-width:46rem; margin:.25rem 0 .75rem; color:var(--muted); }
+  .chart-definition summary { cursor:pointer; font-size:.82rem; }
   .mini-chart > svg { grid-column:1 / -1; display:block; width:100%; height:auto;
                      overflow:visible; }
   .mini-chart svg text { font-family:var(--mono); }
@@ -1588,11 +1601,11 @@ MAIN_CSS = """
   #language-tables h3 { font-size:1.6rem; letter-spacing:-.03em; }
   #language-tables .definition { max-width:46rem; margin:.2rem 0 1.25rem; }
   #language-tables table { font-size:.9rem; }
-  .term-explorer-grid { display:grid; grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);
-                        gap:clamp(1.5rem,3vw,3rem); align-items:start; }
-  .term-explorer-grid[data-view="frequency"] { grid-template-columns:minmax(0,1.4fr) minmax(0,1fr); }
+  .term-explorer-grid { display:grid; grid-template-columns:1fr; gap:1.25rem; }
+  .term-explorer-grid[data-view="frequency"] { grid-template-columns:1fr; }
   .term-explorer-grid .card { margin:0; }
-  .state-map-card { padding:1.25rem; background:var(--paper-deep); }
+  .state-map-card { max-width:48rem; padding:1rem 0; }
+  .language-page .table-wrap { border-top:1px solid var(--rule); }
   .state-map-card figcaption { margin:0 0 1rem; color:var(--muted); font-size:.92rem;
                                line-height:1.45; }
   .state-map-card figcaption strong { display:block; margin-bottom:.2rem; color:var(--ink);
@@ -1635,7 +1648,9 @@ MAIN_CSS = """
                      text-decoration-color:var(--signal); text-underline-offset:.25em; }
   .term-row-toggle:hover { color:var(--ink); }
   .term-row-toggle[hidden] { display:none; }
-  .language-page .methodology { margin:1.5rem 0 0; border-color:var(--hair); }
+  .language-page .notes { margin:1rem 0 0; border:0; }
+  .language-page .notes summary { color:var(--muted); font-size:.62rem; }
+  .language-page .notes[open] > summary { color:var(--ink); }
   .language-page .coverage-note { max-width:60rem; margin:1.5rem 0 0; line-height:1.7; }
   .reading-note { max-width:52rem; margin:.75rem 0 0; color:var(--muted); font-size:.88rem; }
   noscript img { width:100%; margin-top:1.5rem; }
@@ -1643,10 +1658,7 @@ MAIN_CSS = """
     html { scroll-behavior:smooth; }
   }
   @media (min-width:761px) and (max-width:1000px) {
-    .language-page .feature-header,.language-page .section-head > div { gap:1.25rem 2rem; }
     .term-explorer-grid,.term-explorer-grid[data-view="frequency"] { grid-template-columns:1fr; }
-    .state-map-card { display:grid; grid-template-columns:1fr 1.4fr; gap:2rem; align-items:center; }
-    .state-map-card figcaption { margin:0; }
   }
   @media (max-width:760px) {
     .language-page .feature-header { grid-template-columns:1fr; gap:1.25rem; padding:2rem 0; }
@@ -1654,9 +1666,8 @@ MAIN_CSS = """
     .language-page .feature-header > .feature-summary { grid-column:1; }
     .language-page h1 { max-width:16ch; font-size:clamp(2.5rem,9vw,3.5rem); }
     .language-page .section-head > div { grid-template-columns:1fr; gap:.75rem; }
-    .section-nav { gap:.75rem; }
-    .section-nav a { display:block; font-size:.92rem; line-height:1.3; }
-    .section-nav a span { display:block; margin-bottom:.35rem; }
+    .page-navigation { gap:.85rem; }
+    .section-nav { gap:.75rem 1.25rem; }
     .explorer-controls,.recent-controls,.term-controls { grid-template-columns:1fr 1fr; }
     .long-run-controls .control-note { grid-column:1 / -1; }
     .methodology-grid,.recent-shell,.term-explorer-grid,
@@ -2715,45 +2726,46 @@ courtesy, cooperation, personal disrespect, misconduct allegations, and profanit
 <h1>The Language of Congress</h1>
 </div>
 <div class="feature-summary">
-<p class="dek">A record of how Congress speaks. Explore 150 years of floor language,
-then look closer at the members and words behind the trends.</p>
+<p class="dek">How Congress speaks, from historical trends to individual members.</p>
 <div class="byline">
 <p>By Hans W. A. Hanley</p>
 <p>Updated through {html.escape(_long_date(coverage['speech_last_date']))}</p>
 </div>
 </div>
 </header>
+<div class="page-navigation">
 {_feature_nav("language")}
 <nav class="section-nav" aria-label="Explore the language of Congress">
-<a href="#history"><span>01 / Since 1873</span>The long-run picture</a>
-<a href="#members"><span>02 / Since 1994</span>Members &amp; recent trends</a>
-<a href="#terms"><span>03 / The vocabulary</span>Terms &amp; states</a>
+<a href="#history">Historical trends</a>
+<a href="#members">Members</a>
+<a href="#terms">Vocabulary</a>
 </nav>
+</div>
 <section id="history" class="feature-section overview" aria-labelledby="overview-heading">
 <header class="section-head">
-<p class="kicker">01 · 1873–present</p>
 <div><h2 id="overview-heading">The long-run picture</h2>
-<p class="section-dek">Compare Democratic and Republican floor language across the historical
-record. Each measure counts a different kind of language, not an overall civility score.</p></div>
+<p class="section-dek">Democratic and Republican floor language since 1873.</p></div>
 </header>
 <div class="explorer-controls long-run-controls">
 <label>Measure<select id="long-run-metric"></select></label>
 <label>Chamber<select id="long-run-chamber"></select></label>
-<p class="control-note">Rates per 1,000 words. Select a party in the legend to hide or show
-its series; hover over or focus a point for the underlying counts.</p>
 </div>
 <div id="long-run-chart" class="focus-panel"
  aria-label="Interactive long-run Democratic and Republican language chart"></div>
+<details class="notes chart-notes">
+<summary>Sources and how to read the chart</summary>
+<p class="control-note">Rates per 1,000 words. Each measure counts a different kind of
+language, not an overall civility score. Select a party in the legend to hide or show
+its series; hover over or focus a point for the underlying counts.</p>
 <p class="definition source-note">{html.escape(long_run['source_note'])}</p>
+</details>
 </section>
 <div id="coverage-warning" class="warning" {'hidden' if not warning else ''}>{html.escape(warning)}</div>
 <p id="dashboard-error" class="error" role="alert" hidden></p>
 <section id="members" class="feature-section language" aria-labelledby="language-heading">
 <header class="section-head">
-<p class="kicker">02 · 1994–present</p>
 <div><h2 id="language-heading">Recent language on the floor</h2>
-<p class="section-dek">Switch between trends, member rankings, and exact values.
-Member-level results cover 1994–present; historical party comparisons extend to 1873.</p></div>
+<p class="section-dek">Member-level results cover 1994–present.</p></div>
 </header>
 <div class="explorer-controls recent-controls">
 <label>Congress<select id="congress">{''.join(options)}</select></label>
@@ -2766,9 +2778,12 @@ Member-level results cover 1994–present; historical party comparisons extend t
 <div id="recent-visual" class="focus-panel"></div>
 <div id="language-tables" class="focus-panel" hidden>{language_cards}</div>
 </div>
+</div>
+<details class="notes congress-summary">
+<summary>Party comparison and leading members</summary>
 <aside id="language-highlight" class="context-panel"
  aria-label="Selected Congress language summary"></aside>
-</div>
+</details>
 <details class="notes methodology">
 <summary>Methodology and limitations</summary>
 <div class="methodology-grid">
@@ -2782,11 +2797,10 @@ Member-level results cover 1994–present; historical party comparisons extend t
 </section>
 <section id="terms" class="feature-section language" aria-labelledby="term-leaders-heading">
 <header class="section-head term-section-header">
-<p class="kicker">03 · Terms</p>
 <div><p class="eyebrow" id="term-leaders-scope">{html.escape(language['scope_label'])} · House + Senate</p>
 <h2 id="term-leaders-heading">Who uses each term the most?</h2>
-<p class="section-dek" id="term-leaders-description">Explore the most-used profanity terms and
-the members who use them. Related forms are grouped; only accepted, unquoted uses count.</p>
+<p class="section-dek" id="term-leaders-description">Profanity by term and member.
+Related forms are grouped; only accepted, unquoted uses count.</p>
 <p class="definition" id="term-leaders-note" {
     "hidden" if language["profanity_term_detail_available"] else ""
 }>{
@@ -2811,21 +2825,28 @@ the members who use them. Related forms are grouped; only accepted, unquoted use
     language['profanity_term_leaders'],
     available=language['profanity_term_detail_available'],
 )}</div>
+<details class="notes state-map-details">
+<summary>Explore the state map</summary>
 <figure class="card state-map-card">
 <figcaption><strong>Most-used term by state</strong>
 The leading grouped term among attributed members from each state in the selected scope.</figcaption>
 <div id="state-term-map"></div>
 </figure>
+</details>
 </div>
+<details class="notes term-notes">
+<summary>How to read the term table</summary>
 <p class="reading-note">“Total” includes all attributed members; “each” applies to every member
 in a tie. Terms are censored—hover over or focus one to reveal it. Raw matches remain in
 the downloadable data. The Congress selector above applies to this section too.</p>
+</details>
 </section>
-<details class="notes"><summary>Data notes and exclusions</summary><ul>{caveats}</ul></details>
+<details class="notes data-notes"><summary>Data notes, coverage, and exclusions</summary><ul>{caveats}</ul>
 <p id="coverage" class="coverage-note">Speech coverage {html.escape(coverage['speech_first_date'])}
 to {html.escape(coverage['speech_last_date'])}. Newest Congressional Record date:
 {html.escape(coverage['speech_last_date'])}. Site data snapshot:
 {html.escape(payload['generated_utc'])}. <a href="activity/">Open member activity and bill tables.</a></p>
+</details>
 </article>
 </main>
 {_site_footer(payload['generated_utc'])}
