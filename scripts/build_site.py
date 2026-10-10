@@ -49,7 +49,12 @@ BILLS_PATH = ROOT / "data" / "site" / "bills"
 SITE_DIR = ROOT / "site"
 LONG_RUN_DATA_PATH = ROOT / "data" / "site" / "long_run_language.json"
 LONG_RUN_METRICS_PATH = ROOT / "data" / "processed" / "metrics" / "civility_metrics.parquet"
-PUBLIC_URL = "https://www.themarginoferror.com/professional_profanity/"
+PUBLIC_URL = "https://www.themarginoferror.com/congressional_profanity/"
+SUBSCRIBE_URL = (
+    "https://docs.google.com/forms/d/e/"
+    "1FAIpQLSeHPhVHdJ0xdCYq3wDYjkOIxgVdErP4qszNOBQYrnyzTz3xyQ/viewform"
+)
+SOURCE_REPOSITORY_URL = "https://github.com/hanshanley/congressional_record"
 ALL_MEMBER_SCOPE_LABEL = "1994–present"
 
 CAVEATS = [
@@ -95,10 +100,11 @@ const chartColors = {
   D: '#3D6F8C',
   R: '#A9442E',
   I: '#4A7C59',
-  other: '#6B6B6B',
-  text: '#1A1A1A',
-  muted: '#6B6B6B',
-  grid: '#D6D3CC',
+  other: '#655F55',
+  text: '#171713',
+  muted: '#655F55',
+  grid: '#D9D1C2',
+  paper: '#F2EFE7',
 };
 let selectedLongRunMetric = 'profanity_per_1k';
 let selectedLongRunChamber = 'all';
@@ -486,14 +492,14 @@ function renderLongRunPanel(longRun, key) {
       stroke: chartColors.grid, 'stroke-width': 1,
     }));
     addSvgText(svg, margin.left - 9, py + 4, value.toFixed(2), {
-      'text-anchor': 'end', fill: chartColors.muted, 'font-size': compact ? 9 : 11,
+      'text-anchor': 'end', fill: chartColors.muted, 'font-size': compact ? 9 : 9.5,
     });
   }
   const yearLabelIndices = new Set(spacedLabelIndices(years.length, compact ? 4 : 7));
   years.forEach((year, index) => {
     if (!yearLabelIndices.has(index)) return;
     addSvgText(svg, x(year), height - 14, String(year), {
-      'text-anchor': 'middle', fill: chartColors.muted, 'font-size': compact ? 9 : 11,
+      'text-anchor': 'middle', fill: chartColors.muted, 'font-size': compact ? 9 : 9.5,
     });
   });
   [['D', 'Democrats'], ['R', 'Republicans']].forEach(([party, label]) => {
@@ -629,8 +635,8 @@ function renderMemberPanel(language, key) {
     const barWidth = value / maxValue * plotWidth;
     addSvgText(svg, margin.left - 12, py + 22,
       `${row.speaker_name} (${row.party || 'Other'})`, {
-      'text-anchor': 'end', fill: chartColors.text, 'font-size': compact ? 10 : 14,
-      'data-party': row.party || 'other',
+      'text-anchor': 'end', fill: chartColors.text, 'font-size': compact ? 11 : 15,
+      'data-party': row.party || 'other', class: 'svg-label',
     });
     const bar = svgNode('rect', {
       x: margin.left, y: py + 5, width: Math.max(1, barWidth), height: 23, rx: 0,
@@ -638,7 +644,7 @@ function renderMemberPanel(language, key) {
       'data-party': row.party || 'other',
     });
     const termDetail = key === 'profanity' && row.favorite_profanity_term
-      ? `; most-used term: “${row.favorite_profanity_term}” ` +
+      ? `; most-used term: “${censorTerm(row.favorite_profanity_term)}” ` +
         `(${Number(row.favorite_profanity_term_hits).toLocaleString()})`
       : '';
     bindTooltip(bar, wrapper, tooltip,
@@ -649,7 +655,7 @@ function renderMemberPanel(language, key) {
     svg.appendChild(bar);
     addSvgText(svg, Math.min(width - 8, margin.left + barWidth + 8), py + 22,
       formatRate(value), {
-        fill: chartColors.text, 'font-size': compact ? 10 : 13, 'font-weight': 'bold',
+        fill: chartColors.text, 'font-size': compact ? 10 : 12,
         'data-party': row.party || 'other',
       });
   });
@@ -752,11 +758,11 @@ function renderSelectedHighlight(language) {
     const list = document.createElement('ol');
     topMembers.forEach(member => {
       const item = document.createElement('li');
-      const term = selectedRecentMetric === 'profanity' && member.favorite_profanity_term
-        ? ` · “${member.favorite_profanity_term}”`
-        : '';
       item.textContent = `${member.speaker_name} (${member.party}) — ` +
-        `${formatRate(member[metric.rate])}${term}`;
+        `${formatRate(member[metric.rate])}`;
+      if (selectedRecentMetric === 'profanity' && member.favorite_profanity_term) {
+        item.append(' · ', censoredTermNode(member.favorite_profanity_term));
+      }
       list.appendChild(item);
     });
     leader.append(label, list);
@@ -1031,14 +1037,15 @@ function renderStateMap(language, records) {
   Object.entries(STATE_TILES).forEach(([state, [column, row]]) => {
     const winner = winners.get(state);
     const ratio = winner ? Math.sqrt(winner.hits / maxHits) : 0;
-    const shades = ['#EAE5DA', '#D7E5F1', '#B8D2E7', '#86B2D4', '#4A86B5', '#23567D'];
+    const shades = ['#E8E2D5', '#D8CFBD', '#C2B59C', '#9C8E74', '#675D4D', '#2D2A24'];
     const shade = winner ? shades[Math.min(5, Math.max(1, Math.ceil(ratio * 5)))] : shades[0];
     const group = svgNode('g', {transform: `translate(${column * 78 + 10} ${row * 75 + 18})`});
     const tile = svgNode('rect', {
-      width: 70, height: 67, rx: 0, fill: shade, stroke: '#FFFEFA', 'stroke-width': 2,
+      width: 70, height: 67, rx: 0, fill: shade, stroke: chartColors.paper, 'stroke-width': 2,
     });
+    const censoredLabel = winner ? winner.terms.map(censorTerm).join(' / ') : '';
     const tooltip = winner
-      ? `${state}: ${winner.terms.join(' / ')} (${winner.hits.toLocaleString()} uses)`
+      ? `${state}: ${censoredLabel} (${winner.hits.toLocaleString()} uses)`
       : `${state}: no accepted uses`;
     tile.setAttribute('tabindex', '0');
     tile.setAttribute('aria-label', tooltip);
@@ -1046,16 +1053,17 @@ function renderStateMap(language, records) {
     group.appendChild(tile);
     const dark = ratio > 0.62;
     group.appendChild(svgNode('text', {
-      x: 8, y: 18, fill: dark ? '#FFFEFA' : '#171717', 'font-size': 13, 'font-weight': 800,
+      x: 8, y: 18, fill: dark ? chartColors.paper : chartColors.text, 'font-size': 12,
+      'font-weight': 700,
     }, state));
     if (winner) {
-      const label = winner.terms.join(' / ');
+      const label = censoredLabel;
       group.appendChild(svgNode('text', {
-        x: 35, y: 42, fill: dark ? '#FFFEFA' : '#171717', 'font-size': 10,
+        x: 35, y: 42, fill: dark ? chartColors.paper : chartColors.text, 'font-size': 10,
         'text-anchor': 'middle', 'font-weight': 700,
       }, label.length > 11 ? `${label.slice(0, 10)}…` : label));
       group.appendChild(svgNode('text', {
-        x: 35, y: 56, fill: dark ? '#E6EEF5' : '#4F4B45', 'font-size': 9,
+        x: 35, y: 56, fill: dark ? '#E8E2D5' : chartColors.muted, 'font-size': 9,
         'text-anchor': 'middle',
       }, winner.hits.toLocaleString()));
     }
@@ -1310,6 +1318,420 @@ if (requestedCongress && [...select.options].some(option => option.value === req
 }
 """
 
+# Mirrors margin_of_error/src/styles/global.css so the dashboard reads as a page of
+# The Margin of Error. The two repositories deploy separately, so the house tokens,
+# masthead, and footer are duplicated here rather than linked.
+HOUSE_CSS = """
+  :root { --paper:#f2efe7; --paper-deep:#e8e2d5; --ink:#171713; --muted:#655f55;
+          --rule:#b8b0a2; --hair:#d9d1c2; --signal:#b52a25; --signal-dark:#7e1715;
+          --dem:#3D6F8C; --rep:#A9442E; --ind:#4A7C59;
+          --serif:"Iowan Old Style","Palatino Linotype","Book Antiqua",Palatino,Georgia,serif;
+          --sans:"Arial Narrow","Avenir Next Condensed","Franklin Gothic Medium",Arial,sans-serif;
+          --mono:"SFMono-Regular",Consolas,"Liberation Mono",monospace;
+          --page:min(1180px,calc(100vw - 40px)); }
+  *,*::before,*::after { box-sizing:border-box; border-radius:0; }
+  html { background:var(--paper); color:var(--ink); font-family:var(--serif); }
+  body { margin:0; font-size:18px; line-height:1.58;
+         background:linear-gradient(90deg,transparent 0,transparent calc(50% - 1px),
+           rgba(23,23,19,.018) 50%,transparent calc(50% + 1px)),var(--paper); }
+  a { color:inherit; text-decoration-color:var(--signal); text-decoration-thickness:1px;
+      text-underline-offset:.18em; }
+  a:hover { color:var(--signal-dark); }
+  a:focus-visible,button:focus-visible,select:focus-visible,[tabindex]:focus-visible {
+    outline:2px solid var(--signal); outline-offset:3px;
+  }
+  button,input,select { font:inherit; }
+  img { display:block; max-width:100%; height:auto; }
+  .skip-link { position:fixed; z-index:100; top:.75rem; left:.75rem; padding:.65rem .9rem;
+               background:var(--ink); color:var(--paper); transform:translateY(-180%); }
+  .skip-link:focus { transform:translateY(0); }
+  .site-header { width:var(--page); margin:0 auto; padding-top:1rem;
+                 border-bottom:3px double var(--ink); }
+  .edition-line { display:flex; justify-content:space-between; padding:.35rem 0;
+                  border-block:1px solid var(--ink); font-family:var(--mono); font-size:.68rem;
+                  letter-spacing:.08em; text-transform:uppercase; }
+  .masthead { display:grid; grid-template-columns:1fr auto; gap:2rem; align-items:end;
+              padding:1.4rem 0 1rem; }
+  .wordmark { display:inline-grid; width:fit-content; text-decoration:none; line-height:.82; }
+  .wordmark-the { padding-left:.2rem; color:var(--signal); font-family:var(--mono);
+                  font-size:.65rem; letter-spacing:.24em; text-transform:uppercase; }
+  .wordmark-main { font-size:clamp(2.4rem,5.4vw,5.5rem); font-weight:700;
+                   letter-spacing:-.065em; }
+  .wordmark-main i { font-size:.48em; font-weight:400; }
+  .masthead nav ul { display:flex; gap:1.4rem; margin:0; padding:0 0 .3rem; list-style:none;
+                     font-family:var(--sans); font-size:.78rem; letter-spacing:.1em;
+                     text-transform:uppercase; }
+  .masthead nav a { text-decoration:none; }
+  .masthead nav .subscribe-link { padding:.5rem .7rem; background:var(--signal);
+                                  color:var(--paper); }
+  main { min-height:60vh; }
+  .feature { width:var(--page); margin:0 auto; }
+  .feature-header { display:grid; grid-template-columns:minmax(0,4fr) minmax(180px,1fr);
+                    column-gap:4rem; padding:clamp(2.5rem,5vw,4.5rem) 0 2rem;
+                    border-bottom:1px solid var(--ink); }
+  .feature-header > *:not(.byline) { grid-column:1; }
+  .kicker,.eyebrow { margin:0 0 1rem; color:var(--signal-dark); font-family:var(--mono);
+                     font-size:.68rem; font-weight:700; letter-spacing:.13em;
+                     text-transform:uppercase; }
+  h1 { margin:0; font-size:clamp(3rem,5vw,5rem); font-weight:500; letter-spacing:-.05em;
+       line-height:.96; }
+  h2 { margin:0; font-size:clamp(2rem,3.6vw,3rem); font-weight:500; letter-spacing:-.04em;
+       line-height:1.04; }
+  h3 { margin:0 0 .3rem; font-size:1.35rem; font-weight:500; letter-spacing:-.02em;
+       line-height:1.15; }
+  .dek { max-width:760px; margin:1.2rem 0 0; font-size:clamp(1.3rem,2.2vw,1.8rem);
+         font-style:italic; line-height:1.24; }
+  .byline { grid-row:1 / span 3; grid-column:2; align-self:end; padding-top:1rem;
+            border-top:1px solid var(--ink); font-family:var(--mono); font-size:.68rem;
+            letter-spacing:.04em; text-transform:uppercase; }
+  .byline p { margin:0 0 .35rem; }
+  .feature-nav { display:flex; flex-wrap:wrap; gap:.45rem 1.75rem; align-items:baseline;
+                 margin:1.5rem 0 0 clamp(0px,12vw,150px); }
+  .feature-nav > span { color:var(--signal); font-family:var(--mono); font-size:.62rem;
+                        letter-spacing:.06em; text-transform:uppercase; }
+  .feature-nav a { padding-bottom:.1rem; border-bottom:2px solid transparent;
+                   font-family:var(--sans); font-size:.78rem; letter-spacing:.08em;
+                   text-decoration:none; text-transform:uppercase; }
+  .feature-nav a:hover { border-bottom-color:var(--rule); }
+  .feature-nav a[aria-current="page"] { border-bottom-color:var(--signal); }
+  .feature-section { padding-top:clamp(2.75rem,5vw,4.25rem); }
+  .section-head { display:grid; grid-template-columns:minmax(140px,.7fr) minmax(0,3.3fr);
+                  gap:clamp(1rem,3vw,3rem); margin:0 0 1.75rem; padding-top:1rem;
+                  border-top:3px double var(--ink); }
+  .section-head > .kicker { margin:.6rem 0 0; }
+  .section-head .eyebrow { margin:0 0 .6rem; color:var(--muted); font-weight:400; }
+  .section-dek,.sub { max-width:46rem; margin:.75rem 0 0; font-size:1.08rem; line-height:1.5; }
+  .definition,.muted { color:var(--muted); }
+  .definition { font-size:.95rem; }
+  .control-row label,.explorer-controls label,.toolbar label {
+    display:grid; gap:.3rem; color:var(--muted); font-family:var(--mono); font-size:.62rem;
+    letter-spacing:.08em; text-transform:uppercase;
+  }
+  select { appearance:none; width:100%; min-width:0; padding:.35rem 1.5rem .4rem 0; border:0;
+           border-bottom:1px solid var(--ink); color:var(--ink); cursor:pointer;
+           background:transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23171713'/%3E%3C/svg%3E") no-repeat right .15rem center / .6rem;
+           font-family:var(--serif); font-size:1.12rem; letter-spacing:normal;
+           text-transform:none; }
+  select:disabled { opacity:.5; cursor:progress; }
+  .tab-row { display:flex; flex-wrap:wrap; gap:.25rem 1.5rem; margin:0;
+             border-bottom:1px solid var(--rule); }
+  .tab-button { appearance:none; margin:0 0 -1px; padding:.5rem 0 .4rem; border:0;
+                border-bottom:2px solid transparent; background:transparent; color:var(--muted);
+                font-family:var(--sans); font-size:.78rem; letter-spacing:.1em;
+                text-transform:uppercase; cursor:pointer; }
+  .tab-button:hover { color:var(--ink); }
+  .tab-button[aria-selected="true"],.tab-button[aria-pressed="true"] {
+    color:var(--ink); border-bottom-color:var(--signal);
+  }
+  .warning { margin:2rem 0 0; padding:.15rem 0 .15rem 1.2rem; border-left:2px solid var(--signal);
+             font-style:italic; }
+  .error { color:var(--signal-dark); font-family:var(--mono); font-size:.75rem; }
+  .card { min-width:0; margin:0 0 2.5rem; }
+  .table-wrap { width:100%; max-width:100%; overflow-x:auto; border-top:3px double var(--ink); }
+  table { border-collapse:separate; border-spacing:0; width:100%; font-size:.95rem; }
+  th,td { padding:.55rem .6rem; border-bottom:1px solid var(--hair); text-align:left;
+          vertical-align:baseline; }
+  th { position:sticky; top:0; z-index:1; background:var(--paper); color:var(--muted);
+       border-bottom:1px solid var(--ink); white-space:nowrap; font-family:var(--mono);
+       font-size:.6rem; font-weight:400; letter-spacing:.08em; text-transform:uppercase; }
+  tbody tr:hover { background:rgb(232 226 213 / 60%); }
+  tbody tr:last-child td { border-bottom:0; }
+  th.num,td.num { font-variant-numeric:tabular-nums; text-align:right; }
+  .censored-term { position:relative; cursor:help; border-bottom:1px dotted currentColor;
+                   white-space:nowrap; }
+  .censored-term:hover::after,.censored-term:focus::after {
+    content:attr(data-term); position:absolute; left:0; bottom:calc(100% + .35rem); z-index:5;
+    background:var(--ink); color:var(--paper); padding:.3rem .45rem; font-family:var(--mono);
+    font-size:.72rem; font-style:normal; font-weight:400; letter-spacing:normal;
+    text-transform:none; white-space:nowrap;
+  }
+  .notes { margin:clamp(2.75rem,5vw,4rem) 0 0; border-block:1px solid var(--ink); }
+  .notes summary { padding:.85rem 0; cursor:pointer; list-style:none; font-family:var(--mono);
+                   font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; }
+  .notes summary::-webkit-details-marker { display:none; }
+  .notes summary::before { content:"+"; display:inline-block; width:1.25rem;
+                           color:var(--signal); }
+  .notes[open] summary::before { content:"−"; }
+  .notes ul { max-width:52rem; margin:0 0 1.25rem; padding-left:1.25rem; font-size:.98rem; }
+  .notes li { margin:.55rem 0; }
+  .sr-only { position:absolute !important; width:1px !important; height:1px !important;
+             padding:0 !important; margin:-1px !important; overflow:hidden !important;
+             clip:rect(0,0,0,0) !important; white-space:nowrap !important; border:0 !important; }
+  .coverage-note { margin:2.5rem 0 0; color:var(--muted); font-family:var(--mono);
+                   font-size:.66rem; letter-spacing:.04em; line-height:1.8;
+                   text-transform:uppercase; }
+  .site-footer { display:grid; grid-template-columns:2fr 1fr auto; gap:2rem; width:var(--page);
+                 margin:3rem auto 0; padding:2rem 0 3rem; border-top:3px double var(--ink);
+                 font-size:.85rem; }
+  .site-footer p { margin:0; }
+  .site-footer .kicker { margin-bottom:.35rem; }
+  .footer-links { display:flex; flex-wrap:wrap; gap:1rem; font-family:var(--sans);
+                  font-size:.7rem; text-transform:uppercase; }
+  .copyright { color:var(--muted); font-family:var(--mono); font-size:.62rem;
+               text-transform:uppercase; }
+  @media (max-width:760px) {
+    :root { --page:calc(100vw - 28px); }
+    body { font-size:16px; }
+    .edition-line { justify-content:end; }
+    .edition-line span:first-child { display:none; }
+    .masthead { grid-template-columns:1fr; gap:1.2rem; }
+    .masthead nav ul { display:grid; grid-template-columns:repeat(4,auto); gap:.4rem;
+                       justify-content:space-between; width:100%; font-size:.7rem; }
+    .masthead nav .subscribe-link { padding:.4rem .5rem; }
+    .feature-header { grid-template-columns:1fr; row-gap:1.5rem; }
+    .feature-header > *:not(.byline),.byline { grid-row:auto; grid-column:1; }
+    h1 { font-size:clamp(2.5rem,11vw,3.75rem); }
+    .feature-nav { margin-left:0; }
+    .section-head { grid-template-columns:1fr; gap:.4rem; }
+    .site-footer { grid-template-columns:1fr; }
+  }
+"""
+
+MAIN_CSS = """
+  .explorer-controls { display:grid; grid-template-columns:repeat(2,minmax(12rem,16rem));
+                       gap:1.25rem 2rem; margin:0 0 1.75rem; }
+  .recent-controls { grid-template-columns:2fr 1fr 1fr 1.2fr; }
+  .term-toolbar { display:flex; align-items:flex-end; justify-content:space-between;
+                  flex-wrap:wrap; gap:1.25rem 2.5rem; margin:0 0 1.75rem; }
+  .term-controls { grid-template-columns:repeat(2,minmax(0,12rem)); margin:0; }
+  .focus-panel { min-width:0; }
+  .source-note { max-width:52rem; margin:1rem 0 0; font-size:.88rem; font-style:italic; }
+  .recent-shell { display:grid; grid-template-columns:minmax(0,1fr) 16rem;
+                  gap:clamp(1.5rem,3.5vw,3.5rem); align-items:start; }
+  .context-panel { padding-top:1rem; border-top:1px solid var(--ink); }
+  .context-panel h3 { margin-bottom:1rem; font-size:1.65rem; letter-spacing:-.03em; }
+  .party-rates { display:grid; grid-template-columns:1fr 1fr; gap:1rem; padding-bottom:1rem;
+                 border-bottom:1px solid var(--rule); }
+  .party-rate { font-family:var(--mono); font-size:.6rem; letter-spacing:.06em;
+                text-transform:uppercase; }
+  .party-rate b { display:block; margin-bottom:.3rem; font-family:var(--serif);
+                  font-size:2.5rem; font-weight:500; letter-spacing:-.045em; line-height:1; }
+  .party-rate.democratic { color:var(--dem); }
+  .party-rate.republican { color:var(--rep); }
+  .context-panel .comparison { margin:.9rem 0; font-size:1.05rem; font-style:italic;
+                               line-height:1.35; }
+  .top-members { margin:0; font-size:.95rem; line-height:1.45; }
+  .top-members strong { display:block; color:var(--muted); font-family:var(--mono);
+                        font-size:.6rem; font-weight:400; letter-spacing:.08em;
+                        text-transform:uppercase; }
+  .top-members ol { margin:.5rem 0 0; padding-left:1.2rem; }
+  .top-members li { margin:.35rem 0; }
+  .methodology-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr));
+                      gap:1.5rem 2.5rem; padding:0 0 1.5rem; }
+  .methodology-grid h3 { font-size:1.15rem; }
+  .methodology-grid p { margin:.2rem 0; color:var(--muted); font-size:.95rem; }
+  .mini-chart { position:relative; min-width:0; }
+  .mini-chart-heading h3 { font-size:1.6rem; letter-spacing:-.03em; }
+  .mini-chart-heading p { max-width:46rem; margin:.15rem 0 .5rem; }
+  .mini-chart svg { display:block; width:100%; height:auto; overflow:visible; }
+  .mini-chart svg text { font-family:var(--mono); }
+  .mini-chart svg text.svg-label { font-family:var(--serif); }
+  .chart-legend { display:flex; gap:1.5rem; margin:.25rem 0 .75rem; }
+  .chart-toggle { display:inline-flex; align-items:center; gap:.5rem; padding:.2rem 0; border:0;
+                  background:transparent; color:var(--ink); font-family:var(--sans);
+                  font-size:.74rem; letter-spacing:.1em; text-transform:uppercase;
+                  cursor:pointer; }
+  .chart-toggle[aria-pressed="false"] { opacity:.4; text-decoration:line-through; }
+  .chart-legend i { display:inline-block; width:1.5rem; height:3px; }
+  .chart-tooltip { position:absolute; z-index:2; max-width:18rem; pointer-events:none;
+                   background:var(--ink); color:var(--paper); padding:.5rem .65rem;
+                   font:.7rem/1.5 var(--mono); letter-spacing:.02em; }
+  .data-mark { cursor:pointer; transition:opacity .12s ease; }
+  .data-mark:hover,.data-mark:focus { opacity:.6; outline:none; }
+  #language-tables .card { margin:0; }
+  #language-tables h3 { font-size:1.6rem; letter-spacing:-.03em; }
+  #language-tables .definition { max-width:46rem; margin:.2rem 0 1.25rem; }
+  #language-tables table { font-size:.9rem; }
+  .term-explorer-grid { display:grid; grid-template-columns:minmax(0,1.25fr) minmax(20rem,.75fr);
+                        gap:clamp(1.5rem,3.5vw,3.5rem); align-items:start; }
+  .term-explorer-grid[data-view="frequency"] { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .term-explorer-grid .card { margin:0; }
+  .state-map-card { padding-top:.9rem; border-top:3px double var(--ink); }
+  .state-map-card figcaption { margin:0 0 1rem; color:var(--muted); font-size:.92rem;
+                               line-height:1.45; }
+  .state-map-card figcaption strong { display:block; margin-bottom:.2rem; color:var(--ink);
+                                      font-size:1.35rem; font-weight:500; letter-spacing:-.02em; }
+  #state-term-map svg { display:block; width:100%; height:auto; }
+  #state-term-map svg text { font-family:var(--mono); }
+  .map-legend { margin:.75rem 0 0; font-size:.85rem; }
+  #term-leaders-table { table-layout:fixed; }
+  #term-leaders-table[data-view="leaders"] th:first-child,
+  #term-leaders-table[data-view="leaders"] td:first-child { width:18%; }
+  #term-leaders-table[data-view="leaders"] th:last-child,
+  #term-leaders-table[data-view="leaders"] td:last-child { width:12rem; }
+  #term-leaders-table[data-view="frequency"] .rank {
+    width:2.5rem; color:var(--muted); font-family:var(--mono); font-size:.72rem;
+  }
+  #term-leaders-table[data-view="frequency"] th:nth-child(3),
+  #term-leaders-table[data-view="frequency"] td:nth-child(3) { width:5.25rem; }
+  #term-leaders-table[data-view="frequency"] th:last-child,
+  #term-leaders-table[data-view="frequency"] td:last-child { width:5rem; }
+  #term-leaders-table[data-view="frequency"] .share { color:var(--muted); }
+  #term-leaders-table[data-view="frequency"] .censored-term {
+    white-space:normal; overflow-wrap:anywhere;
+  }
+  #term-leaders-table td:nth-child(2) a { text-decoration-color:var(--rule); }
+  #term-leaders-table td:nth-child(2) a:hover { text-decoration-color:var(--signal); }
+  .party-badges { display:inline-flex; gap:.2rem; margin-left:.35rem; }
+  .party-badge { font-family:var(--mono); font-size:.62rem; font-weight:700;
+                 letter-spacing:.04em; }
+  .party-d { color:var(--dem); }
+  .party-r { color:var(--rep); }
+  .party-i { color:var(--ind); }
+  .party-other { color:var(--muted); }
+  .term-usage { display:flex; align-items:baseline; justify-content:flex-end; gap:.3rem;
+                text-align:right; white-space:nowrap; font-variant-numeric:tabular-nums; }
+  .term-usage span { color:var(--muted); font-size:.82rem; }
+  .term-row-toggle { display:block; margin:1rem 0 .2rem; padding:.25rem 0; border:0;
+                     background:transparent; color:var(--signal-dark); cursor:pointer;
+                     font-family:var(--sans); font-size:.74rem; letter-spacing:.1em;
+                     text-transform:uppercase; text-decoration:underline;
+                     text-decoration-color:var(--signal); text-underline-offset:.25em; }
+  .term-row-toggle:hover { color:var(--ink); }
+  .term-row-toggle[hidden] { display:none; }
+  noscript img { width:100%; margin-top:1.5rem; }
+  @media (max-width:760px) {
+    .explorer-controls,.recent-controls,.term-controls { grid-template-columns:1fr 1fr; }
+    .methodology-grid,.recent-shell,.term-explorer-grid,
+    .term-explorer-grid[data-view="frequency"] { grid-template-columns:1fr; }
+    .term-toolbar { display:grid; gap:1rem; }
+    #term-leaders-table[data-view="leaders"] th:first-child,
+    #term-leaders-table[data-view="leaders"] td:first-child { width:22%; }
+    #term-leaders-table[data-view="leaders"] th:last-child,
+    #term-leaders-table[data-view="leaders"] td:last-child { width:36%; }
+    #term-leaders-table[data-view="frequency"] .rank { width:2rem; }
+    #term-leaders-table[data-view="frequency"] th:nth-child(3),
+    #term-leaders-table[data-view="frequency"] td:nth-child(3),
+    #term-leaders-table[data-view="frequency"] th:last-child,
+    #term-leaders-table[data-view="frequency"] td:last-child { width:4rem; }
+    #term-leaders-table th,#term-leaders-table td { padding:.46rem .35rem; }
+    .term-usage { flex-wrap:wrap; gap:.12rem .24rem; }
+    #language-tables table { font-size:.78rem; table-layout:fixed; }
+    #language-tables th,#language-tables td { padding:.32rem .25rem; overflow-wrap:anywhere; }
+    #language-tables th:nth-child(4),#language-tables td:nth-child(4),
+    #language-tables th:nth-child(7),#language-tables td:nth-child(7) { display:none; }
+  }
+"""
+
+ACTIVITY_CSS = """
+  .toolbar { display:flex; flex-wrap:wrap; gap:1.5rem 3rem; align-items:flex-end;
+             justify-content:space-between; margin:0 0 2.25rem; }
+  .toolbar label { width:14rem; max-width:100%; }
+  #leaderboards .card h2 { font-size:clamp(1.8rem,3vw,2.6rem); }
+  #leaderboards .definition { max-width:46rem; margin:.5rem 0 1.4rem; }
+  table th:first-child,table td:first-child { width:2.75rem; color:var(--muted);
+                                              font-family:var(--mono); font-size:.72rem; }
+  @media (max-width:760px) {
+    .toolbar { display:grid; gap:1.25rem; }
+    .toolbar label { max-width:16rem; }
+    table { table-layout:fixed; font-size:.8rem; }
+    table th:first-child,table td:first-child { width:2rem; }
+    table[data-metric="speech"] th:nth-child(6),
+    table[data-metric="speech"] td:nth-child(6) { width:7rem; }
+    th,td { padding:.38rem .28rem; overflow-wrap:normal; }
+    table[data-metric="speech"] th:nth-child(3),table[data-metric="speech"] td:nth-child(3),
+    table[data-metric="speech"] th:nth-child(4),table[data-metric="speech"] td:nth-child(4),
+    table[data-metric="speech"] th:nth-child(5),table[data-metric="speech"] td:nth-child(5),
+    table[data-metric="speech"] th:nth-child(7),table[data-metric="speech"] td:nth-child(7),
+    table[data-metric="speech"] th:nth-child(8),table[data-metric="speech"] td:nth-child(8),
+    table[data-metric="sponsored"] th:nth-child(4),table[data-metric="sponsored"] td:nth-child(4),
+    table[data-metric="sponsored"] th:nth-child(6),table[data-metric="sponsored"] td:nth-child(6),
+    table[data-metric="sponsored"] th:nth-child(7),table[data-metric="sponsored"] td:nth-child(7),
+    table[data-metric="sponsored"] th:nth-child(8),table[data-metric="sponsored"] td:nth-child(8),
+    table[data-metric="passed"] th:nth-child(4),table[data-metric="passed"] td:nth-child(4),
+    table[data-metric="passed"] th:nth-child(6),table[data-metric="passed"] td:nth-child(6),
+    table[data-metric="passed"] th:nth-child(7),table[data-metric="passed"] td:nth-child(7),
+    table[data-metric="passed"] th:nth-child(8),table[data-metric="passed"] td:nth-child(8),
+    table[data-metric="enacted"] th:nth-child(4),table[data-metric="enacted"] td:nth-child(4),
+    table[data-metric="enacted"] th:nth-child(6),table[data-metric="enacted"] td:nth-child(6),
+    table[data-metric="enacted"] th:nth-child(7),table[data-metric="enacted"] td:nth-child(7),
+    table[data-metric="enacted"] th:nth-child(8),table[data-metric="enacted"] td:nth-child(8),
+    table[data-metric="profanity"] th:nth-child(4),table[data-metric="profanity"] td:nth-child(4),
+    table[data-metric="profanity"] th:nth-child(8),table[data-metric="profanity"] td:nth-child(8),
+    table[data-metric="profanity"] th:nth-child(9),table[data-metric="profanity"] td:nth-child(9) {
+      display:none;
+    }
+  }
+"""
+
+
+def _site_header() -> str:
+    """The Margin of Error masthead, matching src/components/Header.astro."""
+    nav = "".join(
+        f'<li><a href="{href}"{attrs}>{label}</a></li>'
+        for href, label, attrs in (
+            ("/", "Latest", ""),
+            ("/archive/", "Archive", ""),
+            ("/about/", "About", ""),
+            (SUBSCRIBE_URL, "Subscribe", ' class="subscribe-link"'),
+        )
+    )
+    return (
+        '<header class="site-header">\n'
+        '<div class="edition-line" aria-hidden="true">'
+        "<span>Independent notes on systems and society</span><span>Est. 2021</span></div>\n"
+        '<div class="masthead">\n'
+        '<a class="wordmark" href="/" aria-label="The Margin of Error, home">'
+        '<span class="wordmark-the">The</span>'
+        '<span class="wordmark-main">Margin <i>of</i> Error</span></a>\n'
+        f'<nav aria-label="Primary navigation"><ul>{nav}</ul></nav>\n'
+        "</div>\n</header>"
+    )
+
+
+def _site_footer(generated_utc: str) -> str:
+    """The Margin of Error footer, matching src/components/Footer.astro."""
+    year = html.escape(str(generated_utc)[:4])
+    return (
+        '<footer class="site-footer">\n'
+        '<div><p class="kicker">Endnote</p><p>The Margin of Error is written by '
+        '<a href="https://www.hanshanley.com/">Hans W. A. Hanley</a>.</p></div>\n'
+        '<div class="footer-links"><a href="/rss.xml">RSS</a>'
+        '<a href="/are-you-an-ai/">AI index</a>'
+        f'<a href="{SOURCE_REPOSITORY_URL}">Data &amp; code</a>'
+        f'<a href="{SUBSCRIBE_URL}">Subscribe</a></div>\n'
+        f'<p class="copyright">© {year} Hans W. A. Hanley</p>\n'
+        "</footer>"
+    )
+
+
+def _head_links(canonical: str) -> str:
+    return (
+        '<meta name="theme-color" content="#f2efe7">\n'
+        '<link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32">\n'
+        '<link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180">\n'
+        f'<link rel="canonical" href="{canonical}">'
+    )
+
+
+def _long_date(value: str) -> str:
+    """Format an ISO date such as ``2026-09-22`` as ``September 22, 2026``."""
+    try:
+        parsed = dt.date.fromisoformat(str(value)[:10])
+    except ValueError:
+        return str(value)
+    return f"{parsed:%B} {parsed.day}, {parsed.year}"
+
+
+def _feature_nav(current: str) -> str:
+    """Links between the two dashboard pages, relative to the current page."""
+    pages = (
+        ("language", "The Language of Congress"),
+        ("activity", "Member Activity &amp; Bills"),
+    )
+    hrefs = {
+        "language": {"language": "./", "activity": "activity/"},
+        "activity": {"language": "../", "activity": "./"},
+    }[current]
+    links = []
+    for key, label in pages:
+        current_attr = ' aria-current="page"' if key == current else ""
+        links.append(f'<a href="{hrefs[key]}"{current_attr}>{label}</a>')
+    return (
+        '<nav class="feature-nav" aria-label="Dashboard pages"><span>Pages</span>'
+        + "".join(links) + "</nav>"
+    )
+
 
 class _TrustedHTML(str):
     """HTML assembled exclusively from escaped text and fixed markup."""
@@ -1401,7 +1823,7 @@ def _chart_leaderboard(board: pd.DataFrame, figs: Path, min_words: int) -> Path:
         )
         ax.text(
             0.5, 0.5, "No eligible nonzero rates", transform=ax.transAxes,
-            ha="center", va="center", color=theme.MUTED,
+            ha="center", va="center", color=theme.active_color("MUTED"),
         )
         return charts.finish(
             fig,
@@ -2181,7 +2603,7 @@ def _render_html(payload: dict, congresses: list[int], long_run: dict) -> str:
     language_cards = "".join(
         (
             f'<section class="card" id="{metric}-table">'
-            f'<h2>Highest {html.escape(metadata["label"].lower())} rates</h2>'
+            f'<h3>Highest {html.escape(metadata["label"].lower())} rates</h3>'
             f'<p class="definition">{html.escape(metadata["definition"])} '
             + (
                 "“Most-used term” is the most frequent unquoted match, not a claim of preference. "
@@ -2193,285 +2615,62 @@ def _render_html(payload: dict, congresses: list[int], long_run: dict) -> str:
         )
         for metric, metadata in LANGUAGE_METRICS.items()
     )
+    coverage = payload["coverage"]
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The Language of Congress</title>
+<title>The Language of Congress — The Margin of Error</title>
 <meta name="description" content="Long-run Democratic and Republican trends in congressional
 courtesy, cooperation, personal disrespect, misconduct allegations, and profanity.">
-<link rel="canonical" href="{PUBLIC_URL}">
-<style>
-  :root {{ --bg:#F3F0E8; --text:#171717; --muted:#68655F;
-           --grid:#D8D3C9; --blue:{theme.BLUE}; --red:{theme.ACCENT};
-           --paper:#FFFEFA; --soft:#EAE5DA;
-           --serif:Georgia,'Times New Roman',serif;
-           --sans:Arial,Helvetica,sans-serif; }}
-  *,*::before,*::after {{ box-sizing:border-box; border-radius:0; }}
-  body {{ background:var(--bg); color:var(--text);
-          font-family:var(--sans);
-          margin:0 auto; padding:1.4rem 1.25rem 4rem; max-width:74rem; line-height:1.55; }}
-  h1,h2,h3 {{ font-family:var(--serif); }}
-  nav,select,button,table,.eyebrow,.chart-legend,.chart-tooltip,.map-legend,footer {{
-    font-family:var(--sans);
-  }}
-  h1 {{ font-size:clamp(2.4rem,5vw,4.5rem); line-height:.98; letter-spacing:-.045em;
-        max-width:58rem; margin:2.4rem 0 1rem; }}
-  h2 {{ font-size:clamp(1.8rem,3vw,2.7rem); line-height:1.05; letter-spacing:-.025em;
-        margin:.1rem 0 .5rem; }}
-  h3 {{ font-size:1.12rem; margin:0 0 .3rem; }}
-  a {{ color:var(--blue); }}
-  nav {{ display:flex; gap:1.4rem; align-items:center; border-bottom:1px solid var(--grid); }}
-  nav a {{ color:var(--muted); text-decoration:none; padding:.65rem 0 .7rem;
-           border-bottom:2px solid transparent; margin-bottom:-1px;
-           font-size:.88rem; font-weight:650; }}
-  nav a:hover {{ color:var(--text); }}
-  nav a[aria-current="page"] {{ color:var(--text); border-bottom-color:var(--text); }}
-  nav a:focus-visible {{ outline:2px solid var(--blue); outline-offset:4px; }}
-  .skip-link {{ position:absolute; left:-9999px; top:.5rem; z-index:10;
-                background:var(--text); color:var(--paper); padding:.55rem .75rem; }}
-  .skip-link:focus {{ left:.5rem; }}
-  .sub,.definition,.muted {{ color:var(--muted); }}
-  .censored-term {{ position:relative; cursor:help; border-bottom:1px dotted currentColor;
-                    white-space:nowrap; }}
-  .censored-term:focus-visible {{ outline:2px solid var(--blue); outline-offset:2px; }}
-  .censored-term:hover::after,.censored-term:focus::after {{
-    content:attr(data-term); position:absolute; left:0; bottom:calc(100% + .35rem); z-index:5;
-    background:var(--text); color:var(--paper); padding:.3rem .45rem;
-    font-size:.78rem; font-weight:600; letter-spacing:normal; text-transform:none;
-    white-space:nowrap; box-shadow:0 2px 8px rgb(0 0 0 / 20%);
-  }}
-  .hero-deck {{ font-size:1.12rem; max-width:50rem; margin-bottom:3rem; }}
-  .section-header {{ margin:4rem 0 1.2rem; }}
-  .section-header h2 {{ margin:0; }}
-  .section-header p {{ margin:.25rem 0 0; max-width:52rem; }}
-  .term-section-header > div {{ display:grid; gap:.8rem; }}
-  .term-section-header h2 {{ margin:0; line-height:1.12; }}
-  .term-section-header p {{ max-width:70rem; margin:0; }}
-  .term-section-header .sub {{ line-height:1.65; }}
-  select {{ font:inherit; padding:.6rem 2.2rem .6rem .8rem; background:var(--paper);
-            border:1px solid var(--grid); }}
-  .explorer-controls {{ display:grid; grid-template-columns:repeat(2,minmax(12rem,18rem));
-                        gap:.75rem; margin:1rem 0 1.2rem; }}
-  .recent-controls {{ grid-template-columns:2fr 1fr 1fr 1fr; }}
-  .term-toolbar {{ display:flex; align-items:flex-end; flex-wrap:wrap; gap:1.5rem;
-                   margin:1rem 0 1.25rem; }}
-  .term-controls {{ grid-template-columns:repeat(2,minmax(0,12rem)); margin:0; }}
-  .term-controls select {{ min-width:0; }}
-  .term-toolbar .tab-row {{ margin:0; }}
-  .explorer-controls label {{ display:grid; gap:.3rem; color:var(--muted);
-                              font-size:.72rem; font-weight:800; letter-spacing:.08em;
-                              text-transform:uppercase; }}
-  .explorer-controls select {{ width:100%; color:var(--text); text-transform:none;
-                               letter-spacing:normal; font-weight:650; }}
-  .warning {{ background:#FFF3CD; border-left:4px solid #C7922B; padding:.8rem 1rem; margin:1rem 0; }}
-  .card {{ background:var(--paper); border:1px solid var(--grid); padding:1rem;
-           margin:1.25rem 0 2rem; min-width:0; }}
-  .language {{ margin:1.5rem 0 2.5rem; }}
-  .overview {{ margin:1.25rem 0 2.5rem; }}
-  .overview-intro {{ max-width:48rem; margin-bottom:1.5rem; }}
-  .overview-intro p {{ color:var(--muted); margin:.35rem 0; }}
-  .tab-row {{ display:flex; gap:.5rem; flex-wrap:wrap; margin:.85rem 0; }}
-  .tab-button {{ appearance:none; border:1px solid var(--muted);
-                 background:var(--paper); color:var(--text); padding:.55rem .8rem;
-                 font:inherit; font-size:.86rem; font-weight:700; cursor:pointer; }}
-  .tab-button:hover {{ background:var(--soft); border-color:var(--text); }}
-  .tab-button:focus-visible {{ outline:2px solid var(--blue); outline-offset:2px; }}
-  .tab-button[aria-selected="true"],.tab-button[aria-pressed="true"] {{
-    color:var(--paper); background:var(--text); border-color:var(--text);
-  }}
-  .focus-panel {{ background:var(--paper); border:1px solid var(--grid);
-                  padding:1rem 1.2rem; }}
-  .recent-shell {{ display:grid; grid-template-columns:minmax(0,1fr) 18rem; gap:1rem;
-                   align-items:start; }}
-  .context-panel {{ background:var(--text); color:var(--paper);
-                    padding:1.1rem; position:sticky; top:1rem; }}
-  .context-panel .eyebrow {{ color:#B9B5AD; }}
-  .context-panel h3 {{ color:var(--paper); font-size:1.45rem; }}
-  .party-rates {{ display:grid; grid-template-columns:1fr 1fr; gap:.5rem; }}
-  .party-rate {{ padding:.55rem .6rem; font-size:.78rem; }}
-  .party-rate b {{ display:block; font-size:1.45rem; line-height:1; margin-bottom:.2rem; }}
-  .party-rate.democratic {{ color:{theme.BLUE}; background:{theme.tint(theme.BLUE, 0.88)}; }}
-  .party-rate.republican {{ color:{theme.ACCENT}; background:{theme.tint(theme.ACCENT, 0.88)}; }}
-  .context-panel .comparison {{ font-weight:750; margin:.8rem 0 .35rem; }}
-  .context-panel .leader {{ color:#CBC7BE; margin:.25rem 0 0; font-size:.86rem; }}
-  .top-members ol {{ margin:.4rem 0 0; padding-left:1.3rem; }}
-  .top-members li {{ margin:.25rem 0; }}
-  .eyebrow {{ text-transform:uppercase; letter-spacing:.12em; font-size:.7rem; font-weight:800;
-              color:var(--muted); margin:0 0 .35rem; }}
-  .methodology {{ background:var(--paper); border:1px solid var(--grid); margin:1rem 0;
-                  padding:.75rem 1rem; }}
-  .methodology summary {{ cursor:pointer; font-weight:bold; }}
-  .methodology-grid {{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr));
-                       gap:1rem; margin-top:.8rem; }}
-  .methodology-grid p {{ margin:.2rem 0; color:var(--muted); }}
-  .chart-card {{ background:var(--paper); border:1px solid var(--grid); margin:1rem 0;
-                 padding:.75rem; }}
-  .chart-card figcaption {{ color:var(--muted); font-size:.9rem; padding:.3rem .35rem 0; }}
-  .interactive-chart {{ display:grid; gap:1rem; }}
-  .mini-chart {{ position:relative; border-top:1px solid var(--grid); padding:.75rem .25rem 0;
-                 min-width:0; }}
-  .mini-chart:first-child {{ border-top:0; }}
-  .mini-chart-heading h3 {{ font-size:1.45rem; }}
-  .mini-chart-heading p {{ margin:.15rem 0 .35rem; }}
-  .mini-chart svg {{ display:block; width:100%; height:auto; overflow:visible; }}
-  .mini-chart svg text {{ font-family:var(--sans); }}
-  .chart-legend {{ display:flex; gap:1rem; color:var(--muted); font-size:.86rem;
-                   margin:.3rem 0 0; }}
-  .chart-toggle {{ display:inline-flex; align-items:center; gap:.35rem; border:1px solid var(--grid);
-                   background:var(--paper); color:var(--text); font:inherit; padding:.25rem .5rem;
-                   cursor:pointer; }}
-  .chart-toggle[aria-pressed="false"] {{ opacity:.45; text-decoration:line-through; }}
-  .chart-toggle:focus-visible {{ outline:2px solid var(--blue); outline-offset:2px; }}
-  .chart-legend i {{ width:1rem; height:.25rem; display:inline-block; }}
-  .chart-tooltip {{ position:absolute; z-index:2; max-width:18rem; pointer-events:none;
-                    background:var(--text); color:var(--paper);
-                    padding:.45rem .55rem; font: .82rem/1.35 var(--sans);
-                    box-shadow:0 2px 8px rgb(0 0 0 / 20%); }}
-  .data-mark {{ cursor:pointer; transition:opacity .12s ease, filter .12s ease; }}
-  .data-mark:hover,.data-mark:focus {{ opacity:.72; filter:brightness(.88); outline:none; }}
-  .sr-only {{ position:absolute !important; width:1px !important; height:1px !important;
-              padding:0 !important; margin:-1px !important; overflow:hidden !important;
-              clip:rect(0,0,0,0) !important; white-space:nowrap !important; border:0 !important; }}
-  .error {{ color:#8A1C1C; font-weight:bold; }}
-  .table-wrap {{ width:100%; max-width:100%; overflow-x:auto; background:var(--paper);
-                 border:1px solid var(--grid); }}
-  .term-explorer-grid {{ display:grid; grid-template-columns:minmax(0,1.45fr) minmax(20rem,.55fr);
-                         gap:1rem; align-items:start; }}
-  .term-explorer-grid[data-view="frequency"] {{ grid-template-columns:repeat(2,minmax(0,1fr)); }}
-  .term-explorer-grid .card {{ margin:0; }}
-  .term-explorer-grid .table-wrap {{ padding:.6rem .85rem .8rem; }}
-  .state-map-card figcaption {{ margin:0 0 .75rem; }}
-  .state-map-card figcaption strong {{ display:block; font-family:var(--serif); font-size:1.35rem; }}
-  #state-term-map svg {{ display:block; width:100%; height:auto; }}
-  #state-term-map svg text {{ font-family:var(--sans); }}
-  .map-legend {{ margin:.5rem 0 0; }}
-  #language-tables .card {{ border:0; box-shadow:none; padding:0; margin:0; }}
-  table {{ border-collapse:separate; border-spacing:0; width:100%; font-size:.84rem; }}
-  th,td {{ padding:.5rem .6rem; border-bottom:1px solid var(--grid); text-align:left;
-           vertical-align:middle; }}
-  th {{ position:sticky; top:0; z-index:1; background:var(--paper); color:var(--muted);
-        border-bottom:2px solid var(--grid); white-space:nowrap; font-size:.64rem;
-        font-weight:800; letter-spacing:.06em; text-transform:uppercase; }}
-  tbody tr:nth-child(even) {{ background:rgb(234 229 218 / 28%); }}
-  tbody tr:hover {{ background:rgb(61 111 140 / 8%); }}
-  tbody tr:last-child td {{ border-bottom:0; }}
-  th.num,td.num {{ font-variant-numeric:tabular-nums; text-align:right; }}
-  td a {{ text-underline-offset:.16em; text-decoration-thickness:.06em; }}
-  #term-leaders-table {{ table-layout:fixed; }}
-  #term-leaders-table[data-view="leaders"] th:first-child,
-  #term-leaders-table[data-view="leaders"] td:first-child {{ width:18%; }}
-  #term-leaders-table[data-view="leaders"] th:last-child,
-  #term-leaders-table[data-view="leaders"] td:last-child {{ width:12rem; }}
-  #term-leaders-table[data-view="leaders"] td:first-child,
-  #term-leaders-table[data-view="frequency"] td:nth-child(2) {{ font-size:.86rem; }}
-  #term-leaders-table[data-view="frequency"] .rank {{
-    width:2.5rem; color:var(--muted); font-size:.72rem; font-weight:400;
-  }}
-  #term-leaders-table[data-view="frequency"] th:nth-child(3),
-  #term-leaders-table[data-view="frequency"] td:nth-child(3) {{ width:5.25rem; }}
-  #term-leaders-table[data-view="frequency"] th:last-child,
-  #term-leaders-table[data-view="frequency"] td:last-child {{ width:5rem; }}
-  #term-leaders-table[data-view="frequency"] th {{ border-bottom-width:1px; }}
-  #term-leaders-table[data-view="frequency"] td {{
-    padding:.48rem .6rem; border-bottom-color:rgb(216 211 201 / 55%);
-  }}
-  #term-leaders-table[data-view="frequency"] tbody tr:nth-child(even) {{ background:transparent; }}
-  #term-leaders-table[data-view="frequency"] tbody tr:hover {{ background:rgb(61 111 140 / 4%); }}
-  #term-leaders-table[data-view="frequency"] td:nth-child(2),
-  #term-leaders-table[data-view="frequency"] .count {{ font-weight:600; }}
-  #term-leaders-table[data-view="frequency"] .share {{ color:var(--muted); font-size:.78rem; }}
-  #term-leaders-table[data-view="frequency"] .censored-term {{
-    white-space:normal; overflow-wrap:anywhere;
-  }}
-  #term-leaders-table td:nth-child(2) a {{ color:var(--text); font-size:.84rem;
-                                          font-weight:650; text-decoration:none; }}
-  #term-leaders-table td:nth-child(2) a:hover {{ color:var(--blue);
-                                                 text-decoration:underline; }}
-  .party-badges {{ display:inline-flex; gap:.2rem; margin-left:.38rem; vertical-align:.08em; }}
-  .party-badge {{ display:inline-grid; place-items:center; min-width:1.35rem; height:1.35rem;
-                  font-size:.58rem; font-weight:850; line-height:1; }}
-  .party-d {{ color:#315D77; background:#DFEAF0; }}
-  .party-r {{ color:#8E3828; background:#F2E2DE; }}
-  .party-i {{ color:#356443; background:#E1ECE4; }}
-  .party-other {{ color:var(--muted); background:var(--soft); }}
-  .term-usage {{ display:flex; align-items:baseline; justify-content:flex-end; gap:.28rem;
-                 text-align:right; white-space:nowrap; }}
-  .term-usage strong {{ font-size:.88rem; }}
-  .term-usage span {{ color:var(--muted); font-size:.76rem; }}
-  .term-row-toggle {{ display:block; margin:.8rem 0 .2rem; border:0;
-                      background:transparent; color:var(--muted);
-                      padding:.25rem 0; font:inherit; font-size:.78rem; font-weight:600;
-                      text-decoration:underline; text-underline-offset:.2em; cursor:pointer; }}
-  .term-row-toggle:hover {{ color:var(--blue); }}
-  .term-row-toggle:focus-visible {{ outline:2px solid var(--blue); outline-offset:4px; }}
-  .term-row-toggle[hidden] {{ display:none; }}
-  img {{ width:100%; height:auto; }}
-  li {{ margin:.4rem 0; }}
-  footer {{ margin-top:3rem; color:var(--muted); font-size:.86rem; }}
-  @media (max-width:44rem) {{
-    body {{ padding:1.5rem .75rem 3rem; }}
-    .explorer-controls,.recent-controls,.term-controls {{ grid-template-columns:1fr 1fr; }}
-    .overview-intro,.methodology-grid,.recent-shell,.term-explorer-grid {{
-      grid-template-columns:1fr;
-    }}
-    .term-toolbar {{ display:grid; gap:.85rem; }}
-    .term-explorer-grid[data-view="frequency"] {{ grid-template-columns:1fr; }}
-    .context-panel {{ position:static; }}
-    .chart-card {{ padding:.3rem; }}
-    #term-leaders-table[data-view="leaders"] th:first-child,
-    #term-leaders-table[data-view="leaders"] td:first-child {{ width:22%; }}
-    #term-leaders-table[data-view="leaders"] th:last-child,
-    #term-leaders-table[data-view="leaders"] td:last-child {{ width:36%; }}
-    #term-leaders-table[data-view="frequency"] .rank {{ width:2rem; }}
-    #term-leaders-table[data-view="frequency"] th:nth-child(3),
-    #term-leaders-table[data-view="frequency"] td:nth-child(3),
-    #term-leaders-table[data-view="frequency"] th:last-child,
-    #term-leaders-table[data-view="frequency"] td:last-child {{ width:4rem; }}
-    #term-leaders-table th,#term-leaders-table td {{ padding:.46rem .35rem; }}
-    #term-leaders-table[data-view="frequency"] td {{ padding:.46rem .35rem; }}
-    .term-usage {{ flex-wrap:wrap; gap:.12rem .24rem; }}
-    #language-tables table {{ font-size:.78rem; table-layout:fixed; }}
-    #language-tables th,#language-tables td {{ padding:.32rem .25rem; overflow-wrap:anywhere; }}
-    #language-tables th:nth-child(4),#language-tables td:nth-child(4),
-    #language-tables th:nth-child(7),#language-tables td:nth-child(7) {{ display:none; }}
-  }}
-</style>
+{_head_links(PUBLIC_URL)}
+<style>{HOUSE_CSS}{MAIN_CSS}</style>
 </head>
 <body>
 <a class="skip-link" href="#main-content">Skip to content</a>
-<nav aria-label="Primary"><a href="./" aria-current="page">The Language of Congress</a>
-<a href="activity/">Member activity and bills</a></nav>
+{_site_header()}
 <main id="main-content">
+<article class="feature">
+<header class="feature-header">
+<p class="kicker">Congress / Data</p>
 <h1>The Language of Congress</h1>
-<p class="sub hero-deck">How Democratic and Republican language in the Congressional Record has changed,
+<p class="dek">How Democratic and Republican language in the Congressional Record has changed,
 from courtesy and bipartisan cooperation to personal disrespect, misconduct allegations,
 and profanity.</p>
-<section class="overview" aria-labelledby="overview-heading">
-<div class="overview-intro">
-<div><p class="eyebrow">1873-present</p><h2 id="overview-heading">The long-run picture</h2>
-<p>Choose a measure to compare Democratic and Republican floor language across the full
-digital and historical record. Rates are word-normalized; positive and negative measures
-remain separate.</p></div>
+<div class="byline">
+<p>By Hans W. A. Hanley</p>
+<p>Congressional Record, 1873–present</p>
+<p>Updated through {html.escape(_long_date(coverage['speech_last_date']))}</p>
 </div>
+</header>
+{_feature_nav("language")}
+<section class="feature-section overview" aria-labelledby="overview-heading">
+<header class="section-head">
+<p class="kicker">01 · 1873–present</p>
+<div><h2 id="overview-heading">The long-run picture</h2>
+<p class="section-dek">Choose a measure to compare Democratic and Republican floor language across
+the full digital and historical record. Rates are word-normalized; positive and negative measures
+remain separate.</p></div>
+</header>
 <div class="explorer-controls">
 <label>Measure<select id="long-run-metric"></select></label>
 <label>Chamber<select id="long-run-chamber"></select></label>
 </div>
 <div id="long-run-chart" class="focus-panel"
  aria-label="Interactive long-run Democratic and Republican language chart"></div>
-<p class="definition">{html.escape(long_run['source_note'])}</p>
+<p class="definition source-note">{html.escape(long_run['source_note'])}</p>
 </section>
 <div id="coverage-warning" class="warning" {'hidden' if not warning else ''}>{html.escape(warning)}</div>
 <p id="dashboard-error" class="error" role="alert" hidden></p>
-<section class="language" aria-labelledby="language-heading">
-<div class="section-header">
+<section class="feature-section language" aria-labelledby="language-heading">
+<header class="section-head">
+<p class="kicker">02 · 1994–present</p>
 <div><h2 id="language-heading">Recent language on the floor</h2>
-<p class="sub">Explore profanity, personal hostility, and misconduct allegations in
+<p class="section-dek">Explore profanity, personal hostility, and misconduct allegations in
 congressional floor remarks. Member-level results cover 1994–present, while historical
 party comparisons extend to 1873.</p></div>
-</div>
+</header>
 <div class="explorer-controls recent-controls">
 <label>Measure<select id="recent-metric"></select></label>
 <label>Chamber<select id="recent-chamber"></select></label>
@@ -2486,7 +2685,7 @@ party comparisons extend to 1873.</p></div>
 <aside id="language-highlight" class="context-panel"
  aria-label="Selected Congress language summary"></aside>
 </div>
-<details class="methodology">
+<details class="notes methodology">
 <summary>Methodology and limitations</summary>
 <div class="methodology-grid">
 <div><h3>What is shown</h3><p id="language-shown">{html.escape(explanation['shown'])}</p></div>
@@ -2497,11 +2696,12 @@ party comparisons extend to 1873.</p></div>
 <noscript><img src="figures/language_trends.png"
  alt="{html.escape(language['trend_alt'], quote=True)}"></noscript>
 </section>
-<section class="language" aria-labelledby="term-leaders-heading">
-<div class="section-header term-section-header">
+<section class="feature-section language" aria-labelledby="term-leaders-heading">
+<header class="section-head term-section-header">
+<p class="kicker">03 · Terms</p>
 <div><p class="eyebrow" id="term-leaders-scope">{html.escape(language['scope_label'])} · House + Senate</p>
 <h2 id="term-leaders-heading">Who uses each term the most?</h2>
-<p class="sub" id="term-leaders-description">Shows the member or tied members with the most accepted, unquoted uses of each
+<p class="section-dek" id="term-leaders-description">Shows the member or tied members with the most accepted, unquoted uses of each
 grouped term. “Total” includes all attributed members; “each” applies to every member in a tie.
 Related forms are grouped, while raw matches remain in the downloadable data. Terms are censored;
 hover over or focus one to reveal it.</p>
@@ -2511,7 +2711,7 @@ hover over or focus one to reveal it.</p>
     "" if language["profanity_term_detail_available"]
     else "Term-level detail has not been backfilled for this historical scope."
 }</p></div>
-</div>
+</header>
 <div class="term-toolbar">
 <div id="term-view" class="tab-row" role="group" aria-label="Term view">
 <button type="button" class="tab-button" data-view="leaders"
@@ -2536,12 +2736,14 @@ The leading grouped term among attributed members from each state in the selecte
 </figure>
 </div>
 </section>
-<details class="methodology"><summary>Data notes and exclusions</summary><ul>{caveats}</ul></details>
+<details class="notes"><summary>Data notes and exclusions</summary><ul>{caveats}</ul></details>
+<p id="coverage" class="coverage-note">Speech coverage {html.escape(coverage['speech_first_date'])}
+to {html.escape(coverage['speech_last_date'])}. Newest Congressional Record date:
+{html.escape(coverage['speech_last_date'])}. Site data snapshot:
+{html.escape(payload['generated_utc'])}. <a href="activity/">Open member activity and bill tables.</a></p>
+</article>
 </main>
-<footer id="coverage">Speech coverage {html.escape(payload['coverage']['speech_first_date'])}
-to {html.escape(payload['coverage']['speech_last_date'])}. Newest Congressional Record date:
-{html.escape(payload['coverage']['speech_last_date'])}. Site data snapshot:
-{html.escape(payload['generated_utc'])}. <a href="activity/">Open member activity and bill tables.</a></footer>
+{_site_footer(payload['generated_utc'])}
 <script>
 const longRunLanguage = {_script_json(long_run)};
 const initialLanguage = {_script_json(language)};
@@ -2666,136 +2868,36 @@ def _render_activity_html(payload: dict, congresses: list[int]) -> str:
         if index != 3
     )
     warning = payload["coverage"]["warning"]
+    coverage = payload["coverage"]
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Congressional member activity and bills</title>
+<title>Congressional member activity and bills — The Margin of Error</title>
 <meta name="description" content="Congressional speech, bill sponsorship,
 passage, enactment, and profanity tables by Congress.">
-<link rel="canonical" href="{PUBLIC_URL}activity/">
-<style>
-  :root {{ --bg:#F3F0E8; --text:#171717; --muted:#68655F;
-           --grid:#D8D3C9; --blue:{theme.BLUE}; --paper:#FFFEFA; --soft:#EAE5DA;
-           --serif:Georgia,'Times New Roman',serif;
-           --sans:Arial,Helvetica,sans-serif; }}
-  *,*::before,*::after {{ box-sizing:border-box; border-radius:0; }}
-  body {{ background:var(--bg); color:var(--text);
-          font-family:var(--sans);
-          margin:0 auto; padding:1.4rem 1.25rem 4rem; max-width:74rem; line-height:1.55; }}
-  h1,h2 {{ font-family:var(--serif); }}
-  nav,select,button,table,.eyebrow,.controls,footer {{ font-family:var(--sans); }}
-  h1 {{ font-size:clamp(2rem,3.4vw,3.2rem); line-height:1.1; letter-spacing:-.035em;
-        margin:2rem 0 .8rem; text-wrap:balance; }}
-  h2 {{ font-size:1.7rem; margin:.1rem 0 .3rem; }}
-  a {{ color:var(--blue); }}
-  nav {{ display:flex; gap:1.4rem; align-items:center; border-bottom:1px solid var(--grid); }}
-  nav a {{ color:var(--muted); text-decoration:none; padding:.65rem 0 .7rem;
-           border-bottom:2px solid transparent; margin-bottom:-1px;
-           font-size:.88rem; font-weight:650; }}
-  nav a:hover {{ color:var(--text); }}
-  nav a[aria-current="page"] {{ color:var(--text); border-bottom-color:var(--text); }}
-  nav a:focus-visible {{ outline:2px solid var(--blue); outline-offset:4px; }}
-  .skip-link {{ position:absolute; left:-9999px; top:.5rem; z-index:10;
-                background:var(--text); color:var(--paper); padding:.55rem .75rem; }}
-  .skip-link:focus {{ left:.5rem; }}
-  .sub,.definition,.muted {{ color:var(--muted); }}
-  .censored-term {{ position:relative; cursor:help; border-bottom:1px dotted currentColor;
-                    white-space:nowrap; }}
-  .censored-term:focus-visible {{ outline:2px solid var(--blue); outline-offset:2px; }}
-  .censored-term:hover::after,.censored-term:focus::after {{
-    content:attr(data-term); position:absolute; left:0; bottom:calc(100% + .35rem); z-index:5;
-    background:var(--text); color:var(--paper); padding:.3rem .45rem;
-    font-size:.78rem; font-weight:600; letter-spacing:normal; text-transform:none;
-    white-space:nowrap; box-shadow:0 2px 8px rgb(0 0 0 / 20%);
-  }}
-  .hero-deck {{ font-size:1rem; max-width:48rem; margin:0; line-height:1.65; }}
-  .toolbar {{ display:flex; flex-wrap:wrap; gap:1.5rem 2rem; align-items:flex-end;
-              margin:1.8rem 0 1.25rem; }}
-  .toolbar label {{ display:grid; gap:.3rem; color:var(--muted); font-size:.72rem;
-                    font-weight:800; letter-spacing:.08em; text-transform:uppercase; }}
-  .toolbar select {{ color:var(--text); text-transform:none; letter-spacing:normal;
-                     font-weight:650; min-width:0; width:13rem; max-width:100%; }}
-  select {{ font:inherit; padding:.6rem 2.2rem .6rem .8rem; background:var(--paper);
-            border:1px solid var(--grid); }}
-  .tab-row {{ display:flex; gap:.5rem; flex-wrap:wrap; margin:0; }}
-  .tab-button {{ appearance:none; border:1px solid var(--muted);
-                 background:var(--paper); color:var(--text); padding:.55rem .8rem;
-                 font:inherit; font-size:.86rem; font-weight:700; cursor:pointer; }}
-  .tab-button:hover {{ background:var(--soft); border-color:var(--text); }}
-  .tab-button:focus-visible {{ outline:2px solid var(--blue); outline-offset:2px; }}
-  .tab-button[aria-pressed="true"] {{
-    color:var(--paper); background:var(--text); border-color:var(--text);
-  }}
-  .warning {{ background:#FFF3CD; border-left:4px solid #C7922B; padding:.8rem 1rem; margin:1rem 0; }}
-  .error {{ color:#8A1C1C; font-weight:bold; }}
-  .card {{ background:var(--paper); border:1px solid var(--grid);
-           padding:1.2rem; margin:0 0 2rem; }}
-  .notes {{ background:var(--paper); border:1px solid var(--grid);
-            padding:.75rem 1rem; margin:1rem 0; }}
-  .notes summary {{ cursor:pointer; font-weight:750; }}
-  .sr-only {{ position:absolute !important; width:1px !important; height:1px !important;
-              padding:0 !important; margin:-1px !important; overflow:hidden !important;
-              clip:rect(0,0,0,0) !important; white-space:nowrap !important; border:0 !important; }}
-  .table-wrap {{ overflow-x:auto; border:1px solid var(--grid);
-                 background:var(--paper); }}
-  table {{ border-collapse:separate; border-spacing:0; width:100%; font-size:.92rem; }}
-  table th:first-child,table td:first-child {{ width:2.75rem; color:var(--muted); }}
-  th,td {{ padding:.72rem .7rem; border-bottom:1px solid var(--grid); text-align:left;
-           vertical-align:middle; }}
-  th {{ position:sticky; top:0; z-index:1; background:var(--paper); color:var(--muted);
-        border-bottom:2px solid var(--grid); white-space:nowrap; font-size:.7rem;
-        font-weight:800; letter-spacing:.06em; text-transform:uppercase; }}
-  tbody tr:nth-child(even) {{ background:rgb(234 229 218 / 28%); }}
-  tbody tr:hover {{ background:rgb(61 111 140 / 8%); }}
-  tbody tr:last-child td {{ border-bottom:0; }}
-  th.num,td.num {{ font-variant-numeric:tabular-nums; text-align:right; }}
-  td a {{ text-underline-offset:.16em; text-decoration-thickness:.06em; }}
-  li {{ margin:.4rem 0; }}
-  footer {{ margin-top:3rem; color:var(--muted); font-size:.86rem; }}
-  @media (max-width:44rem) {{
-    body {{ padding:1.5rem .75rem 3rem; }}
-    .toolbar {{ display:grid; gap:1rem; }}
-    .toolbar label {{ max-width:16rem; }}
-    table {{ table-layout:fixed; font-size:.78rem; }}
-    table th:first-child,table td:first-child {{ width:2rem; }}
-    table[data-metric="speech"] th:nth-child(6),
-    table[data-metric="speech"] td:nth-child(6) {{ width:7rem; }}
-    th,td {{ padding:.36rem .28rem; overflow-wrap:normal; }}
-    table[data-metric="speech"] th:nth-child(3),table[data-metric="speech"] td:nth-child(3),
-    table[data-metric="speech"] th:nth-child(4),table[data-metric="speech"] td:nth-child(4),
-    table[data-metric="speech"] th:nth-child(5),table[data-metric="speech"] td:nth-child(5),
-    table[data-metric="speech"] th:nth-child(7),table[data-metric="speech"] td:nth-child(7),
-    table[data-metric="speech"] th:nth-child(8),table[data-metric="speech"] td:nth-child(8),
-    table[data-metric="sponsored"] th:nth-child(4),table[data-metric="sponsored"] td:nth-child(4),
-    table[data-metric="sponsored"] th:nth-child(6),table[data-metric="sponsored"] td:nth-child(6),
-    table[data-metric="sponsored"] th:nth-child(7),table[data-metric="sponsored"] td:nth-child(7),
-    table[data-metric="sponsored"] th:nth-child(8),table[data-metric="sponsored"] td:nth-child(8),
-    table[data-metric="passed"] th:nth-child(4),table[data-metric="passed"] td:nth-child(4),
-    table[data-metric="passed"] th:nth-child(6),table[data-metric="passed"] td:nth-child(6),
-    table[data-metric="passed"] th:nth-child(7),table[data-metric="passed"] td:nth-child(7),
-    table[data-metric="passed"] th:nth-child(8),table[data-metric="passed"] td:nth-child(8),
-    table[data-metric="enacted"] th:nth-child(4),table[data-metric="enacted"] td:nth-child(4),
-    table[data-metric="enacted"] th:nth-child(6),table[data-metric="enacted"] td:nth-child(6),
-    table[data-metric="enacted"] th:nth-child(7),table[data-metric="enacted"] td:nth-child(7),
-    table[data-metric="enacted"] th:nth-child(8),table[data-metric="enacted"] td:nth-child(8),
-    table[data-metric="profanity"] th:nth-child(4),table[data-metric="profanity"] td:nth-child(4),
-    table[data-metric="profanity"] th:nth-child(8),table[data-metric="profanity"] td:nth-child(8),
-    table[data-metric="profanity"] th:nth-child(9),table[data-metric="profanity"] td:nth-child(9) {{
-      display:none;
-    }}
-  }}
-</style>
+{_head_links(PUBLIC_URL + "activity/")}
+<style>{HOUSE_CSS}{ACTIVITY_CSS}</style>
 </head>
 <body>
 <a class="skip-link" href="#main-content">Skip to content</a>
-<nav aria-label="Primary"><a href="../">The Language of Congress</a>
-<a href="./" aria-current="page">Member activity and bills</a></nav>
+{_site_header()}
 <main id="main-content">
+<article class="feature">
+<header class="feature-header">
+<p class="kicker">Congress / Data</p>
 <h1>Member activity &amp; bills</h1>
-<p class="sub hero-deck">Explore member speech, bill sponsorship, passage, enactment,
+<p class="dek">Explore member speech, bill sponsorship, passage, enactment,
 and profanity by Congress.</p>
+<div class="byline">
+<p>By Hans W. A. Hanley</p>
+<p>Congressional Record, 1994–present</p>
+<p>Updated through {html.escape(_long_date(coverage['speech_last_date']))}</p>
+</div>
+</header>
+{_feature_nav("activity")}
+<section class="feature-section" aria-label="Activity tables">
 <div class="toolbar">
 <div id="activity-metric" class="tab-row" role="group" aria-label="Activity measure">
 {metric_buttons}</div>
@@ -2804,11 +2906,14 @@ and profanity by Congress.</p>
 <div id="coverage-warning" class="warning" {'hidden' if not warning else ''}>{html.escape(warning)}</div>
 <p id="dashboard-error" class="error" role="alert" hidden></p>
 <div id="leaderboards">{cards}</div>
+</section>
 <details class="notes"><summary>Data notes and exclusions</summary><ul>{caveats}</ul></details>
+<p id="coverage" class="coverage-note">Speech coverage {html.escape(coverage['speech_first_date'])}
+to {html.escape(coverage['speech_last_date'])}; {_fmt_int(coverage['bills'])}
+H.R./S. bill records. Site data snapshot: {html.escape(payload['generated_utc'])}.</p>
+</article>
 </main>
-<footer id="coverage">Speech coverage {html.escape(payload['coverage']['speech_first_date'])}
-to {html.escape(payload['coverage']['speech_last_date'])}; {_fmt_int(payload['coverage']['bills'])}
-H.R./S. bill records. Site data snapshot: {html.escape(payload['generated_utc'])}.</footer>
+{_site_footer(payload['generated_utc'])}
 <script>
 const activityNumericColumns = {_script_json(ACTIVITY_NUMERIC_COLUMNS)};
 {ACTIVITY_JS}</script>
@@ -2911,25 +3016,26 @@ def main(argv: Optional[List[str]] = None) -> int:
     selected = payloads[congress]
     homepage_selected = payloads.get("recent5", selected)
     selected_language = selected["language"]
-    site_charts.language_trends(
-        pd.DataFrame(selected_language["series"]),
-        figs / "language_trends.png",
-        scope_label=selected_language["scope_label"],
-        granularity=selected_language["granularity"],
-    )
-    site_charts.language_members(
-        {
-            key: pd.DataFrame(rows)
-            for key, rows in selected_language["members"].items()
-        },
-        figs / "language_members.png",
-        scope_label=selected_language["scope_label"],
-        min_words=args.min_words,
-    )
     profanity = pd.DataFrame(selected["leaderboards"]["profanity"])
     series = timeseries(daily)
-    _chart_leaderboard(profanity, figs, args.min_words)
-    _chart_trend(series, figs)
+    with theme.house_style():
+        site_charts.language_trends(
+            pd.DataFrame(selected_language["series"]),
+            figs / "language_trends.png",
+            scope_label=selected_language["scope_label"],
+            granularity=selected_language["granularity"],
+        )
+        site_charts.language_members(
+            {
+                key: pd.DataFrame(rows)
+                for key, rows in selected_language["members"].items()
+            },
+            figs / "language_members.png",
+            scope_label=selected_language["scope_label"],
+            min_words=args.min_words,
+        )
+        _chart_leaderboard(profanity, figs, args.min_words)
+        _chart_trend(series, figs)
 
     # Retain the original machine-readable outputs for existing embeds.
     legacy_profanity = _legacy_profanity_leaderboard(

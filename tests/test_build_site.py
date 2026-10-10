@@ -166,14 +166,15 @@ def test_build_writes_html_json_and_figures(store, tmp_path):
         rect_radii = re.findall(r"\b(?:rx|ry)\s*:\s*([0-9.]+)", document)
         assert all(float(value) == 0 for value in rect_radii), rel
         control_style = re.search(r"\.tab-button\s*\{([^}]+)\}", document).group(1)
-        assert "border:1px solid var(--muted)" in control_style, rel
-        assert "background:var(--paper)" in control_style, rel
+        assert "border-bottom:2px solid transparent" in control_style, rel
+        assert "background:transparent" in control_style, rel
+        assert "font-family:var(--sans)" in control_style, rel
         assert "cursor:pointer" in control_style, rel
         selected_style = re.search(
             r'\.tab-button\[aria-pressed="true"\]\s*\{([^}]+)\}', document,
         ).group(1)
-        assert "background:var(--text)" in selected_style, rel
-        assert "color:var(--paper)" in selected_style, rel
+        assert "border-bottom-color:var(--signal)" in selected_style, rel
+        assert "color:var(--ink)" in selected_style, rel
 
 
 def test_legacy_leaderboard_dates_use_selected_congress_scope(store, tmp_path):
@@ -388,6 +389,43 @@ def test_censored_terms_remain_distinguishable():
     assert ">a*s</span>" in str(module._censored_term_cell("ass"))
 
 
+def test_pages_use_margin_of_error_masthead_and_footer(store, tmp_path):
+    path, _, bills = store
+    module = _load_build_site()
+    out = tmp_path / "site"
+    assert module.main([
+        "--daily", str(path), "--bills", str(bills), "--out", str(out),
+        "--min-words", "1000",
+    ]) == 0
+    for rel in ("index.html", "activity/index.html"):
+        document = BeautifulSoup((out / rel).read_text(), "html.parser")
+        header = document.select_one("header.site-header")
+        assert header.select_one('a.wordmark[href="/"]'), rel
+        assert [a["href"] for a in header.select("nav a")][:3] == [
+            "/", "/archive/", "/about/",
+        ], rel
+        assert document.select_one("footer.site-footer .copyright"), rel
+        assert document.select_one('.feature-nav a[aria-current="page"]')["href"] == "./"
+        assert document.select_one("p#coverage.coverage-note"), rel
+
+
+def test_language_page_censors_terms_outside_tables(store, tmp_path):
+    path, _, bills = store
+    module = _load_build_site()
+    out = tmp_path / "site"
+    assert module.main([
+        "--daily", str(path), "--bills", str(bills), "--out", str(out),
+        "--min-words", "1000",
+    ]) == 0
+    page = (out / "index.html").read_text()
+    # Context panel, member-bar tooltips, and state tiles all render censored terms.
+    assert "censoredTermNode(member.favorite_profanity_term)" in page
+    assert "most-used term: “${censorTerm(row.favorite_profanity_term)}”" in page
+    assert "winner.terms.map(censorTerm)" in page
+    assert "winner.terms.join(' / ')" not in page
+    assert "“${member.favorite_profanity_term}”" not in page
+
+
 def test_builds_combined_last_five_congresses_payload(store, tmp_path):
     path, daily, bills = store
     earlier = _daily([
@@ -425,11 +463,9 @@ def test_builds_combined_last_five_congresses_payload(store, tmp_path):
     assert "term family" not in page
     assert "font-family:ui-monospace" not in page
     assert "font-family:-apple-system" not in page
-    assert "Iowan Old Style" not in page
-    assert "Avenir Next Condensed" not in page
-    assert "--serif:Georgia,'Times New Roman',serif" in page
-    assert "--sans:Arial,Helvetica,sans-serif" in page
-    assert "body { background:var(--bg); color:var(--text);\n          font-family:var(--sans)" in page
+    assert '--serif:"Iowan Old Style"' in page
+    assert '--sans:"Arial Narrow"' in page
+    assert "--paper:#f2efe7" in page
     assert 'class="term-usage"' in page
     assert "</strong><span>/ " in page
     assert "<progress" not in page
@@ -439,10 +475,6 @@ def test_builds_combined_last_five_congresses_payload(store, tmp_path):
     assert "row.hidden = !showAllTerms" in page
     assert "Related forms are grouped" in page
     assert "term-section-header" in page
-    assert ".term-section-header > div { display:grid; gap:.8rem; }" in page
-    assert ".term-section-header h2 { margin:0; line-height:1.12; }" in page
-    assert ".term-section-header p { max-width:70rem; margin:0; }" in page
-    assert ".term-section-header .sub { line-height:1.65; }" in page
     assert "The conservative codebook" not in page
     assert "precision over exhaustiveness" not in " ".join(page.split())
     assert 'id="term-leaders-note" hidden>' in page
@@ -505,7 +537,6 @@ def test_payload_and_html_expose_selector_aware_language_graphs(store, tmp_path)
     ):
         assert text in page
     assert "min-width:42rem" not in page
-    assert ".mini-chart { position:relative; border-top:1px solid var(--grid);" in page
     assert "Members below the word threshold are omitted." not in page
     long_run = json.loads((out / "data" / "long_run_language.json").read_text())
     assert len(long_run["metrics"]) == 6
@@ -515,12 +546,13 @@ def test_payload_and_html_expose_selector_aware_language_graphs(store, tmp_path)
     assert "Congressional member activity and bills" in activity_page
     assert (
         '<link rel="canonical" '
-        'href="https://www.themarginoferror.com/professional_profanity/">'
+        'href="https://www.themarginoferror.com/congressional_profanity/">'
     ) in page
     assert (
         '<link rel="canonical" '
-        'href="https://www.themarginoferror.com/professional_profanity/activity/">'
+        'href="https://www.themarginoferror.com/congressional_profanity/activity/">'
     ) in activity_page
+    assert "professional_profanity" not in page + activity_page
     assert "Who sponsors the most bills" in activity_page
     assert "The Language of Congress" in activity_page
     assert 'id="activity-metric"' in activity_page
@@ -532,7 +564,6 @@ def test_payload_and_html_expose_selector_aware_language_graphs(store, tmp_path)
     assert activity_document.select_one("select#activity-metric") is None
     assert "<label>Table" not in page
     assert '>Table<select' not in activity_page
-    assert "clamp(2rem,3.4vw,3.2rem)" in activity_page
     assert "table th:first-child,table td:first-child { width:2rem; }" in activity_page
     assert "const activityNumericColumns" in activity_page
     assert "selectActivityMetric" in activity_page
@@ -544,7 +575,7 @@ def test_payload_and_html_expose_selector_aware_language_graphs(store, tmp_path)
     assert "<h1>Congressional member activity and bills</h1>" in activity_redirect
     assert (
         'href="https://www.themarginoferror.com/'
-        'professional_profanity/activity/"'
+        'congressional_profanity/activity/"'
     ) in activity_redirect
 
 

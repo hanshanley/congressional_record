@@ -12,11 +12,16 @@ Usage::
     fig, ax = plt.subplots(figsize=(11, 6))
     ...
     theme.source_note(fig, "Source: ...")
+
+The published website instead wraps its figures in :func:`house_style`, which swaps in
+The Margin of Error palette and typography without touching research figures.
 """
 
 from __future__ import annotations
 
 import textwrap
+from contextlib import contextmanager
+from typing import Iterator
 
 import matplotlib.patheffects as pe
 import matplotlib.pyplot as plt
@@ -123,6 +128,59 @@ RC_PARAMS = {
     "text.parse_math": False,   # treat '$' literally (titles/labels are plain prose)
 }
 
+# ── The Margin of Error house style (website figures only) ───────────────────────
+# Mirrors margin_of_error/src/styles/global.css: paper background, ink text, warm
+# rule grid, and the Iowan Old Style serif stack. Party colours are unchanged.
+HOUSE = {
+    "BG": "#F2EFE7",
+    "TEXT": "#171713",
+    "MUTED": "#655F55",
+    "GRID": "#CFC7B8",
+}
+HOUSE_SERIF = [
+    "Iowan Old Style", "Palatino Linotype", "Book Antiqua", "Palatino", "Georgia",
+    "DejaVu Serif",
+]
+HOUSE_RC_PARAMS = {
+    **RC_PARAMS,
+    "figure.facecolor": HOUSE["BG"],
+    "axes.facecolor": HOUSE["BG"],
+    "savefig.facecolor": HOUSE["BG"],
+    "text.color": HOUSE["TEXT"],
+    "axes.labelcolor": HOUSE["TEXT"],
+    "xtick.color": HOUSE["MUTED"],
+    "ytick.color": HOUSE["MUTED"],
+    "axes.edgecolor": HOUSE["GRID"],
+    "grid.color": HOUSE["GRID"],
+    "grid.alpha": 0.8,
+    "font.serif": HOUSE_SERIF,
+    "axes.titlesize": 18,
+    "axes.titleweight": "normal",
+}
+
+_active_params = RC_PARAMS
+
+
+def active_color(name: str) -> str:
+    """Return ``BG``/``TEXT``/``MUTED``/``GRID`` for whichever style is active."""
+    if _active_params is HOUSE_RC_PARAMS:
+        return HOUSE[name]
+    return {"BG": BG, "TEXT": TEXT, "MUTED": MUTED, "GRID": GRID}[name]
+
+
+@contextmanager
+def house_style() -> Iterator[None]:
+    """Render figures inside this block in The Margin of Error house style."""
+    global _active_params
+    previous = _active_params
+    _active_params = HOUSE_RC_PARAMS
+    try:
+        apply()
+        yield
+    finally:
+        _active_params = previous
+        apply()
+
 # A white "halo" so labels drawn over lines/fills stay legible.
 _WHITE_STROKE = [pe.withStroke(linewidth=3.0, foreground="white")]
 
@@ -133,8 +191,8 @@ def white_stroke() -> list:
 
 
 def apply() -> None:
-    """Apply the shared Substack theme to matplotlib's global rcParams."""
-    plt.rcParams.update(RC_PARAMS)
+    """Apply the active theme (Substack by default) to matplotlib's global rcParams."""
+    plt.rcParams.update(_active_params)
 
 
 def source_note(fig, text: str, x: float = 0.01, y: float = 0.01, ha: str = "left",
@@ -147,7 +205,8 @@ def source_note(fig, text: str, x: float = 0.01, y: float = 0.01, ha: str = "lef
     callers can reserve the right amount of bottom margin.
     """
     lines = textwrap.wrap(text, width=width) or [""]
-    fig.text(x, y, "\n".join(lines), ha=ha, va="bottom", fontsize=8, color=MUTED,
+    fig.text(x, y, "\n".join(lines), ha=ha, va="bottom", fontsize=8,
+             color=active_color("MUTED"),
              style="italic", linespacing=1.4)
     return len(lines)
 

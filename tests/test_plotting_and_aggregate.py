@@ -91,6 +91,20 @@ def test_theme_palette_and_apply() -> None:
         or plt.rcParams["axes.spines.top"] is False
 
 
+def test_house_style_is_scoped_to_website_figures() -> None:
+    import matplotlib.pyplot as plt
+
+    with theme.house_style():
+        charts.new_figure()  # re-applies the active theme, which must stay "house"
+        plt.close("all")
+        assert plt.rcParams["axes.facecolor"] == theme.HOUSE["BG"]
+        assert plt.rcParams["font.serif"][0] == "Iowan Old Style"
+        assert theme.active_color("MUTED") == theme.HOUSE["MUTED"]
+    theme.apply()
+    assert plt.rcParams["axes.facecolor"] == theme.BG
+    assert theme.active_color("MUTED") == theme.MUTED
+
+
 def test_chamber_party_aggregation_word_weighted() -> None:
     import pandas as pd
     from analysis.viz import _by_year_chamber_party

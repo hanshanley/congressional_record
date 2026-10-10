@@ -28,10 +28,10 @@ def style_axes(ax, title: str, xlabel: str, ylabel: str, subtitle: str | None = 
     Renders a two-tier header: a bold title with a muted sub-title beneath it (the
     ``uk_decline`` house convention), rather than a single newline-joined string.
     """
-    ax.set_title(title, fontweight="bold", pad=28 if subtitle else 14)
+    ax.set_title(title, fontweight=plt.rcParams["axes.titleweight"], pad=28 if subtitle else 14)
     if subtitle:
         ax.text(0.5, 1.015, subtitle, transform=ax.transAxes, ha="center", va="bottom",
-                fontsize=11, color=theme.MUTED)
+                fontsize=11, color=theme.active_color("MUTED"))
     ax.set_xlabel(xlabel, labelpad=2)
     ax.set_ylabel(ylabel, labelpad=2)
     ax.grid(axis="y", linestyle="-", linewidth=0.5)
@@ -43,7 +43,7 @@ def line(ax, xs, ys, color: str, label: str | None = None, linewidth: float = 2.
          markersize: float = 4, linestyle: str = "-", marker: str | None = "o") -> None:
     """Draw one Substack-style series. ``marker=None`` gives a clean, markerless line."""
     ax.plot(xs, ys, color=color, linewidth=linewidth, marker=marker, markersize=markersize,
-            markeredgecolor=theme.BG, markeredgewidth=0.8, label=label, linestyle=linestyle)
+            markeredgecolor=theme.active_color("BG"), markeredgewidth=0.8, label=label, linestyle=linestyle)
 
 
 def end_label(ax, x, y, text: str, color: str, **kwargs) -> None:
@@ -65,7 +65,7 @@ def finish(fig, ax, out_path: Path | str, source: str | None = None,
            legend: bool = True, dpi: int = 200) -> Path:
     """Add legend + source note, tight-layout, and save. Returns the output path."""
     if legend and ax.get_legend_handles_labels()[0]:
-        ax.legend(loc="best", frameon=False, labelcolor=theme.TEXT)
+        ax.legend(loc="best", frameon=False, labelcolor=theme.active_color("TEXT"))
     note_lines = theme.source_note(fig, source) if source else 0
     # Reserve bottom margin for the italic source note, growing with its line count
     # so a wrapped two-line note is not overlapped by the x-axis label.

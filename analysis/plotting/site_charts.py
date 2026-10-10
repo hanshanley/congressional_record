@@ -45,7 +45,7 @@ def language_trends(
     fig.suptitle(
         f"Language indicators over time — {scope_label}",
         fontsize=19,
-        fontweight="bold",
+        fontweight=plt.rcParams["axes.titleweight"],
         y=0.985,
     )
     if series.empty or "period" not in series:
@@ -59,7 +59,7 @@ def language_trends(
             )
             ax.text(
                 0.5, 0.5, "No floor-language data", transform=ax.transAxes,
-                ha="center", va="center", color=theme.MUTED,
+                ha="center", va="center", color=theme.active_color("MUTED"),
             )
         axes[-1].set_xlabel("Period")
         return _save(fig, out_path, top=0.955)
@@ -116,7 +116,7 @@ def language_members(
     fig.suptitle(
         f"Highest language-indicator rates — {scope_label}",
         fontsize=19,
-        fontweight="bold",
+        fontweight=plt.rcParams["axes.titleweight"],
         y=0.988,
     )
     for ax, (key, metric) in zip(axes, LANGUAGE_METRICS.items()):
@@ -131,7 +131,7 @@ def language_members(
             )
             ax.text(
                 0.5, 0.5, "No eligible members", transform=ax.transAxes,
-                ha="center", va="center", color=theme.MUTED,
+                ha="center", va="center", color=theme.active_color("MUTED"),
             )
             continue
         labels = [
@@ -142,7 +142,7 @@ def language_members(
         ]
         colors = [theme.PARTY_COLORS.get(party, theme.MUTED) for party in frame["party"]]
         bars = ax.barh(labels, frame[metric["rate"]], color=colors, height=0.72)
-        ax.bar_label(bars, fmt="%.1f", padding=4, fontsize=9, color=theme.TEXT)
+        ax.bar_label(bars, fmt="%.1f", padding=4, fontsize=9, color=theme.active_color("TEXT"))
         charts.style_axes(
             ax,
             metric["label"],
