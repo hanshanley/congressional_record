@@ -9,6 +9,7 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 
 from analysis.daily_language import (
+    restrict_to_complete_metrics,
     aggregate_turn_files,
     merge_long_run_payload,
     replace_daily_window,
@@ -37,11 +38,8 @@ def _daily(rows):
             "party",
             "words",
             "formal_courtesy_hits",
-            "gratitude_praise_hits",
-            "cooperation_hits",
-            "hostility_hits",
-            "misconduct_hits",
             "profanity_hits",
+            "ethnic_slur_hits",
         ],
     )
 
@@ -56,7 +54,7 @@ def test_first_daily_run_backfills_current_congress():
 
 def test_daily_window_rechecks_one_week_without_crossing_congress_start():
     daily = _daily([
-        ["2025-01-04", 119, "house", "D", 1, 0, 0, 0, 0, 0, 0],
+        ["2025-01-04", 119, "house", "D", 1, 0, 0, 0],
     ])
     assert resolve_window(
         _args(until="2025-01-05"),
@@ -82,11 +80,11 @@ def test_current_congress_backfill_uses_safe_probe_windows():
 
 def test_recomputed_window_removes_stale_daily_rows():
     existing = _daily([
-        ["2026-09-01", 119, "house", "D", 100, 1, 0, 0, 0, 0, 0],
-        ["2026-09-02", 119, "house", "D", 100, 1, 0, 0, 0, 0, 0],
+        ["2026-09-01", 119, "house", "D", 100, 1, 0, 0],
+        ["2026-09-02", 119, "house", "D", 100, 1, 0, 0],
     ])
     fresh = _daily([
-        ["2026-09-02", 119, "house", "R", 200, 2, 0, 0, 0, 0, 0],
+        ["2026-09-02", 119, "house", "R", 200, 2, 0, 0],
     ])
     result = replace_daily_window(existing, fresh, "2026-09-02", "2026-09-04")
     assert list(result[["date", "party"]].itertuples(index=False, name=None)) == [
@@ -148,16 +146,8 @@ def test_daily_metrics_replace_current_year_without_changing_history():
                 "party": "D",
                 "words": 10,
                 "formal_courtesy_hits": 1,
-                "gratitude_praise_hits": 0,
-                "cooperation_hits": 0,
-                "hostility_hits": 0,
-                "misconduct_hits": 0,
                 "profanity_hits": 0,
                 "formal_courtesy_per_1k": 100.0,
-                "gratitude_praise_per_1k": 0.0,
-                "cooperation_per_1k": 0.0,
-                "hostility_per_1k": 0.0,
-                "misconduct_per_1k": 0.0,
                 "profanity_per_1k": 0.0,
             },
             {
@@ -165,16 +155,8 @@ def test_daily_metrics_replace_current_year_without_changing_history():
                 "party": "D",
                 "words": 999,
                 "formal_courtesy_hits": 999,
-                "gratitude_praise_hits": 999,
-                "cooperation_hits": 999,
-                "hostility_hits": 999,
-                "misconduct_hits": 999,
                 "profanity_hits": 999,
                 "formal_courtesy_per_1k": 1000.0,
-                "gratitude_praise_per_1k": 1000.0,
-                "cooperation_per_1k": 1000.0,
-                "hostility_per_1k": 1000.0,
-                "misconduct_per_1k": 1000.0,
                 "profanity_per_1k": 1000.0,
             },
         ],
@@ -185,16 +167,8 @@ def test_daily_metrics_replace_current_year_without_changing_history():
                 "chamber": "house",
                 "words": 10,
                 "formal_courtesy_hits": 1,
-                "gratitude_praise_hits": 0,
-                "cooperation_hits": 0,
-                "hostility_hits": 0,
-                "misconduct_hits": 0,
                 "profanity_hits": 0,
                 "formal_courtesy_per_1k": 100.0,
-                "gratitude_praise_per_1k": 0.0,
-                "cooperation_per_1k": 0.0,
-                "hostility_per_1k": 0.0,
-                "misconduct_per_1k": 0.0,
                 "profanity_per_1k": 0.0,
             },
             {
@@ -203,16 +177,8 @@ def test_daily_metrics_replace_current_year_without_changing_history():
                 "chamber": "house",
                 "words": 999,
                 "formal_courtesy_hits": 999,
-                "gratitude_praise_hits": 999,
-                "cooperation_hits": 999,
-                "hostility_hits": 999,
-                "misconduct_hits": 999,
                 "profanity_hits": 999,
                 "formal_courtesy_per_1k": 1000.0,
-                "gratitude_praise_per_1k": 1000.0,
-                "cooperation_per_1k": 1000.0,
-                "hostility_per_1k": 1000.0,
-                "misconduct_per_1k": 1000.0,
                 "profanity_per_1k": 1000.0,
             },
         ],
@@ -221,8 +187,8 @@ def test_daily_metrics_replace_current_year_without_changing_history():
         "source_note": "test",
     }
     daily = _daily([
-        ["2026-09-02", 119, "house", "D", 200, 2, 1, 1, 1, 1, 1],
-        ["2026-09-02", 119, "senate", "D", 300, 3, 2, 2, 2, 2, 2],
+        ["2026-09-02", 119, "house", "D", 200, 2, 1, 0],
+        ["2026-09-02", 119, "senate", "D", 300, 3, 2, 1],
     ])
 
     result = merge_long_run_payload(base, daily)
@@ -234,6 +200,26 @@ def test_daily_metrics_replace_current_year_without_changing_history():
     assert current["formal_courtesy_hits"] == 5
     assert current["formal_courtesy_per_1k"] == 10.0
     assert len([row for row in result["chamber_series"] if row["year"] == 2025]) == 2
+
+
+def test_long_run_payload_omits_measures_missing_from_any_row():
+    payload = {
+        "metrics": {"retired_per_1k": {}},
+        "series": [
+            {"profanity_hits": 1, "profanity_per_1k": 0.1,
+             "ethnic_slur_hits": None, "ethnic_slurs_per_1k": None},
+            {"profanity_hits": 2, "profanity_per_1k": 0.2,
+             "ethnic_slur_hits": 0, "ethnic_slurs_per_1k": 0.0},
+        ],
+        "chamber_series": [],
+    }
+    restricted = restrict_to_complete_metrics(payload)
+    assert list(restricted["metrics"]) == ["profanity_per_1k"]
+    assert set(restricted["series"][1]) == {"profanity_hits", "profanity_per_1k"}
+    payload["series"][0].update(ethnic_slur_hits=0, ethnic_slurs_per_1k=0.0)
+    assert set(restrict_to_complete_metrics(payload)["metrics"]) == {
+        "profanity_per_1k", "ethnic_slurs_per_1k",
+    }
 
 
 def test_daily_workflow_updates_every_data_surface_before_building():

@@ -1,5 +1,11 @@
 # README: how the non-profanity categories actually work
 
+> **Historical document.** Codebook v5 removed gratitude/praise, cooperation, personal attack,
+> misconduct, combined comity, ideological labels, out-party context, the “Democrat party”
+> pejorative, and VADER sentiment. The project now measures formal courtesy, profanity, and
+> ethnic slurs only. This critique describes the codebook as of commit `94a31af`; the lexicon
+> files it links to can be read at that commit.
+
 **Bottom line:** these are reproducible counts of selected words and phrases, not
 measurements of a member's true civility, sincerity, cooperation, or wrongdoing.
 Some labels describe the counts reasonably well; others suggest more contextual

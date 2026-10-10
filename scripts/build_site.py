@@ -29,12 +29,14 @@ from analysis.bills import (  # noqa: E402
     load_bills,
     member_activity,
 )
+from analysis.daily_language import restrict_to_complete_metrics  # noqa: E402
 from analysis.plotting import charts, site_charts, theme  # noqa: E402
 from analysis.score.registry import HEADLINE_METRICS  # noqa: E402
 from analysis.speakers import (  # noqa: E402
     LANGUAGE_METRICS,
     incomplete_profanity_term_rows,
     language_member_rates,
+    language_metric_available,
     language_timeseries,
     load_daily,
     profanity_term_member_counts,
@@ -76,6 +78,13 @@ CAVEATS = [
     "The Congressional Record is lightly edited rather than verbatim, and source metadata can "
     "be corrected after publication.",
 ]
+SLUR_CAVEAT = (
+    "Ethnic slurs use an exact list of slurs used in the United States, drawn from "
+    "Wikipedia's List of ethnic slurs and cross-checked against a Kaggle profanity "
+    "collection. Forms that are also ordinary words, names, or places are left out. Quoted "
+    "slurs are excluded, but a member who repeats a slur to condemn or describe it is still "
+    "counted, so a count is not evidence of endorsement."
+)
 
 METRIC_DEFINITIONS = {
     "speech": "Attributed non-procedural spoken words; turns and active days provide context.",
@@ -788,6 +797,9 @@ function renderSelectedHighlight(language) {
 
 function renderRecentFocus() {
   if (!currentLanguage) return;
+  if (!currentLanguage.metrics[selectedRecentMetric]) {
+    selectedRecentMetric = Object.keys(currentLanguage.metrics)[0];
+  }
   renderTermExplorer(currentLanguage);
   Object.keys(currentLanguage.metrics).forEach(
     key => renderLanguageTable(currentLanguage, key)
@@ -2036,11 +2048,6 @@ def _enrich_board(
 ) -> list[dict]:
     records = _records(board)
     for row in records:
-        for field in (
-            "hostility_hits", "misconduct_hits",
-            "hostility_per_100k", "misconduct_per_100k",
-        ):
-            row.pop(field, None)
         row["member_url"] = (
             f"https://bioguide.congress.gov/search/bio/{row['bioguide']}"
             if row.get("bioguide")
@@ -2093,6 +2100,15 @@ def _language_payload(
         ALL_MEMBER_SCOPE_LABEL if congress is None else f"Congress {congress}"
     )
     granularity = "year" if congress is None else "month"
+    scope_frame = daily if congress is None else daily[daily["congress"] == congress]
+    scope_frame = scope_frame[scope_frame["chamber"].isin(["house", "senate"])]
+    # A measure is published only once every row in the scope has been scored for it,
+    # so a partially backfilled measure is hidden rather than shown with false zeros.
+    metrics = {
+        key: metric
+        for key, metric in LANGUAGE_METRICS.items()
+        if language_metric_available(scope_frame, key)
+    }
     series = language_timeseries(daily, congress)
     chamber_series = language_timeseries(daily, congress, by_chamber=True)
     rankings = language_member_rates(
@@ -2147,10 +2163,10 @@ def _language_payload(
             "words": words,
             **{
                 metric["hits"]: int(rows[metric["hits"]].sum())
-                for metric in LANGUAGE_METRICS.values()
+                for metric in metrics.values()
             },
         }
-        for metric in LANGUAGE_METRICS.values():
+        for metric in metrics.values():
             hits = party_summary[party][metric["hits"]]
             party_summary[party][metric["rate"]] = (
                 100_000 * hits / words if words else 0.0
@@ -2159,6 +2175,8 @@ def _language_payload(
     def enrich_rankings(frames: dict[str, pd.DataFrame]) -> dict[str, list[dict]]:
         enriched = {}
         for key, frame in frames.items():
+            if key not in metrics:
+                continue
             records = _records(frame)
             for row in records:
                 row["member_url"] = (
@@ -2173,7 +2191,7 @@ def _language_payload(
 
     findings = []
     highlights = []
-    for key, metric in LANGUAGE_METRICS.items():
+    for key, metric in metrics.items():
         democratic_rate = party_summary["D"][metric["rate"]]
         republican_rate = party_summary["R"][metric["rate"]]
         if abs(democratic_rate - republican_rate) < 0.05:
@@ -2221,10 +2239,11 @@ def _language_payload(
             f"rate at {float(leader[metric['rate']]):.1f} per 100,000 words."
         )
     period_label = "yearly" if granularity == "year" else "monthly"
+    measures = " and ".join(metric["label"].lower() for metric in metrics.values())
     return {
         "scope_label": scope_label,
         "granularity": granularity,
-        "metrics": LANGUAGE_METRICS,
+        "metrics": metrics,
         "series": _records(series),
         "chamber_series": _records(chamber_series),
         "members": member_records,
@@ -2243,18 +2262,15 @@ def _language_payload(
         "parties": party_summary,
         "highlights": highlights,
         "trend_alt": (
-            f"{period_label.title()} Democratic and Republican rates for profanity, personal "
-            f"hostility or disrespect, and misconduct allegations in {scope_label}."
+            f"{period_label.title()} Democratic and Republican rates for {measures} "
+            f"in {scope_label}."
         ),
-        "member_alt": (
-            f"Highest eligible member rates for profanity, personal hostility or "
-            f"disrespect, and misconduct allegations in {scope_label}."
-        ),
+        "member_alt": f"Highest eligible member rates for {measures} in {scope_label}.",
         "explanation": {
             "shown": (
-                f"The charts show {period_label} Democratic and Republican rates for three "
-                "separate lexical measures, plus the highest-rate members in "
-                f"{scope_label}. Rates are hits per 100,000 attributed spoken words."
+                f"The charts show {period_label} Democratic and Republican rates for "
+                f"{measures}, plus the highest-rate members in {scope_label}. Rates are "
+                "hits per 100,000 attributed spoken words."
             ),
             "examined": (
                 "The trend panels compare party-wide rates over time. Member panels "
@@ -2265,8 +2281,8 @@ def _language_payload(
             ),
             "limitation": (
                 "These are descriptive word-pattern counts, not judgments about intent. "
-                "Misconduct language does not prove misconduct, and quoted profanity is "
-                "excluded from a speaker's rate."
+                "Quoted profanity and quoted slurs are excluded from a speaker's rate, but "
+                "a member who repeats a slur to condemn or describe it is still counted."
             ),
         },
     }
@@ -2323,7 +2339,9 @@ def build_long_run_payload(metrics: pd.DataFrame) -> dict:
 def load_long_run_payload() -> dict:
     """Refresh long-run site data locally when possible, otherwise load committed data."""
     if LONG_RUN_METRICS_PATH.exists():
-        payload = build_long_run_payload(pd.read_parquet(LONG_RUN_METRICS_PATH))
+        payload = restrict_to_complete_metrics(
+            build_long_run_payload(pd.read_parquet(LONG_RUN_METRICS_PATH))
+        )
         LONG_RUN_DATA_PATH.parent.mkdir(parents=True, exist_ok=True)
         LONG_RUN_DATA_PATH.write_text(
             json.dumps(payload, indent=2) + "\n",
@@ -2335,7 +2353,9 @@ def load_long_run_payload() -> dict:
             "error: no long-run site data; run scripts/build_site.py where "
             "data/processed/metrics/civility_metrics.parquet is available"
         )
-    return json.loads(LONG_RUN_DATA_PATH.read_text(encoding="utf-8"))
+    return restrict_to_complete_metrics(
+        json.loads(LONG_RUN_DATA_PATH.read_text(encoding="utf-8"))
+    )
 
 
 def build_payload(
@@ -2686,7 +2706,7 @@ def _render_html(payload: dict, congresses: list[int], long_run: dict) -> str:
     explanation = language["explanation"]
     caveats = "".join(
         f"<li>{html.escape(item)}</li>"
-        for item in (CAVEATS[0], CAVEATS[1], CAVEATS[2], CAVEATS[-1])
+        for item in (CAVEATS[0], CAVEATS[1], SLUR_CAVEAT, CAVEATS[2], CAVEATS[-1])
     )
     language_cards = "".join(
         (
@@ -2698,7 +2718,7 @@ def _render_html(payload: dict, congresses: list[int], long_run: dict) -> str:
                 if metric == "profanity" else ""
             )
             + "Only members with a nonzero rate and enough words are included.</p>"
-            + f'<div class="table-wrap">{_language_table(metric, language["members"][metric])}</div>'
+            + f'<div class="table-wrap">{_language_table(metric, language["members"].get(metric, []))}</div>'
             + "</section>"
         )
         for metric, metadata in LANGUAGE_METRICS.items()
@@ -2711,7 +2731,7 @@ def _render_html(payload: dict, congresses: list[int], long_run: dict) -> str:
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The Language of Congress — The Margin of Error</title>
 <meta name="description" content="Long-run Democratic and Republican trends in congressional
-courtesy, cooperation, personal disrespect, misconduct allegations, and profanity.">
+courtesy, profanity, and ethnic slurs.">
 {_head_links(PUBLIC_URL)}
 <style>{HOUSE_CSS}{MAIN_CSS}</style>
 </head>
@@ -3147,6 +3167,7 @@ def main(argv: Optional[List[str]] = None) -> int:
             figs / "language_trends.png",
             scope_label=selected_language["scope_label"],
             granularity=selected_language["granularity"],
+            metrics=selected_language["metrics"],
         )
         site_charts.language_members(
             {
@@ -3156,6 +3177,7 @@ def main(argv: Optional[List[str]] = None) -> int:
             figs / "language_members.png",
             scope_label=selected_language["scope_label"],
             min_words=args.min_words,
+            metrics=selected_language["metrics"],
         )
         _chart_leaderboard(profanity, figs, args.min_words)
         _chart_trend(series, figs)

@@ -17,7 +17,7 @@ from . import charts, theme
 SOURCE = (
     "Source: Congressional Record via GovInfo CREC / Stanford Hein. "
     "House and Senate attributed, non-procedural floor remarks only; rates per "
-    "100,000 spoken words. Profanity quotations are excluded."
+    "100,000 spoken words. Quoted profanity and slurs are excluded."
 )
 
 
@@ -32,24 +32,36 @@ def _save(fig, out_path: Path | str, *, top: float = 0.94, bottom: float = 0.07)
     return out_path
 
 
+def _header_fraction(height: float, inches: float) -> float:
+    """Figure fraction below a header of fixed physical height, whatever the panel count."""
+    return 1 - inches / height
+
+
 def language_trends(
     series: pd.DataFrame,
     out_path: Path | str,
     *,
     scope_label: str,
     granularity: str,
+    metrics: dict | None = None,
 ) -> Path:
-    """Render three Democratic/Republican trend panels for one Congress scope."""
+    """Render one Democratic/Republican trend panel per language measure."""
+    metrics = LANGUAGE_METRICS if metrics is None else metrics
     theme.apply()
-    fig, axes = plt.subplots(3, 1, figsize=(11, 12.5), sharex=True)
+    height = 4.2 * len(metrics) + 0.4
+    top = _header_fraction(height, 0.12)
+    fig, axes = plt.subplots(
+        len(metrics), 1, figsize=(11, height), sharex=True, squeeze=False,
+    )
+    axes = axes[:, 0]
     fig.suptitle(
         f"Language indicators over time — {scope_label}",
         fontsize=19,
         fontweight=plt.rcParams["axes.titleweight"],
-        y=0.985,
+        y=_header_fraction(height, 0.08),
     )
     if series.empty or "period" not in series:
-        for ax, metric in zip(axes, LANGUAGE_METRICS.values()):
+        for ax, metric in zip(axes, metrics.values()):
             charts.style_axes(
                 ax,
                 metric["label"],
@@ -62,12 +74,12 @@ def language_trends(
                 ha="center", va="center", color=theme.active_color("MUTED"),
             )
         axes[-1].set_xlabel("Period")
-        return _save(fig, out_path, top=0.955)
+        return _save(fig, out_path, top=top)
     parsed_periods = pd.to_datetime(
         series["period"] + ("-01" if granularity == "month" else "-01-01")
     )
     plotted = series.assign(_date=parsed_periods)
-    for ax, metric in zip(axes, LANGUAGE_METRICS.values()):
+    for ax, metric in zip(axes, metrics.values()):
         for party, linestyle, marker in (("D", "-", "o"), ("R", "--", "s")):
             sub = plotted[plotted["party"] == party].sort_values("_date")
             if sub.empty:
@@ -100,7 +112,7 @@ def language_trends(
         axes[-1].xaxis.set_major_locator(mdates.YearLocator(4))
         axes[-1].xaxis.set_major_formatter(mdates.DateFormatter("%Y"))
         axes[-1].set_xlabel("Year")
-    return _save(fig, out_path, top=0.955)
+    return _save(fig, out_path, top=top)
 
 
 def language_members(
@@ -109,18 +121,22 @@ def language_members(
     *,
     scope_label: str,
     min_words: int,
+    metrics: dict | None = None,
 ) -> Path:
-    """Render three horizontal member-rate panels for one Congress scope."""
+    """Render one horizontal member-rate panel per language measure."""
+    metrics = LANGUAGE_METRICS if metrics is None else metrics
     theme.apply()
-    fig, axes = plt.subplots(3, 1, figsize=(11, 13.5))
+    height = 4.5 * len(metrics) + 0.7
+    fig, axes = plt.subplots(len(metrics), 1, figsize=(11, height), squeeze=False)
+    axes = axes[:, 0]
     fig.suptitle(
         f"Highest language-indicator rates — {scope_label}",
         fontsize=19,
         fontweight=plt.rcParams["axes.titleweight"],
-        y=0.988,
+        y=_header_fraction(height, 0.08),
     )
-    for ax, (key, metric) in zip(axes, LANGUAGE_METRICS.items()):
-        frame = rankings[key].iloc[::-1]
+    for ax, (key, metric) in zip(axes, metrics.items()):
+        frame = rankings.get(key, pd.DataFrame()).iloc[::-1]
         if frame.empty:
             charts.style_axes(
                 ax,
@@ -165,6 +181,7 @@ def language_members(
         if party in present_parties
     ]
     if legend:
-        fig.legend(handles=legend, loc="upper center", bbox_to_anchor=(0.5, 0.963),
+        fig.legend(handles=legend, loc="upper center",
+                   bbox_to_anchor=(0.5, _header_fraction(height, 0.45)),
                    frameon=False, ncol=len(legend))
-    return _save(fig, out_path, top=0.94)
+    return _save(fig, out_path, top=_header_fraction(height, 0.5))

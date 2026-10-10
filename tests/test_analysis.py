@@ -38,11 +38,11 @@ def test_congress_year_roundtrip() -> None:
 def test_metric_registry_matches_scorer_outputs() -> None:
     rates = [metric.rate for metric in METRICS]
     assert len(rates) == len(set(rates))
-    scored = Scorers().score_turn(
-        "I thank my Republican colleague, but that dishonest claim alleges bribery. Damn.",
-        "D",
-    )
-    assert set(SCORE_KEYS).issubset(scored)
+    assert {metric.rate for metric in METRICS if metric.headline} == {
+        "formal_courtesy_per_1k", "profanity_per_1k", "ethnic_slurs_per_1k",
+    }
+    scored = Scorers().score_turn("I yield to my distinguished colleague. Damn.")
+    assert set(scored) == {"n_words", *SCORE_KEYS, "profanity_hits"}
 
 
 def test_multiword_surname_segmentation() -> None:
@@ -357,68 +357,25 @@ def test_single_centered_editorial_heading_does_not_hide_floor_remarks():
 
 def test_fuzzy_keyword_matching() -> None:
     from analysis.score.scorers import morph_variants, plural_variants
-    # morphological variants for single words
-    assert {"coward", "cowards"}.issubset(morph_variants("coward"))
-    assert "corrupting" in morph_variants("corrupt")
+    assert {"colleague", "colleagues"}.issubset(morph_variants("colleague"))
     assert "gentlemen" in plural_variants("gentleman")   # irregular plural
     assert "ladies" in plural_variants("lady")           # y -> ies
     fuzzy, exact = Scorers(fuzzy=True), Scorers(fuzzy=False)
-    # plurals/verb-forms match under fuzzy, miss under exact
-    for txt, lex in [("my distinguished colleagues", "comity"),
-                     ("the gentlemen from Ohio", "comity"),
-                     ("cowards and liars corrupting things", "hostility")]:
-        assert fuzzy.score_turn(txt, "D")[f"{lex}_hits"] > exact.score_turn(txt, "D")[f"{lex}_hits"]
-    # fuzzy must not fabricate hits in clean neutral text
+    # Courtesy plurals match under fuzzy and miss under exact matching.
+    for txt in ("my distinguished colleagues", "the gentlemen from Ohio",
+                "the gentlewomen from California"):
+        assert fuzzy.score_turn(txt)["formal_courtesy_hits"] >= 1
+        assert exact.score_turn(txt)["formal_courtesy_hits"] == 0
     neutral = "the committee will now consider the appropriations schedule for review"
-    r = fuzzy.score_turn(neutral, "D")
-    assert r["hostility_hits"] == 0 and r["profanity_hits"] == 0
-
-    # Phrase inflection must inflect the *correct* content word, not just the last one:
-    # "reach across the aisle" -> "reaches/reached across the aisle" (leading verb).
-    for txt in ["She reaches across the aisle", "He worked across the aisle"]:
-        assert fuzzy.score_turn(txt, "D")["comity_hits"] >= 1
-        assert exact.score_turn(txt, "D")["comity_hits"] == 0
-
-    # Curated profanity surface forms are exact and assigned to one severity tier.
-    sc = fuzzy.score_turn("he fucked up the whole vote", "D")
+    assert fuzzy.score_turn(neutral) == {
+        "n_words": 10, "formal_courtesy_hits": 0, "profanity_mild": 0,
+        "profanity_strong": 0, "profanity_hits": 0, "ethnic_slur_hits": 0,
+    }
+    # Profanity and slur codebooks are exact even when courtesy matching is fuzzy.
+    sc = fuzzy.score_turn("he fucked up the whole vote")
     assert sc["profanity_hits"] == 1
     assert sc["profanity_mild"] == 0 and sc["profanity_strong"] == 1
-
-    # Short obfuscation stubs (< 4 chars) are matched literally, never expanded into
-    # ordinary English words: "len" (a lexicon entry) must not expand to match "lens".
-    assert fuzzy.score_turn("we viewed the bill through that lens today", "D")["profanity_hits"] == 0
-
-    # Explicit and fuzzy phrase variants that cover the same span are counted once.
-    assert fuzzy.score_turn("reaching across the aisle", "D")["comity_hits"] == 1
-    assert fuzzy.score_turn(
-        "reaching across the aisle and then reached across the aisle", "D"
-    )["comity_hits"] == 2
-
-    # Gendered comity must be matched symmetrically across gentleman/gentlewoman/gentlelady
-    # (gender is not a morphological inflection), and fuzzy must catch their plurals too.
-    for male, fem, lady in [
-        ("I thank the gentleman.", "I thank the gentlewoman.", "I thank the gentlelady."),
-        ("I appreciate the gentleman.", "I appreciate the gentlewoman.", "I appreciate the gentlelady."),
-    ]:
-        assert fuzzy.score_turn(male, "D")["comity_hits"] >= 1
-        assert fuzzy.score_turn(fem, "D")["comity_hits"] >= 1
-        assert fuzzy.score_turn(lady, "D")["comity_hits"] >= 1
-    # fuzzy (not exact) recovers the plural gendered address forms
-    assert fuzzy.score_turn("the gentlewomen from California", "D")["comity_hits"] >= 1
-    assert exact.score_turn("the gentlewomen from California", "D")["comity_hits"] == 0
-
-    s = Scorers(use_sentiment=True)
-    hostile = s.score_turn("This is a corrupt, shameful lie. He is a coward and a fraud.", "D")
-    civil = s.score_turn("I thank the distinguished gentleman and commend my friend.", "D")
-    assert hostile["sentiment"] < 0 < civil["sentiment"]
-    assert 0.0 <= hostile["neg_share"] <= 1.0
-    assert hostile["neg_share"] > civil["neg_share"]
-    # Late-speech negativity is not lost to truncation: a long positive preamble with a
-    # trailing negative sentence still yields a non-zero negative share.
-    long_tail = ("Thank you, Madam Speaker. " * 400) + "This bill is a corrupt, shameful disgrace."
-    assert s.score_turn(long_tail, "D")["neg_share"] > 0
-
-
+    assert fuzzy.score_turn("we viewed the bill through that lens today")["profanity_hits"] == 0
 
 
 def test_normalize_party() -> None:
@@ -436,36 +393,18 @@ def test_normalize_party() -> None:
     assert opposing_party("I") is None
 
 
-def test_scorer_comity_and_hostility() -> None:
+def test_scorer_formal_courtesy() -> None:
     s = Scorers()
-    r = s.score_turn("I thank the gentleman from Ohio, my distinguished colleague.", "D")
-    assert r["comity_hits"] >= 2  # "i thank the gentleman" + "my distinguished colleague"
-    assert r["formal_courtesy_hits"] >= 1
-    assert r["gratitude_praise_hits"] >= 1
-    assert r["cooperation_hits"] == 0
-    assert r["comity_hits"] == (
-        r["formal_courtesy_hits"] + r["gratitude_praise_hits"] + r["cooperation_hits"]
-    )
-    assert r["hostility_hits"] == 0
-
-    r2 = s.score_turn("That deceitful, cowardly liar is a hypocrite.", "R")
-    assert r2["hostility_hits"] >= 4
-    assert r2["misconduct_hits"] == 0
-
-
-def test_scorer_separates_comity_components() -> None:
-    s = Scorers()
-    formal = s.score_turn("The distinguished gentlewoman from Ohio has the floor.", "D")
-    gratitude = s.score_turn("I thank my colleague for this work.", "D")
-    cooperation = s.score_turn("We reached across the aisle in a bipartisan spirit.", "D")
-    assert formal["formal_courtesy_hits"] >= 1
-    assert gratitude["gratitude_praise_hits"] >= 1
-    assert cooperation["cooperation_hits"] >= 1
+    assert s.score_turn("The distinguished gentlewoman from Ohio has the floor.")[
+        "formal_courtesy_hits"
+    ] >= 1
+    assert s.score_turn("I yield to the gentleman from Texas.")["formal_courtesy_hits"] >= 1
+    assert s.score_turn("The bill funds highway repairs.")["formal_courtesy_hits"] == 0
 
 
 def test_scorer_profanity_tiers() -> None:
     s = Scorers()
-    r = s.score_turn("what the hell is this damn nonsense", "D")
+    r = s.score_turn("what the hell is this damn nonsense")
     assert r["profanity_mild"] >= 2  # hell + damn
     assert r["profanity_hits"] >= 2
 
@@ -476,7 +415,7 @@ def test_scorer_conservative_profanity_expansion() -> None:
         "That bitching bastard called this a shitshow run by dipshits and douchebags. "
         "The cocksucker made it a motherfucking clusterfuck and a pain in the ass."
     )
-    scored = scorer.score_turn(text, "D")
+    scored = scorer.score_turn(text)
     assert scored["profanity_strong"] == 9
     assert scored["profanity_hits"] == 9
     assert scorer.profanity_term_counts(text) == {
@@ -498,76 +437,43 @@ def test_scorer_still_excludes_ambiguous_profanity_candidates() -> None:
         "Dick chaired the medical panel on breasts and reproductive anatomy. "
         "The rooster cocked its head as the player kicked the balls."
     )
-    assert scorer.score_turn(text, "D")["profanity_hits"] == 0
+    assert scorer.score_turn(text)["profanity_hits"] == 0
 
 
-def test_scorer_separates_neutral_topics_and_discourse_categories() -> None:
+def test_scorer_excludes_neutral_topics_from_profanity_and_slurs() -> None:
     s = Scorers()
     for text in (
         "organ transplant legislation", "sex trafficking bill", "murder victims",
         "gay rights legislation", "In God We Trust", "erected a memorial", "strips funding",
     ):
-        assert s.score_turn(text, "D")["profanity_hits"] == 0
-
-    scored = s.score_turn(
-        "That deceitful coward committed bribery, according to this allegation, "
-        "and promoted a socialist policy. What the hell.",
-        "D",
-    )
-    assert scored["hostility_hits"] >= 2
-    assert scored["misconduct_hits"] >= 1
-    assert scored["ideological_label_hits"] >= 1
-    assert scored["profanity_hits"] >= 1
+        scored = s.score_turn(text)
+        assert scored["profanity_hits"] == 0 and scored["ethnic_slur_hits"] == 0
 
 
-def test_scorer_outgroup_directed_and_pejorative() -> None:
+def test_scorer_counts_ethnic_slurs_separately_from_profanity() -> None:
     s = Scorers()
-    # A Democrat attacking Republicans near an out-group reference.
-    txt = "My Republican colleagues are deceitful cowards on this bill."
-    r = s.score_turn(txt, "D")
-    assert r["outgroup_refs"] >= 1               # "republican" is out-group for a D
-    assert r["directed_hostility_hits"] >= 2     # dishonest + cowards near the ref
-    assert r["outgroup_hostility_contexts"] == 1
-    separated = s.score_turn(
-        "My Republican colleagues support this bill. That unrelated witness is a liar.",
-        "D",
-    )
-    assert separated["outgroup_refs"] == 1
-    assert separated["outgroup_hostility_contexts"] == 0
+    scored = s.score_turn("He was called a wetback and a sand nigger. Damn.")
+    # "sand nigger" is one phrase match, not a phrase plus its component word.
+    assert scored["ethnic_slur_hits"] == 2
+    assert scored["profanity_hits"] == 1
+    assert s.signal_spans("a slant-eyed insult")["ethnic_slur"] == [(2, 12)]
 
-    # Same words but speaker is Republican -> "republican" is NOT out-group.
-    r2 = s.score_turn(txt, "R")
-    assert r2["outgroup_refs"] == 0
 
-    # Generic democratic-government language is not a party reference, while a
-    # party-specific Democratic noun phrase is.
-    assert s.score_turn("We defend democratic institutions and values.", "R")["outgroup_refs"] == 0
-    assert s.score_turn("My Democratic colleagues support the bill.", "R")["outgroup_refs"] == 1
-
-    # "Democrat party" pejorative marker.
-    r3 = s.score_turn("The Democrat party wants to raise your taxes.", "R")
-    assert r3["democrat_party_pej"] == 1
+def test_scorer_leaves_ambiguous_slur_homographs_unscored() -> None:
+    s = Scorers()
+    for text in (
+        "The chink in the armor", "a raccoon, or coon, in Squaw Valley",
+        "the Washington Redskins", "Jim Crow laws", "that spick and span office",
+        "the Half-Breeds faction", "honky-tonk music", "the Negro Leagues",
+    ):
+        assert s.score_turn(text)["ethnic_slur_hits"] == 0, text
 
 
 def test_scorer_contextual_false_positive_exclusions() -> None:
     s = Scorers()
-    assert s.score_turn("She serves in a bipartisan commission.", "D")["cooperation_hits"] == 0
-    assert s.score_turn("The phony price was listed in the estimate.", "D")["hostility_hits"] == 0
-    assert s.score_turn("He is not a liar.", "D")["hostility_hits"] == 0
-    assert s.score_turn("The Foreign Corrupt Practices Act applies.", "D")["misconduct_hits"] == 0
-    assert s.score_turn("There is no corruption in this program.", "D")["misconduct_hits"] == 0
-    assert s.score_turn("There was no bribery or perjury.", "D")["misconduct_hits"] == 0
-    assert s.score_turn("The inquiry found no abuse of power.", "D")["misconduct_hits"] == 0
-    assert s.score_turn("There is no doubt bribery occurred.", "D")["misconduct_hits"] == 1
-    assert s.score_turn("The committee condemned the corrupt official.", "D")["misconduct_hits"] == 1
-    assert s.score_turn("The bill authorized a lock and damn.", "D")["profanity_hits"] == 0
-    assert s.score_turn("This is a Federal crap game.", "D")["profanity_hits"] == 0
-    assert s.score_turn("This is one damn bad bill.", "D")["profanity_hits"] == 1
-    assert s.score_turn("The majority party scheduled the vote.", "D")["outgroup_refs"] == 0
-    assert s.score_turn("The Democratic conference met today.", "R")["outgroup_refs"] == 1
-    context = s.score_turn("Democrats committed no bribery.", "R")
-    assert context["directed_misconduct_hits"] == 0
-    assert context["outgroup_misconduct_contexts"] == 0
+    assert s.score_turn("The bill authorized a lock and damn.")["profanity_hits"] == 0
+    assert s.score_turn("This is a Federal crap game.")["profanity_hits"] == 0
+    assert s.score_turn("This is one damn bad bill.")["profanity_hits"] == 1
 
 
 def test_govinfo_helpers() -> None:

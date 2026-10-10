@@ -19,10 +19,10 @@ def code(text: str) -> None:
 
 
 md(r"""
-# Congressional civility & "toxicity" — interactive explorer
+# Congressional profanity, ethnic slurs, and formal courtesy — interactive explorer
 
-Explore changes in comity and conflict language in the U.S. Congressional Record,
-**1873–2026**, and interact with the underlying data and plots.
+Explore three word-pattern measures in the U.S. Congressional Record, **1873–present**, and
+interact with the underlying data and plots.
 
 **Data**
 - 1873–2017: Stanford *hein* corpus (Gentzkow–Shapiro–Taddy), speaker-segmented with party.
@@ -30,33 +30,22 @@ Explore changes in comity and conflict language in the U.S. Congressional Record
   from MODS `congMember@party`.
 
 **What we measure** (all rates are per 1,000 words, split by speaker party):
-- *Formulaic courtesy* — parliamentary address/deference ("the gentleman from").
-- *Gratitude / praise* — thanks, commendation, appreciation, or explicit respect.
-- *Bipartisan cooperation* — explicit cross-aisle work and bipartisan spirit.
-- *Personal disrespect / attack* — a high-precision insult and attack lexicon.
-- *Misconduct allegations* — corruption, fraud, perjury, obstruction, and similar allegation
-  language; this is **not evidence that misconduct occurred**.
-- *Profanity* — a narrow, hand-curated list of genuine curse/obscene forms, excluding neutral
-  topical terms.
-- *Identity slurs* — a separate exact-match diagnostic requiring quotation/context review.
-- *Ideological labels* — tracked separately, not automatically treated as disrespect.
-- *Cross-party reference context* — out-party references plus comity, disrespect, or misconduct
-  terms nearby, reported both per 1,000 words and per 100 reference contexts. Proximity does not
-  prove that the phrase targets the party.
-- *Sentiment / "toxicity"* — VADER sentence-level compound + negative-affect share (see the
-  toxicity section below for exactly what this means and how we validate it).
+- *Formal courtesy* — parliamentary address and deference ("the gentleman from",
+  "my distinguished colleague", "I yield").
+- *Profanity* — a hand-curated list of genuine curse and obscene forms, split into mild and
+  strong tiers, excluding neutral topical terms ("sex trafficking", "erected").
+- *Ethnic slurs* — US ethnic slurs drawn from Wikipedia's *List of ethnic slurs* and
+  cross-checked against the Kaggle *Profanities in English* collection. Forms that are also
+  ordinary words or names ("chink in the armor", "Redskins", "Jim Crow") are audit-only and
+  never scored. See `analysis/score/lexicons/slurs_provenance.tsv`.
 
-**Keyword matching is usually fuzzy.** Most lexicon terms are matched with morphological variants
-(plurals and verb forms: "colleague"→"colleagues", "coward"→"cowards"; irregular plurals like
-"gentleman"→"gentlemen"), so recall doesn't hinge on listing every inflection. (OCR noise in the
-pre-2011 scanned text is a known residual limitation — see caveats.) Profanity, identity slurs,
-and misconduct allegations use exact curated forms to avoid unsafe or ambiguous expansions.
+**Matching.** Formal courtesy uses morphological variants ("colleague"→"colleagues",
+"gentleman"→"gentlemen"). Profanity and ethnic slurs use exact curated forms to avoid unsafe or
+ambiguous expansions. A multi-word slur is counted once, not once per component word.
 
-> **On the word "toxicity."** There is no single ground-truth "toxicity" label for a
-> 150-year speech corpus. Here *toxicity* is only a shorthand for several disclosed lexical
-> signals; it is not a ground-truth label. The measures are transparent and reproducible, but
-> they miss sarcasm, quotation, some negation, and target identity. Optional checks below are
-> diagnostics, not independent human validation.
+> These are descriptive counts. They miss sarcasm and target identity, and a member who
+> repeats a slur to condemn it is still counted. OCR noise in pre-2011 scanned text is a known
+> residual limitation.
 """)
 
 code(r"""
@@ -156,10 +145,8 @@ def plot_by_chamber(metric, title, ylabel="hits per 1,000 words"):
     ax.legend(loc="best", frameon=False, labelcolor=theme.TEXT, fontsize=9)
     plt.show()
 
-plot_by_chamber("formal_courtesy_per_1k", "Formulaic courtesy / deference")
-plot_by_chamber("cooperation_per_1k", "Bipartisan cooperation language")
-plot_by_chamber("hostility_per_1k", "Personal disrespect / attack language")
-plot_by_chamber("misconduct_per_1k", "Misconduct allegation language")
+for spec in HEADLINE_METRICS:
+    plot_by_chamber(spec.rate, spec.title)
 """)
 
 md(r"""
@@ -180,8 +167,8 @@ def plot_metric(metric, title, ylabel="hits per 1,000 words", parties=("D","R"))
     plt.show()
     return fig
 
-METRIC = "comity_per_1k"
-plot_metric(METRIC, "Comity / deference phrases");
+METRIC = "profanity_strong_per_1k"
+plot_metric(METRIC, "Strong profanity");
 """)
 
 code(r"""
@@ -190,33 +177,11 @@ for spec in HEADLINE_METRICS:
     plot_metric(spec.rate, spec.title);
 """)
 
-code(r"""
-# Context-normalized cross-party diagnostics: share of out-party references whose
-# sentence/clause context (bounded at ±300 characters for OCR run-ons) contains each
-# language category. Separate nearby-intensity metrics use ±200-character windows.
-for metric, title in [
-    ("outgroup_comity_contexts_per_100_refs", "Out-party references with nearby comity"),
-    ("outgroup_hostility_contexts_per_100_refs", "Out-party references with nearby disrespect"),
-    ("outgroup_misconduct_contexts_per_100_refs", "Out-party references with nearby misconduct allegations"),
-]:
-    plot_metric(metric, title, ylabel="contexts per 100 references");
-""")
-
 md(r"""
-## 4. Toxicity — are we doing it right?
+## 4. Score a sample of turns
 
-"Toxicity" here is shorthand for disclosed signals: personal disrespect + profanity rates and
-**VADER** negative sentiment. Two methodological points we get right:
-
-1. **Sentence-level VADER.** VADER's `compound` score saturates on long text, so scoring a whole
-   speech (or a fixed truncation of it) is biased. `Scorers._sentiment` splits each turn into
-   sentences, scores each, and averages — the granularity VADER is designed for — and reports the
-   mean **negative-affect share**.
-2. **Word-weighted rates.** Lexicon counts are normalised per 1,000 words, never compared as raw
-   counts across eras of differing verbosity.
-
-Below we score a real sample of source turns and inspect whether lexical signals and VADER agree.
-Correlation is a diagnostic, not proof that either measure is ground truth.
+Score real source turns with the production scorer and inspect which spans matched. Reading
+the matches is the quickest way to judge whether a count reflects the speaker's own language.
 """)
 
 code(r"""
@@ -231,70 +196,38 @@ sample = (pd.read_parquet(recent[-1], columns=["party","text","is_procedural"])
             .query("~is_procedural and text.str.len() > 0", engine="python")
             .sample(2000, random_state=0))
 
-scorer = Scorers(use_sentiment=True)   # VADER on (this smaller sample only)
+scorer = Scorers()
 scored = sample.assign(**pd.DataFrame(
-    [scorer.score_turn(t, p) for t, p in zip(sample.text, sample.party)],
-    index=sample.index)[["n_words","hostility_hits","profanity_hits","sentiment","neg_share"]])
-scored["hostility_per_1k"] = 1000*scored.hostility_hits/scored.n_words.clip(lower=1)
-scored["profanity_per_1k"] = 1000*scored.profanity_hits/scored.n_words.clip(lower=1)
-scored[["party","n_words","hostility_per_1k","profanity_per_1k","sentiment","neg_share"]].describe()
+    [scorer.score_turn(t) for t in sample.text], index=sample.index))
+for key, rate in (("formal_courtesy_hits", "formal_courtesy_per_1k"),
+                  ("profanity_hits", "profanity_per_1k"),
+                  ("ethnic_slur_hits", "ethnic_slurs_per_1k")):
+    scored[rate] = 1000 * scored[key] / scored.n_words.clip(lower=1)
+scored.groupby("party")[["formal_courtesy_per_1k","profanity_per_1k","ethnic_slurs_per_1k"]].mean()
 """)
 
 code(r"""
-# Do the independent negativity signals agree? (lexical hostility/profanity vs VADER)
-corr = scored[["hostility_per_1k","profanity_per_1k","neg_share","sentiment"]].corr(method="spearman")
-print("Spearman correlations among negativity signals:")
-try:
-    display(corr.round(2))          # rich table in Jupyter
-except NameError:
-    print(corr.round(2))            # plain output elsewhere
-print("\nInterpret correlations descriptively. Weak agreement means the signals capture different "
-      "facets; even strong agreement would not establish accuracy.")
+# Show the matched spans in a few turns that contain profanity or an ethnic slur.
+flagged = scored[(scored.profanity_hits > 0) | (scored.ethnic_slur_hits > 0)].head(5)
+for text in flagged.text:
+    for signal, spans in scorer.signal_spans(text).items():
+        for start, end in spans:
+            print(f"{signal:16s} ...{text[max(0, start-60):end+60]}...")
+    print()
 """)
 
 md(r"""
-## 5. Optional: validate against a real toxicity model (Detoxify)
+## 5. Caveats
 
-The cell below is **optional and heavy** (installs `torch` + `transformers` and downloads a
-model). It runs the Detoxify `original` classifier on a small sample and correlates its
-`toxicity` probability with our lexical proxy. A positive correlation is evidence the fast
-lexical measure tracks a modern toxicity model. That is a robustness diagnostic, not validation
-against independent human ground truth.
-
-Uncomment and run only if you want the validation (it does not affect the pipeline).
-""")
-
-code(r"""
-# --- OPTIONAL: real transformer toxicity validation (slow; needs internet + torch) ---
-# import subprocess, sys
-# subprocess.run([sys.executable, "-m", "pip", "install", "-q", "detoxify"], check=True)
-# from detoxify import Detoxify
-# val = scored.sample(200, random_state=1).copy()
-# tox = Detoxify("original").predict(list(val.text.str.slice(0, 2000)))["toxicity"]
-# val["detoxify_toxicity"] = tox
-# print("Spearman(lexical hostility/1k, Detoxify toxicity):",
-#       round(val["hostility_per_1k"].corr(val["detoxify_toxicity"], method="spearman"), 3))
-# print("Spearman(VADER neg_share,     Detoxify toxicity):",
-#       round(val["neg_share"].corr(val["detoxify_toxicity"], method="spearman"), 3))
-print("Optional Detoxify validation cell — uncomment the lines above to run it.")
-""")
-
-md(r"""
-## 6. Caveats
-
-- **Lexicons are literal.** They miss sarcasm, many forms of negation, and **quotation** — a
-  member reading an opponent's words is scored as if they were their own. Profanity/attacks on
-  the floor also often appear inside quoted material.
-- **VADER is lexical**, tuned for modern English; 19th-century phrasing is out-of-distribution.
+- **Lexicons are literal.** They miss sarcasm and many forms of negation. Quoted material is
+  excluded from member-level rates, but a member who repeats a slur to describe or condemn it
+  is still counted.
+- **Party = speaker's party**, not the target's.
 - **Source discontinuity at 2017** (hein → GovInfo) — the dotted line on every chart. Treat
   cross-boundary jumps cautiously; compare within-source trends.
 - **Segmentation error** on the GovInfo side (regex speaker splitting) is measured but non-zero.
-- **Party = speaker's party**, not the target's; "directed" measures use a text window around
-  out-group references. They are labelled "near out-party references" because proximity alone
-  does not prove who is being addressed.
-- **Model-assisted validation is not human ground truth.** Completed rubric grading uses only real,
-  blinded source passages, two independent model passes, disagreement adjudication, confidence,
-  rationale, and preserved `turn_id` provenance.
+- **Validation must be re-run for codebook v5.** Earlier precision/recall figures were measured
+  on the previous codebook.
 """)
 
 def main() -> None:

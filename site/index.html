@@ -1208,6 +1208,9 @@ function renderSelectedHighlight(language) {
 
 function renderRecentFocus() {
   if (!currentLanguage) return;
+  if (!currentLanguage.metrics[selectedRecentMetric]) {
+    selectedRecentMetric = Object.keys(currentLanguage.metrics)[0];
+  }
   renderTermExplorer(currentLanguage);
   Object.keys(currentLanguage.metrics).forEach(
     key => renderLanguageTable(currentLanguage, key)

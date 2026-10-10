@@ -47,9 +47,8 @@ def test_compiled_lexicons_are_identical_across_hash_seeds():
         from analysis.score.scorers import Scorers
         s = Scorers()
         h = hashlib.sha256()
-        for name in ("formal_courtesy", "gratitude_praise", "cooperation",
-                     "hostility", "misconduct", "ideological_labels", "outgroup_idiom"):
-            lex = getattr(s, name)
+        lexicons = [s.formal_courtesy, s.ethnic_slurs, *s.profanity.values()]
+        for lex in lexicons:
             h.update((lex.phrase_re.pattern if lex.phrase_re else "").encode())
             h.update(repr(sorted(lex.singles)).encode())
         print(h.hexdigest())
@@ -63,11 +62,10 @@ def test_scores_are_identical_across_hash_seeds():
         from analysis.score.scorers import Scorers
         s = Scorers()
         text = (
-            "I thank my friend and distinguished colleague. We must reach across "
-            "the aisle and work across party lines with our Republican colleagues, "
-            "who have shown willingness to work together in good faith."
+            "I thank my friend and distinguished colleague, the gentlewoman from Ohio. "
+            "What the hell is this damn bullshit? He called them a sand nigger."
         )
-        got = s.score_turn(text, "D")
+        got = s.score_turn(text)
         print(sorted((k, round(float(v), 6)) for k, v in got.items()))
     """
     results = {_run_with_seed(seed, body) for seed in ("0", "1", "12345")}

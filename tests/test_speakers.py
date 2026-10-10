@@ -357,7 +357,7 @@ def _daily(rows):
     return pd.DataFrame(rows, columns=[
         "bioguide", "date", "chamber", "speaker_name", "party", "state", "congress",
         "turns", "words", "profanity_hits", "profanity_quoted_hits",
-        "hostility_hits", "misconduct_hits",
+        "ethnic_slur_hits", "ethnic_slur_quoted_hits",
     ])
 
 
@@ -466,8 +466,7 @@ def test_language_timeseries_uses_months_and_compares_parties():
     assert set(scoped.index.get_level_values("period")) == {"2025-01", "2025-02"}
     january = scoped.loc[("2025-01", "D")]
     assert january["profanity_per_100k"] == pytest.approx(100.0)
-    assert january["hostility_per_100k"] == pytest.approx(100.0)
-    assert january["misconduct_per_100k"] == pytest.approx(200.0)
+    assert january["ethnic_slurs_per_100k"] == pytest.approx(100.0)
     assert int(scoped["words"].sum()) == 20_000
 
     all_years = language_timeseries(daily)
@@ -498,12 +497,10 @@ def test_language_member_rates_keep_measures_separate_and_apply_threshold():
     rankings = language_member_rates(daily, 119, min_words=25_000, top=5)
     assert set(rankings) == set(LANGUAGE_METRICS)
     assert list(rankings["profanity"]["speaker_name"]) == ["Alpha", "Beta"]
-    assert rankings["hostility"].iloc[0]["speaker_name"] == "Beta"
-    assert rankings["misconduct"].iloc[0]["speaker_name"] == "Beta"
+    assert rankings["slurs"].iloc[0]["speaker_name"] == "Beta"
     assert "Tiny" not in set(rankings["profanity"]["speaker_name"])
     assert "Zero" not in set(rankings["profanity"]["speaker_name"])
-    assert "Zero" not in set(rankings["hostility"]["speaker_name"])
-    assert "Zero" not in set(rankings["misconduct"]["speaker_name"])
+    assert "Zero" not in set(rankings["slurs"]["speaker_name"])
     alpha = rankings["profanity"].set_index("bioguide").loc["A"]
     assert alpha["profanity_per_100k"] == pytest.approx(25.0)
     assert alpha["favorite_profanity_term"] == "damn"

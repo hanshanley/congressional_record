@@ -1,17 +1,282 @@
-# High-precision identity slurs tracked separately from profanity.
-# Every hit is context-sensitive: historical debates frequently quote, condemn, or read
-# these words into the Record. Occurrence never establishes speaker endorsement.
+# Ethnic slurs used in the United States: exact, high-precision surface forms.
+# Primary source: Wikipedia, "List of ethnic slurs" (retrieved 2026-10-10). A row is in scope when
+# its "Location or origin" lists the United States, North America, worldwide use, or a US speech
+# community, or when its location is blank and its targets or notes tie it to American usage.
+# Cross-checked against Kaggle "Profanities in English" (konradb/profanities-in-english-collection,
+# category "racial / ethnic slurs"); real US spellings missing from Wikipedia were added, while
+# leetspeak and obfuscated spellings were not, because they do not occur in the printed Record.
+# Only forms whose main meaning is the slur are scored. Forms that are also ordinary words,
+# names, places, products, or legal/historical terms are in slurs_ambiguous_audit.txt or are
+# not matched; slurs_provenance.tsv records the decision for every source row.
+# Occurrence never establishes endorsement: the Record quotes, condemns, and reads in slurs.
+nigger rigging
+nigger rigged
+nigger-rigged
+nigger-rigging
 beaner
-faggot
+beaners
+boche
+boches
+bogtrotter
+bogtrotters
+bog-trotter
+bog-trotters
+bohunk
+bohunks
+bootlip
+bootlips
+buddhahead
+buddhaheads
+buckra
+buckras
+burrhead
+burrheads
+burr-head
+burr-heads
+china swede
+china swedes
+cheese-eating surrender monkey
+cheese-eating surrender monkeys
+chinaman
+chinamen
+ching chong
+chinky
+chinkies
+coolie
+coolies
+coonass
+coonasses
+coon-ass
+coon-asses
+curry-muncher
+curry-munchers
+curry muncher
+curry munchers
+dago
+dagos
+dagoes
+dego
+degos
+darky
+darkey
+darkie
+darkies
+darkeys
+dothead
+dotheads
+dot-head
+dot-heads
+dune coon
+dune coons
+eyetie
+eyeties
+frogeater
+frogeaters
+frog-eater
+frog-eaters
+golliwog
+golliwogs
+golliwogg
+golliwoggs
 gook
-half-breed
+gooks
+gooky
+gook-eye
+gook-eyed
+greaseball
+greaseballs
+groid
+groids
+ginzo
+ginzos
+heeb
+heebs
+honky
+honkey
+honkie
+honkies
+honkeys
+hymie
+hymies
+hymietown
+indian giver
+indian givers
+indian giving
 injun
+injuns
+jap
+japs
+jewboy
+jewboys
+jew-boy
+jew-boys
+jiggaboo
+jiggaboos
+jigaboo
+jigaboos
+jiggerboo
+niggerboo
+jiggabo
+jigarooni
+jijjiboo
+zigabo
+zigaboo
+jungle bunny
+jungle bunnies
 kike
-nigga
+kikes
+kraut
+krauts
+limey
+limeys
+mayonnaise monkey
+mayonnaise monkeys
+moon cricket
+moon crickets
+mulignan
+mulignans
+mulignon
+moolinyan
+moolinyans
 nigger
+niggers
+nigga
+niggas
+niggaz
+niggah
+niggahs
+nigguh
+niggar
+niggur
+nigor
+nigre
+niggress
+nigette
+nigra
+nigras
+ofay
+ofays
+pajeet
+pajeets
+paleface
+palefaces
+peckerwood
+peckerwoods
+pickaninny
+pickaninnies
+piccaninny
+piccaninnies
+portagee
+portagees
+portugee
+portugees
+prairie nigger
+prairie niggers
 raghead
-redskin
+ragheads
+rag-head
+rag-heads
+rastus
+russki
+russkies
+ruski
+ruskies
 sambo
+sambos
+sand nigger
+sand niggers
+sandnigger
+sandniggers
+scandihoovian
+scandihoovians
+sheboon
+sheboons
+sheeny
+sheenies
+sheenie
+shitskin
+shitskins
+shitlip
+shitlips
+slopehead
+slopeheads
+smoked irish
+smoked irishman
+smoked irishmen
+spearchucker
+spearchuckers
+spear chucker
+spear chuckers
+spear-chucker
+spear-chuckers
 spic
+spics
+spigotty
+timber nigger
+timber niggers
 towelhead
+towelheads
+towel head
+towel heads
+towel-head
+towel-heads
+wagon burner
+wagon burners
 wetback
+wetbacks
+white chimpanzee
+white chimpanzees
+white nigger
+white niggers
+nigger wop
+nigger wops
+white trash
+wigger
+wiggers
+whigger
+whiggers
+wigga
+wiggas
+whigga
+whiggas
+wop
+wops
+zipperhead
+zipperheads
+niglet
+niglets
+nignog
+nignogs
+nig-nog
+nig-nogs
+niggerz
+nigguhs
+niggahz
+kyke
+kykes
+jiggabu
+jiggyboo
+jigro
+jiggerboos
+jiggabooboo
+slanteye
+slanteyes
+slant-eye
+slant-eyes
+slant eye
+slant eyes
+slant-eyed
+slanty
+porch monkey
+porch monkeys
+camel jockey
+camel jockeys
+oven dodger
+oven dodgers
+tacohead
+tacoheads
+chingchong
+rice monkey
+rice monkeys
+wophead
+wopheads

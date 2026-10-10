@@ -48,17 +48,13 @@ LANGUAGE_METRICS = {
         "label": "Profanity",
         "definition": "Unquoted matches from a narrow, curated profanity list.",
     },
-    "hostility": {
-        "hits": "hostility_hits",
-        "rate": "hostility_per_100k",
-        "label": "Personal hostility / disrespect",
-        "definition": "Curated personal attack and disrespect terms.",
-    },
-    "misconduct": {
-        "hits": "misconduct_hits",
-        "rate": "misconduct_per_100k",
-        "label": "Misconduct allegations",
-        "definition": "Curated language alleging corruption, abuse, or other misconduct.",
+    "slurs": {
+        "hits": "ethnic_slur_hits",
+        "rate": "ethnic_slurs_per_100k",
+        "label": "Ethnic slurs",
+        "definition": (
+            "Unquoted matches from a curated list of ethnic slurs used in the United States."
+        ),
     },
 }
 
@@ -78,7 +74,12 @@ _READ_COLS = [
 
 # Emitted per (bioguide, date, chamber) group.
 _COUNT_KEYS = ("turns", "words", "profanity_hits", "profanity_quoted_hits",
-               "hostility_hits", "misconduct_hits")
+               "ethnic_slur_hits", "ethnic_slur_quoted_hits")
+# Columns written by earlier codebooks; dropped on load.
+_RETIRED_COLUMNS = ("hostility_hits", "misconduct_hits")
+# Count columns added after rows were first stored. Older rows carry nulls until they are
+# rescored, so a measure is only reported for a scope whose rows are all populated.
+_BACKFILLED_COLUMNS = ("ethnic_slur_hits", "ethnic_slur_quoted_hits")
 _TERM_COUNTS_COLUMN = "profanity_terms"
 
 # Raw surface forms remain stored for auditability. Member summaries group only
@@ -99,15 +100,14 @@ PROFANITY_TERM_FAMILIES = {
     "effing": ("effing",),
     "bullshit": (
         "bullshit", "bull shit", "bullshitted", "bullshitter",
-        "bullshitters", "bullshitting",
-    ),
+        "bullshitters", "bullshitting", "bullshite"),
     "horseshit": ("horseshit",),
-    "shit": ("shit", "shits", "shitting", "shitty"),
+    "shit": ("shit", "shits", "shitting", "shitty", "shitted"),
     "apeshit": ("apeshit",),
     "batshit": ("batshit",),
     "chickenshit": ("chickenshit",),
     "dipshit": ("dipshit", "dipshits"),
-    "dogshit": ("dogshit",),
+    "dogshit": ("dogshit", "dogshits"),
     "shit bag": ("shit bag", "shit bags", "shitbag", "shitbags"),
     "shithead": ("shithead", "shitheads"),
     "shithole": ("shithole", "shitholes"),
@@ -118,12 +118,16 @@ PROFANITY_TERM_FAMILIES = {
         "fuck off", "fuck you", "fuck up", "fucked up", "fucking up",
     ),
     "fuckup": ("fuckup", "fuckups"),
-    "clusterfuck": ("clusterfuck", "clusterfucks"),
+    "clusterfuck": (
+        "clusterfuck", "clusterfucks", "clusterfucked", "clusterfucking", "clusterfucker",
+    ),
     "motherfucker": (
         "motherfuck", "motherfucked", "motherfucks", "motherfucker",
         "motherfuckers", "motherfucking", "motherfuckin", "mother fucker",
         "mother fuckers", "mother fucking", "mother fuckin", "mothafucka",
-        "mothafuckas", "mothafucker", "mothafuckers",
+        "mothafuckas", "mothafucker", "mothafuckers", "mothafuck", "mothafucked",
+        "mothafuckin", "mothafucking", "mothafucks", "muthafucka", "muthafuckers",
+        "mutherfucker", "mutherfuckers", "mofo", "mofos",
     ),
     "ass": (
         "ass", "asses", "half-assed", "kick ass", "kicked ass", "kicking ass",
@@ -142,12 +146,13 @@ PROFANITY_TERM_FAMILIES = {
     "bitch": (
         "bitch", "bitches", "bitching", "bitchy",
         "son of a bitch", "son-of-a-bitch", "sons of bitches", "sons-of-bitches",
+        "bitched", "bitchin", "sonofabitch", "sumbitch",
     ),
-    "piss off": ("piss off", "pissed off", "pisses off", "pissing off"),
+    "piss off": ("piss off", "pissed off", "pisses off", "pissing off", "pissoff", "pissoffs"),
     "screw you": ("screw you",),
     "arsehole": ("arsehole", "arseholes"),
-    "bollocks": ("bollocks",),
-    "cunt": ("cunt", "cunts"),
+    "bollocks": ("bollocks", "bollock"),
+    "cunt": ("cunt", "cunts", "cunty"),
     "dickhead": ("dickhead", "dickheads"),
     "douchebag": ("douchebag", "douchebags"),
     "cocksucker": (
@@ -156,6 +161,42 @@ PROFANITY_TERM_FAMILIES = {
     ),
     "twat": ("twat", "twats"),
     "wanker": ("wanker", "wankers"),
+    "fuckface": ("fuckface", "fuckfaces"),
+    "fuckhead": ("fuckhead", "fuckheads", "fuckheaded"),
+    "fucktard": ("fucktard", "fucktards"),
+    "fuckwad": ("fuckwad",),
+    "fuckstick": ("fuckstick",),
+    "fucknuckle": ("fucknuckle",),
+    "fuckboy": ("fuckboy",),
+    "fuckbag": ("fuckbag",),
+    "fuckass": ("fuckass", "fuckasses"),
+    "dumbfuck": ("dumbfuck", "dumbfucks"),
+    "mindfuck": ("mindfuck",),
+    "assfucker": (
+        "assfuck", "assfucker", "assfuckers", "ass-fucker", "ass-fuckers", "arsefuck",
+        "arsefucker", "arse-fucker", "arse-fuckers",
+    ),
+    "buttfucker": ("buttfuck", "buttfucker", "buttfuckers", "butt-fucker", "butt-fuckers"),
+    "pigfucker": ("pigfucker", "pigfuckers"),
+    "dogfucker": ("dog-fucker",),
+    "shite": ("shite", "shites"),
+    "gobshite": ("gobshite",),
+    "shitface": ("shitface", "shitfaced"),
+    "shitter": ("shitter",),
+    "shitass": ("shitass", "shitasses", "shit-ass"),
+    "shitbird": ("shitbird",),
+    "shitbrain": ("shitbrain",),
+    "dumbshit": ("dumbshit",),
+    "pigshit": ("pigshit",),
+    "assface": ("assface",),
+    "assmunch": ("assmunch", "assmuncher"),
+    "bitchass": ("bitchass", "bitchasses"),
+    "punkass": ("punkass", "punkasses"),
+    "cuntbag": ("cuntbag",),
+    "cuntlicker": ("cuntlicker", "cuntlickers"),
+    "twatface": ("twatface",),
+    "wank": ("wank", "wanks", "wanked", "wanking"),
+    "taking the piss": ("taking the piss",),
 }
 _TERM_FAMILY_BY_FORM = {
     form: family
@@ -244,6 +285,21 @@ def _ensure_profanity_terms(frame: pd.DataFrame) -> pd.DataFrame:
     return result
 
 
+def _normalize_columns(frame: pd.DataFrame) -> pd.DataFrame:
+    """Drop retired count columns and add not-yet-backfilled ones as nulls."""
+    result = frame.drop(columns=[c for c in _RETIRED_COLUMNS if c in frame])
+    for column in _BACKFILLED_COLUMNS:
+        if column not in result:
+            result[column] = pd.array([pd.NA] * len(result), dtype="Int64")
+    return _ensure_profanity_terms(result)
+
+
+def language_metric_available(frame: pd.DataFrame, key: str) -> bool:
+    """Whether every row in ``frame`` has been scored for a language measure."""
+    column = LANGUAGE_METRICS[key]["hits"]
+    return column in frame and not frame[column].isna().any()
+
+
 def mask_quotations(text: str) -> Tuple[str, str]:
     """Return ``(spoken, quoted)`` -- the text outside and inside quotation marks.
 
@@ -310,8 +366,8 @@ def speaker_counts(
             text = row.get("text") or ""
             spoken, quoted = mask_quotations(text)
             party = row.get("party") or "other"
-            scored = scorers.score_turn(spoken, party)
-            quoted_scored = scorers.score_turn(quoted, party) if quoted else None
+            scored = scorers.score_turn(spoken)
+            quoted_scored = scorers.score_turn(quoted) if quoted else None
             turn_terms = scorers.profanity_term_counts(spoken)
             if sum(turn_terms.values()) != int(scored["profanity_hits"]):
                 raise RuntimeError(
@@ -325,10 +381,10 @@ def speaker_counts(
             bucket["words"] += scored["n_words"]
             bucket["profanity_hits"] += scored["profanity_hits"]
             profanity_terms[key].update(turn_terms)
-            bucket["hostility_hits"] += scored["hostility_hits"]
-            bucket["misconduct_hits"] += scored["misconduct_hits"]
+            bucket["ethnic_slur_hits"] += scored["ethnic_slur_hits"]
             if quoted_scored is not None:
                 bucket["profanity_quoted_hits"] += quoted_scored["profanity_hits"]
+                bucket["ethnic_slur_quoted_hits"] += quoted_scored["ethnic_slur_hits"]
 
             # Congress belongs to the *row*, not to the member. Taking it from the
             # member's latest metadata would relabel a long-serving member's whole
@@ -377,14 +433,14 @@ def merge_daily(existing: Optional[pd.DataFrame], fresh: pd.DataFrame) -> pd.Dat
     Fresh rows win for any ``(bioguide, date, chamber)`` they cover, so re-running a
     day repairs it instead of double counting.
     """
-    fresh = _ensure_profanity_terms(fresh)
+    fresh = _normalize_columns(fresh)
     if existing is None or existing.empty:
         combined = fresh
     elif fresh.empty:
-        combined = _ensure_profanity_terms(existing)
+        combined = _normalize_columns(existing)
     else:
         combined = pd.concat([
-            _ensure_profanity_terms(existing),
+            _normalize_columns(existing),
             fresh,
         ], ignore_index=True)
         combined = combined.drop_duplicates(
@@ -419,11 +475,11 @@ def load_daily(path: Path) -> Optional[pd.DataFrame]:
         parts = sorted(path.glob("congress_*.parquet"))
         if not parts:
             return None
-        return _ensure_profanity_terms(
+        return _normalize_columns(
             pd.concat([pd.read_parquet(p) for p in parts], ignore_index=True)
         )
     if path.exists():
-        return _ensure_profanity_terms(pd.read_parquet(path))
+        return _normalize_columns(pd.read_parquet(path))
     return None
 
 
@@ -433,7 +489,7 @@ def save_daily(frame: pd.DataFrame, path: Path) -> List[Path]:
     Only partitions whose contents actually changed are rewritten, so an update that
     touches a single Congress produces a single-file diff.
     """
-    frame = _ensure_profanity_terms(frame)
+    frame = _normalize_columns(frame)
     path.mkdir(parents=True, exist_ok=True)
     written: List[Path] = []
     for congress, group in frame.groupby("congress", sort=True):

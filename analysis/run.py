@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Orchestrate the congressional-comity analysis pipeline.
+"""Orchestrate the congressional courtesy, profanity, and ethnic-slur analysis pipeline.
 
 Subcommands:
     ingest-hein         Parse the Stanford hein zips into unified turn parquet.
     ingest-govinfo      Segment downloaded GovInfo CREC granules into turn parquet.
     ingest-govinfo-bulk Fast GovInfo ingest via whole-day package zips (no API rate limit).
-    aggregate           Score all turns and write the civility metrics table.
+    aggregate           Score all turns and write the metrics table.
     calibrate           Compare Hein and GovInfo in the 1994-2016 overlap.
     sample-validation   Build a blinded, real-text validation sample.
     viz                 Render charts from the metrics table.
@@ -14,7 +14,7 @@ Subcommands:
 Examples
 --------
     python -m analysis.run ingest-hein --congresses 097 104 114
-    python -m analysis.run aggregate --sentiment
+    python -m analysis.run aggregate
     python -m analysis.run viz
     python -m analysis.run all
 """
@@ -79,7 +79,6 @@ def cmd_aggregate(args) -> int:
 
     df = score_and_aggregate(
         INTERIM / "turns", PROCESSED,
-        use_sentiment=args.sentiment,
         include_procedural=args.include_procedural,
         incremental=not args.full,
     )
@@ -147,7 +146,6 @@ def main(argv=None) -> int:
     pgb.set_defaults(func=cmd_ingest_govinfo_bulk)
 
     pa = sub.add_parser("aggregate")
-    pa.add_argument("--sentiment", action="store_true", help="Also compute VADER sentiment (slower).")
     pa.add_argument("--include-procedural", action="store_true", help="Keep procedural/chair turns.")
     pa.add_argument(
         "--full",
@@ -171,7 +169,6 @@ def main(argv=None) -> int:
 
     pall = sub.add_parser("all")
     pall.add_argument("--congresses", nargs="+", default=None)
-    pall.add_argument("--sentiment", action="store_true")
     pall.add_argument("--include-procedural", action="store_true")
     pall.add_argument("--full", action="store_true", help="Rescore every shard, ignoring the cache.")
     pall.set_defaults(func=cmd_all)

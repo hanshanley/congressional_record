@@ -11,14 +11,11 @@ from typing import List
 import pandas as pd
 
 from analysis.plotting import charts, theme
-from analysis.score.registry import HEADLINE_METRICS, METRICS
+from analysis.score.registry import HEADLINE_METRICS
 
 LOG = logging.getLogger("analysis.calibrate")
 
-CALIBRATION_METRICS = tuple(
-    metric for metric in METRICS
-    if metric in HEADLINE_METRICS or metric.denominator == "outgroup_refs"
-)
+CALIBRATION_METRICS = HEADLINE_METRICS
 
 
 def _source_family(source: str) -> str:
@@ -33,16 +30,14 @@ def _aggregate_sources(df: pd.DataFrame) -> pd.DataFrame:
     df["source_family"] = df["source"].map(_source_family)
     raw_cols = sorted({
         metric.raw_count for metric in CALIBRATION_METRICS
-    } | {"words", "outgroup_refs"})
+    } | {"words"})
     grouped = df.groupby(
         ["source_family", "congress", "year", "chamber", "party"], as_index=False
     )[raw_cols].sum()
     words = grouped["words"].where(grouped["words"] != 0)
-    refs = grouped["outgroup_refs"].where(grouped["outgroup_refs"] != 0)
     for metric in CALIBRATION_METRICS:
-        denominator = words if metric.denominator == "words" else refs
         grouped[metric.rate] = (
-            metric.scale * grouped[metric.raw_count] / denominator
+            metric.scale * grouped[metric.raw_count] / words
         ).fillna(0.0)
     return grouped
 
@@ -175,7 +170,7 @@ def _plot_calibrated_overview(
     import matplotlib.pyplot as plt
 
     theme.apply()
-    fig, axes = plt.subplots(2, 3, figsize=(16, 9))
+    fig, axes = plt.subplots(1, len(HEADLINE_METRICS), figsize=(16, 5.2), squeeze=False)
     for ax, metric in zip(axes.flat, HEADLINE_METRICS):
         column = f"{metric.rate}_source_calibrated"
         for party in ("D", "R"):
@@ -192,7 +187,7 @@ def _plot_calibrated_overview(
         charts.marker_line(ax, boundary_year)
         charts.style_axes(ax, metric.title, "Congress (convening year)", metric.units)
     axes.flat[0].legend(frameon=False, labelcolor=theme.TEXT)
-    fig.suptitle("Source-calibrated congressional discourse components", fontweight="bold")
+    fig.suptitle("Source-calibrated courtesy, profanity, and ethnic slurs", fontweight="bold")
     theme.source_note(
         fig,
         "Dots are Congress values; lines are centered 5-Congress means. GovInfo is mapped to "

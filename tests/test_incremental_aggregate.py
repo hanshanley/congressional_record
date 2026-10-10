@@ -160,7 +160,7 @@ def test_new_congress_file_is_picked_up(corpus):
 def test_lexicon_change_invalidates_every_shard(corpus, monkeypatch, tmp_path):
     root, turns = corpus
     _metrics(turns, root / "out", incremental=True)
-    baseline = config_fingerprint(False, False)
+    baseline = config_fingerprint(False)
 
     # Point the scorer at a modified lexicon directory; the fingerprint must move.
     from analysis.score import scorers as scorers_module
@@ -169,16 +169,14 @@ def test_lexicon_change_invalidates_every_shard(corpus, monkeypatch, tmp_path):
     fake_lex.mkdir()
     for src in Path(scorers_module.LEXDIR).glob("*.txt"):
         (fake_lex / src.name).write_bytes(src.read_bytes())
-    (fake_lex / "hostility.txt").write_text("newword\n", encoding="utf-8")
+    (fake_lex / "slurs.txt").write_text("newword\n", encoding="utf-8")
     monkeypatch.setattr(scorers_module, "LEXDIR", fake_lex)
 
-    assert config_fingerprint(False, False) != baseline
+    assert config_fingerprint(False) != baseline
 
 
 def test_scoring_flags_are_part_of_the_fingerprint():
-    base = config_fingerprint(False, False)
-    assert config_fingerprint(True, False) != base
-    assert config_fingerprint(False, True) != base
+    assert config_fingerprint(True) != config_fingerprint(False)
 
 
 def test_display_only_changes_do_not_invalidate_the_cache(tmp_path):
@@ -192,49 +190,49 @@ def test_display_only_changes_do_not_invalidate_the_cache(tmp_path):
 
     registry_path = Path(registry_module.__file__)
     original = registry_path.read_text(encoding="utf-8")
-    base = config_fingerprint(False, False)
+    base = config_fingerprint(False)
     try:
         registry_path.write_text(
-            original.replace('"words", 1000, "profanity", "Profanity",',
-                             '"words", 1000, "profanity", "Swearing",'),
+            original.replace('"profanity", "Profanity", "negative"',
+                             '"profanity", "Swearing", "negative"'),
             encoding="utf-8",
         )
         importlib.reload(registry_module)
         importlib.reload(aggregate_module)
-        assert config_fingerprint(False, False) == base
+        assert config_fingerprint(False) == base
     finally:
         registry_path.write_text(original, encoding="utf-8")
         importlib.reload(registry_module)
         importlib.reload(aggregate_module)
-    assert config_fingerprint(False, False) == base
+    assert config_fingerprint(False) == base
 
 
 def test_changing_an_accumulated_score_key_invalidates_the_cache(monkeypatch):
     import analysis.aggregate as aggregate_module
     import analysis.score.registry as registry_module
 
-    base = config_fingerprint(False, False)
+    base = config_fingerprint(False)
     monkeypatch.setattr(
         registry_module, "SCORE_KEYS", tuple(registry_module.SCORE_KEYS) + ("new_key",)
     )
-    assert config_fingerprint(False, False) != base
+    assert config_fingerprint(False) != base
     monkeypatch.undo()
     monkeypatch.setattr(
         aggregate_module, "_SUM_KEYS", list(aggregate_module._SUM_KEYS) + ["extra"]
     )
-    assert config_fingerprint(False, False) != base
+    assert config_fingerprint(False) != base
 
 
 def test_changing_the_shard_scoring_function_invalidates_the_cache(monkeypatch):
     import analysis.aggregate as aggregate_module
 
-    base = config_fingerprint(False, False)
+    base = config_fingerprint(False)
 
     def _replacement(shard, scorers, include_procedural):  # different source text
         return {}, {}
 
     monkeypatch.setattr(aggregate_module, "_score_shard", _replacement)
-    assert config_fingerprint(False, False) != base
+    assert config_fingerprint(False) != base
 
 
 def test_changed_fingerprint_discards_cached_entries(corpus):
@@ -245,7 +243,7 @@ def test_changed_fingerprint_discards_cached_entries(corpus):
     payload["config_fingerprint"] = "stale-fingerprint"
     cache_file.write_text(json.dumps(payload), encoding="utf-8")
 
-    cache = ShardCache(cache_file, config_fingerprint(False, False))
+    cache = ShardCache(cache_file, config_fingerprint(False))
     shards = plan_shards(sorted(turns.glob("*.parquet")))
     assert all(cache.get(shard) is None for shard in shards)
 

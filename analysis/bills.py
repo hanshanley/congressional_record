@@ -353,7 +353,7 @@ def speech_member_totals(
             "bioguide", "speaker_name", "party", "state", "chamber", "turns",
             "words", "active_days", "profanity_hits", "profanity_quoted_hits",
             "profanity_terms", "favorite_profanity_term",
-            "favorite_profanity_term_hits", "hostility_hits", "misconduct_hits",
+            "favorite_profanity_term_hits",
         ])
     from analysis.speakers import combine_profanity_terms, favorite_profanity_term
 
@@ -371,8 +371,6 @@ def speech_member_totals(
         profanity_hits=("profanity_hits", "sum"),
         profanity_quoted_hits=("profanity_quoted_hits", "sum"),
         profanity_terms=("profanity_terms", combine_profanity_terms),
-        hostility_hits=("hostility_hits", "sum"),
-        misconduct_hits=("misconduct_hits", "sum"),
     )
     favorites = grouped["profanity_terms"].map(favorite_profanity_term)
     grouped["favorite_profanity_term"] = favorites.map(lambda value: value[0])
@@ -405,8 +403,7 @@ def member_activity(
     ])
     count_columns = [
         "turns", "words", "active_days", "profanity_hits",
-        "profanity_quoted_hits", "hostility_hits", "misconduct_hits",
-        "bills_sponsored", "bills_passed", "bills_enacted",
+        "profanity_quoted_hits", "bills_sponsored", "bills_passed", "bills_enacted",
     ]
     for column in count_columns:
         if column not in joined:
@@ -431,12 +428,9 @@ def member_activity(
         joined[column] = pd.to_numeric(
             joined[column], errors="coerce"
         ).fillna(0.0)
-    for metric in ("profanity", "hostility", "misconduct"):
-        joined[f"{metric}_per_100k"] = (
-            100_000
-            * joined[f"{metric}_hits"]
-            / joined["words"].where(joined["words"] > 0)
-        ).fillna(0.0)
+    joined["profanity_per_100k"] = (
+        100_000 * joined["profanity_hits"] / joined["words"].where(joined["words"] > 0)
+    ).fillna(0.0)
     return joined.sort_values("bioguide").reset_index(drop=True)
 
 

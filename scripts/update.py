@@ -80,9 +80,6 @@ def parse_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
         help="Rescore every shard, ignoring the aggregate cache.",
     )
     p.add_argument(
-        "--sentiment", action="store_true", help="Also compute VADER sentiment (slower)."
-    )
-    p.add_argument(
         "--include-procedural", action="store_true", help="Keep procedural/chair turns."
     )
     p.add_argument("--dry-run", action="store_true", help="Report the plan and exit.")
@@ -137,7 +134,6 @@ def step_aggregate(args) -> int:
     frame = score_and_aggregate(
         INTERIM / "turns",
         PROCESSED,
-        use_sentiment=args.sentiment,
         include_procedural=args.include_procedural,
         incremental=not args.full,
     )

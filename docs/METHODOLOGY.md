@@ -13,42 +13,34 @@ The separate `civility_metrics_by_source.parquet` retains both sources in overla
 
 ## Components
 
-The central registry is `analysis/score/registry.py`. It defines each raw count, denominator,
-scale, construct family, polarity, codebook version, and plot eligibility.
+The central registry is `analysis/score/registry.py`. It defines each raw count, scale, construct
+family, polarity, codebook version (`2026-10-v5`), and plot eligibility. Every rate uses words as
+the denominator.
 
-- **Formulaic courtesy**: conventional parliamentary address and deference.
-- **Gratitude/praise**: explicit thanks, praise, appreciation, commendation, or respect.
-- **Bipartisan cooperation**: explicit cross-aisle work or bipartisan spirit.
-- **Personal attack**: high-precision attacks on honesty, integrity, competence, character, or
-  fitness.
-- **Misconduct allegation**: exact curated language alleging corruption, fraud, bribery,
-  obstruction, abuse of power, or similar conduct. Direct negation patterns and selected
-  legal-title references are excluded. It is not evidence that misconduct occurred.
-- **Ideological label**: tracked separately and not automatically treated as disrespect.
-- **Profanity and identity slurs**: conservative curated exact forms rather than an exhaustive
-  dictionary. Ambiguous neutral vocabulary is excluded; slur occurrence requires quotation and
-  endorsement review.
+- **Formal courtesy**: conventional parliamentary address and deference.
+- **Profanity**: curated exact curse and obscene forms in a mild and a strong tier. Ambiguous
+  neutral vocabulary is excluded.
+- **Ethnic slurs**: curated exact US ethnic slurs. Ambiguous forms are kept in an audit-only list
+  and never scored. Occurrence does not imply endorsement; quotation and condemnation still need
+  review.
 
 Profanity candidates are cross-checked against the
-[LDNOOBW English list](https://github.com/LDNOOBW/List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words)
-and [Surge AI profanity dataset](https://github.com/mod-tc/profanity), then manually narrowed for
-congressional speech. Neither source is imported wholesale because both include terms that are
-neutral, topical, identity-related, or too context-dependent for reliable member attribution.
+[LDNOOBW English list](https://github.com/LDNOOBW/List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words),
+the [Surge AI profanity dataset](https://github.com/mod-tc/profanity), and the Kaggle
+[Profanities in English collection](https://www.kaggle.com/datasets/konradb/profanities-in-english-collection),
+then manually narrowed for congressional speech. None is imported wholesale because each includes
+terms that are neutral, topical, identity-related, or too context-dependent for reliable member
+attribution. From the Kaggle list, only single-word compounds of roots already counted
+(`fuckface`, `dumbshit`, …) were added; multi-word phrases built on an already-counted word were
+not, because they would change how existing matches are counted.
 
-Most rates use words as the denominator. Cross-party context rates use deduplicated out-party
-reference events and report affected contexts per 100 references.
-
-## Cross-party targeting
-
-Target detection is independent of tone matching. The detector uses party nouns, high-precision
-party phrases, and cross-aisle idioms resolved against the speaker's party. Generic
-`democratic` language is not a Democratic Party reference. Overlapping target spans are merged.
-
-Conditional context rates use the sentence/clause containing each reference, bounded to 300
-characters on either side for OCR run-ons. Separate nearby-intensity diagnostics retain a
-200-character window and are labelled **near an out-party reference**. Proximity does not prove
-that a particular phrase targets the party; validation estimates the precision of that
-interpretation.
+Ethnic slurs start from Wikipedia's [List of ethnic slurs](https://en.wikipedia.org/wiki/List_of_ethnic_slurs).
+A row is included when its location is the United States, North America, worldwide, or
+international (or names African American or Native American targets), or when the location is
+blank and the targets or notes tie the term to American usage. Each included row was then sorted
+into scored forms, audit-only forms, or unmatched, with the reason recorded. The Kaggle list
+added US spellings missing from Wikipedia. `analysis/score/lexicons/slurs_provenance.tsv`
+records every source row and decision.
 
 ## Source overlap
 
@@ -76,12 +68,12 @@ passages. Two independent model passes use `docs/VALIDATION_RUBRIC.md`; a separa
 pass resolves disagreements. This is disclosed model-assisted face-validity and consistency
 checking, not independent human ground truth.
 
-The finalized 784-passage validation of the July 2026 v3 codebook achieved overall precision of
-89.4% or better for every published category and at least 80% precision in every era/source
-stratum with 10 or more coded examples. Category-level recall ranged from 16.5% for personal
-attacks to 94.8% for profanity. The September 2026 v4 codebook conservatively expands explicit
-profanity surface forms; its precision and recall have not yet been re-estimated on a new blinded
-sample. `precision_recall.csv` reports the completed v3 validation rather than presenting it as
+The finalized 784-passage validation of the July 2026 v3 codebook achieved precision of 89.4% or
+better for every category it published. That sample
+measured the earlier, broader codebook and did not cover ethnic slurs. Codebook v5 (October 2026)
+narrows the project to formal courtesy, profanity, and ethnic slurs and expands both exact-match
+lists, so its precision and recall must be re-estimated on a new blinded sample.
+`precision_recall.csv` reports the completed v3 validation rather than presenting it as
 validation of later revisions.
 
 Member term summaries retain exact matched surface forms in the underlying daily audit table.

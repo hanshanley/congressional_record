@@ -111,18 +111,14 @@ def test_chamber_party_aggregation_word_weighted() -> None:
     # two House-D rows in the same congress must combine word-weighted, not mean-of-rates.
     df = pd.DataFrame([
         {"congress": 119, "year": 2025, "chamber": "house", "party": "D",
-         "hostility_hits": 10, "words": 1000, "comity_hits": 0, "profanity_hits": 0,
-         "profanity_slurs_hits": 0, "outgroup_refs": 0, "democrat_party_pej": 0,
-         "directed_comity_hits": 0, "directed_hostility_hits": 0},
+         "ethnic_slur_hits": 10, "words": 1000, "profanity_hits": 0},
         {"congress": 119, "year": 2025, "chamber": "house", "party": "D",
-         "hostility_hits": 0, "words": 9000, "comity_hits": 0, "profanity_hits": 0,
-         "profanity_slurs_hits": 0, "outgroup_refs": 0, "democrat_party_pej": 0,
-         "directed_comity_hits": 0, "directed_hostility_hits": 0},
+         "ethnic_slur_hits": 0, "words": 9000, "profanity_hits": 0},
     ])
     g = _by_year_chamber_party(df)
     row = g[(g.chamber == "house") & (g.party == "D")].iloc[0]
     # 10 hits / 10000 words * 1000 = 1.0  (NOT the mean of 10.0 and 0.0 = 5.0)
-    assert abs(row["hostility_per_1k"] - 1.0) < 1e-9
+    assert abs(row["ethnic_slurs_per_1k"] - 1.0) < 1e-9
 
 
 def test_overlap_calibration_pairs_sources() -> None:
@@ -133,11 +129,10 @@ def test_overlap_calibration_pairs_sources() -> None:
         for congress in (103, 104):
             row = {
                 "source": source, "congress": congress, "year": 1993 + 2 * (congress - 103),
-                "chamber": "house", "party": "D", "words": 1000, "outgroup_refs": 10,
+                "chamber": "house", "party": "D", "words": 1000,
             }
             for metric in METRICS:
                 row[metric.raw_count] = 2 * multiplier
-            row["outgroup_refs"] = 10
             rows.append(row)
     pairs = paired_overlap(pd.DataFrame(rows))
     assert not pairs.empty
@@ -150,15 +145,15 @@ def test_primary_metrics_do_not_combine_overlap_sources() -> None:
 
     frame = pd.DataFrame([
         {"source": "hein_daily", "congress": 114, "chamber": "house", "party": "D",
-         "hostility_hits": 1},
+         "profanity_hits": 1},
         {"source": "govinfo", "congress": 114, "chamber": "house", "party": "D",
-         "hostility_hits": 99},
+         "profanity_hits": 99},
         {"source": "govinfo", "congress": 115, "chamber": "house", "party": "D",
-         "hostility_hits": 2},
+         "profanity_hits": 2},
     ])
     selected = _select_primary_source(frame)
-    assert selected[selected.congress.eq(114)].iloc[0]["hostility_hits"] == 1
-    assert selected[selected.congress.eq(115)].iloc[0]["hostility_hits"] == 2
+    assert selected[selected.congress.eq(114)].iloc[0]["profanity_hits"] == 1
+    assert selected[selected.congress.eq(115)].iloc[0]["profanity_hits"] == 2
 
 
 
@@ -252,10 +247,8 @@ def test_site_language_trends_draws_both_party_series(monkeypatch, tmp_path) -> 
     series = pd.DataFrame([
         {
             "period": period, "party": party, "words": 10_000, "turns": 10,
-            "profanity_hits": hits, "hostility_hits": hits + 1,
-            "misconduct_hits": hits + 2, "profanity_per_100k": hits * 10,
-            "hostility_per_100k": (hits + 1) * 10,
-            "misconduct_per_100k": (hits + 2) * 10,
+            "profanity_hits": hits, "ethnic_slur_hits": hits + 1,
+            "profanity_per_100k": hits * 10, "ethnic_slurs_per_100k": (hits + 1) * 10,
         }
         for period in ("2025-01", "2025-02")
         for party, hits in (("D", 1), ("R", 2))
@@ -274,12 +267,22 @@ def test_site_language_trends_draws_both_party_series(monkeypatch, tmp_path) -> 
         granularity="month",
     )
     fig = captured["fig"]
-    assert [axis.get_title() for axis in fig.axes] == [
-        "Profanity", "Personal hostility / disrespect", "Misconduct allegations",
-    ]
+    assert [axis.get_title() for axis in fig.axes] == ["Profanity", "Ethnic slurs"]
     assert all(len(axis.lines) == 2 for axis in fig.axes)
     import matplotlib.pyplot as plt
     plt.close(fig)
+
+    # A measure without complete data is left out of the figure entirely.
+    from analysis.speakers import LANGUAGE_METRICS
+    site_charts.language_trends(
+        series,
+        tmp_path / "trend.png",
+        scope_label="Congress 119",
+        granularity="month",
+        metrics={"profanity": LANGUAGE_METRICS["profanity"]},
+    )
+    assert [axis.get_title() for axis in captured["fig"].axes] == ["Profanity"]
+    plt.close(captured["fig"])
 
 
 if __name__ == "__main__":

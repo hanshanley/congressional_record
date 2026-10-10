@@ -1,7 +1,134 @@
-# Ambiguous historical forms excluded from automated identity-slur metrics.
-# They require contextual review because Congressional Record OCR and ordinary usages produce
-# frequent false positives (e.g. surnames, raccoon references, geographic dykes, "chink" as gap).
+# Ethnic-slur forms excluded from automated metrics because they are also ordinary words,
+# names, places, products, or legal/historical terms. Kept for manual context review only.
+# See slurs_provenance.tsv for the reason attached to each source row.
+abcd
+african engineering
+ali baba
+alligator bait
+gator bait
+armo
+armos
+aunt jemima
+beaney
+beaneys
+black buck
+black brute
+brown buck
+brown brute
+bluegum
+bluegums
+brillo pad
+bakra
+burr head
 chink
+chinks
+cholo
+cholos
 coon
-dyke
-fag
+coons
+cooney
+cotton picker
+cotton pickers
+cotton-picker
+cotton-pickers
+cotton-picking
+dink
+dinks
+fresh off the boat
+goombah
+goombahs
+greaser
+greasers
+guido
+guidos
+guidette
+guidettes
+hajji
+hajjis
+hadji
+haji
+half-breed
+half-breeds
+halfbreed
+halfbreeds
+half breed
+half breeds
+haole
+haoles
+hebe
+hebes
+hillbilly
+hillbillies
+hun
+huns
+hunky
+hunkies
+jeet
+jim crow
+kemosabe
+kemosahbee
+mau-mau
+mau mau
+negro
+negroes
+nigar
+nig
+niger
+nip
+nips
+papoose
+papooses
+pocho
+pochos
+pocha
+pochas
+pocahontas
+redneck
+rednecks
+redskin
+redskins
+skinnie
+skinnies
+slopy
+slopey
+sloper
+sooty
+spick
+spicks
+spik
+spig
+squaw
+squaws
+tar-baby
+tar baby
+tar babies
+tonk
+tonks
+tonto
+uncle tom
+uncle toms
+white ape
+white apes
+high yellow
+yellow bone
+yellowbone
+nigah
+niga
+nigs
+jigga
+jiggas
+coonie
+coonies
+wet back
+wet backs
+spook
+spooks
+shylock
+shylocks
+mongoloid
+mongoloids
+blacky
+pancake face
+abeed
+paki
+pakis

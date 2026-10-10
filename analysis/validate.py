@@ -19,7 +19,7 @@ from analysis.score.scorers import Scorers
 
 LOG = logging.getLogger("analysis.validate")
 
-RUBRIC_VERSION = "2026-07-v1"
+RUBRIC_VERSION = "2026-10-v2"
 PASSAGE_CHARS = 1200
 
 _ERAS = (
@@ -33,13 +33,8 @@ _ERAS = (
 
 _SIGNALS = {
     "formal_courtesy": "formal_courtesy_hits",
-    "gratitude_praise": "gratitude_praise_hits",
-    "cooperation": "cooperation_hits",
-    "personal_attack": "hostility_hits",
-    "misconduct_allegation": "misconduct_hits",
     "profanity": "profanity_hits",
-    "identity_slur": "profanity_slurs",
-    "outparty_target": "outgroup_refs",
+    "ethnic_slur": "ethnic_slur_hits",
 }
 
 _READ_COLS = [
@@ -83,24 +78,10 @@ def _lexicon_regex(lexicons: List[object]) -> re.Pattern:
 
 
 def _signal_trigger_regexes(scorer: Scorers) -> Dict[str, re.Pattern]:
-    idiom_pattern = (
-        scorer.outgroup_idiom.phrase_re.pattern
-        if scorer.outgroup_idiom.phrase_re is not None else r"(?!x)x"
-    )
-    outparty = re.compile(
-        r"\brepublicans?\b|\bgop\b|\bdemocrats?\b|"
-        r"\bdemocratic\s+(?:party|colleagues?|members?|caucus|leadership|side|conference)\b|"
-        + idiom_pattern,
-    )
     return {
         "formal_courtesy": _lexicon_regex([scorer.formal_courtesy]),
-        "gratitude_praise": _lexicon_regex([scorer.gratitude_praise]),
-        "cooperation": _lexicon_regex([scorer.cooperation]),
-        "personal_attack": _lexicon_regex([scorer.hostility]),
-        "misconduct_allegation": _lexicon_regex([scorer.misconduct]),
         "profanity": _lexicon_regex([scorer.profanity["mild"], scorer.profanity["strong"]]),
-        "identity_slur": _lexicon_regex([scorer.profanity["slurs"]]),
-        "outparty_target": outparty,
+        "ethnic_slur": _lexicon_regex([scorer.ethnic_slurs]),
     }
 
 
@@ -236,7 +217,7 @@ def build_validation_sample(
                 match = trigger.search(text.lower())
                 if not match:
                     continue
-                accepted_spans = scorer.signal_spans(text, str(party))
+                accepted_spans = scorer.signal_spans(text)
                 for signal in _SIGNALS:
                     spans = accepted_spans[signal]
                     if not spans:
@@ -249,7 +230,7 @@ def build_validation_sample(
                         continue
                     center = spans[signal_priority % len(spans)][0]
                     sampled = _base_row(row, stratum, center)
-                    if scorer.score_turn(sampled["passage"], str(party))[_SIGNALS[signal]] <= 0:
+                    if scorer.score_turn(sampled["passage"])[_SIGNALS[signal]] <= 0:
                         raise AssertionError(
                             f"accepted {signal} span missing from passage for {turn_id}"
                         )
@@ -274,7 +255,7 @@ def build_validation_sample(
         ).hexdigest().upper()
         # Annotators see the bounded passage, so validation predictions must be scored
         # on that exact same text rather than on unseen parts of the full turn.
-        features = scorer.score_turn(row["passage"], row["party"])
+        features = scorer.score_turn(row["passage"])
         production_rows.append({
             "sample_id": row["sample_id"],
             "turn_id": row["turn_id"],
@@ -307,10 +288,7 @@ def build_validation_sample(
 
 
 ANNOTATION_FIELDS = (
-    "target_exists", "outparty_target_exists", "target_party",
-    "formulaic_address", "procedural_deference",
-    "gratitude_praise", "bipartisan_cooperation", "personal_attack",
-    "misconduct_allegation", "ideological_label", "profanity", "identity_slur",
+    "formulaic_address", "procedural_deference", "profanity", "ethnic_slur",
     "quoted_or_read_in", "ambiguous",
 )
 _YES_NO_UNCERTAIN = {"yes", "no", "uncertain"}
@@ -318,9 +296,8 @@ _ANNOTATION_VALUES = {
     **{
         field: _YES_NO_UNCERTAIN
         for field in ANNOTATION_FIELDS
-        if field not in {"target_party", "ambiguous"}
+        if field != "ambiguous"
     },
-    "target_party": {"d", "r", "i", "other", "none", "uncertain"},
     "ambiguous": {"yes", "no"},
 }
 _CONFIDENCE_VALUES = {"low", "medium", "high"}
@@ -454,15 +431,9 @@ def validation_report(pass_a: pd.DataFrame, pass_b: pd.DataFrame) -> pd.DataFram
 
 
 _PRODUCTION_MAP = {
-    "outparty_target_exists": "outgroup_refs",
     "formulaic_address": "formal_courtesy_hits",
-    "gratitude_praise": "gratitude_praise_hits",
-    "bipartisan_cooperation": "cooperation_hits",
-    "personal_attack": "hostility_hits",
-    "misconduct_allegation": "misconduct_hits",
-    "ideological_label": "ideological_label_hits",
     "profanity": "profanity_hits",
-    "identity_slur": "profanity_slurs",
+    "ethnic_slur": "ethnic_slur_hits",
 }
 
 

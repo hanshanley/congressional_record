@@ -1,7 +1,7 @@
-# Analysis: measuring changes in congressional comity and conflict
+# Analysis: profanity, ethnic slurs, and formal courtesy in Congress
 
 Beyond downloading, this repo includes a reusable **analysis pipeline** (`analysis/`) that
-scores every speaker turn for disclosed lexical markers of civility and conflict and produces
+scores every speaker turn for three disclosed word-pattern measures and produces
 time-series charts. It unifies two corpora into one speaker-turn table:
 
 * **Stanford *hein* corpus** (1873–2017, congresses 043–114) — already speaker-segmented with
@@ -27,108 +27,75 @@ Regenerate them all with `python scripts/update.py`.
 
 ### At a glance
 
-Six validated measures on one canvas — the fastest way to see the long-run shape of the data.
+The three headline measures on one canvas: formal courtesy, profanity, and ethnic slurs.
 
-![Overview of congressional comity and conflict measures](../outputs/figures/overview.png)
+![Overview of formal courtesy, profanity, and ethnic slurs](../outputs/figures/overview.png)
 
-The same six panels for each chamber separately, which separates institutional differences from
-partisan ones. Giving each chamber its own figure — and its own y-scale — keeps two series per
-panel instead of four, and stops the House's much higher rates from flattening the Senate.
+The same panels for each chamber separately, each with its own y-scale so the House's higher
+rates do not flatten the Senate.
 
-![Six comity and conflict measures for the U.S. House, Democrats vs Republicans](../outputs/figures/overview_house.png)
+![Headline measures for the U.S. House, Democrats vs Republicans](../outputs/figures/overview_house.png)
 
-![Six comity and conflict measures for the U.S. Senate, Democrats vs Republicans](../outputs/figures/overview_senate.png)
+![Headline measures for the U.S. Senate, Democrats vs Republicans](../outputs/figures/overview_senate.png)
 
-### Courtesy and cooperation
+### Formal courtesy
 
-Formulaic deference (“my distinguished colleague”, “the gentleman from…”) is the most
-institutionalised form of comity, and the most sensitive to changes in floor ritual.
+Formulaic deference (“my distinguished colleague”, “the gentleman from…”, “I yield”) is the most
+institutionalised floor ritual, and the most sensitive to changes in procedure.
 
-![Formulaic courtesy and deference](../outputs/figures/formal_courtesy_per_1k.png)
+![Formal courtesy](../outputs/figures/formal_courtesy_per_1k.png)
 
-![Gratitude and praise](../outputs/figures/gratitude_praise_per_1k.png)
+### Profanity and ethnic slurs
 
-![Bipartisan cooperation language](../outputs/figures/cooperation_per_1k.png)
-
-### Conflict
-
-Personal disrespect, allegations of misconduct, and profanity — the three negative families.
-Profanity uses a high-precision curated list rather than a broad word list, so it is rare by
-construction.
-
-![Personal disrespect and attack language](../outputs/figures/hostility_per_1k.png)
-
-![Misconduct allegation language](../outputs/figures/misconduct_per_1k.png)
+Both use curated exact lists rather than broad word lists, so they are rare by construction.
 
 ![Profanity](../outputs/figures/profanity_per_1k.png)
 
-### Directed at the other party
+![Ethnic slurs](../outputs/figures/ethnic_slurs_per_1k.png)
 
-The measures above count language anywhere in a speech. These normalise by *references to the
-other party*, so they answer a sharper question: when a member invokes the other side, how do
-they talk about them? Proximity does not prove the language is aimed at the reference.
-
-![Out-party references with nearby comity language](../outputs/figures/outgroup_comity_contexts_per_100_refs.png)
-
-![Out-party references with nearby personal disrespect](../outputs/figures/outgroup_hostility_contexts_per_100_refs.png)
-
-![Out-party references with nearby misconduct allegations](../outputs/figures/outgroup_misconduct_contexts_per_100_refs.png)
-
-Party asymmetry in that directed disrespect, with equal House/Senate weights — above zero means
-the Democratic rate is higher, below zero the Republican rate.
-
-![Asymmetry in disrespect near out-party references](../outputs/figures/directed_asymmetry.png)
-
-The remaining figures — per-chamber breakdowns of each family, plus supplemental measures such as
-ideological labelling, out-party reference volume, and the “Democrat party” pejorative — are in
-[`outputs/figures/`](../outputs/figures/).
+Per-chamber versions of each measure, plus the mild and strong profanity tiers, are in
+[`outputs/figures/`](../outputs/figures/). The ethnic-slur figures appear once the historical
+rebuild workflow (`rebuild-historical-language.yml`) has rescored the corpus with codebook v5.
 
 ## What it measures
 
-* **Formulaic courtesy/deference**, **gratitude/praise**, and **bipartisan cooperation** as
-  separate positive-language components rather than one undifferentiated comity score
-* **Personal disrespect/attack** language, **misconduct allegation language**, and
-  **profanity** as separate categories. Profanity uses a narrow, hand-curated list rather than a
-  broad word list, so ordinary words are never counted. Misconduct words are allegations in text,
-  not evidence that misconduct occurred.
-* **Identity slurs** and **ideological labels** as separate diagnostics; ideological labels do
-  not automatically count as personal disrespect.
-* **Cross-party reference context** — out-group references resolved to the speaker's party, plus
-  comity, disrespect, or misconduct terms **near** each reference. Proximity does not prove target.
-  Context-normalized outputs report affected contexts per 100 out-party references as well as
-  nearby hit rates per 1,000 total words.
-* The **"Democrat party"** pejorative marker; optional **VADER sentiment** (see *Toxicity* below)
+* **Formal courtesy**: conventional parliamentary address and deference.
+* **Profanity**: a hand-curated list of genuine curse and obscene forms, split into a mild tier
+  (`damn`, `what the hell`, `crap`, …) and a strong tier (`shit`, `fuck`, …). Ordinary topical words
+  (`sex trafficking`, `erected`, `In God We Trust`) are never counted.
+* **Ethnic slurs**: US ethnic slurs from Wikipedia's
+  [List of ethnic slurs](https://en.wikipedia.org/wiki/List_of_ethnic_slurs), cross-checked
+  against the Kaggle
+  [Profanities in English collection](https://www.kaggle.com/datasets/konradb/profanities-in-english-collection).
+  A Wikipedia row is included when its location is the US, North America, worldwide, or
+  international, or when its targets or notes tie the term to American usage. Forms that are
+  also ordinary words, names, or historical labels (“chink in the armor”, “Redskins”,
+  “Jim Crow”, “spick and span”) go to `slurs_ambiguous_audit.txt` and are never scored. Every
+  source row and the decision made about it is recorded in
+  `analysis/score/lexicons/slurs_provenance.tsv`.
 
-All lexical rates are per 1,000 words, grouped by `(congress, chamber, party)`, so overall
-trends split by party and chamber, plus D-R differences in nearby language, can all be plotted.
-Aggregation also writes `data/processed/coverage/turn_coverage.{csv,parquet}` with total,
-procedural, and D/R/I-attributed turn/word coverage by source, Congress, and chamber.
+A form may not appear in both the profanity and the slur lists; the scorer refuses to load if it
+does. Orientation and disability slurs are not part of the ethnic-slur measure.
 
-**Fuzzy keyword matching.** Most lexicon terms match their morphological variants by default
-(`Scorers(fuzzy=True)`): single words expand to plurals/verb-forms via suffix rules plus an
-irregular-plural table ("colleague"→"colleagues", "coward"→"cowards", "gentleman"→"gentlemen"),
-and multi-word phrases inflect **every** content word inline in the regex, so "reach across the
-aisle" also matches "reaches/reached/reaching across the aisle". Short tokens (< 4 chars) are
-matched literally so obfuscation stubs are never expanded into ordinary words. Profanity and
-identity-slur codebooks use curated exact variants rather than unsafe morphology. Misconduct also
-uses exact curated forms because broad suffix expansion produced legal-topic false positives.
-Matched spans are de-duplicated so phrases and component words are not double-counted. Pass
-`fuzzy=False` for strict exact matching on the remaining codebooks.
+All rates are per 1,000 words, grouped by `(congress, chamber, party)`, so trends can be split
+by party and chamber. Aggregation also writes `data/processed/coverage/turn_coverage.{csv,parquet}`
+with total, procedural, and D/R/I-attributed turn/word coverage by source, Congress, and chamber.
 
-**By party and by chamber.** Headline charts exclude Extensions/other sections and render
-House/Senate floor language by party, plus a
-**per-chamber** split (House and Senate as separate figures, each by party):
-`overview_house.png`, `overview_senate.png`, a `*_house.png` / `*_senate.png` pair per metric,
-and an extra CSV `metrics_by_congress_chamber_party.csv`.
+**Matching.** Formal courtesy matches morphological variants by default (`Scorers(fuzzy=True)`):
+single words expand to plurals and verb forms, with an irregular-plural table
+(“colleague”→“colleagues”, “gentleman”→“gentlemen”). Profanity and ethnic slurs use curated exact
+forms instead of unsafe morphology. Hyphenated words are single tokens, so “honky-tonk” does not
+match “honky”. Matched spans are de-duplicated, so a multi-word slur counts once rather than once
+per component word. Pass `fuzzy=False` for strict exact matching of courtesy forms.
 
-**Toxicity methodology.** "Toxicity" is shorthand for several transparent, auditable
-**lexical rates** (personal disrespect/profanity per 1k words), not a ground-truth label or a
-black-box classifier. Optional VADER sentiment
-(`--sentiment`) is scored **per sentence and averaged** (VADER's `compound` saturates on long
-passages, so scoring a whole speech is biased), exposing `mean_sentiment` and `mean_neg_share`,
-which are **sentence-count weighted** in the aggregate; lexical rates are separately word-weighted.
-The interactive notebook checks whether these signals converge and can optionally compare
-a sample with Detoxify; neither diagnostic substitutes for independent human ground truth.
+**By party and by chamber.** Headline charts exclude Extensions and other sections and render
+House and Senate floor language by party, plus a per-chamber split: `overview_house.png`,
+`overview_senate.png`, a `*_house.png` / `*_senate.png` pair per metric, and
+`metrics_by_congress_chamber_party.csv`.
+
+**Interpretation.** These are transparent, auditable word counts, not judgments about intent.
+They miss sarcasm and target identity. Member-level website rates exclude quoted material, but a
+member who repeats a slur to describe or condemn it is still counted.
 
 ## Explore interactively
 
@@ -137,12 +104,10 @@ a sample with Detoxify; neither diagnostic substitutes for independent human gro
 jupyter lab notebooks/congressional_civility.ipynb
 ```
 
-The notebook loads the metrics table, plots House/Senate party trends, and runs diagnostics on
-real source turns. Completed model-assisted rubric grading preserves `turn_id`, uses two blinded
-passes plus separate adjudication, and is disclosed as model-assisted rather than human validation.
-The 784-passage precision/recall summary is documented in
-[`docs/METHODOLOGY.md`](METHODOLOGY.md) and generated at
-`data/processed/validation/precision_recall.csv`.
+The notebook loads the metrics table, plots House/Senate party trends, and scores a sample of
+real source turns, printing the matched spans. The earlier 784-passage model-assisted validation
+measured the previous codebook; it must be re-run for codebook v5 (see
+[`docs/METHODOLOGY.md`](METHODOLOGY.md)).
 
 ## Run it
 
@@ -168,7 +133,7 @@ aggregate is served entirely from cache. Useful flags: `--dry-run` (show the pla
 ### Individual stages
 
 ```bash
-uv pip install -r requirements-analysis.txt        # pandas, pyarrow, matplotlib, vader, ...
+uv pip install -r requirements-analysis.txt        # pandas, pyarrow, matplotlib, ...
 
 python -m analysis.run ingest-hein                 # hein zips -> data/interim/turns/*.parquet
 python -m analysis.run ingest-govinfo-bulk         # 2017-present via day-zips (fast, no rate limit)
@@ -179,7 +144,7 @@ python -m analysis.run calibrate                   # Hein/GovInfo paired overlap
 python -m analysis.run sample-validation           # blinded real-text validation sample
 python -m analysis.run viz                         # charts -> outputs/figures/
 
-# or the whole hein pipeline in one go (add --sentiment for VADER):
+# or the whole hein pipeline in one go:
 python -m analysis.run all
 ```
 
@@ -199,7 +164,7 @@ A shard is the smallest group of turn files that must be scored together:
 
 A cached shard is reused only when its files have identical size and mtime **and** the scoring
 fingerprint matches. That fingerprint covers the lexicons, `scorers.py`, `registry.py`,
-`aggregate.py`, and the `--sentiment` / `--include-procedural` flags — so editing a lexicon or the
+`aggregate.py`, and the `--include-procedural` flag — so editing a lexicon or the
 scoring logic invalidates the whole cache rather than blending old and new definitions.
 
 Because the metrics are sums over independent groups and shards are always merged in the same

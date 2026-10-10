@@ -545,16 +545,17 @@ def test_payload_and_html_expose_selector_aware_language_graphs(store, tmp_path)
     ]) == 0
     payload = json.loads((out / "data" / "congress_119.json").read_text())
     language = payload["language"]
-    assert set(language["metrics"]) == {"profanity", "hostility", "misconduct"}
+    # Legacy rows predate slur scoring, so the slur measure is withheld, not shown as zero.
+    assert set(language["metrics"]) == {"profanity"}
     assert language["granularity"] == "month"
     assert {row["party"] for row in language["series"]} <= {"D", "R"}
-    assert set(language["members"]) == {"profanity", "hostility", "misconduct"}
+    assert set(language["members"]) == {"profanity"}
     assert language["series"]
     assert len(language["highlights"][0]["top_members"]) <= 3
     assert {row["chamber"] for row in language["chamber_series"]} == {"house", "senate"}
     assert set(language["members_by_chamber"]) == {"house", "senate"}
     assert "per 100,000 attributed spoken words" in language["explanation"]["shown"]
-    assert "does not prove misconduct" in language["explanation"]["limitation"]
+    assert "not judgments about intent" in language["explanation"]["limitation"]
 
     all_payload = json.loads((out / "data" / "congress_all.json").read_text())
     assert all_payload["language"]["granularity"] == "year"
@@ -579,7 +580,10 @@ def test_payload_and_html_expose_selector_aware_language_graphs(store, tmp_path)
     assert "min-width:42rem" not in page
     assert "Members below the word threshold are omitted." not in page
     long_run = json.loads((out / "data" / "long_run_language.json").read_text())
-    assert len(long_run["metrics"]) == 6
+    assert set(long_run["metrics"]) <= {
+        "formal_courtesy_per_1k", "profanity_per_1k", "ethnic_slurs_per_1k",
+    }
+    assert "profanity_per_1k" in long_run["metrics"]
     assert {row["party"] for row in long_run["series"]} == {"D", "R"}
     assert {row["chamber"] for row in long_run["chamber_series"]} == {"house", "senate"}
     activity_page = (out / "activity" / "index.html").read_text()
@@ -617,6 +621,24 @@ def test_payload_and_html_expose_selector_aware_language_graphs(store, tmp_path)
         'href="https://www.themarginoferror.com/'
         'congressional_profanity/activity/"'
     ) in activity_redirect
+
+
+def test_slur_measure_appears_once_rows_carry_slur_counts(store, tmp_path):
+    path, daily, bills = store
+    daily = daily.drop(columns=["hostility_hits", "misconduct_hits"])
+    daily["ethnic_slur_hits"] = [0, 2, 0]
+    daily["ethnic_slur_quoted_hits"] = [0, 0, 0]
+    save_daily(daily, path)
+    module = _load_build_site()
+    out = tmp_path / "site"
+    assert module.main([
+        "--daily", str(path), "--bills", str(bills), "--out", str(out),
+        "--min-words", "1000",
+    ]) == 0
+    language = json.loads((out / "data" / "congress_119.json").read_text())["language"]
+    assert set(language["metrics"]) == {"profanity", "slurs"}
+    assert [row["speaker_name"] for row in language["members"]["slurs"]] == ["Mr. NEW"]
+    assert 'data-language-metric="slurs"' in (out / "index.html").read_text()
 
 
 def test_activity_headers_share_the_client_numeric_column_mapping():

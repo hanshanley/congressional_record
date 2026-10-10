@@ -1,7 +1,7 @@
 <div align="center">
   <h1>The Language of Congress</h1>
   <p><strong>Official records. Reproducible analysis. 150 years of floor speech.</strong></p>
-  <p>How courtesy, cooperation, disrespect, and profanity in the Congressional Record have changed
+  <p>How formal courtesy, profanity, and ethnic slurs in the Congressional Record have changed
   since 1873, by party and chamber.</p>
   <p>
     <a href="#since-1873">Overview</a> ·
@@ -15,20 +15,21 @@
 
 ## Since 1873
 
-Six lexical measures, each a rate per 1,000 words, compare Democrats with Republicans across the
+Three word-pattern measures, each a rate per 1,000 words, compare Democrats with Republicans across the
 Stanford Hein corpus (1873–2017) and GovInfo's Congressional Record (2017–present). Treat a step
 change at 2017 as a possible source artifact rather than a real shift.
 
 <p align="center">
-  <img src="outputs/figures/overview.png" width="1200" alt="Six congressional comity and conflict measures, Democrats vs Republicans, 1873 to present">
+  <img src="outputs/figures/overview.png" width="1200" alt="Formal courtesy, profanity, and ethnic slurs in Congress, Democrats vs Republicans, 1873 to present">
 </p>
 
 ## Explore the evidence
 
 **The analysis:** [what each measure counts and the key figures](docs/ANALYSIS.md),
 [methodology](docs/METHODOLOGY.md), and the [validation rubric](docs/VALIDATION_RUBRIC.md).
-For an implementation-level explanation, failure examples, critique, and proposed
-replacement, see the [non-profanity scoring README](docs/NON_PROFANITY_README.md).
+Ethnic slurs come from Wikipedia's [List of ethnic slurs](https://en.wikipedia.org/wiki/List_of_ethnic_slurs)
+(US usage) and profanity is cross-checked against the Kaggle
+[Profanities in English collection](https://www.kaggle.com/datasets/konradb/profanities-in-english-collection).
 
 **The website:** [the interactive dashboard, bill data, and attribution safeguards](docs/WEBSITE.md),
 published as [The Language of Congress](https://www.themarginoferror.com/congressional_profanity/)

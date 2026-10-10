@@ -26,9 +26,7 @@ from analysis.score.registry import METRICS, SCORE_KEYS
 LOG = logging.getLogger("analysis.aggregate")
 
 # Sum accumulators kept per group.
-_SUM_KEYS = [
-    "turns", "n_words", *SCORE_KEYS, "sentiment_sum", "neg_share_sum", "sentiment_n",
-]
+_SUM_KEYS = ["turns", "n_words", *SCORE_KEYS]
 
 _READ_COLS = [
     "turn_id", "source", "congress", "chamber", "party", "word_count",
@@ -38,14 +36,7 @@ _READ_COLS = [
 # Single source of truth for per-1,000-word rate columns: rate name -> the raw hit
 # column it is derived from. Shared with :mod:`analysis.viz` so both modules emit
 # identically named rates from the same formula.
-RATE_TO_HITCOL: Dict[str, str] = {
-    metric.rate: metric.raw_count for metric in METRICS if metric.denominator == "words"
-}
-CONTEXT_RATE_TO_COUNT: Dict[str, str] = {
-    metric.rate: metric.raw_count
-    for metric in METRICS
-    if metric.denominator == "outgroup_refs"
-}
+RATE_TO_HITCOL: Dict[str, str] = {metric.rate: metric.raw_count for metric in METRICS}
 
 
 def _iter_batches(path: Path, batch_size: int = 10_000):
@@ -110,7 +101,7 @@ def _score_shard(
                 if not include_procedural and procs[i]:
                     continue
                 party = parties[i] or "other"
-                s = scorers.score_turn(texts[i] or "", party)
+                s = scorers.score_turn(texts[i] or "")
                 key = (
                     sources[i] or "unknown",
                     int(congresses[i]),
@@ -122,16 +113,6 @@ def _score_shard(
                 a["n_words"] += s["n_words"]
                 for k in SCORE_KEYS:
                     a[k] += s[k]
-                if "sentiment" in s:
-                    # Sentence-count weight so long speeches count proportionally (matches
-                    # the word-weighting of every other metric). A turn with no detectable
-                    # sentences (empty/whitespace) carries weight 0 — it must not add a
-                    # phantom neutral sentence to the mean.
-                    w = s.get("n_sentences", 0)
-                    if w:
-                        a["sentiment_sum"] += s["sentiment"] * w
-                        a["neg_share_sum"] += s.get("neg_share", 0.0) * w
-                        a["sentiment_n"] += w
                 n += 1
         LOG.info("scored %s (%d substantive turns)", fp.name, n)
     return dict(acc), {k: dict(v) for k, v in coverage.items()}
@@ -149,7 +130,6 @@ def _merge_groups(
 def score_and_aggregate(
     turns_dir: Path,
     out_dir: Path,
-    use_sentiment: bool = False,
     include_procedural: bool = False,
     incremental: bool = True,
     cache_path: Path | None = None,
@@ -183,7 +163,7 @@ def score_and_aggregate(
     if incremental:
         cache_path = cache_path or (out_dir / "cache" / "aggregate_shards.json")
         cache = ShardCache(
-            cache_path, config_fingerprint(use_sentiment, include_procedural)
+            cache_path, config_fingerprint(include_procedural)
         )
 
     scorers: Scorers | None = None
@@ -198,7 +178,7 @@ def score_and_aggregate(
         else:
             if scorers is None:
                 # Deferred so an all-cached run never pays lexicon compilation.
-                scorers = Scorers(use_sentiment=use_sentiment)
+                scorers = Scorers()
             shard_acc, shard_cov = _score_shard(shard, scorers, include_procedural)
             rescored += 1
             if cache:
@@ -340,15 +320,6 @@ def _finalize(acc: Dict[Tuple[str, int, str, str], Dict[str, float]]) -> pd.Data
         # convenience rates at this (congress, chamber, party) granularity, derived from
         # the raw hit columns via the shared RATE_TO_HITCOL map (same names/formula as viz)
         for metric in METRICS:
-            denominator = words if metric.denominator == "words" else row["outgroup_refs"]
-            row[metric.rate] = (
-                metric.scale * row[metric.raw_count] / denominator if denominator else 0.0
-            )
-        row["mean_sentiment"] = (
-            a["sentiment_sum"] / a["sentiment_n"] if a["sentiment_n"] else None
-        )
-        row["mean_neg_share"] = (
-            a["neg_share_sum"] / a["sentiment_n"] if a["sentiment_n"] else None
-        )
+            row[metric.rate] = metric.scale * row[metric.raw_count] / words
         rows.append(row)
     return pd.DataFrame(rows)

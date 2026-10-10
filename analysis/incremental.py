@@ -34,7 +34,7 @@ from typing import Dict, Iterable, List, Optional, Tuple
 
 LOG = logging.getLogger("analysis.incremental")
 
-CACHE_VERSION = 2
+CACHE_VERSION = 3
 
 # "<prefix>_<congress>.parquet" -- congress is the trailing numeric component.
 _CONGRESS_RE = re.compile(r"^(?P<prefix>.+?)_(?P<congress>\d+)$")
@@ -82,7 +82,6 @@ def plan_shards(files: Iterable[Path]) -> List[Shard]:
 
 
 def config_fingerprint(
-    use_sentiment: bool,
     include_procedural: bool,
     extra_sources: Iterable[Path] = (),
 ) -> str:
@@ -106,7 +105,6 @@ def config_fingerprint(
 
     digest = hashlib.sha256()
     digest.update(f"v{CACHE_VERSION}".encode("utf-8"))
-    digest.update(f"sentiment={int(use_sentiment)}".encode("utf-8"))
     digest.update(f"procedural={int(include_procedural)}".encode("utf-8"))
 
     lexicon_dir = Path(scorers_module.LEXDIR)

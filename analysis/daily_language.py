@@ -38,7 +38,7 @@ def aggregate_turn_files(paths: Iterable[Path]) -> pd.DataFrame:
     """Score GovInfo turns into one compact row per date/chamber/party."""
     totals = defaultdict(lambda: {column: 0 for column in DAILY_COLUMNS[4:]})
     seen: set[str] = set()
-    scorers = Scorers(use_sentiment=False)
+    scorers = Scorers()
 
     for path in sorted(paths):
         parquet = pq.ParquetFile(path)
@@ -59,7 +59,7 @@ def aggregate_turn_files(paths: Iterable[Path]) -> pd.DataFrame:
                     or party not in {"D", "R"}
                 ):
                     continue
-                scores = scorers.score_turn(text or "", party)
+                scores = scorers.score_turn(text or "")
                 key = (
                     date,
                     int(rows["congress"][index]),
@@ -109,7 +109,50 @@ def replace_daily_window(
 
 
 def load_daily(path: Path) -> Optional[pd.DataFrame]:
-    return pd.read_parquet(path) if path.exists() else None
+    """Load daily aggregates; measures added after a row was scored load as nulls."""
+    if not path.exists():
+        return None
+    frame = pd.read_parquet(path)
+    for column in DAILY_COLUMNS:
+        if column not in frame:
+            frame[column] = pd.array([pd.NA] * len(frame), dtype="Int64")
+    return frame[DAILY_COLUMNS]
+
+
+def restrict_to_complete_metrics(payload: dict) -> dict:
+    """Keep only current headline measures that every long-run row reports.
+
+    A measure added to the codebook appears once the historical rebuild has scored the
+    whole series; until then it is omitted rather than drawn with missing years.
+    """
+    rows = [*payload.get("series", []), *payload.get("chamber_series", [])]
+    complete = [
+        metric for metric in HEADLINE_METRICS
+        if rows and all(
+            row.get(metric.raw_count) is not None and row.get(metric.rate) is not None
+            for row in rows
+        )
+    ]
+    # Rows keep only their keys and the published measures, so retired fields are dropped.
+    keep = {"year", "party", "chamber", "words"}
+    keep.update(field for metric in complete for field in (metric.raw_count, metric.rate))
+    result = dict(payload)
+    for name in ("series", "chamber_series"):
+        result[name] = [
+            {key: value for key, value in row.items() if key in keep}
+            for row in payload.get(name, [])
+        ]
+    result["metrics"] = {
+        metric.rate: {
+            "rate": metric.rate,
+            "hits": metric.raw_count,
+            "label": metric.title,
+            "units": metric.units,
+            "polarity": metric.polarity,
+        }
+        for metric in complete
+    }
+    return result
 
 
 def save_daily(frame: pd.DataFrame, path: Path) -> None:
@@ -127,15 +170,21 @@ def save_daily(frame: pd.DataFrame, path: Path) -> None:
 def merge_long_run_payload(base: dict, daily: pd.DataFrame) -> dict:
     """Replace Congress-years represented by daily rows in a long-run payload."""
     if daily.empty:
-        return base
+        return restrict_to_complete_metrics(base)
 
     daily = daily.copy()
     daily["year"] = daily["congress"].map(year_from_congress)
-    hit_columns = [metric.raw_count for metric in HEADLINE_METRICS]
+    # Only measures scored on every daily row are merged; the rest stay absent so
+    # restrict_to_complete_metrics() can tell they are not yet available.
+    complete = tuple(
+        metric for metric in HEADLINE_METRICS
+        if metric.raw_count in daily and not daily[metric.raw_count].isna().any()
+    )
+    hit_columns = [metric.raw_count for metric in complete]
     chamber = daily.groupby(
         ["year", "party", "chamber"], as_index=False
     )[["words", *hit_columns]].sum()
-    for metric in HEADLINE_METRICS:
+    for metric in complete:
         chamber[metric.rate] = (
             metric.scale
             * chamber[metric.raw_count]
@@ -149,12 +198,12 @@ def merge_long_run_payload(base: dict, daily: pd.DataFrame) -> dict:
         "chamber",
         "words",
         *hit_columns,
-        *(metric.rate for metric in HEADLINE_METRICS),
+        *(metric.rate for metric in complete),
     ]
     current_aggregate = chamber.groupby(
         ["year", "party"], as_index=False
     )[["words", *hit_columns]].sum()
-    for metric in HEADLINE_METRICS:
+    for metric in complete:
         current_aggregate[metric.rate] = (
             metric.scale
             * current_aggregate[metric.raw_count]
@@ -165,7 +214,7 @@ def merge_long_run_payload(base: dict, daily: pd.DataFrame) -> dict:
         "party",
         "words",
         *hit_columns,
-        *(metric.rate for metric in HEADLINE_METRICS),
+        *(metric.rate for metric in complete),
     ]
     payload = dict(base)
     current_series = json.loads(
@@ -192,4 +241,4 @@ def merge_long_run_payload(base: dict, daily: pd.DataFrame) -> dict:
     )
     payload["first_year"] = min(row["year"] for row in payload["series"])
     payload["last_year"] = max(row["year"] for row in payload["series"])
-    return payload
+    return restrict_to_complete_metrics(payload)

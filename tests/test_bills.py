@@ -54,7 +54,7 @@ def _daily() -> pd.DataFrame:
     ], columns=[
         "bioguide", "date", "chamber", "speaker_name", "party", "state", "congress",
         "turns", "words", "profanity_hits", "profanity_quoted_hits",
-        "hostility_hits", "misconduct_hits",
+        "ethnic_slur_hits", "ethnic_slur_quoted_hits",
     ])
 
 
@@ -229,21 +229,15 @@ def test_profanity_leaderboard_omits_zero_rate_members():
     assert set(board["bioguide"]) == {"A"}
 
 
-def test_member_activity_preserves_all_language_measures_and_rates():
-    daily = _daily()
-    daily.loc[daily["bioguide"] == "A", "hostility_hits"] = [2, 4]
-    daily.loc[daily["bioguide"] == "A", "misconduct_hits"] = [3, 6]
+def test_member_activity_reports_profanity_rate_without_retired_measures():
     activity = member_activity(
-        daily,
+        _daily(),
         pd.DataFrame([_bill(1, "A")]),
         119,
     ).set_index("bioguide")
     member = activity.loc["A"]
-    assert member["hostility_hits"] == 6
-    assert member["misconduct_hits"] == 9
     assert member["profanity_per_100k"] == pytest.approx(8.0)
-    assert member["hostility_per_100k"] == pytest.approx(8.0)
-    assert member["misconduct_per_100k"] == pytest.approx(12.0)
+    assert not {"hostility_hits", "misconduct_hits"} & set(activity.columns)
     assert set(activity_leaderboards(activity)) == {
         "speech", "sponsored", "passed", "enacted", "profanity",
     }

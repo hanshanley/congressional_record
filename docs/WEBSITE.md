@@ -1,15 +1,16 @@
 # The website
 
 The homepage, published at <https://www.themarginoferror.com/congressional_profanity/>, leads
-with six interactive long-run panels for congressional comity and conflict: courtesy, gratitude, bipartisan cooperation, personal disrespect, misconduct
-allegations, and profanity. Each panel compares Democrats with Republicans from 1873 to the
+with interactive long-run panels for formal courtesy, profanity, and ethnic slurs. Each panel compares Democrats with Republicans from 1873 to the
 present and includes visible party controls, direct end labels, hover/focus values, and a
 screen-reader data table.
 
-Recent-Congress detail then presents three separate negative-language indicators: profanity,
-personal hostility/disrespect, and misconduct allegations. Monthly Democratic/Republican trends
+Recent-Congress detail then presents profanity and ethnic slurs as separate indicators. Monthly Democratic/Republican trends
 are shown within a selected Congress, while the all-Congresses view uses yearly periods. Member
-comparisons apply a minimum-word threshold and omit zero-rate members entirely. Both pages use
+comparisons apply a minimum-word threshold and omit zero-rate members entirely. A measure is shown
+only when every row in the selected scope has been scored for it: rows written before a measure
+existed load as missing rather than zero, so a new measure stays hidden until the backfill and
+historical rebuild workflows have rescored the data. Both pages use
 The Margin of Error masthead, footer, and typography (the house tokens in `build_site.py` mirror
 `margin_of_error/src/styles/global.css`), and the charts are responsive inline SVGs in that house
 style. Hovering or keyboard-focusing a point or bar reveals its raw hits and word denominator, and
@@ -168,7 +169,7 @@ site/data/congress_NNN.json    leaderboards, interactive chart data, definitions
 site/data/leaderboard.json     compatibility profanity leaderboard for the initial view
 site/data/timeseries.json      chamber-level profanity rate per year
 site/data/meta.json            build stamp, thresholds, coverage, caveat text
-site/data/long_run_language.json compact data for the six interactive long-run panels
+site/data/long_run_language.json compact data for the interactive long-run panels
 site/figures/*.png             no-JavaScript/compatibility charts in the project's house style
 ```
 

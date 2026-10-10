@@ -209,14 +209,14 @@ def test_validation_sample_is_blinded_and_real_text_preserved() -> None:
     root = Path(__file__).resolve().parent / "_tmp_validation"
     turns = root / "turns"
     turns.mkdir(parents=True, exist_ok=True)
-    passage = "Mr. Speaker, I thank my Republican colleague for working across the aisle."
+    passage = "Mr. Speaker, I yield to the distinguished gentlewoman from Ohio."
     row = {
         "turn_id": "crec:fixture#0", "source": "govinfo", "date": "2024-01-09",
         "congress": 118, "chamber": "house", "speaker_name": "Ms. SMITH",
         "speaker_id": "", "bioguide": "S000001", "party": "D", "state": "CA",
         "word_count": len(passage.split()), "is_procedural": False, "text": passage,
     }
-    long_text = "My Republican colleagues spoke first. " + ("neutral material " * 100) + "That liar."
+    long_text = "The gentlewoman spoke first. " + ("neutral material " * 100) + "What bullshit."
     long_row = {
         **row,
         "turn_id": "crec:fixture#1",
@@ -232,11 +232,13 @@ def test_validation_sample_is_blinded_and_real_text_preserved() -> None:
         assert not blinded.empty and not hidden.empty
         assert "sampling_stratum" not in blinded.columns
         assert blinded.iloc[0]["passage"] == passage
-        assert hidden["sampling_stratum"].str.contains("cooperation|random").any()
-        attack_ids = hidden[
-            hidden["sampling_stratum"].str.endswith("personal_attack")
+        assert hidden["sampling_stratum"].str.endswith("formal_courtesy").any()
+        profanity_ids = hidden[
+            hidden["sampling_stratum"].str.endswith("profanity")
         ]["sample_id"]
-        assert blinded[blinded["sample_id"].isin(attack_ids)]["passage"].str.contains("liar").all()
+        assert not profanity_ids.empty
+        profane = blinded[blinded["sample_id"].isin(profanity_ids)]["passage"]
+        assert profane.str.contains("bullshit").all()
     finally:
         shutil.rmtree(root, ignore_errors=True)
 

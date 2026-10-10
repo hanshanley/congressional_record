@@ -1,16 +1,10 @@
-"""Modular civility scorers (token-set fast path).
+"""Lexical scorers for congressional floor language (token-set fast path).
 
-Loads the lexicons once and scores a turn's text for:
+Loads the lexicons once and scores a turn's text for three measures:
 
-* comity/deference phrase hits (positive)
-* formulaic courtesy, gratitude/praise, and bipartisan cooperation as separate components
-* hostility/attack hits (negative)
-* profanity hits by tier (mild/strong/slurs)
-* out-group reference count (aisle idioms + high-precision opposing-party references,
-  resolved to the speaker's party) and comity/hostility within a window around each
-  reference (proximity context, not proof of direction)
-* the "Democrat party" pejorative marker
-* optional VADER sentiment compound
+* formulaic courtesy / deference (fuzzy-matched phrases such as "my distinguished colleague")
+* profanity, by tier (mild/strong), from an exact high-precision codebook
+* ethnic slurs used in the United States, from a separate exact codebook
 
 Performance: each turn is tokenized **once** into lowercased word tokens. Single-word
 lexicon terms are counted by O(1) set/dict membership; only genuinely multi-word
@@ -26,44 +20,6 @@ from typing import Dict, List, Optional, Set, Tuple
 
 LEXDIR = Path(__file__).parent / "lexicons"
 
-# Opposing-party name references, keyed by the SPEAKER's normalized party.
-_OUTPARTY_TOKENS = {
-    "D": {"republicans", "gop"},
-    "R": {"democrat", "democrats"},
-}
-_OUTPARTY_PHRASES = {
-    "D": re.compile(
-        r"\brepublican\s+(?:party|colleagues?|members?|caucus|leadership|side|conference)\b"
-    ),
-    "R": re.compile(
-        r"\bdemocratic\s+(?:party|colleagues?|members?|caucus|leadership|side|conference)\b"
-    ),
-}
-# Matched only against already-lowercased text, so no re.IGNORECASE (which would be
-# ~2.7x slower per scan across the 18.5M-turn corpus for identical results).
-_DEMOCRAT_PARTY_PEJ = re.compile(r"\bdemocrat\s+party\b")
-_COOPERATION_EXCLUSIONS = re.compile(
-    r"\bin a bipartisan\s+(?:board|commission|committee)\b"
-)
-_HOSTILITY_EXCLUSIONS = re.compile(
-    r"\bphony\s+(?:price|expense)\b"
-    r"|\b(?:mental|legal)\s+incompetents?\b"
-    r"|\bnot\s+(?:a\s+)?(?:coward|cowardly|liar|incompetent)\b"
-    r"|\b(?:was|is)\s+(?:\w+\s+){0,4}a\s+liar\?"
-)
-_MISCONDUCT_EXCLUSIONS = re.compile(
-    r"\bforeign\s+corrupt\s+practices\s+act\b"
-    r"|\b(?:no|not|without)\s+(?:evidence\s+of\s+)?(?:corrupt|corruption)\b"
-    r"|\bdo\s+not\s+believe\s+there\s+is\s+corruption\b"
-)
-_MISCONDUCT_NEGATION = re.compile(
-    r"\b(?:no|not|without)"
-    r"(?:\s+(?:any|credible|clear|direct|actual))?"
-    r"(?:\s+(?:evidence|proof|finding|findings|sign|signs|allegation|allegations))?"
-    r"(?:\s+of)?\s+$"
-    r"|\bnot\s+guilty\s+of\s+$"
-)
-_MISCONDUCT_COORDINATION = re.compile(r"^\s*(?:,\s*)?(?:or|and)\s*$")
 _MILD_PROFANITY_EXCLUSIONS = re.compile(
     r"\bto\s+damn\s+them\b"
     r"|\bbe\s+damned\s+and\s+annulled\b"
@@ -74,8 +30,6 @@ _MILD_PROFANITY_EXCLUSIONS = re.compile(
 )
 # Tokenizer: word tokens keep internal hyphens/apostrophes (un-american, don't).
 _TOKEN_RE = re.compile(r"[a-z0-9]+(?:[-'\u2019][a-z0-9]+)*")
-# Lightweight sentence splitter for sentence-level VADER (avoids an nltk dependency).
-_SENTENCE_RE = re.compile(r"(?<=[.!?])\s+")
 
 
 def _load_lines(name: str) -> List[str]:
@@ -258,7 +212,7 @@ class _Lexicon:
 def _load_profanity() -> Dict[str, "_Lexicon"]:
     # Profanity uses an explicitly enumerated high-precision list: do not generate
     # morphology (the former broad list turned ordinary words such as "strips" and
-    # "erected" into profanity). Identity slurs are kept in a separate exact list.
+    # "erected" into profanity). Ethnic slurs are kept in a separate exact list.
     tiers: Dict[str, List[str]] = {"mild": [], "strong": []}
     for line in _load_lines("profanity.txt"):
         term, _, tier = line.partition("\t")
@@ -270,315 +224,72 @@ def _load_profanity() -> Dict[str, "_Lexicon"]:
             )
         tiers[tier].append(term)
     lex = {tier: _Lexicon(terms, fuzzy=False) for tier, terms in tiers.items()}
-    lex["slurs"] = _Lexicon(_load_lines("slurs.txt"), fuzzy=False)
     # De-duplicate surface forms across tiers so each token is counted once, in its most
     # severe tier. This protects against accidental duplicate surface forms in curated files.
-    lex["strong"].singles -= lex["slurs"].singles
-    lex["mild"].singles -= lex["slurs"].singles | lex["strong"].singles
+    lex["mild"].singles -= lex["strong"].singles
     return lex
 
 
 class Scorers:
     """Holds compiled lexicons; reused across all turns."""
 
-    def __init__(self, use_sentiment: bool = False, fuzzy: bool = True) -> None:
+    def __init__(self, fuzzy: bool = True) -> None:
         self.formal_courtesy = _Lexicon(_load_lines("formal_courtesy.txt"), fuzzy=fuzzy)
-        self.gratitude_praise = _Lexicon(_load_lines("gratitude_praise.txt"), fuzzy=fuzzy)
-        self.cooperation = _Lexicon(_load_lines("cooperation.txt"), fuzzy=fuzzy)
-        self.hostility = _Lexicon(_load_lines("hostility.txt"), fuzzy=fuzzy)
-        # Misconduct terms are exact curated forms; suffix expansion creates legal-topic
-        # false positives (e.g. "corrupting" an abstract process).
-        self.misconduct = _Lexicon(_load_lines("misconduct.txt"), fuzzy=False)
-        self.ideological_labels = _Lexicon(_load_lines("ideological_labels.txt"), fuzzy=fuzzy)
-        self.outgroup_idiom = _Lexicon(_load_lines("outgroup.txt"), fuzzy=fuzzy)
         self.profanity = _load_profanity()
-        self._sid = None
-        if use_sentiment:
-            from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+        # Ethnic slurs are exact curated forms, separate from profanity, and never inflected.
+        self.ethnic_slurs = _Lexicon(_load_lines("slurs.txt"), fuzzy=False)
+        overlap = self.ethnic_slurs.singles & (
+            self.profanity["mild"].singles | self.profanity["strong"].singles
+        )
+        if overlap:
+            raise ValueError(f"forms listed as both profanity and slurs: {sorted(overlap)}")
 
-            self._sid = SentimentIntensityAnalyzer()
-
-    def _sentiment(self, text: str) -> Tuple[float, float, int]:
-        """Return (mean sentence compound, mean sentence negative share, sentence count).
-
-        VADER is calibrated on sentence-length text and its ``compound`` score
-        saturates on long passages, so scoring a whole speech (or a 5,000-char
-        truncation of it) is biased. We instead split into sentences, score each,
-        and average — the granularity VADER is designed for. The sentence count is
-        returned so the aggregate can length-weight the per-turn mean (matching the
-        word-weighting used for every other metric).
-        """
-        assert self._sid is not None
-        sentences = [s for s in _SENTENCE_RE.split(text) if s.strip()]
-        if not sentences:
-            return 0.0, 0.0, 0
-        comp = neg = 0.0
-        for s in sentences:
-            sc = self._sid.polarity_scores(s)
-            comp += sc["compound"]
-            neg += sc["neg"]
-        n = len(sentences)
-        return comp / n, neg / n, n
-
-    @staticmethod
-    def _count_excluding(
-        lexicon: _Lexicon,
-        tokens: Counter,
-        text: str,
-        exclusions: re.Pattern,
-    ) -> int:
-        return max(0, lexicon.count(tokens, text) - len(exclusions.findall(text)))
-
-    @staticmethod
-    def _without_excluded_spans(
-        spans: List[Tuple[int, int]], text: str, exclusions: re.Pattern
-    ) -> List[Tuple[int, int]]:
-        blocked = [match.span() for match in exclusions.finditer(text)]
+    def _mild_profanity_spans(self, low: str) -> List[Tuple[int, int]]:
+        blocked = [match.span() for match in _MILD_PROFANITY_EXCLUSIONS.finditer(low)]
         return [
-            span for span in spans
+            span for span in self.profanity["mild"].find_spans(low)
             if not any(span[0] < end and start < span[1] for start, end in blocked)
         ]
 
-    def _misconduct_spans(
-        self,
-        text: str,
-        token_spans: Optional[List[Tuple[str, int, int]]] = None,
-    ) -> List[Tuple[int, int]]:
-        spans = self._without_excluded_spans(
-            self.misconduct.find_spans(text, token_spans),
-            text,
-            _MISCONDUCT_EXCLUSIONS,
-        )
-        accepted: List[Tuple[int, int]] = []
-        previous_negated: Optional[Tuple[int, int]] = None
-        for span in spans:
-            directly_negated = bool(
-                _MISCONDUCT_NEGATION.search(text[max(0, span[0] - 80):span[0]])
-            )
-            coordinated_negation = (
-                previous_negated is not None
-                and bool(_MISCONDUCT_COORDINATION.fullmatch(
-                    text[previous_negated[1]:span[0]]
-                ))
-            )
-            if directly_negated or coordinated_negation:
-                previous_negated = span
-            else:
-                accepted.append(span)
-                previous_negated = None
-        return accepted
-
-    @staticmethod
-    def _window_text(text: str, spans: List[Tuple[int, int]], radius: int = 200) -> str:
-        """Concatenate ±``radius``-char windows around each span (merged intervals).
-
-        Fragments are joined with a non-word, non-whitespace sentinel (ASCII RS) so that a
-        phrase can never match *across* a window boundary — text that is not contiguous in
-        the source: the phrase regex's ``\\s+`` / ``\\b`` cannot span the sentinel.
-        """
-        if not spans:
-            return ""
-        ivs = sorted((max(0, s - radius), min(len(text), e + radius)) for s, e in spans)
-        merged: List[List[int]] = [list(ivs[0])]
-        for s, e in ivs[1:]:
-            if s <= merged[-1][1]:
-                merged[-1][1] = max(merged[-1][1], e)
-            else:
-                merged.append([s, e])
-        return " \x1e ".join(text[s:e] for s, e in merged)
-
-    @staticmethod
-    def _reference_context(
-        text: str, span: Tuple[int, int], max_radius: int = 300
-    ) -> str:
-        """Sentence/clause containing one target reference, bounded for OCR run-ons."""
-        start, end = span
-        left_bound = max(0, start - max_radius)
-        right_bound = min(len(text), end + max_radius)
-        left_fragment = text[left_bound:start]
-        right_fragment = text[end:right_bound]
-        left_breaks = [left_fragment.rfind(char) for char in ".!?;\n"]
-        left = left_bound + max(left_breaks) + 1 if max(left_breaks) >= 0 else left_bound
-        right_positions = [
-            pos for char in ".!?;\n"
-            if (pos := right_fragment.find(char)) >= 0
-        ]
-        right = end + min(right_positions) + 1 if right_positions else right_bound
-        return text[left:right]
-
-    def _idiom_spans(self, text_lower: str) -> List[Tuple[int, int]]:
-        if self.outgroup_idiom.phrase_re is None:
-            return []
-        return [m.span() for m in self.outgroup_idiom.phrase_re.finditer(text_lower)]
-
-    @staticmethod
-    def _distinct_spans(spans: List[Tuple[int, int]]) -> List[Tuple[int, int]]:
-        """Collapse overlapping detectors so one reference is counted once."""
-        if not spans:
-            return []
-        merged = [list(span) for span in sorted(spans)]
-        out = [merged[0]]
-        for start, end in merged[1:]:
-            if start < out[-1][1]:
-                out[-1][1] = max(out[-1][1], end)
-            else:
-                out.append([start, end])
-        return [(start, end) for start, end in out]
-
-    def _outgroup_spans(self, text_lower: str, party: str) -> List[Tuple[int, int]]:
-        outtok = _OUTPARTY_TOKENS.get(party)
-        token_spans = [
-            match.span()
-            for match in _TOKEN_RE.finditer(text_lower)
-            if outtok and match.group() in outtok
-        ]
-        phrase_re = _OUTPARTY_PHRASES.get(party)
-        phrase_spans = (
-            [match.span() for match in phrase_re.finditer(text_lower)]
-            if phrase_re else []
-        )
-        return self._distinct_spans(self._idiom_spans(text_lower) + token_spans + phrase_spans)
-
-    def signal_spans(self, text: str, party: str) -> Dict[str, List[Tuple[int, int]]]:
+    def signal_spans(self, text: str) -> Dict[str, List[Tuple[int, int]]]:
         """Return scorer-accepted spans for deterministic validation sampling."""
         low = (text or "").lower()
-        cooperation = self._without_excluded_spans(
-            self.cooperation.find_spans(low), low, _COOPERATION_EXCLUSIONS
-        )
-        hostility = self._without_excluded_spans(
-            self.hostility.find_spans(low), low, _HOSTILITY_EXCLUSIONS
-        )
-        mild = self._without_excluded_spans(
-            self.profanity["mild"].find_spans(low), low, _MILD_PROFANITY_EXCLUSIONS
-        )
         return {
             "formal_courtesy": self.formal_courtesy.find_spans(low),
-            "gratitude_praise": self.gratitude_praise.find_spans(low),
-            "cooperation": cooperation,
-            "personal_attack": hostility,
-            "misconduct_allegation": self._misconduct_spans(low),
-            "profanity": sorted(mild + self.profanity["strong"].find_spans(low)),
-            "identity_slur": self.profanity["slurs"].find_spans(low),
-            "outparty_target": self._outgroup_spans(low, party),
+            "profanity": sorted(
+                self._mild_profanity_spans(low) + self.profanity["strong"].find_spans(low)
+            ),
+            "ethnic_slur": self.ethnic_slurs.find_spans(low),
         }
 
     def profanity_term_counts(self, text: str) -> Counter:
         """Return accepted, unquoted profanity surface forms and their counts.
 
         Callers are responsible for masking quotations first. This uses the same
-        curated tiers and mild-term exclusions as ``score_turn``; identity slurs
-        remain excluded from profanity.
+        curated tiers and mild-term exclusions as ``score_turn``; ethnic slurs
+        are counted separately and never as profanity.
         """
         low = (text or "").lower()
-        mild = self._without_excluded_spans(
-            self.profanity["mild"].find_spans(low), low, _MILD_PROFANITY_EXCLUSIONS
-        )
         strong = self.profanity["strong"].find_spans(low)
         return Counter(
             " ".join(low[start:end].split())
-            for start, end in sorted(mild + strong)
+            for start, end in sorted(self._mild_profanity_spans(low) + strong)
         )
 
-    def score_turn(self, text: str, party: str) -> Dict[str, float]:
-        text = text or ""
-        low = text.lower()
-        # Single tokenization pass: build the token Counter, the word count, AND the
-        # out-party name spans from one walk over the matches (no redundant re-scan).
-        outtok = _OUTPARTY_TOKENS.get(party)
-        tokens: Counter = Counter()
-        outparty_spans: List[Tuple[int, int]] = []
-        misconduct_token_spans: List[Tuple[str, int, int]] = []
-        n_words = 0
-        for m in _TOKEN_RE.finditer(low):
-            g = m.group()
-            tokens[g] += 1
-            if g in self.misconduct.singles:
-                misconduct_token_spans.append((g, *m.span()))
-            n_words += 1
-            if outtok and g in outtok:
-                outparty_spans.append(m.span())
-
-        phrase_re = _OUTPARTY_PHRASES.get(party)
-        phrase_spans = [m.span() for m in phrase_re.finditer(low)] if phrase_re else []
-        spans = self._distinct_spans(self._idiom_spans(low) + outparty_spans + phrase_spans)
-
-        prof = {tier: lex.count(tokens, low) for tier, lex in self.profanity.items()}
-        prof["mild"] = max(
-            0, prof.get("mild", 0) - len(_MILD_PROFANITY_EXCLUSIONS.findall(low))
+    def score_turn(self, text: str) -> Dict[str, int]:
+        low = (text or "").lower()
+        tokens = Counter(_TOKEN_RE.findall(low))
+        mild = max(
+            0,
+            self.profanity["mild"].count(tokens, low)
+            - len(_MILD_PROFANITY_EXCLUSIONS.findall(low)),
         )
-        formal_courtesy_hits = self.formal_courtesy.count(tokens, low)
-        gratitude_praise_hits = self.gratitude_praise.count(tokens, low)
-        cooperation_hits = self._count_excluding(
-            self.cooperation, tokens, low, _COOPERATION_EXCLUSIONS
-        )
-        hostility_hits = self._count_excluding(
-            self.hostility, tokens, low, _HOSTILITY_EXCLUSIONS
-        )
-        misconduct_hits = len(self._misconduct_spans(low, misconduct_token_spans))
-        comity_hits = formal_courtesy_hits + gratitude_praise_hits + cooperation_hits
-        win = self._window_text(low, spans)
-        win_tokens = Counter(_TOKEN_RE.findall(win)) if win else Counter()
-        reference_contexts = []
-        for span in spans:
-            context = self._reference_context(low, span)
-            context_tokens = Counter(_TOKEN_RE.findall(context))
-            reference_contexts.append((context, context_tokens))
-
-        win_formal = self.formal_courtesy.count(win_tokens, win)
-        win_gratitude = self.gratitude_praise.count(win_tokens, win)
-        win_cooperation = self._count_excluding(
-            self.cooperation, win_tokens, win, _COOPERATION_EXCLUSIONS
-        )
-
-        out: Dict[str, float] = {
-            "n_words": n_words,
-            "comity_hits": comity_hits,
-            "formal_courtesy_hits": formal_courtesy_hits,
-            "gratitude_praise_hits": gratitude_praise_hits,
-            "cooperation_hits": cooperation_hits,
-            "hostility_hits": hostility_hits,
-            "misconduct_hits": misconduct_hits,
-            "ideological_label_hits": self.ideological_labels.count(tokens, low),
-            "profanity_mild": prof.get("mild", 0),
-            "profanity_strong": prof.get("strong", 0),
-            "profanity_slurs": prof.get("slurs", 0),
-            # Identity slurs are a separate context-audited category, not profanity.
-            "profanity_hits": prof.get("mild", 0) + prof.get("strong", 0),
-            "outgroup_refs": len(spans),
-            # Only run the pejorative regex when the token "democrat" is present.
-            "democrat_party_pej": len(_DEMOCRAT_PARTY_PEJ.findall(low)) if "democrat" in tokens else 0,
-            "directed_comity_hits": win_formal + win_gratitude + win_cooperation,
-            "directed_hostility_hits": self._count_excluding(
-                self.hostility, win_tokens, win, _HOSTILITY_EXCLUSIONS
-            ),
-            "directed_misconduct_hits": len(self._misconduct_spans(win)),
-            "outgroup_comity_contexts": sum(
-                (
-                    self.formal_courtesy.count(context_tokens, context)
-                    + self.gratitude_praise.count(context_tokens, context)
-                    + self._count_excluding(
-                        self.cooperation,
-                        context_tokens,
-                        context,
-                        _COOPERATION_EXCLUSIONS,
-                    )
-                ) > 0
-                for context, context_tokens in reference_contexts
-            ),
-            "outgroup_hostility_contexts": sum(
-                self._count_excluding(
-                    self.hostility, context_tokens, context, _HOSTILITY_EXCLUSIONS
-                ) > 0
-                for context, context_tokens in reference_contexts
-            ),
-            "outgroup_misconduct_contexts": sum(
-                len(self._misconduct_spans(context)) > 0
-                for context, context_tokens in reference_contexts
-            ),
+        strong = self.profanity["strong"].count(tokens, low)
+        return {
+            "n_words": sum(tokens.values()),
+            "formal_courtesy_hits": self.formal_courtesy.count(tokens, low),
+            "profanity_mild": mild,
+            "profanity_strong": strong,
+            "profanity_hits": mild + strong,
+            "ethnic_slur_hits": self.ethnic_slurs.count(tokens, low),
         }
-        if self._sid is not None:
-            compound, neg_share, n_sentences = self._sentiment(text)
-            out["sentiment"] = compound
-            out["neg_share"] = neg_share
-            out["n_sentences"] = n_sentences
-        return out

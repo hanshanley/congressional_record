@@ -1,4 +1,4 @@
-"""Render civility time-series charts in the shared Substack style.
+"""Render courtesy, profanity, and ethnic-slur time-series charts in the shared style.
 
 Re-aggregates the ``(congress, chamber, party)`` metrics up to ``(congress, party)``
 by summing raw hit counts and words (so rates stay word-weighted), then draws the
@@ -17,9 +17,9 @@ from typing import List
 
 import pandas as pd
 
-from analysis.aggregate import CONTEXT_RATE_TO_COUNT, RATE_TO_HITCOL
+from analysis.aggregate import RATE_TO_HITCOL
 from analysis.plotting import charts, theme
-from analysis.score.registry import CHAMBER_METRICS, HEADLINE_METRICS
+from analysis.score.registry import CHAMBER_METRICS, HEADLINE_METRICS, METRICS
 
 LOG = logging.getLogger("analysis.viz")
 
@@ -35,12 +35,10 @@ SOURCE_BOUNDARY_YEAR = 2017
 
 # Top of the tight-layout rect, leaving headroom for the figure suptitle. A two-line
 # suptitle (chamber overview) needs a little more room than a one-line one.
-_RECT_TOP_1LINE = 0.97
-_RECT_TOP_2LINE = 0.95
+_RECT_TOP_1LINE = 0.93
+_RECT_TOP_2LINE = 0.88
 
-_HIT_COLS = list(dict.fromkeys([
-    *RATE_TO_HITCOL.values(), *CONTEXT_RATE_TO_COUNT.values(), "words"
-]))
+_HIT_COLS = list(dict.fromkeys([*RATE_TO_HITCOL.values(), "words"]))
 
 
 def _available_hit_cols(df: pd.DataFrame) -> List[str]:
@@ -55,11 +53,6 @@ def _add_rates(g: pd.DataFrame) -> pd.DataFrame:
     for rate, col in RATE_TO_HITCOL.items():
         if col in g.columns:
             g[rate] = 1000 * g[col] / w
-    refs = g["outgroup_refs"].where(g["outgroup_refs"] != 0) if "outgroup_refs" in g.columns else None
-    if refs is not None:
-        for rate, col in CONTEXT_RATE_TO_COUNT.items():
-            if col in g.columns:
-                g[rate] = (100 * g[col] / refs).fillna(0.0)
     return g
 
 
@@ -128,35 +121,8 @@ def _load_provenance(metrics_path: Path) -> tuple[int, str]:
 _PANELS = [(metric.rate, metric.title, metric.units) for metric in HEADLINE_METRICS]
 
 _SUPPLEMENTAL_PANELS = [
-    ("comity_per_1k", "All coded comity / deference phrases", "hits per 1,000 words"),
-    ("ideological_label_per_1k", "Ideological labels", "hits per 1,000 words"),
-    ("outgroup_ref_per_1k", "References to the other party", "refs per 1,000 words"),
-    (
-        "outgroup_hostility_contexts_per_100_refs",
-        "Out-party references with nearby personal disrespect",
-        "contexts per 100 references",
-    ),
-    (
-        "outgroup_misconduct_contexts_per_100_refs",
-        "Out-party references with nearby misconduct allegations",
-        "contexts per 100 references",
-    ),
-    (
-        "outgroup_comity_contexts_per_100_refs",
-        "Out-party references with nearby comity language",
-        "contexts per 100 references",
-    ),
-    (
-        "directed_hostility_per_1k",
-        "Personal disrespect near out-party references",
-        "hits per 1,000 words",
-    ),
-    (
-        "directed_misconduct_per_1k",
-        "Misconduct allegations near out-party references",
-        "hits per 1,000 words",
-    ),
-    ("democrat_party_pej_per_1k", '"Democrat party" pejorative', "hits per 1,000 words"),
+    (metric.rate, metric.title, metric.units)
+    for metric in METRICS if not metric.headline
 ]
 
 _CHAMBER_PANELS = [(metric.rate, metric.title, metric.units) for metric in CHAMBER_METRICS]
@@ -164,7 +130,7 @@ _CHAMBER_PANELS = [(metric.rate, metric.title, metric.units) for metric in CHAMB
 
 def _grid_overview(g: pd.DataFrame, figs_dir: Path, plot_fn, suptitle: str,
                    out_name: str, *, legend_fontsize: int, rect_top: float) -> Path:
-    """Render a 2x3 small-multiples overview (one panel per metric in ``_PANELS``).
+    """Render a one-row small-multiples overview (one panel per metric in ``_PANELS``).
 
     ``plot_fn(ax, g, col)`` draws the series for one metric; the two overviews (by party,
     and by party x chamber) differ only in that callback, the suptitle, and spacing.
@@ -172,7 +138,7 @@ def _grid_overview(g: pd.DataFrame, figs_dir: Path, plot_fn, suptitle: str,
     theme.apply()
     import matplotlib.pyplot as plt
 
-    fig, axes = plt.subplots(2, 3, figsize=(16, 9))
+    fig, axes = plt.subplots(1, len(_PANELS), figsize=(16, 5.2), squeeze=False)
     for ax, (col, title, ylab) in zip(axes.flat, _PANELS):
         plot_fn(ax, g, col)
         charts.style_axes(ax, title, "Year", ylab)
@@ -189,40 +155,13 @@ def _grid_overview(g: pd.DataFrame, figs_dir: Path, plot_fn, suptitle: str,
 def _overview(g: pd.DataFrame, figs_dir: Path) -> Path:
     return _grid_overview(
         g, figs_dir, _plot_by_party,
-        "Congressional comity and conflict language \u2014 U.S. Congressional Record, 1873\u20132026",
+        "Courtesy, profanity, and ethnic slurs \u2014 U.S. Congressional Record, 1873\u20132026",
         "overview.png", legend_fontsize=9, rect_top=_RECT_TOP_1LINE,
     )
 
 
-def _asymmetry(gc: pd.DataFrame, figs_dir: Path) -> Path:
-    """Fixed-weight House/Senate D-R difference in nearby disrespect."""
-    piv = gc.pivot_table(
-        index=["year", "chamber"], columns="party",
-        values="directed_hostility_per_1k",
-    )
-    fig, ax = charts.new_figure(figsize=(10, 5.5))
-    if {"D", "R"}.issubset(piv.columns):
-        chamber_diff = (piv["D"] - piv["R"]).unstack("chamber")
-        chamber_diff = chamber_diff.dropna(subset=["house", "senate"])
-        diff = chamber_diff[["house", "senate"]].mean(axis=1)
-        ax.fill_between(diff.index, 0, diff.clip(lower=0), color=theme.BLUE, alpha=0.5,
-                        label="Higher Democratic rate")
-        ax.fill_between(diff.index, 0, diff.clip(upper=0), color=theme.ACCENT, alpha=0.5,
-                        label="Higher Republican rate")
-        charts.line(ax, diff.index, diff.values, color=theme.TEXT, label="D \u2212 R", linewidth=1.6)
-    ax.axhline(0, color=theme.MUTED, linewidth=0.8)
-    charts.style_axes(
-        ax,
-        "Asymmetry in disrespect near out-party references",
-        "Year",
-        "D \u2212 R nearby-disrespect rate (per 1,000 words)",
-        subtitle="Equal House/Senate weights; proximity does not prove direction",
-    )
-    return charts.finish(fig, ax, figs_dir / "directed_asymmetry.png", source=SOURCE_NOTE)
-
-
 def _overview_for_chamber(gc: pd.DataFrame, figs_dir: Path, chamber: str) -> Path:
-    """Six-panel overview of one chamber, Democrats vs Republicans.
+    """Headline-measure overview of one chamber, Democrats vs Republicans.
 
     Splitting the chambers into separate figures replaces the previous combined
     version, which crammed four series into every panel and made the House and
@@ -231,7 +170,7 @@ def _overview_for_chamber(gc: pd.DataFrame, figs_dir: Path, chamber: str) -> Pat
     label = theme.CHAMBER_LABELS[chamber]
     return _grid_overview(
         gc[gc["chamber"] == chamber], figs_dir, _plot_by_party,
-        f"Civility in the U.S. {label} \u2014 Congressional Record, 1873\u20132026\n"
+        f"Floor language in the U.S. {label} \u2014 Congressional Record, 1873\u20132026\n"
         "Democrats vs Republicans",
         f"overview_{chamber}.png", legend_fontsize=9, rect_top=_RECT_TOP_2LINE,
     )
@@ -280,8 +219,6 @@ def render(metrics_path: Path, out_dir: Path) -> List[Path]:
                     fig, ax, temp_figs / f"{col}_{chamber}.png",
                     source=SOURCE_NOTE, legend=False,
                 ))
-
-        written.append(_asymmetry(gc, temp_figs))
 
         data_root = metrics_path.parents[2]
         tbl_dir = data_root / "reports" / "tables"
