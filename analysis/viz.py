@@ -147,7 +147,8 @@ _CHAMBER_PANELS = [(metric.rate, metric.title, metric.units) for metric in CHAMB
 
 def _grid_overview(g: pd.DataFrame, figs_dir: Path, plot_fn, suptitle: str,
                    out_name: str, *, legend_fontsize: int, rect_top: float,
-                   panels: List[tuple] = _PANELS, source_note: str | None = None) -> Path:
+                   panels: List[tuple] = _PANELS, source_note: str | None = None,
+                   last50: bool = False) -> Path:
     """Render a one-row small-multiples overview (one panel per metric in ``_PANELS``).
 
     ``plot_fn(ax, g, col)`` draws the series for one metric; the two overviews (by party,
@@ -162,6 +163,9 @@ def _grid_overview(g: pd.DataFrame, figs_dir: Path, plot_fn, suptitle: str,
     for ax, (col, title, ylab) in zip(axes.flat, panels):
         plot_fn(ax, g, col)
         charts.style_axes(ax, title, "Year", ylab)
+        if last50:
+            _set_recent_year_ticks(ax, g)
+            ax.tick_params(axis="x", labelsize=9)
     axes.flat[0].legend(loc="best", frameon=False, labelcolor=theme.TEXT, fontsize=legend_fontsize)
     fig.suptitle(suptitle, fontweight="bold")
     theme.source_note(fig, SOURCE_NOTE if source_note is None else source_note)
@@ -176,13 +180,22 @@ def _span(g: pd.DataFrame) -> str:
     return f"{int(g['year'].min())}\u2013present"
 
 
+def _set_recent_year_ticks(ax, frame: pd.DataFrame) -> None:
+    first_year = int(frame["year"].min())
+    last_year = int(frame["year"].max())
+    ticks = list(range(5 * ((first_year + 4) // 5), last_year + 1, 5))
+    if last_year not in ticks:
+        ticks.append(last_year)
+    ax.set_xticks(ticks)
+
+
 def _overview(g: pd.DataFrame, figs_dir: Path, panels: List[tuple] = _PANELS, *,
               suffix: str = "", source_note: str | None = None) -> Path:
     return _grid_overview(
         g, figs_dir, _plot_by_party,
         f"Floor language in the U.S. Congressional Record, {_span(g)}",
         f"overview{suffix}.png", legend_fontsize=9, rect_top=_RECT_TOP_1LINE,
-        panels=panels, source_note=source_note,
+        panels=panels, source_note=source_note, last50=bool(suffix),
     )
 
 
@@ -202,7 +215,7 @@ def _overview_for_chamber(gc: pd.DataFrame, figs_dir: Path, chamber: str,
         f"Floor language in the U.S. {label} \u2014 Congressional Record, {_span(sub)}\n"
         "Democrats vs Republicans",
         f"overview_{chamber}{suffix}.png", legend_fontsize=9, rect_top=_RECT_TOP_2LINE,
-        panels=panels, source_note=source_note,
+        panels=panels, source_note=source_note, last50=bool(suffix),
     )
 
 
@@ -263,8 +276,7 @@ def render(metrics_path: Path, out_dir: Path) -> List[Path]:
                     subtitle += f" \u2014 {_span(period_g)}"
                 charts.style_axes(ax, title, "Year", ylab, subtitle=subtitle)
                 if suffix:
-                    ax.set_xticks([tick for tick in ax.get_xticks()
-                                   if period_g["year"].min() <= tick <= period_g["year"].max()])
+                    _set_recent_year_ticks(ax, period_g)
                 written.append(charts.finish(
                     fig, ax, temp_figs / f"{col}{suffix}.png",
                     source=source_note, legend=False,
@@ -284,8 +296,7 @@ def render(metrics_path: Path, out_dir: Path) -> List[Path]:
                     charts.style_axes(ax, f"{title} \u2014 {label}", "Year", ylab,
                                       subtitle=subtitle)
                     if suffix:
-                        ax.set_xticks([tick for tick in ax.get_xticks()
-                                       if sub["year"].min() <= tick <= sub["year"].max()])
+                        _set_recent_year_ticks(ax, sub)
                     written.append(charts.finish(
                         fig, ax, temp_figs / f"{col}_{chamber}{suffix}.png",
                         source=source_note, legend=False,

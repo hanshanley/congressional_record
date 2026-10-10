@@ -214,6 +214,7 @@ def test_viz_draws_only_measures_present_in_the_metrics_table(tmp_path) -> None:
 def test_last50_figures_filter_years_without_changing_rates(tmp_path, monkeypatch) -> None:
     from datetime import date
 
+    from matplotlib.figure import Figure
     import pandas as pd
     from analysis import viz
     from analysis.ingest.schema import congress_from_year
@@ -247,6 +248,20 @@ def test_last50_figures_filter_years_without_changing_rates(tmp_path, monkeypatc
         return finish(fig, ax, path, **kwargs)
 
     monkeypatch.setattr(viz.charts, "finish", capture)
+    savefig = Figure.savefig
+
+    def check_labels(fig, *args, **kwargs):
+        result = savefig(fig, *args, **kwargs)
+        fig.canvas.draw()
+        renderer = fig.canvas.get_renderer()
+        for axis in fig.axes:
+            boxes = [label.get_window_extent(renderer)
+                     for label in axis.get_xticklabels() if label.get_visible()]
+            boxes.sort(key=lambda box: box.x0)
+            assert all(left.x1 < right.x0 for left, right in zip(boxes, boxes[1:]))
+        return result
+
+    monkeypatch.setattr(Figure, "savefig", check_labels)
     names = {path.name for path in viz.render(metrics, tmp_path / "outputs")}
     full_names = {name for name in names if "_last50" not in name}
     assert len(full_names) == 9
@@ -259,6 +274,8 @@ def test_last50_figures_filter_years_without_changing_rates(tmp_path, monkeypatc
     assert all(1977 <= tick <= 2025
                for name, chart in captured.items() if "_last50" in name
                for tick in chart["ticks"])
+    assert all(chart["ticks"] == list(range(1980, 2026, 5))
+               for name, chart in captured.items() if "_last50" in name)
     assert captured["profanity_per_1k_last50.png"]["source"] == (
         "Sources: Stanford Hein (1977-2017) + GovInfo CREC (2017-present)."
     )
