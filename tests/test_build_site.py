@@ -426,6 +426,34 @@ def test_language_page_censors_terms_outside_tables(store, tmp_path):
     assert "“${member.favorite_profanity_term}”" not in page
 
 
+def test_language_section_navigation_and_controls_remain_accessible(store, tmp_path):
+    path, _, bills = store
+    module = _load_build_site()
+    out = tmp_path / "site"
+    assert module.main([
+        "--daily", str(path), "--bills", str(bills), "--out", str(out),
+        "--min-words", "1000",
+    ]) == 0
+    document = BeautifulSoup((out / "index.html").read_text(), "html.parser")
+    navigation = document.find("nav", attrs={"aria-label": "Explore the language of Congress"})
+    targets = [link["href"].removeprefix("#") for link in navigation.find_all("a")]
+    assert targets == ["history", "members", "terms"]
+    for target in targets:
+        section = document.find(id=target)
+        assert section.name == "section"
+        heading = document.find(id=section["aria-labelledby"])
+        assert heading and heading.get_text(strip=True)
+    for selector in (
+        "long-run-metric", "long-run-chamber", "congress",
+        "recent-metric", "recent-chamber", "recent-view", "term-party", "term-chamber",
+    ):
+        control = document.find(id=selector)
+        assert control.name == "select"
+        assert control.find_parent("label").get_text(strip=True)
+    assert document.select_one("#members #language-highlight")
+    assert document.select_one("#terms .reading-note")
+
+
 def test_builds_combined_last_five_congresses_payload(store, tmp_path):
     path, daily, bills = store
     earlier = _daily([
