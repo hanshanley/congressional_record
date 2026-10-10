@@ -24,6 +24,9 @@ change at 2017 as a possible source artifact rather than a real shift.
   <img src="outputs/figures/overview.png" width="1200" alt="Formal courtesy, profanity, and slurs in Congress, Democrats vs Republicans, 1873 to present">
 </p>
 
+Matching [past-50-year figures](docs/ANALYSIS.md#past-50-years) are available alongside every
+full-history chart in [`outputs/figures/`](outputs/figures).
+
 ## What is counted
 
 | Measure | What matches | Sources |

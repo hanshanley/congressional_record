@@ -98,12 +98,13 @@ def _plot_by_party(ax, g: pd.DataFrame, col: str, parties=("D", "R"), *,
         _place_end_labels(ax, ends)
 
 
-def _load_provenance(metrics_path: Path) -> tuple[int, str]:
+def _load_provenance(metrics_path: Path, *, first_year: int | None = None) -> tuple[int, str]:
     """Build plot provenance from aggregate metadata, with a legacy fallback."""
     metadata_path = metrics_path.parent.parent / "coverage" / "source_metadata.json"
-    if not metadata_path.exists():
-        return SOURCE_BOUNDARY_YEAR, SOURCE_NOTE
-    metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
+    metadata = (
+        json.loads(metadata_path.read_text(encoding="utf-8"))
+        if metadata_path.exists() else {}
+    )
     boundary = int(metadata.get("primary_boundary_year") or SOURCE_BOUNDARY_YEAR)
     sources = metadata.get("sources", [])
     # Hein comes in two editions (bound 1873-1980, daily 1981-2017) and GovInfo also holds
@@ -120,10 +121,16 @@ def _load_provenance(metrics_path: Path) -> tuple[int, str]:
         if govinfo_last is None or govinfo_last >= congress_from_year(date.today().year)
         else str(year_from_congress(govinfo_last + 1))
     )
-    note = (
-        f"Sources: Stanford Hein ({hein_start}-{year_from_congress(hein_last + 1)}) "
-        f"+ GovInfo CREC ({boundary}-{govinfo_end})."
-    )
+    hein_end = year_from_congress(hein_last + 1)
+    govinfo_start = boundary
+    if first_year is not None:
+        hein_start = max(hein_start, first_year)
+        govinfo_start = max(govinfo_start, first_year)
+    source_labels = []
+    if hein_start < hein_end:
+        source_labels.append(f"Stanford Hein ({hein_start}-{hein_end})")
+    source_labels.append(f"GovInfo CREC ({govinfo_start}-{govinfo_end})")
+    note = "Sources: " + " + ".join(source_labels) + "."
     return boundary, note
 
 
@@ -140,7 +147,7 @@ _CHAMBER_PANELS = [(metric.rate, metric.title, metric.units) for metric in CHAMB
 
 def _grid_overview(g: pd.DataFrame, figs_dir: Path, plot_fn, suptitle: str,
                    out_name: str, *, legend_fontsize: int, rect_top: float,
-                   panels: List[tuple] = _PANELS) -> Path:
+                   panels: List[tuple] = _PANELS, source_note: str | None = None) -> Path:
     """Render a one-row small-multiples overview (one panel per metric in ``_PANELS``).
 
     ``plot_fn(ax, g, col)`` draws the series for one metric; the two overviews (by party,
@@ -157,7 +164,7 @@ def _grid_overview(g: pd.DataFrame, figs_dir: Path, plot_fn, suptitle: str,
         charts.style_axes(ax, title, "Year", ylab)
     axes.flat[0].legend(loc="best", frameon=False, labelcolor=theme.TEXT, fontsize=legend_fontsize)
     fig.suptitle(suptitle, fontweight="bold")
-    theme.source_note(fig, SOURCE_NOTE)
+    theme.source_note(fig, SOURCE_NOTE if source_note is None else source_note)
     fig.tight_layout(rect=(0, 0.03, 1, rect_top))
     out = figs_dir / out_name
     fig.savefig(out, dpi=200, bbox_inches="tight")
@@ -169,16 +176,19 @@ def _span(g: pd.DataFrame) -> str:
     return f"{int(g['year'].min())}\u2013present"
 
 
-def _overview(g: pd.DataFrame, figs_dir: Path, panels: List[tuple] = _PANELS) -> Path:
+def _overview(g: pd.DataFrame, figs_dir: Path, panels: List[tuple] = _PANELS, *,
+              suffix: str = "", source_note: str | None = None) -> Path:
     return _grid_overview(
         g, figs_dir, _plot_by_party,
         f"Floor language in the U.S. Congressional Record, {_span(g)}",
-        "overview.png", legend_fontsize=9, rect_top=_RECT_TOP_1LINE, panels=panels,
+        f"overview{suffix}.png", legend_fontsize=9, rect_top=_RECT_TOP_1LINE,
+        panels=panels, source_note=source_note,
     )
 
 
 def _overview_for_chamber(gc: pd.DataFrame, figs_dir: Path, chamber: str,
-                          panels: List[tuple] = _PANELS) -> Path:
+                          panels: List[tuple] = _PANELS, *, suffix: str = "",
+                          source_note: str | None = None) -> Path:
     """Headline-measure overview of one chamber, Democrats vs Republicans.
 
     Splitting the chambers into separate figures replaces the previous combined
@@ -186,12 +196,13 @@ def _overview_for_chamber(gc: pd.DataFrame, figs_dir: Path, chamber: str,
     Senate lines fight for the same space.
     """
     label = theme.CHAMBER_LABELS[chamber]
+    sub = gc[gc["chamber"] == chamber]
     return _grid_overview(
-        gc[gc["chamber"] == chamber], figs_dir, _plot_by_party,
-        f"Floor language in the U.S. {label} \u2014 Congressional Record, {_span(gc)}\n"
+        sub, figs_dir, _plot_by_party,
+        f"Floor language in the U.S. {label} \u2014 Congressional Record, {_span(sub)}\n"
         "Democrats vs Republicans",
-        f"overview_{chamber}.png", legend_fontsize=9, rect_top=_RECT_TOP_2LINE,
-        panels=panels,
+        f"overview_{chamber}{suffix}.png", legend_fontsize=9, rect_top=_RECT_TOP_2LINE,
+        panels=panels, source_note=source_note,
     )
 
 
@@ -219,38 +230,66 @@ def render(metrics_path: Path, out_dir: Path) -> List[Path]:
     figs_dir.mkdir(parents=True, exist_ok=True)
     temp_figs = Path(tempfile.mkdtemp(prefix=".figures-", dir=figs_dir.parent))
     try:
-        written: List[Path] = [
-            _overview(g, temp_figs, headline),
-            _overview_for_chamber(gc, temp_figs, "house", headline),
-            _overview_for_chamber(gc, temp_figs, "senate", headline),
-        ]
+        written: List[Path] = []
+        scopes = [("", g, gc)]
+        current_year = date.today().year
+        # Inclusive calendar-year window: in 2026, 1977 through 2026.
+        first_year = current_year - 49
+        recent_g = g[g["year"].between(first_year, current_year)]
+        recent_gc = gc[gc["year"].between(first_year, current_year)]
+        if not recent_g.empty:
+            scopes.append(("_last50", recent_g, recent_gc))
 
-        for col, title, ylab in [*headline, *supplemental]:
-            # overall (by party): clean markerless lines with direct end-of-line party labels
-            fig, ax = charts.new_figure(figsize=(10, 5.5))
-            _plot_by_party(ax, g, col, label_ends=True, marker=None, linewidth=2.6)
-            charts.style_axes(ax, title, "Year", ylab,
-                              subtitle="U.S. House & Senate combined, Democrats vs Republicans")
-            written.append(charts.finish(
-                fig, ax, temp_figs / f"{col}.png", source=SOURCE_NOTE, legend=False
+        for suffix, period_g, period_gc in scopes:
+            source_note = (
+                _load_provenance(metrics_path, first_year=int(period_g["year"].min()))[1]
+                if suffix else SOURCE_NOTE
+            )
+            written.append(_overview(
+                period_g, temp_figs, headline, suffix=suffix, source_note=source_note
             ))
-
-        # Per-chamber breakdowns for the headline measures: one figure each, so the
-        # House and Senate series are never overplotted on the same axes.
-        for col, title, ylab in chamber_panels:
             for chamber in ("house", "senate"):
-                sub = gc[gc["chamber"] == chamber]
-                if sub.empty:
-                    continue
-                label = theme.CHAMBER_LABELS[chamber]
+                if not period_gc[period_gc["chamber"] == chamber].empty:
+                    written.append(_overview_for_chamber(
+                        period_gc, temp_figs, chamber, headline,
+                        suffix=suffix, source_note=source_note,
+                    ))
+
+            for col, title, ylab in [*headline, *supplemental]:
                 fig, ax = charts.new_figure(figsize=(10, 5.5))
-                _plot_by_party(ax, sub, col, label_ends=True, marker=None, linewidth=2.6)
-                charts.style_axes(ax, f"{title} \u2014 {label}", "Year", ylab,
-                                  subtitle=f"U.S. {label}, Democrats vs Republicans")
+                _plot_by_party(ax, period_g, col, label_ends=True, marker=None, linewidth=2.6)
+                subtitle = "U.S. House & Senate combined, Democrats vs Republicans"
+                if suffix:
+                    subtitle += f" \u2014 {_span(period_g)}"
+                charts.style_axes(ax, title, "Year", ylab, subtitle=subtitle)
+                if suffix:
+                    ax.set_xticks([tick for tick in ax.get_xticks()
+                                   if period_g["year"].min() <= tick <= period_g["year"].max()])
                 written.append(charts.finish(
-                    fig, ax, temp_figs / f"{col}_{chamber}.png",
-                    source=SOURCE_NOTE, legend=False,
+                    fig, ax, temp_figs / f"{col}{suffix}.png",
+                    source=source_note, legend=False,
                 ))
+
+            for col, title, ylab in chamber_panels:
+                for chamber in ("house", "senate"):
+                    sub = period_gc[period_gc["chamber"] == chamber]
+                    if sub.empty:
+                        continue
+                    label = theme.CHAMBER_LABELS[chamber]
+                    fig, ax = charts.new_figure(figsize=(10, 5.5))
+                    _plot_by_party(ax, sub, col, label_ends=True, marker=None, linewidth=2.6)
+                    subtitle = f"U.S. {label}, Democrats vs Republicans"
+                    if suffix:
+                        subtitle += f" \u2014 {_span(sub)}"
+                    charts.style_axes(ax, f"{title} \u2014 {label}", "Year", ylab,
+                                      subtitle=subtitle)
+                    if suffix:
+                        ax.set_xticks([tick for tick in ax.get_xticks()
+                                       if sub["year"].min() <= tick <= sub["year"].max()])
+                    written.append(charts.finish(
+                        fig, ax, temp_figs / f"{col}_{chamber}{suffix}.png",
+                        source=source_note, legend=False,
+                    ))
 
         data_root = metrics_path.parents[2]
         tbl_dir = data_root / "reports" / "tables"

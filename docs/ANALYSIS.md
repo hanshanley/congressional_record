@@ -18,8 +18,8 @@ time-series charts. It unifies two corpora into one speaker-turn table:
 ## Key figures
 
 These publication figures are generated from real Stanford/GovInfo Congressional Record text and
-are intentionally tracked under `outputs/figures/`. All rates are per 1,000 words unless noted,
-and every panel carries the coverage caveat described under
+are intentionally tracked under `outputs/figures/`. All rates are per 1,000 words unless noted.
+Coverage limitations are documented under
 [Two ingest paths](DATA_PIPELINE.md#two-ingest-paths--check-coverage-before-you-trust-a-date). Note that the
 primary source switches from Stanford Hein to GovInfo CREC in 2017, so treat a step change
 across that year as possibly a source artifact rather than a real shift.
@@ -37,6 +37,19 @@ rates do not flatten the Senate.
 ![Headline measures for the U.S. House, Democrats vs Republicans](../outputs/figures/overview_house.png)
 
 ![Headline measures for the U.S. Senate, Democrats vs Republicans](../outputs/figures/overview_senate.png)
+
+### Past 50 years
+
+Every full-history figure has a matching `_last50.png` version: the combined overview, the House
+and Senate overviews, and each measure's combined and chamber-specific charts. The window is the
+current calendar year plus the previous 49 years (1977–present in 2026), using the same counts,
+word-weighted rates, and party colors. The window rolls forward automatically on each rebuild.
+
+![Headline measures over the past 50 years](../outputs/figures/overview_last50.png)
+
+![House headline measures over the past 50 years](../outputs/figures/overview_house_last50.png)
+
+![Senate headline measures over the past 50 years](../outputs/figures/overview_senate_last50.png)
 
 ### Formal courtesy
 

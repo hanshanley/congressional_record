@@ -208,6 +208,64 @@ def test_viz_draws_only_measures_present_in_the_metrics_table(tmp_path) -> None:
     assert "profanity_per_1k.png" in names and "overview.png" in names
     assert not any(name.startswith(("slurs", "profanity_mild", "profanity_strong"))
                    for name in names)
+    assert not any("_last50" in name for name in names)
+
+
+def test_last50_figures_filter_years_without_changing_rates(tmp_path, monkeypatch) -> None:
+    from datetime import date
+
+    import pandas as pd
+    from analysis import viz
+    from analysis.ingest.schema import congress_from_year
+
+    class FrozenDate(date):
+        @classmethod
+        def today(cls):
+            return cls(2026, 10, 10)
+
+    monkeypatch.setattr(viz, "date", FrozenDate)
+    metrics = tmp_path / "data" / "processed" / "metrics" / "civility_metrics.parquet"
+    metrics.parent.mkdir(parents=True)
+    frame = pd.DataFrame([
+        {"congress": congress_from_year(year), "year": year, "chamber": chamber,
+         "party": party, "words": 10_000, "formal_courtesy_hits": 12,
+         "profanity_hits": hits}
+        for year, hits in ((1976, 100), (1977, 2), (2025, 3))
+        for chamber in ("house", "senate") for party in ("D", "R")
+    ])
+    frame.to_parquet(metrics, index=False)
+    captured = {}
+    finish = viz.charts.finish
+
+    def capture(fig, ax, path, **kwargs):
+        captured[path.name] = {
+            "lines": [(line.get_xdata().tolist(), line.get_ydata().tolist())
+                      for line in ax.lines],
+            "ticks": ax.get_xticks().tolist(),
+            "source": kwargs["source"],
+        }
+        return finish(fig, ax, path, **kwargs)
+
+    monkeypatch.setattr(viz.charts, "finish", capture)
+    names = {path.name for path in viz.render(metrics, tmp_path / "outputs")}
+    full_names = {name for name in names if "_last50" not in name}
+    assert len(full_names) == 9
+    assert {name.removesuffix(".png") + "_last50.png" for name in full_names} <= names
+    full = captured["profanity_per_1k.png"]["lines"]
+    recent = captured["profanity_per_1k_last50.png"]["lines"]
+    assert all(years == [1976, 1977, 2025] for years, _ in full)
+    assert all(years == [1977, 2025] for years, _ in recent)
+    assert [rates for _, rates in recent] == [rates[1:] for _, rates in full]
+    assert all(1977 <= tick <= 2025
+               for name, chart in captured.items() if "_last50" in name
+               for tick in chart["ticks"])
+    assert captured["profanity_per_1k_last50.png"]["source"] == (
+        "Sources: Stanford Hein (1977-2017) + GovInfo CREC (2017-present)."
+    )
+    exported = pd.read_csv(
+        tmp_path / "data" / "reports" / "tables" / "metrics_by_congress_party.csv"
+    )
+    assert 1976 in set(exported["year"])
 
 
 def test_source_note_spans_every_hein_edition_and_ends_at_present(tmp_path) -> None:
