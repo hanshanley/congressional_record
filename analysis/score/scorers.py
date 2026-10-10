@@ -4,7 +4,8 @@ Loads the lexicons once and scores a turn's text for three measures:
 
 * formulaic courtesy / deference (fuzzy-matched phrases such as "my distinguished colleague")
 * profanity, by tier (mild/strong), from an exact high-precision codebook
-* ethnic slurs used in the United States, from a separate exact codebook
+* ethnic, sexual-orientation, gender-identity, and disability slurs used in the United
+  States, from a separate exact codebook with context exclusions for homographs
 
 Performance: each turn is tokenized **once** into lowercased word tokens. Single-word
 lexicon terms are counted by O(1) set/dict membership; only genuinely multi-word
@@ -27,6 +28,24 @@ _MILD_PROFANITY_EXCLUSIONS = re.compile(
     r"|\bkilled\s+a\s+damn\s+in\b"
     r"|\bmy\s+damn\s+sin\b"
     r"|\bcrap\s+game\b"
+)
+# Slur forms that double as other words. A slur span overlapping one of these is not counted.
+_SLUR_EXCLUSIONS = re.compile(
+    # "retard" as a verb: after a modal/auxiliary/adverb, or followed by an object.
+    r"\b(?:to|will|would|may|might|could|can|cannot|should|must|shall|not|does|did|do"
+    r"|tend|tends|further|greatly|seriously|materially|thus|only|also|merely|but)\s+retard\b"
+    r"|\bretards?\s+(?:the|its|their|our|his|her|a|an|this|that|these|those|any|all|such"
+    r"|economic|growth|progress|development|recovery|investment|production|commerce|trade"
+    r"|competition|innovation|it|them|us|rather|instead)\b"
+    # Archaic "faggot", a bundle of sticks, and 19th-century "faggot votes".
+    r"|\bfaggots?\s+(?:of|votes?|voters?|voting)\b"
+    r"|\b(?:sticks|wood|brush|fuel|bundles?)\s+(?:and\s+)?faggots?\b"
+    r"|\bfag\s+ends?\b"
+    r"|\bhomo\s+(?:sapiens|erectus|habilis|economicus|faber|neanderthalensis|novus|politicus"
+    r"|ludens|homini)\b|\becce\s+homo\b"
+    # Line-break hyphenation in the printed Record ("homo- geneous", "re- tard- ed").
+    r"|\b[a-z]+-\s+[a-z]"
+    r"|\b[a-z]+\s*-\s*\n"
 )
 # Tokenizer: word tokens keep internal hyphens/apostrophes (un-american, don't).
 _TOKEN_RE = re.compile(r"[a-z0-9]+(?:[-'\u2019][a-z0-9]+)*")
@@ -212,7 +231,7 @@ class _Lexicon:
 def _load_profanity() -> Dict[str, "_Lexicon"]:
     # Profanity uses an explicitly enumerated high-precision list: do not generate
     # morphology (the former broad list turned ordinary words such as "strips" and
-    # "erected" into profanity). Ethnic slurs are kept in a separate exact list.
+    # "erected" into profanity). Slurs are kept in a separate exact list.
     tiers: Dict[str, List[str]] = {"mild": [], "strong": []}
     for line in _load_lines("profanity.txt"):
         term, _, tier = line.partition("\t")
@@ -236,9 +255,9 @@ class Scorers:
     def __init__(self, fuzzy: bool = True) -> None:
         self.formal_courtesy = _Lexicon(_load_lines("formal_courtesy.txt"), fuzzy=fuzzy)
         self.profanity = _load_profanity()
-        # Ethnic slurs are exact curated forms, separate from profanity, and never inflected.
-        self.ethnic_slurs = _Lexicon(_load_lines("slurs.txt"), fuzzy=False)
-        overlap = self.ethnic_slurs.singles & (
+        # Slurs are exact curated forms, separate from profanity, and never inflected.
+        self.slurs = _Lexicon(_load_lines("slurs.txt"), fuzzy=False)
+        overlap = self.slurs.singles & (
             self.profanity["mild"].singles | self.profanity["strong"].singles
         )
         if overlap:
@@ -251,6 +270,18 @@ class Scorers:
             if not any(span[0] < end and start < span[1] for start, end in blocked)
         ]
 
+    def _slur_spans(self, low: str) -> List[Tuple[int, int]]:
+        blocked = [match.span() for match in _SLUR_EXCLUSIONS.finditer(low)]
+        return [
+            span for span in self.slurs.find_spans(low)
+            if not any(span[0] < end and start < span[1] for start, end in blocked)
+        ]
+
+    def _slur_count(self, tokens: Counter, low: str) -> int:
+        count = self.slurs.count(tokens, low)
+        # Exclusion contexts are rare, so only pay for span matching when a slur matched.
+        return len(self._slur_spans(low)) if count else 0
+
     def signal_spans(self, text: str) -> Dict[str, List[Tuple[int, int]]]:
         """Return scorer-accepted spans for deterministic validation sampling."""
         low = (text or "").lower()
@@ -259,14 +290,14 @@ class Scorers:
             "profanity": sorted(
                 self._mild_profanity_spans(low) + self.profanity["strong"].find_spans(low)
             ),
-            "ethnic_slur": self.ethnic_slurs.find_spans(low),
+            "slur": self._slur_spans(low),
         }
 
     def profanity_term_counts(self, text: str) -> Counter:
         """Return accepted, unquoted profanity surface forms and their counts.
 
         Callers are responsible for masking quotations first. This uses the same
-        curated tiers and mild-term exclusions as ``score_turn``; ethnic slurs
+        curated tiers and mild-term exclusions as ``score_turn``; slurs
         are counted separately and never as profanity.
         """
         low = (text or "").lower()
@@ -291,5 +322,5 @@ class Scorers:
             "profanity_mild": mild,
             "profanity_strong": strong,
             "profanity_hits": mild + strong,
-            "ethnic_slur_hits": self.ethnic_slurs.count(tokens, low),
+            "slur_hits": self._slur_count(tokens, low),
         }

@@ -47,7 +47,7 @@ def test_compiled_lexicons_are_identical_across_hash_seeds():
         from analysis.score.scorers import Scorers
         s = Scorers()
         h = hashlib.sha256()
-        lexicons = [s.formal_courtesy, s.ethnic_slurs, *s.profanity.values()]
+        lexicons = [s.formal_courtesy, s.slurs, *s.profanity.values()]
         for lex in lexicons:
             h.update((lex.phrase_re.pattern if lex.phrase_re else "").encode())
             h.update(repr(sorted(lex.singles)).encode())

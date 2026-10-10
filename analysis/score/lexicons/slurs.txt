@@ -1,14 +1,27 @@
-# Ethnic slurs used in the United States: exact, high-precision surface forms.
-# Primary source: Wikipedia, "List of ethnic slurs" (retrieved 2026-10-10). A row is in scope when
-# its "Location or origin" lists the United States, North America, worldwide use, or a US speech
-# community, or when its location is blank and its targets or notes tie it to American usage.
-# Cross-checked against Kaggle "Profanities in English" (konradb/profanities-in-english-collection,
-# category "racial / ethnic slurs"); real US spellings missing from Wikipedia were added, while
-# leetspeak and obfuscated spellings were not, because they do not occur in the printed Record.
+# Slurs used in the United States: exact, high-precision surface forms for three groups.
+#
+# Ethnic slurs. Primary source: Wikipedia, "List of ethnic slurs" (retrieved 2026-10-10). A row is
+# in scope when its "Location or origin" lists the United States, North America, worldwide use, or
+# a US speech community, or when its location is blank and its targets or notes tie it to American
+# usage.
+# Sexual-orientation and gender-identity slurs. Primary source: Wikipedia, Category:Homophobic
+# slurs and Category:LGBTQ-related slurs (retrieved 2026-10-10).
+# Disability slurs. Primary source: Wikipedia, "List of disability-related terms with negative
+# connotations" and Category:Slurs related to low intelligence (retrieved 2026-10-10). Only terms
+# used as slurs for disabled people are in scope; descriptive words with negative connotations
+# (blind, handicapped) and former clinical labels now used as general insults (idiot, moron) are not.
+#
+# All three are cross-checked against Kaggle "Profanities in English"
+# (konradb/profanities-in-english-collection); real spellings missing from Wikipedia were added,
+# while leetspeak and obfuscated spellings were not, because they do not occur in the printed
+# Record. Gendered insults (bitch, whore, slut) are counted as profanity, not here.
 # Only forms whose main meaning is the slur are scored. Forms that are also ordinary words,
-# names, places, products, or legal/historical terms are in slurs_ambiguous_audit.txt or are
-# not matched; slurs_provenance.tsv records the decision for every source row.
+# names, places, products, or legal/historical/clinical terms are in slurs_ambiguous_audit.txt or
+# are not matched; slurs_provenance.tsv records the decision for every source row. Verb uses of
+# "retard", "faggot(s) of" bundles, "homo sapiens"-type phrases, and line-break fragments are
+# excluded in scorers.py.
 # Occurrence never establishes endorsement: the Record quotes, condemns, and reads in slurs.
+# --- Ethnic slurs
 nigger rigging
 nigger rigged
 nigger-rigged
@@ -280,3 +293,87 @@ rice monkey
 rice monkeys
 wophead
 wopheads
+# --- Sexual-orientation and gender-identity slurs
+faggot
+faggots
+faggy
+faggoty
+fag
+fags
+fag hag
+fag hags
+bulldyke
+bulldykes
+bull dyke
+bull dykes
+bulldagger
+bulldaggers
+diesel dyke
+diesel dykes
+lesbo
+lezbo
+lezbos
+lezzie
+lezzies
+lezzy
+poofter
+poofters
+batty boy
+batty boys
+battyboy
+battyboys
+batty man
+fudgepacker
+fudgepackers
+fudge packer
+fudge packers
+tranny
+trannies
+trannys
+shemale
+shemales
+she-male
+she-males
+homo
+homos
+carpet muncher
+carpet munchers
+carpetmuncher
+carpetmunchers
+butt pirate
+butt pirates
+pillow biter
+pillow biters
+pillow-biter
+pillow-biters
+ladyboy
+ladyboys
+lady-boy
+lady-boys
+gaytard
+gaytards
+nancy boy
+nancy boys
+he-she
+he-shes
+# --- Disability slurs
+retard
+retards
+retardo
+retardos
+libtard
+libtards
+spaz
+spazz
+spazzes
+spazzy
+spazzing
+window licker
+window lickers
+gimp
+gimps
+gimpy
+flid
+flids
+schizo
+schizos

@@ -1,4 +1,4 @@
-# Analysis: profanity, ethnic slurs, and formal courtesy in Congress
+# Analysis: profanity, slurs, and formal courtesy in Congress
 
 Beyond downloading, this repo includes a reusable **analysis pipeline** (`analysis/`) that
 scores every speaker turn for three disclosed word-pattern measures and produces
@@ -27,9 +27,9 @@ Regenerate them all with `python scripts/update.py`.
 
 ### At a glance
 
-The three headline measures on one canvas: formal courtesy, profanity, and ethnic slurs.
+The three headline measures on one canvas: formal courtesy, profanity, and slurs.
 
-![Overview of formal courtesy, profanity, and ethnic slurs](../outputs/figures/overview.png)
+![Overview of formal courtesy, profanity, and slurs](../outputs/figures/overview.png)
 
 The same panels for each chamber separately, each with its own y-scale so the House's higher
 rates do not flatten the Senate.
@@ -45,17 +45,18 @@ institutionalised floor ritual, and the most sensitive to changes in procedure.
 
 ![Formal courtesy](../outputs/figures/formal_courtesy_per_1k.png)
 
-### Profanity and ethnic slurs
+### Profanity and slurs
 
 Both use curated exact lists rather than broad word lists, so they are rare by construction.
 
 ![Profanity](../outputs/figures/profanity_per_1k.png)
 
-![Ethnic slurs](../outputs/figures/ethnic_slurs_per_1k.png)
-
 Per-chamber versions of each measure, plus the mild and strong profanity tiers, are in
-[`outputs/figures/`](../outputs/figures/). The ethnic-slur figures appear once the historical
-rebuild workflow (`rebuild-historical-language.yml`) has rescored the corpus with codebook v5.
+[`outputs/figures/`](../outputs/figures/). Charts are drawn only for measures the metrics table
+has scored: the slur figures (`slurs_per_1k.png` and its chamber pair) and the profanity tiers
+appear once the historical rebuild workflow (`rebuild-historical-language.yml`) has rescored the
+corpus with codebook v5. Until then the committed courtesy and profanity figures use the previous
+profanity list, which lacked the Kaggle compound forms.
 
 ## What it measures
 
@@ -63,19 +64,32 @@ rebuild workflow (`rebuild-historical-language.yml`) has rescored the corpus wit
 * **Profanity**: a hand-curated list of genuine curse and obscene forms, split into a mild tier
   (`damn`, `what the hell`, `crap`, …) and a strong tier (`shit`, `fuck`, …). Ordinary topical words
   (`sex trafficking`, `erected`, `In God We Trust`) are never counted.
-* **Ethnic slurs**: US ethnic slurs from Wikipedia's
-  [List of ethnic slurs](https://en.wikipedia.org/wiki/List_of_ethnic_slurs), cross-checked
-  against the Kaggle
+* **Slurs**: slurs used in the United States against three groups, cross-checked against the
+  Kaggle
   [Profanities in English collection](https://www.kaggle.com/datasets/konradb/profanities-in-english-collection).
-  A Wikipedia row is included when its location is the US, North America, worldwide, or
-  international, or when its targets or notes tie the term to American usage. Forms that are
-  also ordinary words, names, or historical labels (“chink in the armor”, “Redskins”,
-  “Jim Crow”, “spick and span”) go to `slurs_ambiguous_audit.txt` and are never scored. Every
+  * *Ethnic* slurs from Wikipedia's [List of ethnic slurs](https://en.wikipedia.org/wiki/List_of_ethnic_slurs). A row is
+    included when its location is the US, North America, worldwide, or international, or when
+    its targets or notes tie the term to American usage.
+  * *Sexual-orientation and gender-identity* slurs from Wikipedia's
+    [homophobic](https://en.wikipedia.org/wiki/Category:Homophobic_slurs) and
+    [LGBTQ-related](https://en.wikipedia.org/wiki/Category:LGBTQ-related_slurs) slur categories
+    (`faggot`, `dyke` compounds, `tranny`, …).
+  * *Disability* slurs from Wikipedia's
+    [list of disability-related terms with negative connotations](https://en.wikipedia.org/wiki/List_of_disability-related_terms_with_negative_connotations),
+    keeping only terms used as slurs (`retard`, `spaz`, `window licker`, …). Descriptive words with
+    negative connotations (`blind`, `handicapped`) and former clinical labels now used as general
+    insults (`idiot`, `moron`) are not counted.
+
+  Forms that are also ordinary words, names, places, or clinical terms (“chink in the armor”,
+  “Redskins”, “Jim Crow”, bare “dyke”, “queer”, “Gaylord”, “retarded”, “cripple”) go to
+  `slurs_ambiguous_audit.txt` and are never scored. Context rules drop verb uses of “retard”
+  (“to retard the growth”), archaic “faggot(s) of” sticks, “homo sapiens”, and line-break
+  fragments such as “homo- geneous”. Gendered insults (`bitch`, `whore`) stay in profanity. Every
   source row and the decision made about it is recorded in
   `analysis/score/lexicons/slurs_provenance.tsv`.
 
 A form may not appear in both the profanity and the slur lists; the scorer refuses to load if it
-does. Orientation and disability slurs are not part of the ethnic-slur measure.
+does.
 
 All rates are per 1,000 words, grouped by `(congress, chamber, party)`, so trends can be split
 by party and chamber. Aggregation also writes `data/processed/coverage/turn_coverage.{csv,parquet}`
@@ -83,7 +97,7 @@ with total, procedural, and D/R/I-attributed turn/word coverage by source, Congr
 
 **Matching.** Formal courtesy matches morphological variants by default (`Scorers(fuzzy=True)`):
 single words expand to plurals and verb forms, with an irregular-plural table
-(“colleague”→“colleagues”, “gentleman”→“gentlemen”). Profanity and ethnic slurs use curated exact
+(“colleague”→“colleagues”, “gentleman”→“gentlemen”). Profanity and slurs use curated exact
 forms instead of unsafe morphology. Hyphenated words are single tokens, so “honky-tonk” does not
 match “honky”. Matched spans are de-duplicated, so a multi-word slur counts once rather than once
 per component word. Pass `fuzzy=False` for strict exact matching of courtesy forms.

@@ -581,7 +581,7 @@ def test_payload_and_html_expose_selector_aware_language_graphs(store, tmp_path)
     assert "Members below the word threshold are omitted." not in page
     long_run = json.loads((out / "data" / "long_run_language.json").read_text())
     assert set(long_run["metrics"]) <= {
-        "formal_courtesy_per_1k", "profanity_per_1k", "ethnic_slurs_per_1k",
+        "formal_courtesy_per_1k", "profanity_per_1k", "slurs_per_1k",
     }
     assert "profanity_per_1k" in long_run["metrics"]
     assert {row["party"] for row in long_run["series"]} == {"D", "R"}
@@ -626,8 +626,8 @@ def test_payload_and_html_expose_selector_aware_language_graphs(store, tmp_path)
 def test_slur_measure_appears_once_rows_carry_slur_counts(store, tmp_path):
     path, daily, bills = store
     daily = daily.drop(columns=["hostility_hits", "misconduct_hits"])
-    daily["ethnic_slur_hits"] = [0, 2, 0]
-    daily["ethnic_slur_quoted_hits"] = [0, 0, 0]
+    daily["slur_hits"] = [0, 2, 0]
+    daily["slur_quoted_hits"] = [0, 0, 0]
     save_daily(daily, path)
     module = _load_build_site()
     out = tmp_path / "site"

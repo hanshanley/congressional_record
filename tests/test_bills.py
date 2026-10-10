@@ -54,7 +54,7 @@ def _daily() -> pd.DataFrame:
     ], columns=[
         "bioguide", "date", "chamber", "speaker_name", "party", "state", "congress",
         "turns", "words", "profanity_hits", "profanity_quoted_hits",
-        "ethnic_slur_hits", "ethnic_slur_quoted_hits",
+        "slur_hits", "slur_quoted_hits",
     ])
 
 

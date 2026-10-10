@@ -20,7 +20,8 @@ the denominator.
 - **Formal courtesy**: conventional parliamentary address and deference.
 - **Profanity**: curated exact curse and obscene forms in a mild and a strong tier. Ambiguous
   neutral vocabulary is excluded.
-- **Ethnic slurs**: curated exact US ethnic slurs. Ambiguous forms are kept in an audit-only list
+- **Slurs**: curated exact US ethnic, sexual-orientation and gender-identity, and disability
+  slurs. Ambiguous forms are kept in an audit-only list
   and never scored. Occurrence does not imply endorsement; quotation and condemnation still need
   review.
 
@@ -39,8 +40,22 @@ A row is included when its location is the United States, North America, worldwi
 international (or names African American or Native American targets), or when the location is
 blank and the targets or notes tie the term to American usage. Each included row was then sorted
 into scored forms, audit-only forms, or unmatched, with the reason recorded. The Kaggle list
-added US spellings missing from Wikipedia. `analysis/score/lexicons/slurs_provenance.tsv`
-records every source row and decision.
+added US spellings missing from Wikipedia.
+
+Sexual-orientation and gender-identity slurs start from Wikipedia's
+[homophobic](https://en.wikipedia.org/wiki/Category:Homophobic_slurs) and
+[LGBTQ-related](https://en.wikipedia.org/wiki/Category:LGBTQ-related_slurs) slur categories.
+Disability slurs start from Wikipedia's
+[list of disability-related terms with negative connotations](https://en.wikipedia.org/wiki/List_of_disability-related_terms_with_negative_connotations),
+restricted to terms used as slurs for disabled people; most of that list is descriptive
+vocabulary (`blind`, `handicapped`) or former clinical labels now used as general insults
+(`idiot`, `moron`), which are not counted. Terms whose main meaning is something else (bare
+`dyke`, `queer`, `fairy`, `Gaylord`, `cripple`, `midget`, `retarded`, which was the statutory term
+until 2010) are audit-only. `scorers.py` drops slur matches inside verb uses of `retard`,
+archaic `faggot(s) of` bundles and 19th-century `faggot votes`, `fag end`, Latin `homo`
+phrases, and line-break hyphenation fragments. Gendered insults (`bitch`, `whore`) remain
+profanity, and no form may be both. `analysis/score/lexicons/slurs_provenance.tsv` records every
+source row and decision.
 
 ## Source overlap
 
@@ -70,8 +85,8 @@ checking, not independent human ground truth.
 
 The finalized 784-passage validation of the July 2026 v3 codebook achieved precision of 89.4% or
 better for every category it published. That sample
-measured the earlier, broader codebook and did not cover ethnic slurs. Codebook v5 (October 2026)
-narrows the project to formal courtesy, profanity, and ethnic slurs and expands both exact-match
+measured the earlier, broader codebook and did not cover slurs. Codebook v5 (October 2026)
+narrows the project to formal courtesy, profanity, and slurs and expands both exact-match
 lists, so its precision and recall must be re-estimated on a new blinded sample.
 `precision_recall.csv` reports the completed v3 validation rather than presenting it as
 validation of later revisions.

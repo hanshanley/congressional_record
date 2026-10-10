@@ -1,7 +1,8 @@
 """Central registry for discourse metrics, labels, and plot eligibility.
 
 The project measures three things in congressional floor speech: formulaic courtesy,
-profanity, and ethnic slurs used in the United States. Every rate is hits per 1,000 words.
+profanity, and slurs (ethnic, sexual-orientation and gender-identity, and disability) used
+in the United States. Every rate is hits per 1,000 words.
 """
 
 from __future__ import annotations
@@ -45,8 +46,8 @@ METRICS = (
         "profanity", "Profanity", "negative", headline=True, chamber_plot=True,
     ),
     MetricSpec(
-        "ethnic_slurs_per_1k", "ethnic_slur_hits", "ethnic_slur_hits",
-        "ethnic_slur", "Ethnic slurs", "negative", headline=True, chamber_plot=True,
+        "slurs_per_1k", "slur_hits", "slur_hits",
+        "slur", "Slurs", "negative", headline=True, chamber_plot=True,
     ),
     MetricSpec(
         "profanity_mild_per_1k", "profanity_mild_hits", "profanity_mild",

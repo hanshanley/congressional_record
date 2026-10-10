@@ -187,7 +187,7 @@ def _plot_calibrated_overview(
         charts.marker_line(ax, boundary_year)
         charts.style_axes(ax, metric.title, "Congress (convening year)", metric.units)
     axes.flat[0].legend(frameon=False, labelcolor=theme.TEXT)
-    fig.suptitle("Source-calibrated courtesy, profanity, and ethnic slurs", fontweight="bold")
+    fig.suptitle("Source-calibrated courtesy, profanity, and slurs", fontweight="bold")
     theme.source_note(
         fig,
         "Dots are Congress values; lines are centered 5-Congress means. GovInfo is mapped to "

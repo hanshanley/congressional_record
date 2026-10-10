@@ -1,11 +1,11 @@
 # The website
 
 The homepage, published at <https://www.themarginoferror.com/congressional_profanity/>, leads
-with interactive long-run panels for formal courtesy, profanity, and ethnic slurs. Each panel compares Democrats with Republicans from 1873 to the
+with interactive long-run panels for formal courtesy, profanity, and slurs. Each panel compares Democrats with Republicans from 1873 to the
 present and includes visible party controls, direct end labels, hover/focus values, and a
 screen-reader data table.
 
-Recent-Congress detail then presents profanity and ethnic slurs as separate indicators. Monthly Democratic/Republican trends
+Recent-Congress detail then presents profanity and slurs as separate indicators. Monthly Democratic/Republican trends
 are shown within a selected Congress, while the all-Congresses view uses yearly periods. Member
 comparisons apply a minimum-word threshold and omit zero-rate members entirely. A measure is shown
 only when every row in the selected scope has been scored for it: rows written before a measure

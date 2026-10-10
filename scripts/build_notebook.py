@@ -19,7 +19,7 @@ def code(text: str) -> None:
 
 
 md(r"""
-# Congressional profanity, ethnic slurs, and formal courtesy — interactive explorer
+# Congressional profanity, slurs, and formal courtesy — interactive explorer
 
 Explore three word-pattern measures in the U.S. Congressional Record, **1873–present**, and
 interact with the underlying data and plots.
@@ -34,13 +34,14 @@ interact with the underlying data and plots.
   "my distinguished colleague", "I yield").
 - *Profanity* — a hand-curated list of genuine curse and obscene forms, split into mild and
   strong tiers, excluding neutral topical terms ("sex trafficking", "erected").
-- *Ethnic slurs* — US ethnic slurs drawn from Wikipedia's *List of ethnic slurs* and
-  cross-checked against the Kaggle *Profanities in English* collection. Forms that are also
-  ordinary words or names ("chink in the armor", "Redskins", "Jim Crow") are audit-only and
-  never scored. See `analysis/score/lexicons/slurs_provenance.tsv`.
+- *Slurs* — US ethnic, sexual-orientation and gender-identity, and disability slurs drawn
+  from Wikipedia's slur lists and cross-checked against the Kaggle *Profanities in English*
+  collection. Forms that are also ordinary words, names, or clinical terms ("chink in the
+  armor", "Redskins", "queer", "retarded") are audit-only, and verb uses ("retard the growth")
+  are excluded. See `analysis/score/lexicons/slurs_provenance.tsv`.
 
 **Matching.** Formal courtesy uses morphological variants ("colleague"→"colleagues",
-"gentleman"→"gentlemen"). Profanity and ethnic slurs use exact curated forms to avoid unsafe or
+"gentleman"→"gentlemen"). Profanity and slurs use exact curated forms to avoid unsafe or
 ambiguous expansions. A multi-word slur is counted once, not once per component word.
 
 > These are descriptive counts. They miss sarcasm and target identity, and a member who
@@ -201,14 +202,14 @@ scored = sample.assign(**pd.DataFrame(
     [scorer.score_turn(t) for t in sample.text], index=sample.index))
 for key, rate in (("formal_courtesy_hits", "formal_courtesy_per_1k"),
                   ("profanity_hits", "profanity_per_1k"),
-                  ("ethnic_slur_hits", "ethnic_slurs_per_1k")):
+                  ("slur_hits", "slurs_per_1k")):
     scored[rate] = 1000 * scored[key] / scored.n_words.clip(lower=1)
-scored.groupby("party")[["formal_courtesy_per_1k","profanity_per_1k","ethnic_slurs_per_1k"]].mean()
+scored.groupby("party")[["formal_courtesy_per_1k","profanity_per_1k","slurs_per_1k"]].mean()
 """)
 
 code(r"""
-# Show the matched spans in a few turns that contain profanity or an ethnic slur.
-flagged = scored[(scored.profanity_hits > 0) | (scored.ethnic_slur_hits > 0)].head(5)
+# Show the matched spans in a few turns that contain profanity or a slur.
+flagged = scored[(scored.profanity_hits > 0) | (scored.slur_hits > 0)].head(5)
 for text in flagged.text:
     for signal, spans in scorer.signal_spans(text).items():
         for start, end in spans:

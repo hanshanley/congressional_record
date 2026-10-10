@@ -49,11 +49,12 @@ LANGUAGE_METRICS = {
         "definition": "Unquoted matches from a narrow, curated profanity list.",
     },
     "slurs": {
-        "hits": "ethnic_slur_hits",
-        "rate": "ethnic_slurs_per_100k",
-        "label": "Ethnic slurs",
+        "hits": "slur_hits",
+        "rate": "slurs_per_100k",
+        "label": "Slurs",
         "definition": (
-            "Unquoted matches from a curated list of ethnic slurs used in the United States."
+            "Unquoted matches from a curated list of ethnic, sexual-orientation, gender-identity, "
+            "and disability slurs used in the United States."
         ),
     },
 }
@@ -74,12 +75,12 @@ _READ_COLS = [
 
 # Emitted per (bioguide, date, chamber) group.
 _COUNT_KEYS = ("turns", "words", "profanity_hits", "profanity_quoted_hits",
-               "ethnic_slur_hits", "ethnic_slur_quoted_hits")
+               "slur_hits", "slur_quoted_hits")
 # Columns written by earlier codebooks; dropped on load.
 _RETIRED_COLUMNS = ("hostility_hits", "misconduct_hits")
 # Count columns added after rows were first stored. Older rows carry nulls until they are
 # rescored, so a measure is only reported for a scope whose rows are all populated.
-_BACKFILLED_COLUMNS = ("ethnic_slur_hits", "ethnic_slur_quoted_hits")
+_BACKFILLED_COLUMNS = ("slur_hits", "slur_quoted_hits")
 _TERM_COUNTS_COLUMN = "profanity_terms"
 
 # Raw surface forms remain stored for auditability. Member summaries group only
@@ -381,10 +382,10 @@ def speaker_counts(
             bucket["words"] += scored["n_words"]
             bucket["profanity_hits"] += scored["profanity_hits"]
             profanity_terms[key].update(turn_terms)
-            bucket["ethnic_slur_hits"] += scored["ethnic_slur_hits"]
+            bucket["slur_hits"] += scored["slur_hits"]
             if quoted_scored is not None:
                 bucket["profanity_quoted_hits"] += quoted_scored["profanity_hits"]
-                bucket["ethnic_slur_quoted_hits"] += quoted_scored["ethnic_slur_hits"]
+                bucket["slur_quoted_hits"] += quoted_scored["slur_hits"]
 
             # Congress belongs to the *row*, not to the member. Taking it from the
             # member's latest metadata would relabel a long-serving member's whole

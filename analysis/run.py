@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Orchestrate the congressional courtesy, profanity, and ethnic-slur analysis pipeline.
+"""Orchestrate the congressional courtesy, profanity, and slur analysis pipeline.
 
 Subcommands:
     ingest-hein         Parse the Stanford hein zips into unified turn parquet.

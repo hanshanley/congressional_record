@@ -39,7 +39,7 @@ def _daily(rows):
             "words",
             "formal_courtesy_hits",
             "profanity_hits",
-            "ethnic_slur_hits",
+            "slur_hits",
         ],
     )
 
@@ -207,18 +207,18 @@ def test_long_run_payload_omits_measures_missing_from_any_row():
         "metrics": {"retired_per_1k": {}},
         "series": [
             {"profanity_hits": 1, "profanity_per_1k": 0.1,
-             "ethnic_slur_hits": None, "ethnic_slurs_per_1k": None},
+             "slur_hits": None, "slurs_per_1k": None},
             {"profanity_hits": 2, "profanity_per_1k": 0.2,
-             "ethnic_slur_hits": 0, "ethnic_slurs_per_1k": 0.0},
+             "slur_hits": 0, "slurs_per_1k": 0.0},
         ],
         "chamber_series": [],
     }
     restricted = restrict_to_complete_metrics(payload)
     assert list(restricted["metrics"]) == ["profanity_per_1k"]
     assert set(restricted["series"][1]) == {"profanity_hits", "profanity_per_1k"}
-    payload["series"][0].update(ethnic_slur_hits=0, ethnic_slurs_per_1k=0.0)
+    payload["series"][0].update(slur_hits=0, slurs_per_1k=0.0)
     assert set(restrict_to_complete_metrics(payload)["metrics"]) == {
-        "profanity_per_1k", "ethnic_slurs_per_1k",
+        "profanity_per_1k", "slurs_per_1k",
     }
 
 

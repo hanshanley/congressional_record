@@ -79,9 +79,10 @@ CAVEATS = [
     "be corrected after publication.",
 ]
 SLUR_CAVEAT = (
-    "Ethnic slurs use an exact list of slurs used in the United States, drawn from "
-    "Wikipedia's List of ethnic slurs and cross-checked against a Kaggle profanity "
-    "collection. Forms that are also ordinary words, names, or places are left out. Quoted "
+    "Slurs use an exact list of ethnic, sexual-orientation, gender-identity, and disability "
+    "slurs used in the United States, drawn from Wikipedia's slur lists and cross-checked "
+    "against a Kaggle profanity collection. Forms that are also ordinary words, names, "
+    "places, or clinical terms are left out, as are verb uses such as \"retard the growth.\" Quoted "
     "slurs are excluded, but a member who repeats a slur to condemn or describe it is still "
     "counted, so a count is not evidence of endorsement."
 )
@@ -2731,7 +2732,7 @@ def _render_html(payload: dict, congresses: list[int], long_run: dict) -> str:
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The Language of Congress — The Margin of Error</title>
 <meta name="description" content="Long-run Democratic and Republican trends in congressional
-courtesy, profanity, and ethnic slurs.">
+courtesy, profanity, and slurs.">
 {_head_links(PUBLIC_URL)}
 <style>{HOUSE_CSS}{MAIN_CSS}</style>
 </head>
@@ -2749,6 +2750,7 @@ courtesy, profanity, and ethnic slurs.">
 <p class="dek">How Congress speaks, from historical trends to individual members.</p>
 <div class="byline">
 <p>By Hans W. A. Hanley</p>
+<p>Congressional Record, 1873–present</p>
 <p>Updated through {html.escape(_long_date(coverage['speech_last_date']))}</p>
 </div>
 </div>

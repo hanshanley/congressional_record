@@ -39,7 +39,7 @@ def test_metric_registry_matches_scorer_outputs() -> None:
     rates = [metric.rate for metric in METRICS]
     assert len(rates) == len(set(rates))
     assert {metric.rate for metric in METRICS if metric.headline} == {
-        "formal_courtesy_per_1k", "profanity_per_1k", "ethnic_slurs_per_1k",
+        "formal_courtesy_per_1k", "profanity_per_1k", "slurs_per_1k",
     }
     scored = Scorers().score_turn("I yield to my distinguished colleague. Damn.")
     assert set(scored) == {"n_words", *SCORE_KEYS, "profanity_hits"}
@@ -369,7 +369,7 @@ def test_fuzzy_keyword_matching() -> None:
     neutral = "the committee will now consider the appropriations schedule for review"
     assert fuzzy.score_turn(neutral) == {
         "n_words": 10, "formal_courtesy_hits": 0, "profanity_mild": 0,
-        "profanity_strong": 0, "profanity_hits": 0, "ethnic_slur_hits": 0,
+        "profanity_strong": 0, "profanity_hits": 0, "slur_hits": 0,
     }
     # Profanity and slur codebooks are exact even when courtesy matching is fuzzy.
     sc = fuzzy.score_turn("he fucked up the whole vote")
@@ -447,16 +447,40 @@ def test_scorer_excludes_neutral_topics_from_profanity_and_slurs() -> None:
         "gay rights legislation", "In God We Trust", "erected a memorial", "strips funding",
     ):
         scored = s.score_turn(text)
-        assert scored["profanity_hits"] == 0 and scored["ethnic_slur_hits"] == 0
+        assert scored["profanity_hits"] == 0 and scored["slur_hits"] == 0
 
 
-def test_scorer_counts_ethnic_slurs_separately_from_profanity() -> None:
+def test_scorer_counts_slurs_separately_from_profanity() -> None:
     s = Scorers()
     scored = s.score_turn("He was called a wetback and a sand nigger. Damn.")
     # "sand nigger" is one phrase match, not a phrase plus its component word.
-    assert scored["ethnic_slur_hits"] == 2
+    assert scored["slur_hits"] == 2
     assert scored["profanity_hits"] == 1
-    assert s.signal_spans("a slant-eyed insult")["ethnic_slur"] == [(2, 12)]
+    assert s.signal_spans("a slant-eyed insult")["slur"] == [(2, 12)]
+
+
+def test_scorer_counts_orientation_and_disability_slurs() -> None:
+    s = Scorers()
+    for text, expected in (
+        ("He called him a faggot.", 1), ("a fag hag", 1), ("a bull dyke", 1),
+        ("tranny and shemale", 2), ("You retard.", 1), ("those retards", 1),
+        ("that spaz", 1), ("window lickers", 1),
+    ):
+        assert s.score_turn(text)["slur_hits"] == expected, text
+
+
+def test_scorer_excludes_verb_archaic_and_fragment_uses_of_slur_forms() -> None:
+    s = Scorers()
+    for text in (
+        "This tax will retard the growth of the economy.",
+        "it retards the development of the West", "tends to retard progress",
+        "a faggot of sticks", "the faggot votes in the borough", "the fag end of the session",
+        "homo sapiens", "the homo- geneous population", "re- tard",
+    ):
+        assert s.score_turn(text)["slur_hits"] == 0, text
+        assert s.signal_spans(text)["slur"] == [], text
+    # An excluded context does not hide a genuine slur elsewhere in the same turn.
+    assert s.score_turn("Taxes retard the growth. You retard.")["slur_hits"] == 1
 
 
 def test_scorer_leaves_ambiguous_slur_homographs_unscored() -> None:
@@ -465,8 +489,11 @@ def test_scorer_leaves_ambiguous_slur_homographs_unscored() -> None:
         "The chink in the armor", "a raccoon, or coon, in Squaw Valley",
         "the Washington Redskins", "Jim Crow laws", "that spick and span office",
         "the Half-Breeds faction", "honky-tonk music", "the Negro Leagues",
+        "the queer community", "Senator Gaylord Nelson", "the mentally retarded",
+        "spastic paralysis", "cripple the economy", "midget submarine",
+        "the dyke broke near Van Dyke", "refugees on Lesbos",
     ):
-        assert s.score_turn(text)["ethnic_slur_hits"] == 0, text
+        assert s.score_turn(text)["slur_hits"] == 0, text
 
 
 def test_scorer_contextual_false_positive_exclusions() -> None:

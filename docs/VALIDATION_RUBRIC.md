@@ -11,7 +11,7 @@ Annotators receive `validation_sample_blinded.csv` without production metric val
 | `formulaic_address` | yes/no/uncertain | Conventional parliamentary courtesy or address, regardless of substantive warmth. |
 | `procedural_deference` | yes/no/uncertain | Courtesy required by floor procedure, yielding, recognition, or regular order. |
 | `profanity` | yes/no/uncertain | Genuine curse/obscene expression, not neutral medical, sexual, religious, identity, or criminal vocabulary. |
-| `ethnic_slur` | yes/no/uncertain | An ethnic slur occurs, not a homograph such as a name, place, or ordinary word. Occurrence does not imply endorsement. |
+| `slur` | yes/no/uncertain | An ethnic, sexual-orientation, gender-identity, or disability slur occurs, not a homograph or verb use such as a name, place, or ordinary word. Occurrence does not imply endorsement. |
 | `quoted_or_read_in` | yes/no/uncertain | Relevant language is quoted, read into the Record, condemned, or attributed to another source. |
 | `ambiguous` | yes/no | Context is insufficient or supports materially different readings. |
 

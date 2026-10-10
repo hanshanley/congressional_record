@@ -111,14 +111,14 @@ def test_chamber_party_aggregation_word_weighted() -> None:
     # two House-D rows in the same congress must combine word-weighted, not mean-of-rates.
     df = pd.DataFrame([
         {"congress": 119, "year": 2025, "chamber": "house", "party": "D",
-         "ethnic_slur_hits": 10, "words": 1000, "profanity_hits": 0},
+         "slur_hits": 10, "words": 1000, "profanity_hits": 0},
         {"congress": 119, "year": 2025, "chamber": "house", "party": "D",
-         "ethnic_slur_hits": 0, "words": 9000, "profanity_hits": 0},
+         "slur_hits": 0, "words": 9000, "profanity_hits": 0},
     ])
     g = _by_year_chamber_party(df)
     row = g[(g.chamber == "house") & (g.party == "D")].iloc[0]
     # 10 hits / 10000 words * 1000 = 1.0  (NOT the mean of 10.0 and 0.0 = 5.0)
-    assert abs(row["ethnic_slurs_per_1k"] - 1.0) < 1e-9
+    assert abs(row["slurs_per_1k"] - 1.0) < 1e-9
 
 
 def test_overlap_calibration_pairs_sources() -> None:
@@ -193,6 +193,51 @@ def test_shade_and_tint_are_bounded_and_ordered() -> None:
         assert all(0.0 <= c <= 1.0 for c in theme._hex_to_rgb(value))
 
 
+def test_viz_draws_only_measures_present_in_the_metrics_table(tmp_path) -> None:
+    import pandas as pd
+    from analysis import viz
+
+    metrics = tmp_path / "data" / "processed" / "metrics" / "civility_metrics.parquet"
+    metrics.parent.mkdir(parents=True)
+    pd.DataFrame([
+        {"congress": c, "year": 1871 + 2 * (c - 42), "chamber": ch, "party": p,
+         "words": 10_000, "formal_courtesy_hits": 12, "profanity_hits": 1}
+        for c in (43, 44) for ch in ("house", "senate") for p in ("D", "R")
+    ]).to_parquet(metrics, index=False)
+    names = {path.name for path in viz.render(metrics, tmp_path / "outputs")}
+    assert "profanity_per_1k.png" in names and "overview.png" in names
+    assert not any(name.startswith(("slurs", "profanity_mild", "profanity_strong"))
+                   for name in names)
+
+
+def test_source_note_spans_every_hein_edition_and_ends_at_present(tmp_path) -> None:
+    import json
+    from datetime import date
+
+    from analysis.ingest.schema import congress_from_year
+    from analysis.viz import _load_provenance
+
+    coverage = tmp_path / "processed" / "coverage"
+    coverage.mkdir(parents=True)
+    current = congress_from_year(date.today().year)
+    sources = [
+        ("govinfo", 103, current, 1993, 2025),
+        ("hein_bound", 43, 96, 1873, 1979),
+        ("hein_daily", 97, 114, 1981, 2015),
+    ]
+    (coverage / "source_metadata.json").write_text(json.dumps({
+        "sources": [
+            {"source": name, "min_congress": lo, "max_congress": hi,
+             "min_year": y0, "max_year": y1, "rows": 1}
+            for name, lo, hi, y0, y1 in sources
+        ],
+        "primary_boundary_year": 2017,
+    }))
+    boundary, note = _load_provenance(tmp_path / "processed" / "metrics" / "m.parquet")
+    assert boundary == 2017
+    assert note.startswith("Sources: Stanford Hein (1873-2017) + GovInfo CREC (2017-present).")
+
+
 def test_source_note_wraps_long_text_to_multiple_lines() -> None:
     # Figures save with bbox_inches="tight", so an unwrapped note sets the saved
     # width and leaves a band of empty space to the right of the axes.
@@ -247,8 +292,8 @@ def test_site_language_trends_draws_both_party_series(monkeypatch, tmp_path) -> 
     series = pd.DataFrame([
         {
             "period": period, "party": party, "words": 10_000, "turns": 10,
-            "profanity_hits": hits, "ethnic_slur_hits": hits + 1,
-            "profanity_per_100k": hits * 10, "ethnic_slurs_per_100k": (hits + 1) * 10,
+            "profanity_hits": hits, "slur_hits": hits + 1,
+            "profanity_per_100k": hits * 10, "slurs_per_100k": (hits + 1) * 10,
         }
         for period in ("2025-01", "2025-02")
         for party, hits in (("D", 1), ("R", 2))
@@ -267,7 +312,7 @@ def test_site_language_trends_draws_both_party_series(monkeypatch, tmp_path) -> 
         granularity="month",
     )
     fig = captured["fig"]
-    assert [axis.get_title() for axis in fig.axes] == ["Profanity", "Ethnic slurs"]
+    assert [axis.get_title() for axis in fig.axes] == ["Profanity", "Slurs"]
     assert all(len(axis.lines) == 2 for axis in fig.axes)
     import matplotlib.pyplot as plt
     plt.close(fig)

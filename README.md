@@ -1,10 +1,11 @@
 <div align="center">
   <h1>The Language of Congress</h1>
   <p><strong>Official records. Reproducible analysis. 150 years of floor speech.</strong></p>
-  <p>How formal courtesy, profanity, and ethnic slurs in the Congressional Record have changed
+  <p>How formal courtesy, profanity, and slurs in the Congressional Record have changed
   since 1873, by party and chamber.</p>
   <p>
     <a href="#since-1873">Overview</a> ·
+    <a href="#what-is-counted">Measures</a> ·
     <a href="#explore-the-evidence">Analyses</a> ·
     <a href="#setup">Setup</a> ·
     <a href="https://www.themarginoferror.com/congressional_profanity/">Live site</a>
@@ -20,16 +21,32 @@ Stanford Hein corpus (1873–2017) and GovInfo's Congressional Record (2017–pr
 change at 2017 as a possible source artifact rather than a real shift.
 
 <p align="center">
-  <img src="outputs/figures/overview.png" width="1200" alt="Formal courtesy, profanity, and ethnic slurs in Congress, Democrats vs Republicans, 1873 to present">
+  <img src="outputs/figures/overview.png" width="1200" alt="Formal courtesy, profanity, and slurs in Congress, Democrats vs Republicans, 1873 to present">
 </p>
+
+## What is counted
+
+| Measure | What matches | Sources |
+|---|---|---|
+| **Formal courtesy** | Parliamentary address and deference: “the gentleman from”, “my distinguished colleague”, “I yield”. | Hand-curated |
+| **Profanity** | Curse and obscene words in a mild tier (`damn`, `crap`) and a strong tier (`shit`, `fuck`). | Hand-curated; cross-checked against LDNOOBW, Surge AI, and [Kaggle](https://www.kaggle.com/datasets/konradb/profanities-in-english-collection) |
+| **Slurs** | Ethnic, sexual-orientation and gender-identity, and disability slurs used in the US. | Wikipedia's [ethnic](https://en.wikipedia.org/wiki/List_of_ethnic_slurs), [homophobic](https://en.wikipedia.org/wiki/Category:Homophobic_slurs), and [disability](https://en.wikipedia.org/wiki/List_of_disability-related_terms_with_negative_connotations) lists; cross-checked against [Kaggle](https://www.kaggle.com/datasets/konradb/profanities-in-english-collection) |
+
+Profanity and slurs are exact lists, and no word is in both. Words that are also ordinary words,
+names, places, or clinical terms (“chink in the armor”, “Redskins”, “queer”, “Gaylord”,
+“retarded”) are never scored, and verb uses such as “retard the growth” are dropped.
+[`slurs_provenance.tsv`](analysis/score/lexicons/slurs_provenance.tsv) records the decision for
+every source entry. These are word counts, not judgments of intent: quoted material is excluded
+from member rates, but a member who repeats a slur to condemn it is still counted.
+
+Changing a word list changes past counts, so the historical series must be rescored with the
+`rebuild-historical-language` and `backfill-all-speaker-terms` workflows. Until then, the site
+hides any measure that older rows have not been scored for rather than showing false zeros.
 
 ## Explore the evidence
 
 **The analysis:** [what each measure counts and the key figures](docs/ANALYSIS.md),
 [methodology](docs/METHODOLOGY.md), and the [validation rubric](docs/VALIDATION_RUBRIC.md).
-Ethnic slurs come from Wikipedia's [List of ethnic slurs](https://en.wikipedia.org/wiki/List_of_ethnic_slurs)
-(US usage) and profanity is cross-checked against the Kaggle
-[Profanities in English collection](https://www.kaggle.com/datasets/konradb/profanities-in-english-collection).
 
 **The website:** [the interactive dashboard, bill data, and attribution safeguards](docs/WEBSITE.md),
 published as [The Language of Congress](https://www.themarginoferror.com/congressional_profanity/)

@@ -357,7 +357,7 @@ def _daily(rows):
     return pd.DataFrame(rows, columns=[
         "bioguide", "date", "chamber", "speaker_name", "party", "state", "congress",
         "turns", "words", "profanity_hits", "profanity_quoted_hits",
-        "ethnic_slur_hits", "ethnic_slur_quoted_hits",
+        "slur_hits", "slur_quoted_hits",
     ])
 
 
@@ -466,7 +466,7 @@ def test_language_timeseries_uses_months_and_compares_parties():
     assert set(scoped.index.get_level_values("period")) == {"2025-01", "2025-02"}
     january = scoped.loc[("2025-01", "D")]
     assert january["profanity_per_100k"] == pytest.approx(100.0)
-    assert january["ethnic_slurs_per_100k"] == pytest.approx(100.0)
+    assert january["slurs_per_100k"] == pytest.approx(100.0)
     assert int(scoped["words"].sum()) == 20_000
 
     all_years = language_timeseries(daily)

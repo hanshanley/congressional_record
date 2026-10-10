@@ -34,7 +34,7 @@ _ERAS = (
 _SIGNALS = {
     "formal_courtesy": "formal_courtesy_hits",
     "profanity": "profanity_hits",
-    "ethnic_slur": "ethnic_slur_hits",
+    "slur": "slur_hits",
 }
 
 _READ_COLS = [
@@ -81,7 +81,7 @@ def _signal_trigger_regexes(scorer: Scorers) -> Dict[str, re.Pattern]:
     return {
         "formal_courtesy": _lexicon_regex([scorer.formal_courtesy]),
         "profanity": _lexicon_regex([scorer.profanity["mild"], scorer.profanity["strong"]]),
-        "ethnic_slur": _lexicon_regex([scorer.ethnic_slurs]),
+        "slur": _lexicon_regex([scorer.slurs]),
     }
 
 
@@ -288,7 +288,7 @@ def build_validation_sample(
 
 
 ANNOTATION_FIELDS = (
-    "formulaic_address", "procedural_deference", "profanity", "ethnic_slur",
+    "formulaic_address", "procedural_deference", "profanity", "slur",
     "quoted_or_read_in", "ambiguous",
 )
 _YES_NO_UNCERTAIN = {"yes", "no", "uncertain"}
@@ -433,7 +433,7 @@ def validation_report(pass_a: pd.DataFrame, pass_b: pd.DataFrame) -> pd.DataFram
 _PRODUCTION_MAP = {
     "formulaic_address": "formal_courtesy_hits",
     "profanity": "profanity_hits",
-    "ethnic_slur": "ethnic_slur_hits",
+    "slur": "slur_hits",
 }
 
 

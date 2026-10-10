@@ -1,4 +1,4 @@
-"""Render courtesy, profanity, and ethnic-slur time-series charts in the shared style.
+"""Render courtesy, profanity, and slur time-series charts in the shared style.
 
 Re-aggregates the ``(congress, chamber, party)`` metrics up to ``(congress, party)``
 by summing raw hit counts and words (so rates stay word-weighted), then draws the
@@ -12,19 +12,21 @@ import os
 import shutil
 import tempfile
 import json
+from datetime import date
 from pathlib import Path
 from typing import List
 
 import pandas as pd
 
 from analysis.aggregate import RATE_TO_HITCOL
+from analysis.ingest.schema import congress_from_year, year_from_congress
 from analysis.plotting import charts, theme
 from analysis.score.registry import CHAMBER_METRICS, HEADLINE_METRICS, METRICS
 
 LOG = logging.getLogger("analysis.viz")
 
 SOURCE_NOTE = (
-    "Sources: Stanford hein (1873-2017) + GovInfo CREC (2017-present). House/Senate only; "
+    "Sources: Stanford Hein (1873-2017) + GovInfo CREC (2017-present). House/Senate only; "
     "Extensions excluded. Units shown on y-axis. GovInfo party "
     "coverage varies; see coverage/turn_coverage.csv."
 )
@@ -35,8 +37,8 @@ SOURCE_BOUNDARY_YEAR = 2017
 
 # Top of the tight-layout rect, leaving headroom for the figure suptitle. A two-line
 # suptitle (chamber overview) needs a little more room than a one-line one.
-_RECT_TOP_1LINE = 0.93
-_RECT_TOP_2LINE = 0.88
+_RECT_TOP_1LINE = 0.97
+_RECT_TOP_2LINE = 0.94
 
 _HIT_COLS = list(dict.fromkeys([*RATE_TO_HITCOL.values(), "words"]))
 
@@ -105,12 +107,24 @@ def _load_provenance(metrics_path: Path) -> tuple[int, str]:
         return SOURCE_BOUNDARY_YEAR, SOURCE_NOTE
     metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
     boundary = int(metadata.get("primary_boundary_year") or SOURCE_BOUNDARY_YEAR)
-    sources = {item["source"]: item for item in metadata.get("sources", [])}
-    hein = sources.get("hein_daily") or sources.get("hein_bound") or {}
-    govinfo = sources.get("govinfo") or {}
+    sources = metadata.get("sources", [])
+    # Hein comes in two editions (bound 1873-1980, daily 1981-2017) and GovInfo also holds
+    # 1994-2016 overlap rows for calibration, so ranges span every edition and follow the
+    # primary rule (Hein through Congress 114, GovInfo from 115). Metadata years are each
+    # Congress's convening year, so a range ends when its last Congress ends.
+    hein = [item for item in sources if item["source"].startswith("hein_")]
+    govinfo = [item for item in sources if item["source"].startswith("govinfo")]
+    hein_start = min((year_from_congress(i["min_congress"]) for i in hein), default=1873)
+    hein_last = min(114, max((i["max_congress"] for i in hein), default=114))
+    govinfo_last = max((i["max_congress"] for i in govinfo), default=None)
+    govinfo_end = (
+        "present"
+        if govinfo_last is None or govinfo_last >= congress_from_year(date.today().year)
+        else str(year_from_congress(govinfo_last + 1))
+    )
     note = (
-        f"Sources: Stanford Hein ({hein.get('min_year', 1873)}-{hein.get('max_year', 2017)}) "
-        f"+ GovInfo CREC ({govinfo.get('min_year', boundary)}-{govinfo.get('max_year', 'present')}). "
+        f"Sources: Stanford Hein ({hein_start}-{year_from_congress(hein_last + 1)}) "
+        f"+ GovInfo CREC ({boundary}-{govinfo_end}). "
         "House/Senate only; Extensions excluded. Units shown on y-axis. "
         "GovInfo party coverage varies; see coverage/turn_coverage.csv."
     )
@@ -129,7 +143,8 @@ _CHAMBER_PANELS = [(metric.rate, metric.title, metric.units) for metric in CHAMB
 
 
 def _grid_overview(g: pd.DataFrame, figs_dir: Path, plot_fn, suptitle: str,
-                   out_name: str, *, legend_fontsize: int, rect_top: float) -> Path:
+                   out_name: str, *, legend_fontsize: int, rect_top: float,
+                   panels: List[tuple] = _PANELS) -> Path:
     """Render a one-row small-multiples overview (one panel per metric in ``_PANELS``).
 
     ``plot_fn(ax, g, col)`` draws the series for one metric; the two overviews (by party,
@@ -138,8 +153,10 @@ def _grid_overview(g: pd.DataFrame, figs_dir: Path, plot_fn, suptitle: str,
     theme.apply()
     import matplotlib.pyplot as plt
 
-    fig, axes = plt.subplots(1, len(_PANELS), figsize=(16, 5.2), squeeze=False)
-    for ax, (col, title, ylab) in zip(axes.flat, _PANELS):
+    fig, axes = plt.subplots(
+        1, len(panels), figsize=(5.4 * len(panels) + 0.4, 5.2), squeeze=False
+    )
+    for ax, (col, title, ylab) in zip(axes.flat, panels):
         plot_fn(ax, g, col)
         charts.style_axes(ax, title, "Year", ylab)
     axes.flat[0].legend(loc="best", frameon=False, labelcolor=theme.TEXT, fontsize=legend_fontsize)
@@ -152,15 +169,20 @@ def _grid_overview(g: pd.DataFrame, figs_dir: Path, plot_fn, suptitle: str,
     return out
 
 
-def _overview(g: pd.DataFrame, figs_dir: Path) -> Path:
+def _span(g: pd.DataFrame) -> str:
+    return f"{int(g['year'].min())}\u2013present"
+
+
+def _overview(g: pd.DataFrame, figs_dir: Path, panels: List[tuple] = _PANELS) -> Path:
     return _grid_overview(
         g, figs_dir, _plot_by_party,
-        "Courtesy, profanity, and ethnic slurs \u2014 U.S. Congressional Record, 1873\u20132026",
-        "overview.png", legend_fontsize=9, rect_top=_RECT_TOP_1LINE,
+        f"Floor language in the U.S. Congressional Record, {_span(g)}",
+        "overview.png", legend_fontsize=9, rect_top=_RECT_TOP_1LINE, panels=panels,
     )
 
 
-def _overview_for_chamber(gc: pd.DataFrame, figs_dir: Path, chamber: str) -> Path:
+def _overview_for_chamber(gc: pd.DataFrame, figs_dir: Path, chamber: str,
+                          panels: List[tuple] = _PANELS) -> Path:
     """Headline-measure overview of one chamber, Democrats vs Republicans.
 
     Splitting the chambers into separate figures replaces the previous combined
@@ -170,9 +192,10 @@ def _overview_for_chamber(gc: pd.DataFrame, figs_dir: Path, chamber: str) -> Pat
     label = theme.CHAMBER_LABELS[chamber]
     return _grid_overview(
         gc[gc["chamber"] == chamber], figs_dir, _plot_by_party,
-        f"Floor language in the U.S. {label} \u2014 Congressional Record, 1873\u20132026\n"
+        f"Floor language in the U.S. {label} \u2014 Congressional Record, {_span(gc)}\n"
         "Democrats vs Republicans",
         f"overview_{chamber}.png", legend_fontsize=9, rect_top=_RECT_TOP_2LINE,
+        panels=panels,
     )
 
 
@@ -183,17 +206,30 @@ def render(metrics_path: Path, out_dir: Path) -> List[Path]:
     df = df[df["chamber"].isin(["house", "senate"])].copy()
     g = _by_congress_party(df)
     gc = _by_year_chamber_party(df)
+    # A measure is drawn only when the metrics table scored it; a codebook addition
+    # appears after the historical rescore instead of as a flat line of false zeros.
+    def present(panels: List[tuple]) -> List[tuple]:
+        return [panel for panel in panels if RATE_TO_HITCOL[panel[0]] in df.columns]
+
+    headline, supplemental, chamber_panels = (
+        present(_PANELS), present(_SUPPLEMENTAL_PANELS), present(_CHAMBER_PANELS)
+    )
+    if not headline:
+        raise ValueError(f"{metrics_path} has no headline measure columns")
+    skipped = [col for col, _, _ in _PANELS if col not in {p[0] for p in headline}]
+    if skipped:
+        LOG.warning("not drawing measures missing from the metrics table: %s", skipped)
     figs_dir = out_dir / "figures"
     figs_dir.mkdir(parents=True, exist_ok=True)
     temp_figs = Path(tempfile.mkdtemp(prefix=".figures-", dir=figs_dir.parent))
     try:
         written: List[Path] = [
-            _overview(g, temp_figs),
-            _overview_for_chamber(gc, temp_figs, "house"),
-            _overview_for_chamber(gc, temp_figs, "senate"),
+            _overview(g, temp_figs, headline),
+            _overview_for_chamber(gc, temp_figs, "house", headline),
+            _overview_for_chamber(gc, temp_figs, "senate", headline),
         ]
 
-        for col, title, ylab in [*_PANELS, *_SUPPLEMENTAL_PANELS]:
+        for col, title, ylab in [*headline, *supplemental]:
             # overall (by party): clean markerless lines with direct end-of-line party labels
             fig, ax = charts.new_figure(figsize=(10, 5.5))
             _plot_by_party(ax, g, col, label_ends=True, marker=None, linewidth=2.6)
@@ -205,7 +241,7 @@ def render(metrics_path: Path, out_dir: Path) -> List[Path]:
 
         # Per-chamber breakdowns for the headline measures: one figure each, so the
         # House and Senate series are never overplotted on the same axes.
-        for col, title, ylab in _CHAMBER_PANELS:
+        for col, title, ylab in chamber_panels:
             for chamber in ("house", "senate"):
                 sub = gc[gc["chamber"] == chamber]
                 if sub.empty:

@@ -41,18 +41,6 @@
         "rate": "profanity_per_100k",
         "label": "Profanity",
         "definition": "Unquoted matches from a narrow, curated profanity list."
-      },
-      "hostility": {
-        "hits": "hostility_hits",
-        "rate": "hostility_per_100k",
-        "label": "Personal hostility / disrespect",
-        "definition": "Curated personal attack and disrespect terms."
-      },
-      "misconduct": {
-        "hits": "misconduct_hits",
-        "rate": "misconduct_per_100k",
-        "label": "Misconduct allegations",
-        "definition": "Curated language alleging corruption, abuse, or other misconduct."
       }
     },
     "series": [
@@ -62,11 +50,9 @@
         "words": 280517,
         "turns": 932,
         "profanity_hits": 0,
-        "hostility_hits": 3,
-        "misconduct_hits": 10,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 1.0694539012,
-        "misconduct_per_100k": 3.5648463373
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-01",
@@ -74,11 +60,9 @@
         "words": 268479,
         "turns": 877,
         "profanity_hits": 0,
-        "hostility_hits": 6,
-        "misconduct_hits": 3,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 2.2348116612,
-        "misconduct_per_100k": 1.1174058306
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-02",
@@ -86,11 +70,9 @@
         "words": 449036,
         "turns": 1305,
         "profanity_hits": 1,
-        "hostility_hits": 5,
-        "misconduct_hits": 10,
+        "slur_hits": 0,
         "profanity_per_100k": 0.2226992936,
-        "hostility_per_100k": 1.113496468,
-        "misconduct_per_100k": 2.226992936
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-02",
@@ -98,11 +80,9 @@
         "words": 411604,
         "turns": 953,
         "profanity_hits": 0,
-        "hostility_hits": 8,
-        "misconduct_hits": 2,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 1.9436157083,
-        "misconduct_per_100k": 0.4859039271
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-03",
@@ -110,11 +90,9 @@
         "words": 646735,
         "turns": 2262,
         "profanity_hits": 1,
-        "hostility_hits": 3,
-        "misconduct_hits": 16,
+        "slur_hits": 0,
         "profanity_per_100k": 0.1546228362,
-        "hostility_per_100k": 0.4638685087,
-        "misconduct_per_100k": 2.4739653799
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-03",
@@ -122,11 +100,9 @@
         "words": 593586,
         "turns": 1594,
         "profanity_hits": 1,
-        "hostility_hits": 2,
-        "misconduct_hits": 13,
+        "slur_hits": 0,
         "profanity_per_100k": 0.1684675852,
-        "hostility_per_100k": 0.3369351703,
-        "misconduct_per_100k": 2.190078607
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-04",
@@ -134,11 +110,9 @@
         "words": 521861,
         "turns": 1634,
         "profanity_hits": 0,
-        "hostility_hits": 16,
-        "misconduct_hits": 5,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 3.0659505117,
-        "misconduct_per_100k": 0.9581095349
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-04",
@@ -146,11 +120,9 @@
         "words": 414997,
         "turns": 1230,
         "profanity_hits": 0,
-        "hostility_hits": 14,
-        "misconduct_hits": 5,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 3.3735183628,
-        "misconduct_per_100k": 1.2048279867
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-05",
@@ -158,11 +130,9 @@
         "words": 550105,
         "turns": 2053,
         "profanity_hits": 1,
-        "hostility_hits": 5,
-        "misconduct_hits": 8,
+        "slur_hits": 0,
         "profanity_per_100k": 0.1817834777,
-        "hostility_per_100k": 0.9089173885,
-        "misconduct_per_100k": 1.4542678216
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-05",
@@ -170,11 +140,9 @@
         "words": 449110,
         "turns": 1625,
         "profanity_hits": 0,
-        "hostility_hits": 3,
-        "misconduct_hits": 40,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 0.6679877981,
-        "misconduct_per_100k": 8.9065039745
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-06",
@@ -182,11 +150,9 @@
         "words": 838100,
         "turns": 3215,
         "profanity_hits": 3,
-        "hostility_hits": 9,
-        "misconduct_hits": 46,
+        "slur_hits": 0,
         "profanity_per_100k": 0.3579525116,
-        "hostility_per_100k": 1.0738575349,
-        "misconduct_per_100k": 5.4886051784
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-06",
@@ -194,11 +160,9 @@
         "words": 873081,
         "turns": 3095,
         "profanity_hits": 1,
-        "hostility_hits": 14,
-        "misconduct_hits": 46,
+        "slur_hits": 0,
         "profanity_per_100k": 0.1145369101,
-        "hostility_per_100k": 1.6035167413,
-        "misconduct_per_100k": 5.2686978642
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-07",
@@ -206,11 +170,9 @@
         "words": 688157,
         "turns": 2818,
         "profanity_hits": 1,
-        "hostility_hits": 8,
-        "misconduct_hits": 24,
+        "slur_hits": 0,
         "profanity_per_100k": 0.1453156765,
-        "hostility_per_100k": 1.1625254121,
-        "misconduct_per_100k": 3.4875762362
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-07",
@@ -218,11 +180,9 @@
         "words": 619334,
         "turns": 2453,
         "profanity_hits": 1,
-        "hostility_hits": 16,
-        "misconduct_hits": 15,
+        "slur_hits": 0,
         "profanity_per_100k": 0.1614637659,
-        "hostility_per_100k": 2.5834202547,
-        "misconduct_per_100k": 2.4219564887
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-08",
@@ -230,11 +190,9 @@
         "words": 99095,
         "turns": 385,
         "profanity_hits": 0,
-        "hostility_hits": 0,
-        "misconduct_hits": 29,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 0.0,
-        "misconduct_per_100k": 29.2648468641
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-08",
@@ -242,11 +200,9 @@
         "words": 107896,
         "turns": 372,
         "profanity_hits": 0,
-        "hostility_hits": 10,
-        "misconduct_hits": 4,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 9.2681841774,
-        "misconduct_per_100k": 3.7072736709
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-09",
@@ -254,11 +210,9 @@
         "words": 576102,
         "turns": 1878,
         "profanity_hits": 1,
-        "hostility_hits": 7,
-        "misconduct_hits": 40,
+        "slur_hits": 0,
         "profanity_per_100k": 0.1735803729,
-        "hostility_per_100k": 1.2150626104,
-        "misconduct_per_100k": 6.9432149168
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-09",
@@ -266,11 +220,9 @@
         "words": 691863,
         "turns": 1896,
         "profanity_hits": 3,
-        "hostility_hits": 12,
-        "misconduct_hits": 19,
+        "slur_hits": 0,
         "profanity_per_100k": 0.4336118567,
-        "hostility_per_100k": 1.7344474267,
-        "misconduct_per_100k": 2.7462084257
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-10",
@@ -278,11 +230,9 @@
         "words": 899268,
         "turns": 3032,
         "profanity_hits": 3,
-        "hostility_hits": 14,
-        "misconduct_hits": 13,
+        "slur_hits": 0,
         "profanity_per_100k": 0.3336046651,
-        "hostility_per_100k": 1.5568217706,
-        "misconduct_per_100k": 1.4456202156
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-10",
@@ -290,11 +240,9 @@
         "words": 670771,
         "turns": 2085,
         "profanity_hits": 2,
-        "hostility_hits": 8,
-        "misconduct_hits": 16,
+        "slur_hits": 0,
         "profanity_per_100k": 0.2981643512,
-        "hostility_per_100k": 1.1926574047,
-        "misconduct_per_100k": 2.3853148094
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-11",
@@ -302,11 +250,9 @@
         "words": 463424,
         "turns": 1449,
         "profanity_hits": 1,
-        "hostility_hits": 7,
-        "misconduct_hits": 7,
+        "slur_hits": 0,
         "profanity_per_100k": 0.2157851126,
-        "hostility_per_100k": 1.5104957879,
-        "misconduct_per_100k": 1.5104957879
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-11",
@@ -314,11 +260,9 @@
         "words": 382802,
         "turns": 1180,
         "profanity_hits": 4,
-        "hostility_hits": 3,
-        "misconduct_hits": 40,
+        "slur_hits": 0,
         "profanity_per_100k": 1.04492662,
-        "hostility_per_100k": 0.783694965,
-        "misconduct_per_100k": 10.4492662003
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-12",
@@ -326,11 +270,9 @@
         "words": 413661,
         "turns": 1355,
         "profanity_hits": 0,
-        "hostility_hits": 2,
-        "misconduct_hits": 15,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 0.4834876868,
-        "misconduct_per_100k": 3.6261576508
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-12",
@@ -338,11 +280,9 @@
         "words": 549594,
         "turns": 1150,
         "profanity_hits": 0,
-        "hostility_hits": 7,
-        "misconduct_hits": 22,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 1.2736674709,
-        "misconduct_per_100k": 4.0029549085
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-01",
@@ -350,11 +290,9 @@
         "words": 490282,
         "turns": 1621,
         "profanity_hits": 2,
-        "hostility_hits": 7,
-        "misconduct_hits": 14,
+        "slur_hits": 0,
         "profanity_per_100k": 0.4079284983,
-        "hostility_per_100k": 1.427749744,
-        "misconduct_per_100k": 2.855499488
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-01",
@@ -362,11 +300,9 @@
         "words": 434924,
         "turns": 1138,
         "profanity_hits": 1,
-        "hostility_hits": 8,
-        "misconduct_hits": 25,
+        "slur_hits": 0,
         "profanity_per_100k": 0.2299252283,
-        "hostility_per_100k": 1.8394018265,
-        "misconduct_per_100k": 5.7481307079
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-02",
@@ -374,11 +310,9 @@
         "words": 428115,
         "turns": 1415,
         "profanity_hits": 0,
-        "hostility_hits": 9,
-        "misconduct_hits": 41,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 2.1022388844,
-        "misconduct_per_100k": 9.576866029
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-02",
@@ -386,11 +320,9 @@
         "words": 415699,
         "turns": 1158,
         "profanity_hits": 1,
-        "hostility_hits": 11,
-        "misconduct_hits": 27,
+        "slur_hits": 0,
         "profanity_per_100k": 0.2405586735,
-        "hostility_per_100k": 2.6461454081,
-        "misconduct_per_100k": 6.4950841835
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-03",
@@ -398,11 +330,9 @@
         "words": 583696,
         "turns": 1986,
         "profanity_hits": 1,
-        "hostility_hits": 12,
-        "misconduct_hits": 45,
+        "slur_hits": 0,
         "profanity_per_100k": 0.1713220581,
-        "hostility_per_100k": 2.0558646967,
-        "misconduct_per_100k": 7.7094926126
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-03",
@@ -410,11 +340,9 @@
         "words": 465785,
         "turns": 1449,
         "profanity_hits": 1,
-        "hostility_hits": 12,
-        "misconduct_hits": 50,
+        "slur_hits": 0,
         "profanity_per_100k": 0.2146913275,
-        "hostility_per_100k": 2.5762959305,
-        "misconduct_per_100k": 10.7345663772
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-04",
@@ -422,11 +350,9 @@
         "words": 488852,
         "turns": 1609,
         "profanity_hits": 4,
-        "hostility_hits": 8,
-        "misconduct_hits": 19,
+        "slur_hits": 0,
         "profanity_per_100k": 0.8182435584,
-        "hostility_per_100k": 1.6364871168,
-        "misconduct_per_100k": 3.8866569023
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-04",
@@ -434,11 +360,9 @@
         "words": 490963,
         "turns": 1405,
         "profanity_hits": 2,
-        "hostility_hits": 13,
-        "misconduct_hits": 22,
+        "slur_hits": 0,
         "profanity_per_100k": 0.407362673,
-        "hostility_per_100k": 2.6478573742,
-        "misconduct_per_100k": 4.4809894025
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-05",
@@ -446,11 +370,9 @@
         "words": 628017,
         "turns": 2288,
         "profanity_hits": 1,
-        "hostility_hits": 10,
-        "misconduct_hits": 43,
+        "slur_hits": 0,
         "profanity_per_100k": 0.1592313584,
-        "hostility_per_100k": 1.5923135839,
-        "misconduct_per_100k": 6.8469484106
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-05",
@@ -458,11 +380,9 @@
         "words": 535837,
         "turns": 2092,
         "profanity_hits": 0,
-        "hostility_hits": 12,
-        "misconduct_hits": 39,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 2.2394870082,
-        "misconduct_per_100k": 7.2783327766
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-06",
@@ -470,11 +390,9 @@
         "words": 596842,
         "turns": 2386,
         "profanity_hits": 1,
-        "hostility_hits": 8,
-        "misconduct_hits": 18,
+        "slur_hits": 0,
         "profanity_per_100k": 0.1675485304,
-        "hostility_per_100k": 1.3403882435,
-        "misconduct_per_100k": 3.0158735478
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-06",
@@ -482,11 +400,9 @@
         "words": 552285,
         "turns": 2085,
         "profanity_hits": 2,
-        "hostility_hits": 3,
-        "misconduct_hits": 44,
+        "slur_hits": 0,
         "profanity_per_100k": 0.3621318703,
-        "hostility_per_100k": 0.5431978055,
-        "misconduct_per_100k": 7.9669011471
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-07",
@@ -494,11 +410,9 @@
         "words": 867134,
         "turns": 3110,
         "profanity_hits": 1,
-        "hostility_hits": 26,
-        "misconduct_hits": 46,
+        "slur_hits": 0,
         "profanity_per_100k": 0.11532243,
-        "hostility_per_100k": 2.9983831795,
-        "misconduct_per_100k": 5.3048317792
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-07",
@@ -506,11 +420,9 @@
         "words": 845935,
         "turns": 2800,
         "profanity_hits": 1,
-        "hostility_hits": 17,
-        "misconduct_hits": 63,
+        "slur_hits": 0,
         "profanity_per_100k": 0.1182123922,
-        "hostility_per_100k": 2.0096106675,
-        "misconduct_per_100k": 7.4473807089
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-08",
@@ -518,11 +430,9 @@
         "words": 29662,
         "turns": 252,
         "profanity_hits": 1,
-        "hostility_hits": 0,
-        "misconduct_hits": 2,
+        "slur_hits": 0,
         "profanity_per_100k": 3.3713168364,
-        "hostility_per_100k": 0.0,
-        "misconduct_per_100k": 6.7426336727
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-08",
@@ -530,11 +440,9 @@
         "words": 27266,
         "turns": 150,
         "profanity_hits": 0,
-        "hostility_hits": 0,
-        "misconduct_hits": 0,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 0.0,
-        "misconduct_per_100k": 0.0
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-09",
@@ -542,11 +450,9 @@
         "words": 427571,
         "turns": 1385,
         "profanity_hits": 1,
-        "hostility_hits": 9,
-        "misconduct_hits": 52,
+        "slur_hits": 0,
         "profanity_per_100k": 0.2338792855,
-        "hostility_per_100k": 2.1049135699,
-        "misconduct_per_100k": 12.1617228484
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-09",
@@ -554,11 +460,9 @@
         "words": 395170,
         "turns": 1245,
         "profanity_hits": 1,
-        "hostility_hits": 7,
-        "misconduct_hits": 16,
+        "slur_hits": 0,
         "profanity_per_100k": 0.2530556469,
-        "hostility_per_100k": 1.7713895286,
-        "misconduct_per_100k": 4.048890351
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-11",
@@ -566,11 +470,9 @@
         "words": 250871,
         "turns": 846,
         "profanity_hits": 0,
-        "hostility_hits": 3,
-        "misconduct_hits": 3,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 1.1958337153,
-        "misconduct_per_100k": 1.1958337153
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-11",
@@ -578,11 +480,9 @@
         "words": 222658,
         "turns": 724,
         "profanity_hits": 1,
-        "hostility_hits": 3,
-        "misconduct_hits": 12,
+        "slur_hits": 0,
         "profanity_per_100k": 0.4491192771,
-        "hostility_per_100k": 1.3473578313,
-        "misconduct_per_100k": 5.3894313252
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-12",
@@ -590,11 +490,9 @@
         "words": 581897,
         "turns": 1911,
         "profanity_hits": 2,
-        "hostility_hits": 4,
-        "misconduct_hits": 31,
+        "slur_hits": 0,
         "profanity_per_100k": 0.3437034389,
-        "hostility_per_100k": 0.6874068778,
-        "misconduct_per_100k": 5.3274033033
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-12",
@@ -602,11 +500,9 @@
         "words": 446753,
         "turns": 1402,
         "profanity_hits": 1,
-        "hostility_hits": 2,
-        "misconduct_hits": 21,
+        "slur_hits": 0,
         "profanity_per_100k": 0.2238373329,
-        "hostility_per_100k": 0.4476746659,
-        "misconduct_per_100k": 4.7005839916
+        "slurs_per_100k": 0.0
       }
     ],
     "chamber_series": [
@@ -617,11 +513,9 @@
         "words": 92889,
         "turns": 446,
         "profanity_hits": 0,
-        "hostility_hits": 1,
-        "misconduct_hits": 1,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 1.0765537362,
-        "misconduct_per_100k": 1.0765537362
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-01",
@@ -630,11 +524,9 @@
         "words": 187628,
         "turns": 486,
         "profanity_hits": 0,
-        "hostility_hits": 2,
-        "misconduct_hits": 9,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 1.0659389857,
-        "misconduct_per_100k": 4.7967254354
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-01",
@@ -643,11 +535,9 @@
         "words": 130844,
         "turns": 613,
         "profanity_hits": 0,
-        "hostility_hits": 1,
-        "misconduct_hits": 2,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 0.7642689004,
-        "misconduct_per_100k": 1.5285378007
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-01",
@@ -656,11 +546,9 @@
         "words": 137635,
         "turns": 264,
         "profanity_hits": 0,
-        "hostility_hits": 5,
-        "misconduct_hits": 1,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 3.6327968903,
-        "misconduct_per_100k": 0.7265593781
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-02",
@@ -669,11 +557,9 @@
         "words": 215667,
         "turns": 638,
         "profanity_hits": 1,
-        "hostility_hits": 4,
-        "misconduct_hits": 6,
+        "slur_hits": 0,
         "profanity_per_100k": 0.4636777996,
-        "hostility_per_100k": 1.8547111983,
-        "misconduct_per_100k": 2.7820667974
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-02",
@@ -682,11 +568,9 @@
         "words": 233369,
         "turns": 667,
         "profanity_hits": 0,
-        "hostility_hits": 1,
-        "misconduct_hits": 4,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 0.4285059284,
-        "misconduct_per_100k": 1.7140237135
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-02",
@@ -695,11 +579,9 @@
         "words": 211202,
         "turns": 582,
         "profanity_hits": 0,
-        "hostility_hits": 1,
-        "misconduct_hits": 0,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 0.4734803648,
-        "misconduct_per_100k": 0.0
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-02",
@@ -708,11 +590,9 @@
         "words": 200402,
         "turns": 371,
         "profanity_hits": 0,
-        "hostility_hits": 7,
-        "misconduct_hits": 2,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 3.492979112,
-        "misconduct_per_100k": 0.997994032
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-03",
@@ -721,11 +601,9 @@
         "words": 202943,
         "turns": 734,
         "profanity_hits": 1,
-        "hostility_hits": 2,
-        "misconduct_hits": 1,
+        "slur_hits": 0,
         "profanity_per_100k": 0.4927491956,
-        "hostility_per_100k": 0.9854983912,
-        "misconduct_per_100k": 0.4927491956
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-03",
@@ -734,11 +612,9 @@
         "words": 443792,
         "turns": 1528,
         "profanity_hits": 0,
-        "hostility_hits": 1,
-        "misconduct_hits": 15,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 0.2253307856,
-        "misconduct_per_100k": 3.3799617839
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-03",
@@ -747,11 +623,9 @@
         "words": 178216,
         "turns": 701,
         "profanity_hits": 0,
-        "hostility_hits": 0,
-        "misconduct_hits": 4,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 0.0,
-        "misconduct_per_100k": 2.2444673879
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-03",
@@ -760,11 +634,9 @@
         "words": 415370,
         "turns": 893,
         "profanity_hits": 1,
-        "hostility_hits": 2,
-        "misconduct_hits": 9,
+        "slur_hits": 0,
         "profanity_per_100k": 0.2407492115,
-        "hostility_per_100k": 0.4814984231,
-        "misconduct_per_100k": 2.1667429039
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-04",
@@ -773,11 +645,9 @@
         "words": 223538,
         "turns": 781,
         "profanity_hits": 0,
-        "hostility_hits": 2,
-        "misconduct_hits": 0,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 0.8947024667,
-        "misconduct_per_100k": 0.0
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-04",
@@ -786,11 +656,9 @@
         "words": 298323,
         "turns": 853,
         "profanity_hits": 0,
-        "hostility_hits": 14,
-        "misconduct_hits": 5,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 4.6928999775,
-        "misconduct_per_100k": 1.6760357063
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-04",
@@ -799,11 +667,9 @@
         "words": 227165,
         "turns": 845,
         "profanity_hits": 0,
-        "hostility_hits": 10,
-        "misconduct_hits": 3,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 4.402086589,
-        "misconduct_per_100k": 1.3206259767
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-04",
@@ -812,11 +678,9 @@
         "words": 187832,
         "turns": 385,
         "profanity_hits": 0,
-        "hostility_hits": 4,
-        "misconduct_hits": 2,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 2.1295625878,
-        "misconduct_per_100k": 1.0647812939
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-05",
@@ -825,11 +689,9 @@
         "words": 233333,
         "turns": 959,
         "profanity_hits": 1,
-        "hostility_hits": 1,
-        "misconduct_hits": 6,
+        "slur_hits": 0,
         "profanity_per_100k": 0.4285720408,
-        "hostility_per_100k": 0.4285720408,
-        "misconduct_per_100k": 2.5714322449
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-05",
@@ -838,11 +700,9 @@
         "words": 316772,
         "turns": 1094,
         "profanity_hits": 0,
-        "hostility_hits": 4,
-        "misconduct_hits": 2,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 1.2627378682,
-        "misconduct_per_100k": 0.6313689341
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-05",
@@ -851,11 +711,9 @@
         "words": 252593,
         "turns": 1052,
         "profanity_hits": 0,
-        "hostility_hits": 3,
-        "misconduct_hits": 25,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 1.1876813688,
-        "misconduct_per_100k": 9.8973447404
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-05",
@@ -864,11 +722,9 @@
         "words": 196517,
         "turns": 573,
         "profanity_hits": 0,
-        "hostility_hits": 0,
-        "misconduct_hits": 15,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 0.0,
-        "misconduct_per_100k": 7.6329274312
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-06",
@@ -877,11 +733,9 @@
         "words": 418014,
         "turns": 1944,
         "profanity_hits": 2,
-        "hostility_hits": 6,
-        "misconduct_hits": 39,
+        "slur_hits": 0,
         "profanity_per_100k": 0.4784528748,
-        "hostility_per_100k": 1.4353586244,
-        "misconduct_per_100k": 9.3298310583
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-06",
@@ -890,11 +744,9 @@
         "words": 420086,
         "turns": 1271,
         "profanity_hits": 1,
-        "hostility_hits": 3,
-        "misconduct_hits": 7,
+        "slur_hits": 0,
         "profanity_per_100k": 0.2380464952,
-        "hostility_per_100k": 0.7141394857,
-        "misconduct_per_100k": 1.6663254667
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-06",
@@ -903,11 +755,9 @@
         "words": 410850,
         "turns": 2229,
         "profanity_hits": 0,
-        "hostility_hits": 4,
-        "misconduct_hits": 21,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 0.973591335,
-        "misconduct_per_100k": 5.1113545089
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-06",
@@ -916,11 +766,9 @@
         "words": 462231,
         "turns": 866,
         "profanity_hits": 1,
-        "hostility_hits": 10,
-        "misconduct_hits": 25,
+        "slur_hits": 0,
         "profanity_per_100k": 0.2163420454,
-        "hostility_per_100k": 2.1634204543,
-        "misconduct_per_100k": 5.4085511357
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-07",
@@ -929,11 +777,9 @@
         "words": 394679,
         "turns": 1875,
         "profanity_hits": 0,
-        "hostility_hits": 5,
-        "misconduct_hits": 19,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 1.2668523028,
-        "misconduct_per_100k": 4.8140387505
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-07",
@@ -942,11 +788,9 @@
         "words": 293478,
         "turns": 943,
         "profanity_hits": 1,
-        "hostility_hits": 3,
-        "misconduct_hits": 5,
+        "slur_hits": 0,
         "profanity_per_100k": 0.3407410436,
-        "hostility_per_100k": 1.0222231309,
-        "misconduct_per_100k": 1.7037052181
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-07",
@@ -955,11 +799,9 @@
         "words": 359652,
         "turns": 1957,
         "profanity_hits": 0,
-        "hostility_hits": 8,
-        "misconduct_hits": 15,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 2.2243724489,
-        "misconduct_per_100k": 4.1706983417
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-07",
@@ -968,11 +810,9 @@
         "words": 259682,
         "turns": 496,
         "profanity_hits": 1,
-        "hostility_hits": 8,
-        "misconduct_hits": 0,
+        "slur_hits": 0,
         "profanity_per_100k": 0.3850863749,
-        "hostility_per_100k": 3.080690999,
-        "misconduct_per_100k": 0.0
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-08",
@@ -981,11 +821,9 @@
         "words": 49733,
         "turns": 237,
         "profanity_hits": 0,
-        "hostility_hits": 0,
-        "misconduct_hits": 1,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 0.0,
-        "misconduct_per_100k": 2.0107373374
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-08",
@@ -994,11 +832,9 @@
         "words": 49362,
         "turns": 148,
         "profanity_hits": 0,
-        "hostility_hits": 0,
-        "misconduct_hits": 28,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 0.0,
-        "misconduct_per_100k": 56.7237956323
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-08",
@@ -1007,11 +843,9 @@
         "words": 66743,
         "turns": 289,
         "profanity_hits": 0,
-        "hostility_hits": 3,
-        "misconduct_hits": 3,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 4.4948533929,
-        "misconduct_per_100k": 4.4948533929
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-08",
@@ -1020,11 +854,9 @@
         "words": 41153,
         "turns": 83,
         "profanity_hits": 0,
-        "hostility_hits": 7,
-        "misconduct_hits": 1,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 17.0096955265,
-        "misconduct_per_100k": 2.4299565038
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-09",
@@ -1033,11 +865,9 @@
         "words": 262020,
         "turns": 1042,
         "profanity_hits": 1,
-        "hostility_hits": 3,
-        "misconduct_hits": 9,
+        "slur_hits": 0,
         "profanity_per_100k": 0.3816502557,
-        "hostility_per_100k": 1.1449507671,
-        "misconduct_per_100k": 3.4348523014
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-09",
@@ -1046,11 +876,9 @@
         "words": 314082,
         "turns": 836,
         "profanity_hits": 0,
-        "hostility_hits": 4,
-        "misconduct_hits": 31,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 1.2735527665,
-        "misconduct_per_100k": 9.8700339402
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-09",
@@ -1059,11 +887,9 @@
         "words": 299465,
         "turns": 1270,
         "profanity_hits": 0,
-        "hostility_hits": 9,
-        "misconduct_hits": 10,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 3.0053595579,
-        "misconduct_per_100k": 3.3392883976
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-09",
@@ -1072,11 +898,9 @@
         "words": 392398,
         "turns": 626,
         "profanity_hits": 3,
-        "hostility_hits": 3,
-        "misconduct_hits": 9,
+        "slur_hits": 0,
         "profanity_per_100k": 0.7645298906,
-        "hostility_per_100k": 0.7645298906,
-        "misconduct_per_100k": 2.2935896717
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-10",
@@ -1085,11 +909,9 @@
         "words": 435292,
         "turns": 1913,
         "profanity_hits": 3,
-        "hostility_hits": 6,
-        "misconduct_hits": 4,
+        "slur_hits": 0,
         "profanity_per_100k": 0.689192542,
-        "hostility_per_100k": 1.378385084,
-        "misconduct_per_100k": 0.9189233894
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-10",
@@ -1098,11 +920,9 @@
         "words": 463976,
         "turns": 1119,
         "profanity_hits": 0,
-        "hostility_hits": 8,
-        "misconduct_hits": 9,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 1.7242271152,
-        "misconduct_per_100k": 1.9397555046
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-10",
@@ -1111,11 +931,9 @@
         "words": 421073,
         "turns": 1583,
         "profanity_hits": 1,
-        "hostility_hits": 2,
-        "misconduct_hits": 7,
+        "slur_hits": 0,
         "profanity_per_100k": 0.2374885115,
-        "hostility_per_100k": 0.474977023,
-        "misconduct_per_100k": 1.6624195805
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-10",
@@ -1124,11 +942,9 @@
         "words": 249698,
         "turns": 502,
         "profanity_hits": 1,
-        "hostility_hits": 6,
-        "misconduct_hits": 9,
+        "slur_hits": 0,
         "profanity_per_100k": 0.4004837844,
-        "hostility_per_100k": 2.4029027065,
-        "misconduct_per_100k": 3.6043540597
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-11",
@@ -1137,11 +953,9 @@
         "words": 177566,
         "turns": 637,
         "profanity_hits": 0,
-        "hostility_hits": 1,
-        "misconduct_hits": 5,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 0.5631708773,
-        "misconduct_per_100k": 2.8158543865
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-11",
@@ -1150,11 +964,9 @@
         "words": 285858,
         "turns": 812,
         "profanity_hits": 1,
-        "hostility_hits": 6,
-        "misconduct_hits": 2,
+        "slur_hits": 0,
         "profanity_per_100k": 0.3498240385,
-        "hostility_per_100k": 2.0989442311,
-        "misconduct_per_100k": 0.699648077
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-11",
@@ -1163,11 +975,9 @@
         "words": 192396,
         "turns": 759,
         "profanity_hits": 0,
-        "hostility_hits": 0,
-        "misconduct_hits": 30,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 0.0,
-        "misconduct_per_100k": 15.592839768
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-11",
@@ -1176,11 +986,9 @@
         "words": 190406,
         "turns": 421,
         "profanity_hits": 4,
-        "hostility_hits": 3,
-        "misconduct_hits": 10,
+        "slur_hits": 0,
         "profanity_per_100k": 2.1007741353,
-        "hostility_per_100k": 1.5755806015,
-        "misconduct_per_100k": 5.2519353382
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-12",
@@ -1189,11 +997,9 @@
         "words": 195383,
         "turns": 656,
         "profanity_hits": 0,
-        "hostility_hits": 0,
-        "misconduct_hits": 11,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 0.0,
-        "misconduct_per_100k": 5.6299678068
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-12",
@@ -1202,11 +1008,9 @@
         "words": 218278,
         "turns": 699,
         "profanity_hits": 0,
-        "hostility_hits": 2,
-        "misconduct_hits": 4,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 0.9162627475,
-        "misconduct_per_100k": 1.832525495
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-12",
@@ -1215,11 +1019,9 @@
         "words": 175832,
         "turns": 625,
         "profanity_hits": 0,
-        "hostility_hits": 0,
-        "misconduct_hits": 9,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 0.0,
-        "misconduct_per_100k": 5.1185222258
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2013-12",
@@ -1228,11 +1030,9 @@
         "words": 373762,
         "turns": 525,
         "profanity_hits": 0,
-        "hostility_hits": 7,
-        "misconduct_hits": 13,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 1.8728495674,
-        "misconduct_per_100k": 3.4781491965
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-01",
@@ -1241,11 +1041,9 @@
         "words": 224198,
         "turns": 795,
         "profanity_hits": 2,
-        "hostility_hits": 4,
-        "misconduct_hits": 7,
+        "slur_hits": 0,
         "profanity_per_100k": 0.8920686179,
-        "hostility_per_100k": 1.7841372358,
-        "misconduct_per_100k": 3.1222401627
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-01",
@@ -1254,11 +1052,9 @@
         "words": 266084,
         "turns": 826,
         "profanity_hits": 0,
-        "hostility_hits": 3,
-        "misconduct_hits": 7,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 1.1274635078,
-        "misconduct_per_100k": 2.6307481848
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-01",
@@ -1267,11 +1063,9 @@
         "words": 185128,
         "turns": 763,
         "profanity_hits": 0,
-        "hostility_hits": 7,
-        "misconduct_hits": 12,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 3.7811676246,
-        "misconduct_per_100k": 6.4820016421
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-01",
@@ -1280,11 +1074,9 @@
         "words": 249796,
         "turns": 375,
         "profanity_hits": 1,
-        "hostility_hits": 1,
-        "misconduct_hits": 13,
+        "slur_hits": 0,
         "profanity_per_100k": 0.4003266666,
-        "hostility_per_100k": 0.4003266666,
-        "misconduct_per_100k": 5.2042466653
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-02",
@@ -1293,11 +1085,9 @@
         "words": 190894,
         "turns": 753,
         "profanity_hits": 0,
-        "hostility_hits": 7,
-        "misconduct_hits": 9,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 3.6669565308,
-        "misconduct_per_100k": 4.7146583968
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-02",
@@ -1306,11 +1096,9 @@
         "words": 237221,
         "turns": 662,
         "profanity_hits": 0,
-        "hostility_hits": 2,
-        "misconduct_hits": 32,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 0.8430956787,
-        "misconduct_per_100k": 13.4895308594
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-02",
@@ -1319,11 +1107,9 @@
         "words": 226920,
         "turns": 836,
         "profanity_hits": 0,
-        "hostility_hits": 4,
-        "misconduct_hits": 13,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 1.7627357659,
-        "misconduct_per_100k": 5.7288912392
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-02",
@@ -1332,11 +1118,9 @@
         "words": 188779,
         "turns": 322,
         "profanity_hits": 1,
-        "hostility_hits": 7,
-        "misconduct_hits": 14,
+        "slur_hits": 0,
         "profanity_per_100k": 0.5297199371,
-        "hostility_per_100k": 3.7080395595,
-        "misconduct_per_100k": 7.416079119
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-03",
@@ -1345,11 +1129,9 @@
         "words": 244813,
         "turns": 912,
         "profanity_hits": 1,
-        "hostility_hits": 6,
-        "misconduct_hits": 11,
+        "slur_hits": 0,
         "profanity_per_100k": 0.4084750401,
-        "hostility_per_100k": 2.4508502408,
-        "misconduct_per_100k": 4.4932254415
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-03",
@@ -1358,11 +1140,9 @@
         "words": 338883,
         "turns": 1074,
         "profanity_hits": 0,
-        "hostility_hits": 6,
-        "misconduct_hits": 34,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 1.7705225697,
-        "misconduct_per_100k": 10.0329612285
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-03",
@@ -1371,11 +1151,9 @@
         "words": 255093,
         "turns": 1024,
         "profanity_hits": 1,
-        "hostility_hits": 7,
-        "misconduct_hits": 21,
+        "slur_hits": 0,
         "profanity_per_100k": 0.392013893,
-        "hostility_per_100k": 2.7440972508,
-        "misconduct_per_100k": 8.2322917524
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-03",
@@ -1384,11 +1162,9 @@
         "words": 210692,
         "turns": 425,
         "profanity_hits": 0,
-        "hostility_hits": 5,
-        "misconduct_hits": 29,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 2.3731323448,
-        "misconduct_per_100k": 13.7641676001
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-04",
@@ -1397,11 +1173,9 @@
         "words": 255794,
         "turns": 918,
         "profanity_hits": 4,
-        "hostility_hits": 3,
-        "misconduct_hits": 5,
+        "slur_hits": 0,
         "profanity_per_100k": 1.5637583368,
-        "hostility_per_100k": 1.1728187526,
-        "misconduct_per_100k": 1.954697921
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-04",
@@ -1410,11 +1184,9 @@
         "words": 233058,
         "turns": 691,
         "profanity_hits": 0,
-        "hostility_hits": 5,
-        "misconduct_hits": 14,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 2.1453887015,
-        "misconduct_per_100k": 6.0070883643
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-04",
@@ -1423,11 +1195,9 @@
         "words": 297130,
         "turns": 1042,
         "profanity_hits": 2,
-        "hostility_hits": 11,
-        "misconduct_hits": 15,
+        "slur_hits": 0,
         "profanity_per_100k": 0.6731060479,
-        "hostility_per_100k": 3.7020832632,
-        "misconduct_per_100k": 5.0482953589
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-04",
@@ -1436,11 +1206,9 @@
         "words": 193833,
         "turns": 363,
         "profanity_hits": 0,
-        "hostility_hits": 2,
-        "misconduct_hits": 7,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 1.0318160478,
-        "misconduct_per_100k": 3.6113561674
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-05",
@@ -1449,11 +1217,9 @@
         "words": 306729,
         "turns": 1401,
         "profanity_hits": 1,
-        "hostility_hits": 5,
-        "misconduct_hits": 17,
+        "slur_hits": 0,
         "profanity_per_100k": 0.3260206893,
-        "hostility_per_100k": 1.6301034464,
-        "misconduct_per_100k": 5.5423517176
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-05",
@@ -1462,11 +1228,9 @@
         "words": 321288,
         "turns": 887,
         "profanity_hits": 0,
-        "hostility_hits": 5,
-        "misconduct_hits": 26,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 1.5562361495,
-        "misconduct_per_100k": 8.0924279774
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-05",
@@ -1475,11 +1239,9 @@
         "words": 312449,
         "turns": 1635,
         "profanity_hits": 0,
-        "hostility_hits": 9,
-        "misconduct_hits": 24,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 2.8804700927,
-        "misconduct_per_100k": 7.6812535806
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-05",
@@ -1488,11 +1250,9 @@
         "words": 223388,
         "turns": 457,
         "profanity_hits": 0,
-        "hostility_hits": 3,
-        "misconduct_hits": 15,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 1.3429548588,
-        "misconduct_per_100k": 6.7147742941
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-06",
@@ -1501,11 +1261,9 @@
         "words": 262833,
         "turns": 1337,
         "profanity_hits": 1,
-        "hostility_hits": 1,
-        "misconduct_hits": 10,
+        "slur_hits": 0,
         "profanity_per_100k": 0.3804697279,
-        "hostility_per_100k": 0.3804697279,
-        "misconduct_per_100k": 3.8046972793
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-06",
@@ -1514,11 +1272,9 @@
         "words": 334009,
         "turns": 1049,
         "profanity_hits": 0,
-        "hostility_hits": 7,
-        "misconduct_hits": 8,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 2.0957519109,
-        "misconduct_per_100k": 2.395145041
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-06",
@@ -1527,11 +1283,9 @@
         "words": 256581,
         "turns": 1493,
         "profanity_hits": 0,
-        "hostility_hits": 1,
-        "misconduct_hits": 14,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 0.3897404718,
-        "misconduct_per_100k": 5.4563666055
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-06",
@@ -1540,11 +1294,9 @@
         "words": 295704,
         "turns": 592,
         "profanity_hits": 2,
-        "hostility_hits": 2,
-        "misconduct_hits": 30,
+        "slur_hits": 0,
         "profanity_per_100k": 0.6763520277,
-        "hostility_per_100k": 0.6763520277,
-        "misconduct_per_100k": 10.1452804156
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-07",
@@ -1553,11 +1305,9 @@
         "words": 459676,
         "turns": 1861,
         "profanity_hits": 1,
-        "hostility_hits": 18,
-        "misconduct_hits": 18,
+        "slur_hits": 0,
         "profanity_per_100k": 0.2175445314,
-        "hostility_per_100k": 3.9158015646,
-        "misconduct_per_100k": 3.9158015646
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-07",
@@ -1566,11 +1316,9 @@
         "words": 407458,
         "turns": 1249,
         "profanity_hits": 0,
-        "hostility_hits": 8,
-        "misconduct_hits": 28,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 1.963392546,
-        "misconduct_per_100k": 6.8718739109
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-07",
@@ -1579,11 +1327,9 @@
         "words": 472704,
         "turns": 2107,
         "profanity_hits": 0,
-        "hostility_hits": 9,
-        "misconduct_hits": 40,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 1.9039398863,
-        "misconduct_per_100k": 8.4619550501
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-07",
@@ -1592,11 +1338,9 @@
         "words": 373231,
         "turns": 693,
         "profanity_hits": 1,
-        "hostility_hits": 8,
-        "misconduct_hits": 23,
+        "slur_hits": 0,
         "profanity_per_100k": 0.2679305845,
-        "hostility_per_100k": 2.1434446764,
-        "misconduct_per_100k": 6.1624034445
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-08",
@@ -1605,11 +1349,9 @@
         "words": 22406,
         "turns": 199,
         "profanity_hits": 1,
-        "hostility_hits": 0,
-        "misconduct_hits": 2,
+        "slur_hits": 0,
         "profanity_per_100k": 4.4630902437,
-        "hostility_per_100k": 0.0,
-        "misconduct_per_100k": 8.9261804874
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-08",
@@ -1618,11 +1360,9 @@
         "words": 7256,
         "turns": 53,
         "profanity_hits": 0,
-        "hostility_hits": 0,
-        "misconduct_hits": 0,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 0.0,
-        "misconduct_per_100k": 0.0
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-08",
@@ -1631,11 +1371,9 @@
         "words": 19716,
         "turns": 138,
         "profanity_hits": 0,
-        "hostility_hits": 0,
-        "misconduct_hits": 0,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 0.0,
-        "misconduct_per_100k": 0.0
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-08",
@@ -1644,11 +1382,9 @@
         "words": 7550,
         "turns": 12,
         "profanity_hits": 0,
-        "hostility_hits": 0,
-        "misconduct_hits": 0,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 0.0,
-        "misconduct_per_100k": 0.0
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-09",
@@ -1657,11 +1393,9 @@
         "words": 210211,
         "turns": 706,
         "profanity_hits": 1,
-        "hostility_hits": 6,
-        "misconduct_hits": 8,
+        "slur_hits": 0,
         "profanity_per_100k": 0.4757124984,
-        "hostility_per_100k": 2.8542749904,
-        "misconduct_per_100k": 3.8056999872
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-09",
@@ -1670,11 +1404,9 @@
         "words": 217360,
         "turns": 679,
         "profanity_hits": 0,
-        "hostility_hits": 3,
-        "misconduct_hits": 44,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 1.3801987486,
-        "misconduct_per_100k": 20.2429149798
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-09",
@@ -1683,11 +1415,9 @@
         "words": 201936,
         "turns": 948,
         "profanity_hits": 0,
-        "hostility_hits": 5,
-        "misconduct_hits": 6,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 2.4760320101,
-        "misconduct_per_100k": 2.9712384122
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-09",
@@ -1696,11 +1426,9 @@
         "words": 193234,
         "turns": 297,
         "profanity_hits": 1,
-        "hostility_hits": 2,
-        "misconduct_hits": 10,
+        "slur_hits": 0,
         "profanity_per_100k": 0.517507271,
-        "hostility_per_100k": 1.035014542,
-        "misconduct_per_100k": 5.1750727098
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-11",
@@ -1709,11 +1437,9 @@
         "words": 98006,
         "turns": 303,
         "profanity_hits": 0,
-        "hostility_hits": 1,
-        "misconduct_hits": 3,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 1.0203456931,
-        "misconduct_per_100k": 3.0610370794
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-11",
@@ -1722,11 +1448,9 @@
         "words": 152865,
         "turns": 543,
         "profanity_hits": 0,
-        "hostility_hits": 2,
-        "misconduct_hits": 0,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 1.3083439636,
-        "misconduct_per_100k": 0.0
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-11",
@@ -1735,11 +1459,9 @@
         "words": 123694,
         "turns": 494,
         "profanity_hits": 1,
-        "hostility_hits": 2,
-        "misconduct_hits": 9,
+        "slur_hits": 0,
         "profanity_per_100k": 0.8084466506,
-        "hostility_per_100k": 1.6168933012,
-        "misconduct_per_100k": 7.2760198554
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-11",
@@ -1748,11 +1470,9 @@
         "words": 98964,
         "turns": 230,
         "profanity_hits": 0,
-        "hostility_hits": 1,
-        "misconduct_hits": 3,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 1.0104684532,
-        "misconduct_per_100k": 3.0314053595
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-12",
@@ -1761,11 +1481,9 @@
         "words": 224698,
         "turns": 743,
         "profanity_hits": 1,
-        "hostility_hits": 4,
-        "misconduct_hits": 12,
+        "slur_hits": 0,
         "profanity_per_100k": 0.4450417894,
-        "hostility_per_100k": 1.7801671577,
-        "misconduct_per_100k": 5.3405014731
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-12",
@@ -1774,11 +1492,9 @@
         "words": 357199,
         "turns": 1168,
         "profanity_hits": 1,
-        "hostility_hits": 0,
-        "misconduct_hits": 19,
+        "slur_hits": 0,
         "profanity_per_100k": 0.2799559909,
-        "hostility_per_100k": 0.0,
-        "misconduct_per_100k": 5.3191638274
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-12",
@@ -1787,11 +1503,9 @@
         "words": 218768,
         "turns": 895,
         "profanity_hits": 0,
-        "hostility_hits": 2,
-        "misconduct_hits": 4,
+        "slur_hits": 0,
         "profanity_per_100k": 0.0,
-        "hostility_per_100k": 0.9142104878,
-        "misconduct_per_100k": 1.8284209756
+        "slurs_per_100k": 0.0
       },
       {
         "period": "2014-12",
@@ -1800,11 +1514,9 @@
         "words": 227985,
         "turns": 507,
         "profanity_hits": 1,
-        "hostility_hits": 0,
-        "misconduct_hits": 17,
+        "slur_hits": 0,
         "profanity_per_100k": 0.4386253482,
-        "hostility_per_100k": 0.0,
-        "misconduct_per_100k": 7.4566309187
+        "slurs_per_100k": 0.0
       }
     ],
     "members": {
@@ -1936,234 +1648,6 @@
           "favorite_profanity_term": "hell",
           "favorite_profanity_term_hits": 7,
           "member_url": "https://bioguide.congress.gov/search/bio/M000312"
-        }
-      ],
-      "hostility": [
-        {
-          "rank": 1,
-          "bioguide": "D000191",
-          "speaker_name": "Mr. DeFAZIO",
-          "party": "D",
-          "state": "OR",
-          "chamber": "house",
-          "words": 78103,
-          "turns": 316,
-          "active_days": 75,
-          "hostility_hits": 17,
-          "hostility_per_100k": 21.766129342,
-          "member_url": "https://bioguide.congress.gov/search/bio/D000191"
-        },
-        {
-          "rank": 2,
-          "bioguide": "B001251",
-          "speaker_name": "Mr. BUTTERFIELD",
-          "party": "D",
-          "state": "NC",
-          "chamber": "house",
-          "words": 26738,
-          "turns": 100,
-          "active_days": 57,
-          "hostility_hits": 5,
-          "hostility_per_100k": 18.69997756,
-          "member_url": "https://bioguide.congress.gov/search/bio/B001251"
-        },
-        {
-          "rank": 3,
-          "bioguide": "G000565",
-          "speaker_name": "Mr. GOSAR",
-          "party": "R",
-          "state": "AZ",
-          "chamber": "house",
-          "words": 32367,
-          "turns": 205,
-          "active_days": 41,
-          "hostility_hits": 5,
-          "hostility_per_100k": 15.4478326691,
-          "member_url": "https://bioguide.congress.gov/search/bio/G000565"
-        },
-        {
-          "rank": 4,
-          "bioguide": "K000376",
-          "speaker_name": "Mr. KELLY of Pennsylvania",
-          "party": "R",
-          "state": "PA",
-          "chamber": "house",
-          "words": 37718,
-          "turns": 106,
-          "active_days": 49,
-          "hostility_hits": 4,
-          "hostility_per_100k": 10.6050161726,
-          "member_url": "https://bioguide.congress.gov/search/bio/K000376"
-        },
-        {
-          "rank": 5,
-          "bioguide": "L000578",
-          "speaker_name": "Mr. LaMALFA",
-          "party": "R",
-          "state": "CA",
-          "chamber": "house",
-          "words": 30628,
-          "turns": 115,
-          "active_days": 59,
-          "hostility_hits": 3,
-          "hostility_per_100k": 9.7949588612,
-          "member_url": "https://bioguide.congress.gov/search/bio/L000578"
-        },
-        {
-          "rank": 6,
-          "bioguide": "C000560",
-          "speaker_name": "Mr. COBURN",
-          "party": "R",
-          "state": "OK",
-          "chamber": "senate",
-          "words": 152252,
-          "turns": 331,
-          "active_days": 76,
-          "hostility_hits": 13,
-          "hostility_per_100k": 8.538475685,
-          "member_url": "https://bioguide.congress.gov/search/bio/C000560"
-        },
-        {
-          "rank": 7,
-          "bioguide": "S001175",
-          "speaker_name": "Ms. SPEIER",
-          "party": "D",
-          "state": "CA",
-          "chamber": "house",
-          "words": 36057,
-          "turns": 123,
-          "active_days": 52,
-          "hostility_hits": 3,
-          "hostility_per_100k": 8.3201597471,
-          "member_url": "https://bioguide.congress.gov/search/bio/S001175"
-        },
-        {
-          "rank": 8,
-          "bioguide": "W000802",
-          "speaker_name": "Mr. WHITEHOUSE",
-          "party": "D",
-          "state": "RI",
-          "chamber": "senate",
-          "words": 229593,
-          "turns": 501,
-          "active_days": 114,
-          "hostility_hits": 19,
-          "hostility_per_100k": 8.2755136263,
-          "member_url": "https://bioguide.congress.gov/search/bio/W000802"
-        }
-      ],
-      "misconduct": [
-        {
-          "rank": 1,
-          "bioguide": "J000255",
-          "speaker_name": "Mr. JONES",
-          "party": "R",
-          "state": "NC",
-          "chamber": "house",
-          "words": 32006,
-          "turns": 54,
-          "active_days": 42,
-          "misconduct_hits": 23,
-          "misconduct_per_100k": 71.8615259639,
-          "member_url": "https://bioguide.congress.gov/search/bio/J000255"
-        },
-        {
-          "rank": 2,
-          "bioguide": "Q000023",
-          "speaker_name": "Mr. QUIGLEY",
-          "party": "D",
-          "state": "IL",
-          "chamber": "house",
-          "words": 26063,
-          "turns": 77,
-          "active_days": 53,
-          "misconduct_hits": 10,
-          "misconduct_per_100k": 38.3685684687,
-          "member_url": "https://bioguide.congress.gov/search/bio/Q000023"
-        },
-        {
-          "rank": 3,
-          "bioguide": "G000556",
-          "speaker_name": "Mr. GRAYSON",
-          "party": "D",
-          "state": "FL",
-          "chamber": "house",
-          "words": 26640,
-          "turns": 175,
-          "active_days": 28,
-          "misconduct_hits": 10,
-          "misconduct_per_100k": 37.5375375375,
-          "member_url": "https://bioguide.congress.gov/search/bio/G000556"
-        },
-        {
-          "rank": 4,
-          "bioguide": "L000261",
-          "speaker_name": "Mr. LEVIN",
-          "party": "D",
-          "state": "MI",
-          "chamber": "senate",
-          "words": 169769,
-          "turns": 415,
-          "active_days": 128,
-          "misconduct_hits": 55,
-          "misconduct_per_100k": 32.396962932,
-          "member_url": "https://bioguide.congress.gov/search/bio/L000261"
-        },
-        {
-          "rank": 5,
-          "bioguide": "R000487",
-          "speaker_name": "Mr. ROYCE",
-          "party": "R",
-          "state": "CA",
-          "chamber": "house",
-          "words": 67226,
-          "turns": 321,
-          "active_days": 56,
-          "misconduct_hits": 16,
-          "misconduct_per_100k": 23.8003153542,
-          "member_url": "https://bioguide.congress.gov/search/bio/R000487"
-        },
-        {
-          "rank": 6,
-          "bioguide": "G000289",
-          "speaker_name": "Mr. GOODLATTE",
-          "party": "R",
-          "state": "VA",
-          "chamber": "house",
-          "words": 78015,
-          "turns": 591,
-          "active_days": 60,
-          "misconduct_hits": 18,
-          "misconduct_per_100k": 23.0724860604,
-          "member_url": "https://bioguide.congress.gov/search/bio/G000289"
-        },
-        {
-          "rank": 7,
-          "bioguide": "F000456",
-          "speaker_name": "Mr. FLEMING",
-          "party": "R",
-          "state": "LA",
-          "chamber": "house",
-          "words": 26300,
-          "turns": 116,
-          "active_days": 41,
-          "misconduct_hits": 6,
-          "misconduct_per_100k": 22.8136882129,
-          "member_url": "https://bioguide.congress.gov/search/bio/F000456"
-        },
-        {
-          "rank": 8,
-          "bioguide": "K000367",
-          "speaker_name": "Ms. KLOBUCHAR",
-          "party": "D",
-          "state": "MN",
-          "chamber": "senate",
-          "words": 100479,
-          "turns": 126,
-          "active_days": 64,
-          "misconduct_hits": 20,
-          "misconduct_per_100k": 19.9046566944,
-          "member_url": "https://bioguide.congress.gov/search/bio/K000367"
         }
       ]
     },
@@ -2298,234 +1782,6 @@
             "favorite_profanity_term_hits": 1,
             "member_url": "https://bioguide.congress.gov/search/bio/B001250"
           }
-        ],
-        "hostility": [
-          {
-            "rank": 1,
-            "bioguide": "D000191",
-            "speaker_name": "Mr. DeFAZIO",
-            "party": "D",
-            "state": "OR",
-            "chamber": "house",
-            "words": 78103,
-            "turns": 316,
-            "active_days": 75,
-            "hostility_hits": 17,
-            "hostility_per_100k": 21.766129342,
-            "member_url": "https://bioguide.congress.gov/search/bio/D000191"
-          },
-          {
-            "rank": 2,
-            "bioguide": "B001251",
-            "speaker_name": "Mr. BUTTERFIELD",
-            "party": "D",
-            "state": "NC",
-            "chamber": "house",
-            "words": 26738,
-            "turns": 100,
-            "active_days": 57,
-            "hostility_hits": 5,
-            "hostility_per_100k": 18.69997756,
-            "member_url": "https://bioguide.congress.gov/search/bio/B001251"
-          },
-          {
-            "rank": 3,
-            "bioguide": "G000565",
-            "speaker_name": "Mr. GOSAR",
-            "party": "R",
-            "state": "AZ",
-            "chamber": "house",
-            "words": 32367,
-            "turns": 205,
-            "active_days": 41,
-            "hostility_hits": 5,
-            "hostility_per_100k": 15.4478326691,
-            "member_url": "https://bioguide.congress.gov/search/bio/G000565"
-          },
-          {
-            "rank": 4,
-            "bioguide": "K000376",
-            "speaker_name": "Mr. KELLY of Pennsylvania",
-            "party": "R",
-            "state": "PA",
-            "chamber": "house",
-            "words": 37718,
-            "turns": 106,
-            "active_days": 49,
-            "hostility_hits": 4,
-            "hostility_per_100k": 10.6050161726,
-            "member_url": "https://bioguide.congress.gov/search/bio/K000376"
-          },
-          {
-            "rank": 5,
-            "bioguide": "L000578",
-            "speaker_name": "Mr. LaMALFA",
-            "party": "R",
-            "state": "CA",
-            "chamber": "house",
-            "words": 30628,
-            "turns": 115,
-            "active_days": 59,
-            "hostility_hits": 3,
-            "hostility_per_100k": 9.7949588612,
-            "member_url": "https://bioguide.congress.gov/search/bio/L000578"
-          },
-          {
-            "rank": 6,
-            "bioguide": "S001175",
-            "speaker_name": "Ms. SPEIER",
-            "party": "D",
-            "state": "CA",
-            "chamber": "house",
-            "words": 36057,
-            "turns": 123,
-            "active_days": 52,
-            "hostility_hits": 3,
-            "hostility_per_100k": 8.3201597471,
-            "member_url": "https://bioguide.congress.gov/search/bio/S001175"
-          },
-          {
-            "rank": 7,
-            "bioguide": "G000552",
-            "speaker_name": "Mr. GOHMERT",
-            "party": "R",
-            "state": "TX",
-            "chamber": "house",
-            "words": 432199,
-            "turns": 339,
-            "active_days": 127,
-            "hostility_hits": 35,
-            "hostility_per_100k": 8.0981214672,
-            "member_url": "https://bioguide.congress.gov/search/bio/G000552"
-          },
-          {
-            "rank": 8,
-            "bioguide": "D000619",
-            "speaker_name": "Mr. RODNEY DAVIS of Illinois",
-            "party": "R",
-            "state": "IL",
-            "chamber": "house",
-            "words": 26443,
-            "turns": 130,
-            "active_days": 60,
-            "hostility_hits": 2,
-            "hostility_per_100k": 7.5634383391,
-            "member_url": "https://bioguide.congress.gov/search/bio/D000619"
-          }
-        ],
-        "misconduct": [
-          {
-            "rank": 1,
-            "bioguide": "J000255",
-            "speaker_name": "Mr. JONES",
-            "party": "R",
-            "state": "NC",
-            "chamber": "house",
-            "words": 32006,
-            "turns": 54,
-            "active_days": 42,
-            "misconduct_hits": 23,
-            "misconduct_per_100k": 71.8615259639,
-            "member_url": "https://bioguide.congress.gov/search/bio/J000255"
-          },
-          {
-            "rank": 2,
-            "bioguide": "Q000023",
-            "speaker_name": "Mr. QUIGLEY",
-            "party": "D",
-            "state": "IL",
-            "chamber": "house",
-            "words": 26063,
-            "turns": 77,
-            "active_days": 53,
-            "misconduct_hits": 10,
-            "misconduct_per_100k": 38.3685684687,
-            "member_url": "https://bioguide.congress.gov/search/bio/Q000023"
-          },
-          {
-            "rank": 3,
-            "bioguide": "G000556",
-            "speaker_name": "Mr. GRAYSON",
-            "party": "D",
-            "state": "FL",
-            "chamber": "house",
-            "words": 26640,
-            "turns": 175,
-            "active_days": 28,
-            "misconduct_hits": 10,
-            "misconduct_per_100k": 37.5375375375,
-            "member_url": "https://bioguide.congress.gov/search/bio/G000556"
-          },
-          {
-            "rank": 4,
-            "bioguide": "R000487",
-            "speaker_name": "Mr. ROYCE",
-            "party": "R",
-            "state": "CA",
-            "chamber": "house",
-            "words": 67226,
-            "turns": 321,
-            "active_days": 56,
-            "misconduct_hits": 16,
-            "misconduct_per_100k": 23.8003153542,
-            "member_url": "https://bioguide.congress.gov/search/bio/R000487"
-          },
-          {
-            "rank": 5,
-            "bioguide": "G000289",
-            "speaker_name": "Mr. GOODLATTE",
-            "party": "R",
-            "state": "VA",
-            "chamber": "house",
-            "words": 78015,
-            "turns": 591,
-            "active_days": 60,
-            "misconduct_hits": 18,
-            "misconduct_per_100k": 23.0724860604,
-            "member_url": "https://bioguide.congress.gov/search/bio/G000289"
-          },
-          {
-            "rank": 6,
-            "bioguide": "F000456",
-            "speaker_name": "Mr. FLEMING",
-            "party": "R",
-            "state": "LA",
-            "chamber": "house",
-            "words": 26300,
-            "turns": 116,
-            "active_days": 41,
-            "misconduct_hits": 6,
-            "misconduct_per_100k": 22.8136882129,
-            "member_url": "https://bioguide.congress.gov/search/bio/F000456"
-          },
-          {
-            "rank": 7,
-            "bioguide": "M001144",
-            "speaker_name": "Mr. MILLER of Florida",
-            "party": "R",
-            "state": "FL",
-            "chamber": "house",
-            "words": 27129,
-            "turns": 247,
-            "active_days": 43,
-            "misconduct_hits": 5,
-            "misconduct_per_100k": 18.4304618674,
-            "member_url": "https://bioguide.congress.gov/search/bio/M001144"
-          },
-          {
-            "rank": 8,
-            "bioguide": "G000565",
-            "speaker_name": "Mr. GOSAR",
-            "party": "R",
-            "state": "AZ",
-            "chamber": "house",
-            "words": 32367,
-            "turns": 205,
-            "active_days": 41,
-            "misconduct_hits": 5,
-            "misconduct_per_100k": 15.4478326691,
-            "member_url": "https://bioguide.congress.gov/search/bio/G000565"
-          }
         ]
       },
       "senate": {
@@ -2657,234 +1913,6 @@
             "favorite_profanity_term": "damn",
             "favorite_profanity_term_hits": 1,
             "member_url": "https://bioguide.congress.gov/search/bio/P000603"
-          }
-        ],
-        "hostility": [
-          {
-            "rank": 1,
-            "bioguide": "C000560",
-            "speaker_name": "Mr. COBURN",
-            "party": "R",
-            "state": "OK",
-            "chamber": "senate",
-            "words": 152252,
-            "turns": 331,
-            "active_days": 76,
-            "hostility_hits": 13,
-            "hostility_per_100k": 8.538475685,
-            "member_url": "https://bioguide.congress.gov/search/bio/C000560"
-          },
-          {
-            "rank": 2,
-            "bioguide": "W000802",
-            "speaker_name": "Mr. WHITEHOUSE",
-            "party": "D",
-            "state": "RI",
-            "chamber": "senate",
-            "words": 229593,
-            "turns": 501,
-            "active_days": 114,
-            "hostility_hits": 19,
-            "hostility_per_100k": 8.2755136263,
-            "member_url": "https://bioguide.congress.gov/search/bio/W000802"
-          },
-          {
-            "rank": 3,
-            "bioguide": "W000817",
-            "speaker_name": "Ms. WARREN",
-            "party": "D",
-            "state": "MA",
-            "chamber": "senate",
-            "words": 63096,
-            "turns": 167,
-            "active_days": 61,
-            "hostility_hits": 4,
-            "hostility_per_100k": 6.3395460885,
-            "member_url": "https://bioguide.congress.gov/search/bio/W000817"
-          },
-          {
-            "rank": 4,
-            "bioguide": "H000338",
-            "speaker_name": "Mr. HATCH",
-            "party": "R",
-            "state": "UT",
-            "chamber": "senate",
-            "words": 208416,
-            "turns": 301,
-            "active_days": 113,
-            "hostility_hits": 13,
-            "hostility_per_100k": 6.2375249501,
-            "member_url": "https://bioguide.congress.gov/search/bio/H000338"
-          },
-          {
-            "rank": 5,
-            "bioguide": "S000033",
-            "speaker_name": "Mr. SANDERS",
-            "party": "I",
-            "state": "VT",
-            "chamber": "senate",
-            "words": 229209,
-            "turns": 328,
-            "active_days": 107,
-            "hostility_hits": 14,
-            "hostility_per_100k": 6.1079626018,
-            "member_url": "https://bioguide.congress.gov/search/bio/S000033"
-          },
-          {
-            "rank": 6,
-            "bioguide": "R000307",
-            "speaker_name": "Mr. ROBERTS",
-            "party": "R",
-            "state": "KS",
-            "chamber": "senate",
-            "words": 74344,
-            "turns": 132,
-            "active_days": 42,
-            "hostility_hits": 3,
-            "hostility_per_100k": 4.0352953836,
-            "member_url": "https://bioguide.congress.gov/search/bio/R000307"
-          },
-          {
-            "rank": 7,
-            "bioguide": "M001170",
-            "speaker_name": "Mrs. McCASKILL",
-            "party": "D",
-            "state": "MO",
-            "chamber": "senate",
-            "words": 25111,
-            "turns": 72,
-            "active_days": 34,
-            "hostility_hits": 1,
-            "hostility_per_100k": 3.9823185058,
-            "member_url": "https://bioguide.congress.gov/search/bio/M001170"
-          },
-          {
-            "rank": 8,
-            "bioguide": "T000461",
-            "speaker_name": "Mr. TOOMEY",
-            "party": "R",
-            "state": "PA",
-            "chamber": "senate",
-            "words": 83537,
-            "turns": 147,
-            "active_days": 62,
-            "hostility_hits": 3,
-            "hostility_per_100k": 3.5912230509,
-            "member_url": "https://bioguide.congress.gov/search/bio/T000461"
-          }
-        ],
-        "misconduct": [
-          {
-            "rank": 1,
-            "bioguide": "L000261",
-            "speaker_name": "Mr. LEVIN",
-            "party": "D",
-            "state": "MI",
-            "chamber": "senate",
-            "words": 169769,
-            "turns": 415,
-            "active_days": 128,
-            "misconduct_hits": 55,
-            "misconduct_per_100k": 32.396962932,
-            "member_url": "https://bioguide.congress.gov/search/bio/L000261"
-          },
-          {
-            "rank": 2,
-            "bioguide": "K000367",
-            "speaker_name": "Ms. KLOBUCHAR",
-            "party": "D",
-            "state": "MN",
-            "chamber": "senate",
-            "words": 100479,
-            "turns": 126,
-            "active_days": 64,
-            "misconduct_hits": 20,
-            "misconduct_per_100k": 19.9046566944,
-            "member_url": "https://bioguide.congress.gov/search/bio/K000367"
-          },
-          {
-            "rank": 3,
-            "bioguide": "U000039",
-            "speaker_name": "Mr. UDALL of New Mexico",
-            "party": "D",
-            "state": "NM",
-            "chamber": "senate",
-            "words": 52232,
-            "turns": 114,
-            "active_days": 49,
-            "misconduct_hits": 10,
-            "misconduct_per_100k": 19.1453515087,
-            "member_url": "https://bioguide.congress.gov/search/bio/U000039"
-          },
-          {
-            "rank": 4,
-            "bioguide": "C001098",
-            "speaker_name": "Mr. CRUZ",
-            "party": "R",
-            "state": "TX",
-            "chamber": "senate",
-            "words": 259584,
-            "turns": 440,
-            "active_days": 68,
-            "misconduct_hits": 48,
-            "misconduct_per_100k": 18.4911242604,
-            "member_url": "https://bioguide.congress.gov/search/bio/C001098"
-          },
-          {
-            "rank": 5,
-            "bioguide": "C000141",
-            "speaker_name": "Mr. CARDIN",
-            "party": "D",
-            "state": "MD",
-            "chamber": "senate",
-            "words": 243035,
-            "turns": 430,
-            "active_days": 145,
-            "misconduct_hits": 32,
-            "misconduct_per_100k": 13.1668278232,
-            "member_url": "https://bioguide.congress.gov/search/bio/C000141"
-          },
-          {
-            "rank": 6,
-            "bioguide": "H001046",
-            "speaker_name": "Mr. HEINRICH",
-            "party": "D",
-            "state": "NM",
-            "chamber": "senate",
-            "words": 31151,
-            "turns": 68,
-            "active_days": 22,
-            "misconduct_hits": 4,
-            "misconduct_per_100k": 12.8406792719,
-            "member_url": "https://bioguide.congress.gov/search/bio/H001046"
-          },
-          {
-            "rank": 7,
-            "bioguide": "B001267",
-            "speaker_name": "Mr. BENNET",
-            "party": "D",
-            "state": "CO",
-            "chamber": "senate",
-            "words": 62385,
-            "turns": 140,
-            "active_days": 43,
-            "misconduct_hits": 8,
-            "misconduct_per_100k": 12.8235954156,
-            "member_url": "https://bioguide.congress.gov/search/bio/B001267"
-          },
-          {
-            "rank": 8,
-            "bioguide": "S000033",
-            "speaker_name": "Mr. SANDERS",
-            "party": "I",
-            "state": "VT",
-            "chamber": "senate",
-            "words": 229209,
-            "turns": 328,
-            "active_days": 107,
-            "misconduct_hits": 28,
-            "misconduct_per_100k": 12.2159252036,
-            "member_url": "https://bioguide.congress.gov/search/bio/S000033"
           }
         ]
       }
@@ -3636,20 +2664,12 @@
       "D": {
         "words": 11799000,
         "profanity_hits": 26,
-        "hostility_hits": 175,
-        "misconduct_hits": 537,
-        "profanity_per_100k": 0.22035765742859564,
-        "hostility_per_100k": 1.4831765403847783,
-        "misconduct_per_100k": 4.551233155352149
+        "profanity_per_100k": 0.22035765742859564
       },
       "R": {
         "words": 10866392,
         "profanity_hits": 23,
-        "hostility_hits": 191,
-        "misconduct_hits": 544,
-        "profanity_per_100k": 0.2116617916968208,
-        "hostility_per_100k": 1.757713139743164,
-        "misconduct_per_100k": 5.006261507959588
+        "profanity_per_100k": 0.2116617916968208
       }
     },
     "highlights": [
@@ -3682,75 +2702,15 @@
             "rate": 5.380393844829442
           }
         ]
-      },
-      {
-        "key": "hostility",
-        "label": "Personal hostility / disrespect",
-        "democratic_rate": 1.4831765403847783,
-        "republican_rate": 1.757713139743164,
-        "difference": -0.2745365993583857,
-        "higher_party": "Republicans",
-        "leader_name": "Mr. DeFAZIO",
-        "leader_rate": 21.766129342022715,
-        "top_members": [
-          {
-            "rank": 1,
-            "name": "Mr. DeFAZIO",
-            "party": "D",
-            "rate": 21.766129342022715
-          },
-          {
-            "rank": 2,
-            "name": "Mr. BUTTERFIELD",
-            "party": "D",
-            "rate": 18.699977560026927
-          },
-          {
-            "rank": 3,
-            "name": "Mr. GOSAR",
-            "party": "R",
-            "rate": 15.44783266907653
-          }
-        ]
-      },
-      {
-        "key": "misconduct",
-        "label": "Misconduct allegations",
-        "democratic_rate": 4.551233155352149,
-        "republican_rate": 5.006261507959588,
-        "difference": -0.4550283526074388,
-        "higher_party": "Republicans",
-        "leader_name": "Mr. JONES",
-        "leader_rate": 71.86152596388177,
-        "top_members": [
-          {
-            "rank": 1,
-            "name": "Mr. JONES",
-            "party": "R",
-            "rate": 71.86152596388177
-          },
-          {
-            "rank": 2,
-            "name": "Mr. QUIGLEY",
-            "party": "D",
-            "rate": 38.368568468710436
-          },
-          {
-            "rank": 3,
-            "name": "Mr. GRAYSON",
-            "party": "D",
-            "rate": 37.53753753753754
-          }
-        ]
       }
     ],
-    "trend_alt": "Monthly Democratic and Republican rates for profanity, personal hostility or disrespect, and misconduct allegations in Congress 113.",
-    "member_alt": "Highest eligible member rates for profanity, personal hostility or disrespect, and misconduct allegations in Congress 113.",
+    "trend_alt": "Monthly Democratic and Republican rates for profanity in Congress 113.",
+    "member_alt": "Highest eligible member rates for profanity in Congress 113.",
     "explanation": {
-      "shown": "The charts show monthly Democratic and Republican rates for three separate lexical measures, plus the highest-rate members in Congress 113. Rates are hits per 100,000 attributed spoken words.",
+      "shown": "The charts show monthly Democratic and Republican rates for profanity, plus the highest-rate members in Congress 113. Rates are hits per 100,000 attributed spoken words.",
       "examined": "The trend panels compare party-wide rates over time. Member panels show the highest nonzero rates among speakers with substantial floor remarks.",
-      "finding": "Democratic and Republican aggregate profanity rates are approximately equal at 0.2 per 100,000 words. Mr. McDERMOTT has the highest eligible profanity rate at 9.6 per 100,000 words. Republicans have the higher aggregate personal hostility / disrespect rate (1.8 versus 1.5 per 100,000 words). Mr. DeFAZIO has the highest eligible personal hostility / disrespect rate at 21.8 per 100,000 words. Republicans have the higher aggregate misconduct allegations rate (5.0 versus 4.6 per 100,000 words). Mr. JONES has the highest eligible misconduct allegations rate at 71.9 per 100,000 words.",
-      "limitation": "These are descriptive word-pattern counts, not judgments about intent. Misconduct language does not prove misconduct, and quoted profanity is excluded from a speaker's rate."
+      "finding": "Democratic and Republican aggregate profanity rates are approximately equal at 0.2 per 100,000 words. Mr. McDERMOTT has the highest eligible profanity rate at 9.6 per 100,000 words.",
+      "limitation": "These are descriptive word-pattern counts, not judgments about intent. Quoted profanity and quoted slurs are excluded from a speaker's rate, but a member who repeats a slur to condemn or describe it is still counted."
     }
   },
   "leaderboards": {
