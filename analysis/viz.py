@@ -26,9 +26,7 @@ from analysis.score.registry import CHAMBER_METRICS, HEADLINE_METRICS, METRICS
 LOG = logging.getLogger("analysis.viz")
 
 SOURCE_NOTE = (
-    "Sources: Stanford Hein (1873-2017) + GovInfo CREC (2017-present). House/Senate only; "
-    "Extensions excluded. Units shown on y-axis. GovInfo party "
-    "coverage varies; see coverage/turn_coverage.csv."
+    "Sources: Stanford Hein (1873-2017) + GovInfo CREC (2017-present)."
 )
 # The year the primary source switches from Hein to GovInfo. No longer drawn on the
 # charts, but still reported in the source note's date ranges and used by the
@@ -124,9 +122,7 @@ def _load_provenance(metrics_path: Path) -> tuple[int, str]:
     )
     note = (
         f"Sources: Stanford Hein ({hein_start}-{year_from_congress(hein_last + 1)}) "
-        f"+ GovInfo CREC ({boundary}-{govinfo_end}). "
-        "House/Senate only; Extensions excluded. Units shown on y-axis. "
-        "GovInfo party coverage varies; see coverage/turn_coverage.csv."
+        f"+ GovInfo CREC ({boundary}-{govinfo_end})."
     )
     return boundary, note
 

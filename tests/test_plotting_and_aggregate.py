@@ -235,7 +235,7 @@ def test_source_note_spans_every_hein_edition_and_ends_at_present(tmp_path) -> N
     }))
     boundary, note = _load_provenance(tmp_path / "processed" / "metrics" / "m.parquet")
     assert boundary == 2017
-    assert note.startswith("Sources: Stanford Hein (1873-2017) + GovInfo CREC (2017-present).")
+    assert note == "Sources: Stanford Hein (1873-2017) + GovInfo CREC (2017-present)."
 
 
 def test_source_note_wraps_long_text_to_multiple_lines() -> None:
@@ -246,10 +246,9 @@ def test_source_note_wraps_long_text_to_multiple_lines() -> None:
     import matplotlib.pyplot as plt
 
     long_note = (
-        "Sources: Stanford Hein (1873-2017) + GovInfo CREC (2017-present). "
-        "House/Senate only; Extensions excluded. Units shown on y-axis. "
-        "Dotted line: 2017 source boundary. GovInfo party coverage varies; "
-        "see coverage/turn_coverage.csv."
+        "Sources: Matthew Gentzkow, Jesse M. Shapiro and Matt Taddy, Stanford Libraries, "
+        "Congressional Record (1873-2017); U.S. Government Publishing Office, "
+        "GovInfo Congressional Record (2017-present)."
     )
     fig = plt.figure()
     lines = theme.source_note(fig, long_note)
