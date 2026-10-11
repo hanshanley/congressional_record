@@ -405,7 +405,7 @@ def test_pages_use_margin_of_error_masthead_and_footer(store, tmp_path):
         "--daily", str(path), "--bills", str(bills), "--out", str(out),
         "--min-words", "1000",
     ]) == 0
-    for rel in ("index.html", "activity/index.html"):
+    for rel in ("index.html", "activity/index.html", "terms/index.html"):
         document = BeautifulSoup((out / rel).read_text(), "html.parser")
         header = document.select_one("header.site-header")
         assert header.select_one('a.wordmark[href="/"]'), rel
@@ -414,7 +414,13 @@ def test_pages_use_margin_of_error_masthead_and_footer(store, tmp_path):
         ], rel
         assert document.select_one("footer.site-footer .copyright"), rel
         assert document.select_one('.feature-nav a[aria-current="page"]')["href"] == "./"
-        assert document.select_one("p#coverage.coverage-note"), rel
+        assert document.select_one("article.dashboard-page"), rel
+        pages = document.select_one('nav[aria-label="Dashboard pages"]')
+        assert len(pages.select('a[aria-current="page"]')) == 1
+        assert len(pages.select("a")) == 3
+        assert pages.find_parent("nav", class_="section-nav") is None
+        if rel != "terms/index.html":
+            assert document.select_one("p#coverage.coverage-note"), rel
 
 
 def test_language_page_censors_terms_outside_tables(store, tmp_path):
@@ -446,6 +452,9 @@ def test_language_section_navigation_and_controls_remain_accessible(store, tmp_p
     navigation = document.find("nav", attrs={"aria-label": "Explore the language of Congress"})
     targets = [link["href"].removeprefix("#") for link in navigation.find_all("a")]
     assert targets == ["history", "members", "terms"]
+    assert navigation.select_one("span").get_text() == "On this page"
+    assert not navigation.select('a[aria-current="page"]')
+    assert navigation.parent == document.select_one("article.dashboard-page")
     for target in targets:
         section = document.find(id=target)
         assert section.name == "section"
@@ -460,7 +469,7 @@ def test_language_section_navigation_and_controls_remain_accessible(store, tmp_p
         assert control.find_parent("label").get_text(strip=True)
     assert document.select_one("#members #language-highlight")
     assert document.select_one("#terms .reading-note")
-    assert not document.select(".section-nav span, .section-head > .kicker")
+    assert not document.select(".section-nav a span, .section-head > .kicker")
     for selector, content in (
         (".chart-notes", ".source-note"),
         (".congress-summary", "#language-highlight"),
@@ -610,6 +619,10 @@ def test_payload_and_html_expose_selector_aware_language_graphs(store, tmp_path)
     assert 'id="activity-metric"' in activity_page
     activity_document = BeautifulSoup(activity_page, "html.parser")
     assert activity_document.h1.get_text() == "Member activity & bills"
+    assert activity_document.select_one("article.activity-page.dashboard-page")
+    assert activity_document.select_one(".control-caption").get_text() == "Rank members by"
+    coverage_details = activity_document.find(id="coverage").find_parent("details")
+    assert coverage_details and not coverage_details.has_attr("open")
     activity_switch = activity_document.find(id="activity-metric")
     assert activity_switch.get("role") == "group"
     assert len(activity_switch.find_all("button")) == 5

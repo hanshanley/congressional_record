@@ -1497,6 +1497,29 @@ HOUSE_CSS = """
                   font-size:.7rem; text-transform:uppercase; }
   .copyright { color:var(--muted); font-family:var(--mono); font-size:.62rem;
                text-transform:uppercase; }
+  .dashboard-page .feature-header { grid-template-columns:1fr; gap:.85rem;
+                                    padding:clamp(2rem,4vw,3rem) 0 1.75rem; border:0; }
+  .dashboard-page .feature-header > * { grid-column:1; grid-row:auto; }
+  .dashboard-page h1 { max-width:28ch; font-size:clamp(2.6rem,4.5vw,3.8rem);
+                        line-height:1.06; text-wrap:balance; }
+  .dashboard-page .dek { margin:0; max-width:44rem; font-size:1.15rem;
+                         font-style:normal; line-height:1.45; }
+  .dashboard-page .byline { display:flex; flex-wrap:wrap; gap:.3rem 1.25rem;
+                            margin:.75rem 0 0; padding:0; border:0;
+                            font-size:.62rem; color:var(--muted); }
+  .dashboard-page .byline p { margin:0; }
+  .dashboard-page .feature-nav { margin:0; padding:0; display:flex; gap:.5rem; }
+  .dashboard-page .feature-nav > span { width:100%; color:var(--muted); }
+  .dashboard-page .feature-nav a { padding:.7rem 1rem; border:1px solid var(--rule);
+                                  background:var(--paper-deep); font-size:.75rem;
+                                  letter-spacing:.03em; text-transform:none; }
+  .dashboard-page .feature-nav a:hover { border-color:var(--ink); }
+  .dashboard-page .feature-nav a[aria-current="page"] {
+    background:var(--ink); border-color:var(--ink); color:var(--paper);
+  }
+  .dashboard-page .notes { margin:1rem 0 0; border:0; }
+  .dashboard-page .notes summary { color:var(--muted); font-size:.62rem; }
+  .dashboard-page .notes[open] > summary { color:var(--ink); }
   @media (max-width:760px) {
     :root { --page:calc(100vw - 28px); }
     body { font-size:16px; }
@@ -1512,29 +1535,21 @@ HOUSE_CSS = """
     .feature-nav { margin-left:0; }
     .section-head { grid-template-columns:1fr; gap:.4rem; }
     .site-footer { grid-template-columns:1fr; }
+    .dashboard-page h1 { font-size:clamp(2.2rem,8vw,3.2rem); }
+    .dashboard-page .feature-nav { display:grid; grid-template-columns:1fr; gap:.35rem; }
+    .dashboard-page .feature-nav a { padding:.65rem .85rem; }
   }
 """
 
 MAIN_CSS = """
-  .language-page .feature-header { grid-template-columns:1fr; gap:.85rem;
-                                  padding:clamp(2rem,4vw,3rem) 0 1.75rem; border:0; }
-  .language-page .feature-header > .feature-intro { grid-column:1; }
-  .language-page .feature-header > .feature-summary { grid-column:1; }
-  .language-page h1 { max-width:28ch; font-size:clamp(2.6rem,4.5vw,3.8rem); line-height:1.06;
-                       text-wrap:balance; }
-  .language-page .dek { margin:0; max-width:42rem; font-size:1.15rem;
-                        font-style:normal; line-height:1.45; }
-  .language-page .byline { display:flex; flex-wrap:wrap; gap:.3rem 1.25rem; margin-top:.75rem;
-                          padding:0; border:0; font-size:.62rem; color:var(--muted); }
-  .language-page .byline p { margin:0; }
-  .page-navigation { display:flex; flex-wrap:wrap; justify-content:space-between;
-                     gap:.75rem 2rem; padding:.85rem 0; border-bottom:1px solid var(--rule); }
-  .language-page .feature-nav { margin:0; padding:0; border:0; }
-  .language-page .feature-nav > span { display:none; }
-  .section-nav { display:flex; flex-wrap:wrap; gap:.75rem 1.5rem; margin:0; padding:0; }
+  .section-nav { display:flex; flex-wrap:wrap; align-items:baseline;
+                 gap:.6rem 1.25rem; margin:1.5rem 0 0; padding:0; }
+  .section-nav > span { font-family:var(--mono); font-size:.62rem;
+                        color:var(--muted); }
   .section-nav a { text-decoration:none; color:var(--muted); font-family:var(--sans);
                    font-size:.78rem; }
-  .section-nav a:hover { text-decoration:underline; }
+  .section-nav a::after { content:" ↓"; }
+  .section-nav a:hover { color:var(--ink); text-decoration:underline; }
   .language-page .feature-section { padding-top:clamp(2rem,4vw,3rem);
                                     scroll-margin-top:1.5rem; }
   .language-page .feature-section ~ .feature-section { margin-top:3rem;
@@ -1675,13 +1690,9 @@ MAIN_CSS = """
     .term-explorer-grid,.term-explorer-grid[data-view="frequency"] { grid-template-columns:1fr; }
   }
   @media (max-width:760px) {
-    .language-page .feature-header { grid-template-columns:1fr; gap:1.25rem; padding:2rem 0; }
-    .language-page .feature-header > .feature-intro,
-    .language-page .feature-header > .feature-summary { grid-column:1; }
-    .language-page h1 { max-width:16ch; font-size:clamp(2.5rem,9vw,3.5rem); }
     .language-page .section-head > div { grid-template-columns:1fr; gap:.75rem; }
-    .page-navigation { gap:.85rem; }
     .section-nav { gap:.75rem 1.25rem; }
+    .section-nav > span { width:100%; }
     .explorer-controls,.recent-controls,.term-controls { grid-template-columns:1fr 1fr; }
     .long-run-controls .control-note { grid-column:1 / -1; }
     .methodology-grid,.recent-shell,.term-explorer-grid,
@@ -1716,15 +1727,23 @@ MAIN_CSS = """
 """
 
 ACTIVITY_CSS = """
-  .toolbar { display:flex; flex-wrap:wrap; gap:1.5rem 3rem; align-items:flex-end;
-             justify-content:space-between; margin:0 0 2.25rem; }
+  .activity-page .feature-section { padding-top:2rem; }
+  .toolbar { display:grid; grid-template-columns:minmax(0,1fr) 14rem; gap:1.5rem 3rem;
+             align-items:end; margin:0 0 1.75rem; }
+  .control-caption { margin:0 0 .4rem; color:var(--muted); font-family:var(--mono);
+                     font-size:.62rem; letter-spacing:.08em; text-transform:uppercase; }
+  .activity-page .tab-row { gap:.25rem 1.25rem; border:0; }
   .toolbar label { width:14rem; max-width:100%; }
-  #leaderboards .card h2 { font-size:clamp(1.8rem,3vw,2.6rem); }
-  #leaderboards .definition { max-width:46rem; margin:.5rem 0 1.4rem; }
+  .activity-page select { font-size:1rem; border-bottom-color:var(--rule); }
+  #leaderboards .card h2 { font-size:clamp(1.7rem,2.5vw,2.15rem); line-height:1.12; }
+  #leaderboards .definition { max-width:46rem; margin:.5rem 0 1.25rem; font-size:.95rem; }
+  .activity-page .table-wrap { border-top:1px solid var(--rule); }
+  .activity-page tbody a { text-decoration-color:var(--rule); }
+  .activity-page tbody a:hover { text-decoration-color:var(--signal); }
   table th:first-child,table td:first-child { width:2.75rem; color:var(--muted);
                                               font-family:var(--mono); font-size:.72rem; }
   @media (max-width:760px) {
-    .toolbar { display:grid; gap:1.25rem; }
+    .toolbar { grid-template-columns:1fr; gap:1.25rem; }
     .toolbar label { max-width:16rem; }
     table { table-layout:fixed; font-size:.8rem; }
     table th:first-child,table td:first-child { width:2rem; }
@@ -2729,7 +2748,7 @@ courtesy, profanity, and slurs.">
 <a class="skip-link" href="#main-content">Skip to content</a>
 {_site_header()}
 <main id="main-content">
-<article class="feature language-page">
+<article class="feature dashboard-page language-page">
 <header class="feature-header">
 <div class="feature-intro">
 <p class="kicker">Congress / Data</p>
@@ -2744,14 +2763,13 @@ courtesy, profanity, and slurs.">
 </div>
 </div>
 </header>
-<div class="page-navigation">
 {_feature_nav("language")}
 <nav class="section-nav" aria-label="Explore the language of Congress">
+<span>On this page</span>
 <a href="#history">Historical trends</a>
 <a href="#members">Members</a>
 <a href="#terms">Vocabulary</a>
 </nav>
-</div>
 <section id="history" class="feature-section overview" aria-labelledby="overview-heading">
 <header class="section-head">
 <div><h2 id="overview-heading">The long-run picture</h2>
@@ -3018,7 +3036,7 @@ passage, enactment, and profanity tables by Congress.">
 <a class="skip-link" href="#main-content">Skip to content</a>
 {_site_header()}
 <main id="main-content">
-<article class="feature">
+<article class="feature dashboard-page activity-page">
 <header class="feature-header">
 <p class="kicker">Congress / Data</p>
 <h1>Member activity &amp; bills</h1>
@@ -3026,25 +3044,27 @@ passage, enactment, and profanity tables by Congress.">
 and profanity by Congress.</p>
 <div class="byline">
 <p>By Hans W. A. Hanley</p>
-<p>Congressional Record, 1994–present</p>
 <p>Updated through {html.escape(_long_date(coverage['speech_last_date']))}</p>
 </div>
 </header>
 {_feature_nav("activity")}
 <section class="feature-section" aria-label="Activity tables">
 <div class="toolbar">
+<div class="activity-measure-control">
+<p class="control-caption" id="activity-measure-label">Rank members by</p>
 <div id="activity-metric" class="tab-row" role="group" aria-label="Activity measure">
-{metric_buttons}</div>
+{metric_buttons}</div></div>
 <label for="congress">Congress<select id="congress">{''.join(options)}</select></label>
 </div>
 <div id="coverage-warning" class="warning" {'hidden' if not warning else ''}>{html.escape(warning)}</div>
 <p id="dashboard-error" class="error" role="alert" hidden></p>
 <div id="leaderboards">{cards}</div>
 </section>
-<details class="notes"><summary>Data notes and exclusions</summary><ul>{caveats}</ul></details>
+<details class="notes"><summary>Data notes, coverage, and exclusions</summary><ul>{caveats}</ul>
 <p id="coverage" class="coverage-note">Speech coverage {html.escape(coverage['speech_first_date'])}
 to {html.escape(coverage['speech_last_date'])}; {_fmt_int(coverage['bills'])}
 H.R./S. bill records. Site data snapshot: {html.escape(payload['generated_utc'])}.</p>
+</details>
 </article>
 </main>
 {_site_footer(payload['generated_utc'])}
@@ -3095,7 +3115,7 @@ def _render_term_graphs_html(payload: dict, generated_utc: str) -> str:
 {_head_links(PUBLIC_URL + "terms/")}
 <style>{HOUSE_CSS}{MAIN_CSS}</style></head>
 <body><a class="skip-link" href="#main-content">Skip to content</a>{_site_header()}
-<main id="main-content"><article class="feature">
+<main id="main-content"><article class="feature dashboard-page">
 <header class="feature-header"><p class="kicker">Congress / Vocabulary</p>
 <h1>Ten swear-word families</h1>
 <p class="dek">The most-used families in member-attributed House and Senate text, ranked by total matches.
