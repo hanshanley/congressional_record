@@ -420,12 +420,12 @@ courtesy, profanity, and slurs.">
 <nav class="section-nav" aria-label="Explore the language of Congress">
 <span>On this page</span>
 <a href="#history">Historical trends</a>
-<a href="#members">Members</a>
-<a href="#terms">Vocabulary</a>
+<a href="#members">Recent language</a>
+<a href="#terms">Profanity by term</a>
 </nav>
 <section id="history" class="feature-section overview" aria-labelledby="overview-heading">
 <header class="section-head">
-<div><h2 id="overview-heading">The long-run picture</h2>
+<div><h2 id="overview-heading">Historical trends</h2>
 <p class="section-dek">Democratic and Republican floor language since 1873.</p></div>
 </header>
 <div class="explorer-controls long-run-controls">
@@ -446,7 +446,7 @@ its series; hover over or focus a point for the underlying counts.</p>
 <p id="dashboard-error" class="error" role="alert" hidden></p>
 <section id="members" class="feature-section language" aria-labelledby="language-heading">
 <header class="section-head">
-<div><h2 id="language-heading">Recent language on the floor</h2>
+<div><h2 id="language-heading">Recent language</h2>
 <p class="section-dek">Member-level results cover 1994–present.</p></div>
 </header>
 <div class="explorer-controls recent-controls">
@@ -480,7 +480,7 @@ its series; hover over or focus a point for the underlying counts.</p>
 <section id="terms" class="feature-section language" aria-labelledby="term-leaders-heading">
 <header class="section-head term-section-header">
 <div><p class="eyebrow" id="term-leaders-scope">Last 5 Congresses (115–119) · House + Senate</p>
-<h2 id="term-leaders-heading">Who uses each term the most?</h2>
+<h2 id="term-leaders-heading">Profanity by term</h2>
 <p class="section-dek" id="term-leaders-description">Profanity by term and member.
 Related forms are grouped; only accepted, unquoted uses count.</p>
 <p class="definition" id="term-leaders-note" hidden></p></div>
@@ -1547,8 +1547,6 @@ function renderTermExplorer(language) {
       renderTermExplorer(currentLanguage);
     };
   });
-  document.getElementById('term-leaders-heading').textContent = selectedTermView === 'leaders'
-    ? 'Who uses each term the most?' : 'Most-used terms';
   document.getElementById('term-leaders-description').textContent = selectedTermView === 'leaders'
     ? termLeaderDescription
     : 'Terms ranked by accepted, unquoted uses in the selected scope. ' +

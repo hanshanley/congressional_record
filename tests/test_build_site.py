@@ -365,7 +365,7 @@ def test_profanity_tables_show_each_members_most_used_term(store, tmp_path):
         ("NEW2", "D", "NY", "senate", "shit"),
     }
     page = (out / "index.html").read_text()
-    assert "Who uses each term the most?" in page
+    assert "Profanity by term" in page
     assert 'id="term-leaders-table"' in page
     assert "renderTermExplorer(language)" in page
     assert "recentTermDetailAvailable" in page
@@ -461,11 +461,12 @@ def test_language_section_navigation_and_controls_remain_accessible(store, tmp_p
     assert navigation.select_one("span").get_text() == "On this page"
     assert not navigation.select('a[aria-current="page"]')
     assert navigation.parent == document.select_one("article.dashboard-page")
-    for target in targets:
+    for link, target in zip(navigation.find_all("a"), targets):
         section = document.find(id=target)
         assert section.name == "section"
         heading = document.find(id=section["aria-labelledby"])
         assert heading and heading.get_text(strip=True)
+        assert link.get_text(strip=True) == heading.get_text(strip=True)
     for selector in (
         "long-run-metric", "long-run-chamber", "congress",
         "recent-metric", "recent-chamber", "recent-view", "term-party", "term-chamber",
@@ -585,8 +586,8 @@ def test_payload_and_html_expose_selector_aware_language_graphs(store, tmp_path)
 
     page = (out / "index.html").read_text()
     for text in (
-        "The Language of Congress", "The long-run picture",
-        "Recent language on the floor", "What is shown", "What is examined",
+        "The Language of Congress", "Historical trends",
+        "Recent language", "What is shown", "What is examined",
         "Methodology and limitations", 'id="language-highlight"',
         'id="recent-visual"', 'id="recent-metric"', 'id="recent-view"',
         'id="recent-chamber"', 'id="long-run-chamber"',
