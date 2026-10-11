@@ -13,6 +13,13 @@
       "label": "Profanity",
       "units": "hits per 1,000 words",
       "polarity": "negative"
+    },
+    "slurs_per_1k": {
+      "rate": "slurs_per_1k",
+      "hits": "slur_hits",
+      "label": "Slurs",
+      "units": "hits per 1,000 words",
+      "polarity": "negative"
     }
   },
   "series": [
@@ -21,27 +28,33 @@
       "party": "D",
       "words": 2686802,
       "formal_courtesy_hits": 3144,
-      "profanity_hits": 56,
+      "profanity_hits": 59,
+      "slur_hits": 26,
       "formal_courtesy_per_1k": 1.1701643813,
-      "profanity_per_1k": 0.0208426226
+      "profanity_per_1k": 0.0219591916,
+      "slurs_per_1k": 0.0096769319
     },
     {
       "year": 1873,
       "party": "R",
       "words": 7330583,
       "formal_courtesy_hits": 7358,
-      "profanity_hits": 137,
+      "profanity_hits": 141,
+      "slur_hits": 57,
       "formal_courtesy_per_1k": 1.0037400845,
-      "profanity_per_1k": 0.0186888273
+      "profanity_per_1k": 0.0192344865,
+      "slurs_per_1k": 0.0077756435
     },
     {
       "year": 1875,
       "party": "D",
       "words": 4699594,
       "formal_courtesy_hits": 6977,
-      "profanity_hits": 64,
+      "profanity_hits": 65,
+      "slur_hits": 32,
       "formal_courtesy_per_1k": 1.484596329,
-      "profanity_per_1k": 0.0136181977
+      "profanity_per_1k": 0.013830982,
+      "slurs_per_1k": 0.0068090988
     },
     {
       "year": 1875,
@@ -49,8 +62,10 @@
       "words": 5081609,
       "formal_courtesy_hits": 5337,
       "profanity_hits": 56,
+      "slur_hits": 37,
       "formal_courtesy_per_1k": 1.0502579006,
-      "profanity_per_1k": 0.0110201316
+      "profanity_per_1k": 0.0110201316,
+      "slurs_per_1k": 0.0072811584
     },
     {
       "year": 1877,
@@ -58,8 +73,10 @@
       "words": 4825809,
       "formal_courtesy_hits": 7757,
       "profanity_hits": 23,
+      "slur_hits": 52,
       "formal_courtesy_per_1k": 1.6073988838,
-      "profanity_per_1k": 0.0047660403
+      "profanity_per_1k": 0.0047660403,
+      "slurs_per_1k": 0.0107753954
     },
     {
       "year": 1877,
@@ -67,17 +84,21 @@
       "words": 4887537,
       "formal_courtesy_hits": 5849,
       "profanity_hits": 23,
+      "slur_hits": 67,
       "formal_courtesy_per_1k": 1.1967172832,
-      "profanity_per_1k": 0.0047058467
+      "profanity_per_1k": 0.0047058467,
+      "slurs_per_1k": 0.0137083361
     },
     {
       "year": 1879,
       "party": "D",
       "words": 6431762,
       "formal_courtesy_hits": 11783,
-      "profanity_hits": 50,
+      "profanity_hits": 51,
+      "slur_hits": 20,
       "formal_courtesy_per_1k": 1.8320018682,
-      "profanity_per_1k": 0.0077739195
+      "profanity_per_1k": 0.0079293979,
+      "slurs_per_1k": 0.0031095678
     },
     {
       "year": 1879,
@@ -85,8 +106,10 @@
       "words": 5234959,
       "formal_courtesy_hits": 7706,
       "profanity_hits": 55,
+      "slur_hits": 22,
       "formal_courtesy_per_1k": 1.4720268105,
-      "profanity_per_1k": 0.0105062905
+      "profanity_per_1k": 0.0105062905,
+      "slurs_per_1k": 0.0042025162
     },
     {
       "year": 1881,
@@ -94,8 +117,10 @@
       "words": 7159782,
       "formal_courtesy_hits": 9977,
       "profanity_hits": 62,
+      "slur_hits": 183,
       "formal_courtesy_per_1k": 1.3934781813,
-      "profanity_per_1k": 0.0086594815
+      "profanity_per_1k": 0.0086594815,
+      "slurs_per_1k": 0.0255594374
     },
     {
       "year": 1881,
@@ -103,8 +128,10 @@
       "words": 6836308,
       "formal_courtesy_hits": 9008,
       "profanity_hits": 43,
+      "slur_hits": 258,
       "formal_courtesy_per_1k": 1.3176702981,
-      "profanity_per_1k": 0.0062899448
+      "profanity_per_1k": 0.0062899448,
+      "slurs_per_1k": 0.0377396688
     },
     {
       "year": 1883,
@@ -112,17 +139,21 @@
       "words": 5188318,
       "formal_courtesy_hits": 9306,
       "profanity_hits": 30,
+      "slur_hits": 50,
       "formal_courtesy_per_1k": 1.7936448768,
-      "profanity_per_1k": 0.0057822208
+      "profanity_per_1k": 0.0057822208,
+      "slurs_per_1k": 0.0096370346
     },
     {
       "year": 1883,
       "party": "R",
       "words": 4512462,
       "formal_courtesy_hits": 6272,
-      "profanity_hits": 19,
+      "profanity_hits": 20,
+      "slur_hits": 45,
       "formal_courtesy_per_1k": 1.3899286022,
-      "profanity_per_1k": 0.0042105618
+      "profanity_per_1k": 0.0044321703,
+      "slurs_per_1k": 0.0099723831
     },
     {
       "year": 1885,
@@ -130,8 +161,10 @@
       "words": 5602079,
       "formal_courtesy_hits": 9630,
       "profanity_hits": 24,
+      "slur_hits": 39,
       "formal_courtesy_per_1k": 1.7190046767,
-      "profanity_per_1k": 0.0042841238
+      "profanity_per_1k": 0.0042841238,
+      "slurs_per_1k": 0.0069617012
     },
     {
       "year": 1885,
@@ -139,8 +172,10 @@
       "words": 6153909,
       "formal_courtesy_hits": 6620,
       "profanity_hits": 18,
+      "slur_hits": 52,
       "formal_courtesy_per_1k": 1.075739014,
-      "profanity_per_1k": 0.0029249701
+      "profanity_per_1k": 0.0029249701,
+      "slurs_per_1k": 0.0084499137
     },
     {
       "year": 1887,
@@ -148,8 +183,10 @@
       "words": 6357840,
       "formal_courtesy_hits": 12110,
       "profanity_hits": 29,
+      "slur_hits": 210,
       "formal_courtesy_per_1k": 1.9047349414,
-      "profanity_per_1k": 0.0045612975
+      "profanity_per_1k": 0.0045612975,
+      "slurs_per_1k": 0.0330300857
     },
     {
       "year": 1887,
@@ -157,8 +194,10 @@
       "words": 6080186,
       "formal_courtesy_hits": 7742,
       "profanity_hits": 17,
+      "slur_hits": 194,
       "formal_courtesy_per_1k": 1.2733163097,
-      "profanity_per_1k": 0.0027959671
+      "profanity_per_1k": 0.0027959671,
+      "slurs_per_1k": 0.0319069186
     },
     {
       "year": 1889,
@@ -166,17 +205,21 @@
       "words": 7994269,
       "formal_courtesy_hits": 12049,
       "profanity_hits": 61,
+      "slur_hits": 103,
       "formal_courtesy_per_1k": 1.5072047238,
-      "profanity_per_1k": 0.0076304663
+      "profanity_per_1k": 0.0076304663,
+      "slurs_per_1k": 0.0128842299
     },
     {
       "year": 1889,
       "party": "R",
       "words": 8249998,
       "formal_courtesy_hits": 11166,
-      "profanity_hits": 47,
+      "profanity_hits": 48,
+      "slur_hits": 151,
       "formal_courtesy_per_1k": 1.3534548736,
-      "profanity_per_1k": 0.0056969711
+      "profanity_per_1k": 0.0058181832,
+      "slurs_per_1k": 0.0183030347
     },
     {
       "year": 1891,
@@ -184,17 +227,21 @@
       "words": 5799439,
       "formal_courtesy_hits": 11533,
       "profanity_hits": 56,
+      "slur_hits": 67,
       "formal_courtesy_per_1k": 1.9886406254,
-      "profanity_per_1k": 0.0096561064
+      "profanity_per_1k": 0.0096561064,
+      "slurs_per_1k": 0.0115528416
     },
     {
       "year": 1891,
       "party": "R",
       "words": 3722206,
       "formal_courtesy_hits": 4486,
-      "profanity_hits": 19,
+      "profanity_hits": 20,
+      "slur_hits": 149,
       "formal_courtesy_per_1k": 1.2051992824,
-      "profanity_per_1k": 0.0051044999
+      "profanity_per_1k": 0.0053731577,
+      "slurs_per_1k": 0.0400300252
     },
     {
       "year": 1893,
@@ -202,8 +249,10 @@
       "words": 8175531,
       "formal_courtesy_hits": 12880,
       "profanity_hits": 89,
+      "slur_hits": 109,
       "formal_courtesy_per_1k": 1.5754328373,
-      "profanity_per_1k": 0.0108861431
+      "profanity_per_1k": 0.0108861431,
+      "slurs_per_1k": 0.0133324673
     },
     {
       "year": 1893,
@@ -211,8 +260,10 @@
       "words": 6778425,
       "formal_courtesy_hits": 7771,
       "profanity_hits": 30,
+      "slur_hits": 217,
       "formal_courtesy_per_1k": 1.1464315088,
-      "profanity_per_1k": 0.0044258069
+      "profanity_per_1k": 0.0044258069,
+      "slurs_per_1k": 0.0320133364
     },
     {
       "year": 1895,
@@ -220,8 +271,10 @@
       "words": 3621245,
       "formal_courtesy_hits": 4826,
       "profanity_hits": 25,
+      "slur_hits": 16,
       "formal_courtesy_per_1k": 1.3326908287,
-      "profanity_per_1k": 0.006903703
+      "profanity_per_1k": 0.006903703,
+      "slurs_per_1k": 0.0044183699
     },
     {
       "year": 1895,
@@ -229,8 +282,10 @@
       "words": 5468653,
       "formal_courtesy_hits": 8800,
       "profanity_hits": 25,
+      "slur_hits": 28,
       "formal_courtesy_per_1k": 1.6091713992,
-      "profanity_per_1k": 0.0045715097
+      "profanity_per_1k": 0.0045715097,
+      "slurs_per_1k": 0.0051200908
     },
     {
       "year": 1897,
@@ -238,8 +293,10 @@
       "words": 5732822,
       "formal_courtesy_hits": 8905,
       "profanity_hits": 37,
+      "slur_hits": 67,
       "formal_courtesy_per_1k": 1.5533362103,
-      "profanity_per_1k": 0.006454064
+      "profanity_per_1k": 0.006454064,
+      "slurs_per_1k": 0.0116870888
     },
     {
       "year": 1897,
@@ -247,8 +304,10 @@
       "words": 6033426,
       "formal_courtesy_hits": 10305,
       "profanity_hits": 33,
+      "slur_hits": 28,
       "formal_courtesy_per_1k": 1.7079848166,
-      "profanity_per_1k": 0.0054695293
+      "profanity_per_1k": 0.0054695293,
+      "slurs_per_1k": 0.0046408127
     },
     {
       "year": 1899,
@@ -256,8 +315,10 @@
       "words": 4395770,
       "formal_courtesy_hits": 5873,
       "profanity_hits": 41,
+      "slur_hits": 71,
       "formal_courtesy_per_1k": 1.336057164,
-      "profanity_per_1k": 0.0093271486
+      "profanity_per_1k": 0.0093271486,
+      "slurs_per_1k": 0.0161518915
     },
     {
       "year": 1899,
@@ -265,8 +326,10 @@
       "words": 5260517,
       "formal_courtesy_hits": 7358,
       "profanity_hits": 22,
+      "slur_hits": 48,
       "formal_courtesy_per_1k": 1.3987218367,
-      "profanity_per_1k": 0.0041820985
+      "profanity_per_1k": 0.0041820985,
+      "slurs_per_1k": 0.0091245784
     },
     {
       "year": 1901,
@@ -274,8 +337,10 @@
       "words": 4128761,
       "formal_courtesy_hits": 5792,
       "profanity_hits": 32,
+      "slur_hits": 254,
       "formal_courtesy_per_1k": 1.4028421602,
-      "profanity_per_1k": 0.0077505092
+      "profanity_per_1k": 0.0077505092,
+      "slurs_per_1k": 0.0615196666
     },
     {
       "year": 1901,
@@ -283,8 +348,10 @@
       "words": 5333957,
       "formal_courtesy_hits": 7556,
       "profanity_hits": 31,
+      "slur_hits": 248,
       "formal_courtesy_per_1k": 1.4165843482,
-      "profanity_per_1k": 0.0058118204
+      "profanity_per_1k": 0.0058118204,
+      "slurs_per_1k": 0.046494563
     },
     {
       "year": 1903,
@@ -292,8 +359,10 @@
       "words": 3736710,
       "formal_courtesy_hits": 5508,
       "profanity_hits": 38,
+      "slur_hits": 76,
       "formal_courtesy_per_1k": 1.4740239408,
-      "profanity_per_1k": 0.0101693736
+      "profanity_per_1k": 0.0101693736,
+      "slurs_per_1k": 0.0203387472
     },
     {
       "year": 1903,
@@ -301,8 +370,10 @@
       "words": 4329348,
       "formal_courtesy_hits": 6579,
       "profanity_hits": 13,
+      "slur_hits": 47,
       "formal_courtesy_per_1k": 1.5196283597,
-      "profanity_per_1k": 0.0030027616
+      "profanity_per_1k": 0.0030027616,
+      "slurs_per_1k": 0.0108561382
     },
     {
       "year": 1905,
@@ -310,8 +381,10 @@
       "words": 4787152,
       "formal_courtesy_hits": 6579,
       "profanity_hits": 26,
+      "slur_hits": 143,
       "formal_courtesy_per_1k": 1.3743035525,
-      "profanity_per_1k": 0.0054312042
+      "profanity_per_1k": 0.0054312042,
+      "slurs_per_1k": 0.029871623
     },
     {
       "year": 1905,
@@ -319,8 +392,10 @@
       "words": 6768245,
       "formal_courtesy_hits": 9449,
       "profanity_hits": 22,
+      "slur_hits": 47,
       "formal_courtesy_per_1k": 1.3960783039,
-      "profanity_per_1k": 0.0032504734
+      "profanity_per_1k": 0.0032504734,
+      "slurs_per_1k": 0.0069441931
     },
     {
       "year": 1907,
@@ -328,8 +403,10 @@
       "words": 3748061,
       "formal_courtesy_hits": 5801,
       "profanity_hits": 15,
+      "slur_hits": 56,
       "formal_courtesy_per_1k": 1.5477336148,
-      "profanity_per_1k": 0.0040020693
+      "profanity_per_1k": 0.0040020693,
+      "slurs_per_1k": 0.0149410589
     },
     {
       "year": 1907,
@@ -337,8 +414,10 @@
       "words": 5294670,
       "formal_courtesy_hits": 8251,
       "profanity_hits": 20,
+      "slur_hits": 76,
       "formal_courtesy_per_1k": 1.5583596334,
-      "profanity_per_1k": 0.0037773837
+      "profanity_per_1k": 0.0037773837,
+      "slurs_per_1k": 0.0143540579
     },
     {
       "year": 1909,
@@ -346,8 +425,10 @@
       "words": 6097400,
       "formal_courtesy_hits": 9126,
       "profanity_hits": 30,
+      "slur_hits": 51,
       "formal_courtesy_per_1k": 1.496703513,
-      "profanity_per_1k": 0.0049201299
+      "profanity_per_1k": 0.0049201299,
+      "slurs_per_1k": 0.0083642208
     },
     {
       "year": 1909,
@@ -355,17 +436,21 @@
       "words": 10336307,
       "formal_courtesy_hits": 14688,
       "profanity_hits": 25,
+      "slur_hits": 39,
       "formal_courtesy_per_1k": 1.4210104247,
-      "profanity_per_1k": 0.0024186588
+      "profanity_per_1k": 0.0024186588,
+      "slurs_per_1k": 0.0037731077
     },
     {
       "year": 1911,
       "party": "D",
       "words": 9211380,
       "formal_courtesy_hits": 17810,
-      "profanity_hits": 55,
+      "profanity_hits": 56,
+      "slur_hits": 109,
       "formal_courtesy_per_1k": 1.9334779371,
-      "profanity_per_1k": 0.0059708752
+      "profanity_per_1k": 0.0060794365,
+      "slurs_per_1k": 0.0118331889
     },
     {
       "year": 1911,
@@ -373,8 +458,10 @@
       "words": 9342037,
       "formal_courtesy_hits": 14188,
       "profanity_hits": 56,
+      "slur_hits": 62,
       "formal_courtesy_per_1k": 1.5187265904,
-      "profanity_per_1k": 0.00599441
+      "profanity_per_1k": 0.00599441,
+      "slurs_per_1k": 0.0066366682
     },
     {
       "year": 1913,
@@ -382,17 +469,21 @@
       "words": 13675042,
       "formal_courtesy_hits": 22098,
       "profanity_hits": 85,
+      "slur_hits": 99,
       "formal_courtesy_per_1k": 1.6159365361,
-      "profanity_per_1k": 0.006215703
+      "profanity_per_1k": 0.006215703,
+      "slurs_per_1k": 0.0072394659
     },
     {
       "year": 1913,
       "party": "R",
       "words": 13098951,
       "formal_courtesy_hits": 18223,
-      "profanity_hits": 62,
+      "profanity_hits": 63,
+      "slur_hits": 68,
       "formal_courtesy_per_1k": 1.3911801029,
-      "profanity_per_1k": 0.0047332034
+      "profanity_per_1k": 0.0048095454,
+      "slurs_per_1k": 0.0051912554
     },
     {
       "year": 1915,
@@ -400,35 +491,43 @@
       "words": 8694261,
       "formal_courtesy_hits": 11281,
       "profanity_hits": 52,
+      "slur_hits": 80,
       "formal_courtesy_per_1k": 1.2975225842,
-      "profanity_per_1k": 0.0059809569
+      "profanity_per_1k": 0.0059809569,
+      "slurs_per_1k": 0.0092014721
     },
     {
       "year": 1915,
       "party": "R",
       "words": 8529372,
       "formal_courtesy_hits": 11139,
-      "profanity_hits": 46,
+      "profanity_hits": 47,
+      "slur_hits": 63,
       "formal_courtesy_per_1k": 1.3059578126,
-      "profanity_per_1k": 0.0053931286
+      "profanity_per_1k": 0.0055103705,
+      "slurs_per_1k": 0.0073862413
     },
     {
       "year": 1917,
       "party": "D",
       "words": 11648885,
       "formal_courtesy_hits": 15991,
-      "profanity_hits": 56,
+      "profanity_hits": 58,
+      "slur_hits": 58,
       "formal_courtesy_per_1k": 1.3727494091,
-      "profanity_per_1k": 0.0048073271
+      "profanity_per_1k": 0.0049790173,
+      "slurs_per_1k": 0.0049790173
     },
     {
       "year": 1917,
       "party": "R",
       "words": 11827059,
       "formal_courtesy_hits": 16228,
-      "profanity_hits": 43,
+      "profanity_hits": 44,
+      "slur_hits": 55,
       "formal_courtesy_per_1k": 1.372107808,
-      "profanity_per_1k": 0.0036357306
+      "profanity_per_1k": 0.0037202824,
+      "slurs_per_1k": 0.0046503531
     },
     {
       "year": 1919,
@@ -436,17 +535,21 @@
       "words": 9467706,
       "formal_courtesy_hits": 13421,
       "profanity_hits": 70,
+      "slur_hits": 89,
       "formal_courtesy_per_1k": 1.417555636,
-      "profanity_per_1k": 0.0073935545
+      "profanity_per_1k": 0.0073935545,
+      "slurs_per_1k": 0.0094003764
     },
     {
       "year": 1919,
       "party": "R",
       "words": 10735533,
       "formal_courtesy_hits": 14808,
-      "profanity_hits": 51,
+      "profanity_hits": 52,
+      "slur_hits": 68,
       "formal_courtesy_per_1k": 1.3793446492,
-      "profanity_per_1k": 0.0047505792
+      "profanity_per_1k": 0.0048437278,
+      "slurs_per_1k": 0.0063341056
     },
     {
       "year": 1921,
@@ -454,8 +557,10 @@
       "words": 12036506,
       "formal_courtesy_hits": 13710,
       "profanity_hits": 154,
+      "slur_hits": 182,
       "formal_courtesy_per_1k": 1.1390348661,
-      "profanity_per_1k": 0.0127944106
+      "profanity_per_1k": 0.0127944106,
+      "slurs_per_1k": 0.0151206671
     },
     {
       "year": 1921,
@@ -463,35 +568,43 @@
       "words": 13439027,
       "formal_courtesy_hits": 16980,
       "profanity_hits": 91,
+      "slur_hits": 94,
       "formal_courtesy_per_1k": 1.2634843281,
-      "profanity_per_1k": 0.0067713235
+      "profanity_per_1k": 0.0067713235,
+      "slurs_per_1k": 0.006994554
     },
     {
       "year": 1923,
       "party": "D",
       "words": 7338509,
       "formal_courtesy_hits": 10386,
-      "profanity_hits": 75,
+      "profanity_hits": 76,
+      "slur_hits": 77,
       "formal_courtesy_per_1k": 1.4152738656,
-      "profanity_per_1k": 0.0102200597
+      "profanity_per_1k": 0.0103563272,
+      "slurs_per_1k": 0.0104925946
     },
     {
       "year": 1923,
       "party": "R",
       "words": 6154010,
       "formal_courtesy_hits": 8972,
-      "profanity_hits": 27,
+      "profanity_hits": 28,
+      "slur_hits": 40,
       "formal_courtesy_per_1k": 1.4579111831,
-      "profanity_per_1k": 0.0043873832
+      "profanity_per_1k": 0.0045498789,
+      "slurs_per_1k": 0.0064998269
     },
     {
       "year": 1925,
       "party": "D",
       "words": 6563637,
       "formal_courtesy_hits": 9305,
-      "profanity_hits": 51,
+      "profanity_hits": 52,
+      "slur_hits": 56,
       "formal_courtesy_per_1k": 1.4176591423,
-      "profanity_per_1k": 0.0077700823
+      "profanity_per_1k": 0.0079224369,
+      "slurs_per_1k": 0.0085318551
     },
     {
       "year": 1925,
@@ -499,8 +612,10 @@
       "words": 6556342,
       "formal_courtesy_hits": 9168,
       "profanity_hits": 29,
+      "slur_hits": 14,
       "formal_courtesy_per_1k": 1.3983407211,
-      "profanity_per_1k": 0.0044231982
+      "profanity_per_1k": 0.0044231982,
+      "slurs_per_1k": 0.0021353371
     },
     {
       "year": 1927,
@@ -508,8 +623,10 @@
       "words": 5337923,
       "formal_courtesy_hits": 5826,
       "profanity_hits": 63,
+      "slur_hits": 49,
       "formal_courtesy_per_1k": 1.0914357513,
-      "profanity_per_1k": 0.0118023433
+      "profanity_per_1k": 0.0118023433,
+      "slurs_per_1k": 0.0091796004
     },
     {
       "year": 1927,
@@ -517,8 +634,10 @@
       "words": 4925333,
       "formal_courtesy_hits": 7468,
       "profanity_hits": 33,
+      "slur_hits": 31,
       "formal_courtesy_per_1k": 1.5162426581,
-      "profanity_per_1k": 0.0067000546
+      "profanity_per_1k": 0.0067000546,
+      "slurs_per_1k": 0.0062939907
     },
     {
       "year": 1929,
@@ -526,8 +645,10 @@
       "words": 8578404,
       "formal_courtesy_hits": 9072,
       "profanity_hits": 86,
+      "slur_hits": 42,
       "formal_courtesy_per_1k": 1.0575393745,
-      "profanity_per_1k": 0.0100251748
+      "profanity_per_1k": 0.0100251748,
+      "slurs_per_1k": 0.0048960156
     },
     {
       "year": 1929,
@@ -535,8 +656,10 @@
       "words": 9360793,
       "formal_courtesy_hits": 11719,
       "profanity_hits": 73,
+      "slur_hits": 37,
       "formal_courtesy_per_1k": 1.2519238488,
-      "profanity_per_1k": 0.0077984846
+      "profanity_per_1k": 0.0077984846,
+      "slurs_per_1k": 0.0039526566
     },
     {
       "year": 1931,
@@ -544,8 +667,10 @@
       "words": 8317243,
       "formal_courtesy_hits": 11369,
       "profanity_hits": 52,
+      "slur_hits": 72,
       "formal_courtesy_per_1k": 1.3669193025,
-      "profanity_per_1k": 0.0062520718
+      "profanity_per_1k": 0.0062520718,
+      "slurs_per_1k": 0.0086567147
     },
     {
       "year": 1931,
@@ -553,8 +678,10 @@
       "words": 6870448,
       "formal_courtesy_hits": 9791,
       "profanity_hits": 25,
+      "slur_hits": 44,
       "formal_courtesy_per_1k": 1.4250890189,
-      "profanity_per_1k": 0.0036387729
+      "profanity_per_1k": 0.0036387729,
+      "slurs_per_1k": 0.0064042403
     },
     {
       "year": 1933,
@@ -562,8 +689,10 @@
       "words": 8107612,
       "formal_courtesy_hits": 12229,
       "profanity_hits": 61,
+      "slur_hits": 47,
       "formal_courtesy_per_1k": 1.5083356234,
-      "profanity_per_1k": 0.0075237937
+      "profanity_per_1k": 0.0075237937,
+      "slurs_per_1k": 0.0057970214
     },
     {
       "year": 1933,
@@ -571,8 +700,10 @@
       "words": 4627961,
       "formal_courtesy_hits": 5950,
       "profanity_hits": 40,
+      "slur_hits": 18,
       "formal_courtesy_per_1k": 1.2856633839,
-      "profanity_per_1k": 0.0086431152
+      "profanity_per_1k": 0.0086431152,
+      "slurs_per_1k": 0.0038894018
     },
     {
       "year": 1935,
@@ -580,8 +711,10 @@
       "words": 11663240,
       "formal_courtesy_hits": 17283,
       "profanity_hits": 102,
+      "slur_hits": 75,
       "formal_courtesy_per_1k": 1.4818352362,
-      "profanity_per_1k": 0.0087454258
+      "profanity_per_1k": 0.0087454258,
+      "slurs_per_1k": 0.0064304601
     },
     {
       "year": 1935,
@@ -589,8 +722,10 @@
       "words": 4677784,
       "formal_courtesy_hits": 7412,
       "profanity_hits": 60,
+      "slur_hits": 30,
       "formal_courtesy_per_1k": 1.5845109565,
-      "profanity_per_1k": 0.0128265863
+      "profanity_per_1k": 0.0128265863,
+      "slurs_per_1k": 0.0064132931
     },
     {
       "year": 1937,
@@ -598,17 +733,21 @@
       "words": 10779923,
       "formal_courtesy_hits": 18903,
       "profanity_hits": 103,
+      "slur_hits": 79,
       "formal_courtesy_per_1k": 1.7535375717,
-      "profanity_per_1k": 0.0095547992
+      "profanity_per_1k": 0.0095547992,
+      "slurs_per_1k": 0.0073284382
     },
     {
       "year": 1937,
       "party": "R",
       "words": 4118130,
       "formal_courtesy_hits": 9084,
-      "profanity_hits": 59,
+      "profanity_hits": 60,
+      "slur_hits": 28,
       "formal_courtesy_per_1k": 2.2058555704,
-      "profanity_per_1k": 0.0143268911
+      "profanity_per_1k": 0.0145697198,
+      "slurs_per_1k": 0.0067992026
     },
     {
       "year": 1939,
@@ -616,8 +755,10 @@
       "words": 12516303,
       "formal_courtesy_hits": 22529,
       "profanity_hits": 66,
+      "slur_hits": 58,
       "formal_courtesy_per_1k": 1.799972404,
-      "profanity_per_1k": 0.0052731226
+      "profanity_per_1k": 0.0052731226,
+      "slurs_per_1k": 0.0046339562
     },
     {
       "year": 1939,
@@ -625,8 +766,10 @@
       "words": 6800118,
       "formal_courtesy_hits": 15136,
       "profanity_hits": 53,
+      "slur_hits": 37,
       "formal_courtesy_per_1k": 2.225843728,
-      "profanity_per_1k": 0.0077939824
+      "profanity_per_1k": 0.0077939824,
+      "slurs_per_1k": 0.0054410821
     },
     {
       "year": 1941,
@@ -634,8 +777,10 @@
       "words": 10953481,
       "formal_courtesy_hits": 20481,
       "profanity_hits": 91,
+      "slur_hits": 244,
       "formal_courtesy_per_1k": 1.8698165451,
-      "profanity_per_1k": 0.0083078612
+      "profanity_per_1k": 0.0083078612,
+      "slurs_per_1k": 0.0222760235
     },
     {
       "year": 1941,
@@ -643,8 +788,10 @@
       "words": 6507833,
       "formal_courtesy_hits": 13833,
       "profanity_hits": 75,
+      "slur_hits": 118,
       "formal_courtesy_per_1k": 2.1255923439,
-      "profanity_per_1k": 0.0115245735
+      "profanity_per_1k": 0.0115245735,
+      "slurs_per_1k": 0.0181319957
     },
     {
       "year": 1943,
@@ -652,8 +799,10 @@
       "words": 10047102,
       "formal_courtesy_hits": 21054,
       "profanity_hits": 69,
+      "slur_hits": 437,
       "formal_courtesy_per_1k": 2.0955296363,
-      "profanity_per_1k": 0.006867652
+      "profanity_per_1k": 0.006867652,
+      "slurs_per_1k": 0.0434951292
     },
     {
       "year": 1943,
@@ -661,8 +810,10 @@
       "words": 7993181,
       "formal_courtesy_hits": 17024,
       "profanity_hits": 77,
+      "slur_hits": 346,
       "formal_courtesy_per_1k": 2.1298154014,
-      "profanity_per_1k": 0.0096332111
+      "profanity_per_1k": 0.0096332111,
+      "slurs_per_1k": 0.0432868967
     },
     {
       "year": 1945,
@@ -670,8 +821,10 @@
       "words": 10794043,
       "formal_courtesy_hits": 20153,
       "profanity_hits": 57,
+      "slur_hits": 246,
       "formal_courtesy_per_1k": 1.867048334,
-      "profanity_per_1k": 0.0052806905
+      "profanity_per_1k": 0.0052806905,
+      "slurs_per_1k": 0.0227903483
     },
     {
       "year": 1945,
@@ -679,8 +832,10 @@
       "words": 8966241,
       "formal_courtesy_hits": 16606,
       "profanity_hits": 67,
+      "slur_hits": 246,
       "formal_courtesy_per_1k": 1.8520581813,
-      "profanity_per_1k": 0.0074724737
+      "profanity_per_1k": 0.0074724737,
+      "slurs_per_1k": 0.0274362467
     },
     {
       "year": 1947,
@@ -688,8 +843,10 @@
       "words": 7088044,
       "formal_courtesy_hits": 11527,
       "profanity_hits": 24,
+      "slur_hits": 63,
       "formal_courtesy_per_1k": 1.6262596564,
-      "profanity_per_1k": 0.0033859835
+      "profanity_per_1k": 0.0033859835,
+      "slurs_per_1k": 0.0088882067
     },
     {
       "year": 1947,
@@ -697,8 +854,10 @@
       "words": 9840011,
       "formal_courtesy_hits": 18583,
       "profanity_hits": 34,
+      "slur_hits": 36,
       "formal_courtesy_per_1k": 1.888514149,
-      "profanity_per_1k": 0.0034552807
+      "profanity_per_1k": 0.0034552807,
+      "slurs_per_1k": 0.0036585325
     },
     {
       "year": 1949,
@@ -706,8 +865,10 @@
       "words": 13135509,
       "formal_courtesy_hits": 24157,
       "profanity_hits": 45,
+      "slur_hits": 72,
       "formal_courtesy_per_1k": 1.8390608236,
-      "profanity_per_1k": 0.0034258284
+      "profanity_per_1k": 0.0034258284,
+      "slurs_per_1k": 0.0054813255
     },
     {
       "year": 1949,
@@ -715,8 +876,10 @@
       "words": 11881132,
       "formal_courtesy_hits": 19546,
       "profanity_hits": 61,
+      "slur_hits": 58,
       "formal_courtesy_per_1k": 1.6451294372,
-      "profanity_per_1k": 0.0051341909
+      "profanity_per_1k": 0.0051341909,
+      "slurs_per_1k": 0.0048816897
     },
     {
       "year": 1951,
@@ -724,17 +887,21 @@
       "words": 10021016,
       "formal_courtesy_hits": 20707,
       "profanity_hits": 42,
+      "slur_hits": 634,
       "formal_courtesy_per_1k": 2.0663573434,
-      "profanity_per_1k": 0.0041911918
+      "profanity_per_1k": 0.0041911918,
+      "slurs_per_1k": 0.063267038
     },
     {
       "year": 1951,
       "party": "R",
       "words": 8618342,
       "formal_courtesy_hits": 17531,
-      "profanity_hits": 43,
+      "profanity_hits": 44,
+      "slur_hits": 120,
       "formal_courtesy_per_1k": 2.034149956,
-      "profanity_per_1k": 0.0049893587
+      "profanity_per_1k": 0.0051053903,
+      "slurs_per_1k": 0.0139237918
     },
     {
       "year": 1953,
@@ -742,8 +909,10 @@
       "words": 10582272,
       "formal_courtesy_hits": 18811,
       "profanity_hits": 23,
+      "slur_hits": 207,
       "formal_courtesy_per_1k": 1.7775955863,
-      "profanity_per_1k": 0.0021734463
+      "profanity_per_1k": 0.0021734463,
+      "slurs_per_1k": 0.0195610168
     },
     {
       "year": 1953,
@@ -751,8 +920,10 @@
       "words": 9569906,
       "formal_courtesy_hits": 19451,
       "profanity_hits": 20,
+      "slur_hits": 96,
       "formal_courtesy_per_1k": 2.0325173518,
-      "profanity_per_1k": 0.0020898847
+      "profanity_per_1k": 0.0020898847,
+      "slurs_per_1k": 0.0100314465
     },
     {
       "year": 1955,
@@ -760,8 +931,10 @@
       "words": 10677140,
       "formal_courtesy_hits": 19294,
       "profanity_hits": 19,
+      "slur_hits": 51,
       "formal_courtesy_per_1k": 1.8070382144,
-      "profanity_per_1k": 0.0017795028
+      "profanity_per_1k": 0.0017795028,
+      "slurs_per_1k": 0.00477656
     },
     {
       "year": 1955,
@@ -769,8 +942,10 @@
       "words": 6593052,
       "formal_courtesy_hits": 12712,
       "profanity_hits": 8,
+      "slur_hits": 25,
       "formal_courtesy_per_1k": 1.9280903594,
-      "profanity_per_1k": 0.0012133986
+      "profanity_per_1k": 0.0012133986,
+      "slurs_per_1k": 0.0037918706
     },
     {
       "year": 1957,
@@ -778,8 +953,10 @@
       "words": 14881836,
       "formal_courtesy_hits": 24117,
       "profanity_hits": 31,
+      "slur_hits": 53,
       "formal_courtesy_per_1k": 1.6205661721,
-      "profanity_per_1k": 0.0020830763
+      "profanity_per_1k": 0.0020830763,
+      "slurs_per_1k": 0.0035613885
     },
     {
       "year": 1957,
@@ -787,8 +964,10 @@
       "words": 9305952,
       "formal_courtesy_hits": 17979,
       "profanity_hits": 13,
+      "slur_hits": 26,
       "formal_courtesy_per_1k": 1.9319893333,
-      "profanity_per_1k": 0.0013969554
+      "profanity_per_1k": 0.0013969554,
+      "slurs_per_1k": 0.0027939108
     },
     {
       "year": 1959,
@@ -796,8 +975,10 @@
       "words": 17461359,
       "formal_courtesy_hits": 25516,
       "profanity_hits": 44,
+      "slur_hits": 48,
       "formal_courtesy_per_1k": 1.4612837409,
-      "profanity_per_1k": 0.0025198497
+      "profanity_per_1k": 0.0025198497,
+      "slurs_per_1k": 0.0027489269
     },
     {
       "year": 1959,
@@ -805,8 +986,10 @@
       "words": 8219993,
       "formal_courtesy_hits": 14613,
       "profanity_hits": 30,
+      "slur_hits": 22,
       "formal_courtesy_per_1k": 1.7777387402,
-      "profanity_per_1k": 0.0036496381
+      "profanity_per_1k": 0.0036496381,
+      "slurs_per_1k": 0.0026764013
     },
     {
       "year": 1961,
@@ -814,17 +997,21 @@
       "words": 16972840,
       "formal_courtesy_hits": 26077,
       "profanity_hits": 37,
+      "slur_hits": 75,
       "formal_courtesy_per_1k": 1.5363957947,
-      "profanity_per_1k": 0.0021799534
+      "profanity_per_1k": 0.0021799534,
+      "slurs_per_1k": 0.0044188244
     },
     {
       "year": 1961,
       "party": "R",
       "words": 10849267,
       "formal_courtesy_hits": 20688,
-      "profanity_hits": 30,
+      "profanity_hits": 32,
+      "slur_hits": 30,
       "formal_courtesy_per_1k": 1.9068569333,
-      "profanity_per_1k": 0.0027651638
+      "profanity_per_1k": 0.002949508,
+      "slurs_per_1k": 0.0027651638
     },
     {
       "year": 1963,
@@ -832,8 +1019,10 @@
       "words": 19671833,
       "formal_courtesy_hits": 26956,
       "profanity_hits": 55,
+      "slur_hits": 98,
       "formal_courtesy_per_1k": 1.3702841011,
-      "profanity_per_1k": 0.0027958757
+      "profanity_per_1k": 0.0027958757,
+      "slurs_per_1k": 0.0049817422
     },
     {
       "year": 1963,
@@ -841,8 +1030,10 @@
       "words": 11058052,
       "formal_courtesy_hits": 20739,
       "profanity_hits": 39,
+      "slur_hits": 52,
       "formal_courtesy_per_1k": 1.8754659501,
-      "profanity_per_1k": 0.0035268418
+      "profanity_per_1k": 0.0035268418,
+      "slurs_per_1k": 0.0047024557
     },
     {
       "year": 1965,
@@ -850,17 +1041,21 @@
       "words": 22670052,
       "formal_courtesy_hits": 35209,
       "profanity_hits": 64,
+      "slur_hits": 87,
       "formal_courtesy_per_1k": 1.5531062743,
-      "profanity_per_1k": 0.0028231078
+      "profanity_per_1k": 0.0028231078,
+      "slurs_per_1k": 0.0038376621
     },
     {
       "year": 1965,
       "party": "R",
       "words": 11177305,
       "formal_courtesy_hits": 22754,
-      "profanity_hits": 32,
+      "profanity_hits": 33,
+      "slur_hits": 27,
       "formal_courtesy_per_1k": 2.035732227,
-      "profanity_per_1k": 0.0028629442
+      "profanity_per_1k": 0.0029524112,
+      "slurs_per_1k": 0.0024156091
     },
     {
       "year": 1967,
@@ -868,8 +1063,10 @@
       "words": 23037709,
       "formal_courtesy_hits": 37282,
       "profanity_hits": 70,
+      "slur_hits": 48,
       "formal_courtesy_per_1k": 1.6183032783,
-      "profanity_per_1k": 0.0030384966
+      "profanity_per_1k": 0.0030384966,
+      "slurs_per_1k": 0.0020835405
     },
     {
       "year": 1967,
@@ -877,8 +1074,10 @@
       "words": 13274292,
       "formal_courtesy_hits": 27041,
       "profanity_hits": 51,
+      "slur_hits": 23,
       "formal_courtesy_per_1k": 2.0370954624,
-      "profanity_per_1k": 0.0038420128
+      "profanity_per_1k": 0.0038420128,
+      "slurs_per_1k": 0.0017326724
     },
     {
       "year": 1969,
@@ -886,8 +1085,10 @@
       "words": 23501935,
       "formal_courtesy_hits": 33927,
       "profanity_hits": 118,
+      "slur_hits": 71,
       "formal_courtesy_per_1k": 1.4435832624,
-      "profanity_per_1k": 0.0050208632
+      "profanity_per_1k": 0.0050208632,
+      "slurs_per_1k": 0.0030210278
     },
     {
       "year": 1969,
@@ -895,8 +1096,10 @@
       "words": 14507294,
       "formal_courtesy_hits": 23050,
       "profanity_hits": 53,
+      "slur_hits": 14,
       "formal_courtesy_per_1k": 1.5888559231,
-      "profanity_per_1k": 0.0036533347
+      "profanity_per_1k": 0.0036533347,
+      "slurs_per_1k": 0.0009650318
     },
     {
       "year": 1971,
@@ -904,8 +1107,10 @@
       "words": 21695858,
       "formal_courtesy_hits": 30274,
       "profanity_hits": 75,
+      "slur_hits": 53,
       "formal_courtesy_per_1k": 1.3953815516,
-      "profanity_per_1k": 0.003456881
+      "profanity_per_1k": 0.003456881,
+      "slurs_per_1k": 0.0024428626
     },
     {
       "year": 1971,
@@ -913,8 +1118,10 @@
       "words": 12853519,
       "formal_courtesy_hits": 19261,
       "profanity_hits": 48,
+      "slur_hits": 13,
       "formal_courtesy_per_1k": 1.4985001384,
-      "profanity_per_1k": 0.0037343859
+      "profanity_per_1k": 0.0037343859,
+      "slurs_per_1k": 0.0010113962
     },
     {
       "year": 1973,
@@ -922,17 +1129,21 @@
       "words": 23350897,
       "formal_courtesy_hits": 36438,
       "profanity_hits": 97,
+      "slur_hits": 81,
       "formal_courtesy_per_1k": 1.5604539731,
-      "profanity_per_1k": 0.004154016
+      "profanity_per_1k": 0.004154016,
+      "slurs_per_1k": 0.0034688175
     },
     {
       "year": 1973,
       "party": "R",
       "words": 14260822,
       "formal_courtesy_hits": 28722,
-      "profanity_hits": 75,
+      "profanity_hits": 76,
+      "slur_hits": 19,
       "formal_courtesy_per_1k": 2.0140494005,
-      "profanity_per_1k": 0.0052591639
+      "profanity_per_1k": 0.0053292861,
+      "slurs_per_1k": 0.0013323215
     },
     {
       "year": 1975,
@@ -940,8 +1151,10 @@
       "words": 23659445,
       "formal_courtesy_hits": 42863,
       "profanity_hits": 100,
+      "slur_hits": 12,
       "formal_courtesy_per_1k": 1.8116654892,
-      "profanity_per_1k": 0.0042266418
+      "profanity_per_1k": 0.0042266418,
+      "slurs_per_1k": 0.000507197
     },
     {
       "year": 1975,
@@ -949,17 +1162,21 @@
       "words": 13720325,
       "formal_courtesy_hits": 28982,
       "profanity_hits": 65,
+      "slur_hits": 14,
       "formal_courtesy_per_1k": 2.1123406333,
-      "profanity_per_1k": 0.0047374971
+      "profanity_per_1k": 0.0047374971,
+      "slurs_per_1k": 0.001020384
     },
     {
       "year": 1977,
       "party": "D",
       "words": 23208115,
       "formal_courtesy_hits": 45053,
-      "profanity_hits": 83,
+      "profanity_hits": 84,
+      "slur_hits": 10,
       "formal_courtesy_per_1k": 1.9412606323,
-      "profanity_per_1k": 0.0035763353
+      "profanity_per_1k": 0.0036194236,
+      "slurs_per_1k": 0.0004308838
     },
     {
       "year": 1977,
@@ -967,17 +1184,21 @@
       "words": 15593216,
       "formal_courtesy_hits": 34798,
       "profanity_hits": 69,
+      "slur_hits": 36,
       "formal_courtesy_per_1k": 2.2316114905,
-      "profanity_per_1k": 0.0044250012
+      "profanity_per_1k": 0.0044250012,
+      "slurs_per_1k": 0.0023086963
     },
     {
       "year": 1979,
       "party": "D",
       "words": 21301605,
       "formal_courtesy_hits": 40670,
-      "profanity_hits": 65,
+      "profanity_hits": 67,
+      "slur_hits": 31,
       "formal_courtesy_per_1k": 1.9092458057,
-      "profanity_per_1k": 0.0030514133
+      "profanity_per_1k": 0.0031453029,
+      "slurs_per_1k": 0.0014552894
     },
     {
       "year": 1979,
@@ -985,8 +1206,10 @@
       "words": 15521239,
       "formal_courtesy_hits": 31881,
       "profanity_hits": 76,
+      "slur_hits": 11,
       "formal_courtesy_per_1k": 2.0540241665,
-      "profanity_per_1k": 0.0048965163
+      "profanity_per_1k": 0.0048965163,
+      "slurs_per_1k": 0.0007087063
     },
     {
       "year": 1981,
@@ -994,35 +1217,43 @@
       "words": 16644812,
       "formal_courtesy_hits": 26247,
       "profanity_hits": 96,
+      "slur_hits": 14,
       "formal_courtesy_per_1k": 1.5768877414,
-      "profanity_per_1k": 0.0057675629
+      "profanity_per_1k": 0.0057675629,
+      "slurs_per_1k": 0.0008411029
     },
     {
       "year": 1981,
       "party": "R",
       "words": 15073372,
       "formal_courtesy_hits": 25135,
-      "profanity_hits": 71,
+      "profanity_hits": 75,
+      "slur_hits": 11,
       "formal_courtesy_per_1k": 1.6675100966,
-      "profanity_per_1k": 0.0047102931
+      "profanity_per_1k": 0.0049756617,
+      "slurs_per_1k": 0.0007297637
     },
     {
       "year": 1983,
       "party": "D",
       "words": 16808689,
       "formal_courtesy_hits": 27155,
-      "profanity_hits": 98,
+      "profanity_hits": 99,
+      "slur_hits": 30,
       "formal_courtesy_per_1k": 1.6155334899,
-      "profanity_per_1k": 0.0058303179
+      "profanity_per_1k": 0.0058898109,
+      "slurs_per_1k": 0.0017847912
     },
     {
       "year": 1983,
       "party": "R",
       "words": 15959671,
       "formal_courtesy_hits": 27782,
-      "profanity_hits": 72,
+      "profanity_hits": 74,
+      "slur_hits": 17,
       "formal_courtesy_per_1k": 1.7407627012,
-      "profanity_per_1k": 0.0045113712
+      "profanity_per_1k": 0.0046366871,
+      "slurs_per_1k": 0.0010651849
     },
     {
       "year": 1985,
@@ -1030,17 +1261,21 @@
       "words": 18448792,
       "formal_courtesy_hits": 28020,
       "profanity_hits": 69,
+      "slur_hits": 34,
       "formal_courtesy_per_1k": 1.5187986292,
-      "profanity_per_1k": 0.0037400823
+      "profanity_per_1k": 0.0037400823,
+      "slurs_per_1k": 0.0018429391
     },
     {
       "year": 1985,
       "party": "R",
       "words": 17028022,
       "formal_courtesy_hits": 28823,
-      "profanity_hits": 77,
+      "profanity_hits": 78,
+      "slur_hits": 16,
       "formal_courtesy_per_1k": 1.6926804534,
-      "profanity_per_1k": 0.004521958
+      "profanity_per_1k": 0.0045806847,
+      "slurs_per_1k": 0.0009396276
     },
     {
       "year": 1987,
@@ -1048,17 +1283,21 @@
       "words": 19632883,
       "formal_courtesy_hits": 28186,
       "profanity_hits": 68,
+      "slur_hits": 19,
       "formal_courtesy_per_1k": 1.4356526242,
-      "profanity_per_1k": 0.0034635769
+      "profanity_per_1k": 0.0034635769,
+      "slurs_per_1k": 0.0009677641
     },
     {
       "year": 1987,
       "party": "R",
       "words": 16549388,
       "formal_courtesy_hits": 27789,
-      "profanity_hits": 71,
+      "profanity_hits": 72,
+      "slur_hits": 22,
       "formal_courtesy_per_1k": 1.6791557488,
-      "profanity_per_1k": 0.0042901889
+      "profanity_per_1k": 0.0043506141,
+      "slurs_per_1k": 0.0013293543
     },
     {
       "year": 1989,
@@ -1066,8 +1305,10 @@
       "words": 19457677,
       "formal_courtesy_hits": 28679,
       "profanity_hits": 143,
+      "slur_hits": 29,
       "formal_courtesy_per_1k": 1.4739169532,
-      "profanity_per_1k": 0.0073492843
+      "profanity_per_1k": 0.0073492843,
+      "slurs_per_1k": 0.0014904143
     },
     {
       "year": 1989,
@@ -1075,8 +1316,10 @@
       "words": 15019416,
       "formal_courtesy_hits": 27148,
       "profanity_hits": 72,
+      "slur_hits": 12,
       "formal_courtesy_per_1k": 1.8075270037,
-      "profanity_per_1k": 0.0047937949
+      "profanity_per_1k": 0.0047937949,
+      "slurs_per_1k": 0.0007989658
     },
     {
       "year": 1991,
@@ -1084,8 +1327,10 @@
       "words": 20884367,
       "formal_courtesy_hits": 29089,
       "profanity_hits": 180,
+      "slur_hits": 31,
       "formal_courtesy_per_1k": 1.3928600278,
-      "profanity_per_1k": 0.008618887
+      "profanity_per_1k": 0.008618887,
+      "slurs_per_1k": 0.0014843639
     },
     {
       "year": 1991,
@@ -1093,8 +1338,10 @@
       "words": 14887237,
       "formal_courtesy_hits": 24936,
       "profanity_hits": 105,
+      "slur_hits": 4,
       "formal_courtesy_per_1k": 1.6749918067,
-      "profanity_per_1k": 0.0070530213
+      "profanity_per_1k": 0.0070530213,
+      "slurs_per_1k": 0.0002686865
     },
     {
       "year": 1993,
@@ -1102,26 +1349,32 @@
       "words": 18402107,
       "formal_courtesy_hits": 25859,
       "profanity_hits": 127,
+      "slur_hits": 20,
       "formal_courtesy_per_1k": 1.4052195219,
-      "profanity_per_1k": 0.0069013836
+      "profanity_per_1k": 0.0069013836,
+      "slurs_per_1k": 0.0010868321
     },
     {
       "year": 1993,
       "party": "R",
       "words": 16547982,
       "formal_courtesy_hits": 24381,
-      "profanity_hits": 87,
+      "profanity_hits": 89,
+      "slur_hits": 15,
       "formal_courtesy_per_1k": 1.4733518564,
-      "profanity_per_1k": 0.0052574386
+      "profanity_per_1k": 0.0053782993,
+      "slurs_per_1k": 0.0009064549
     },
     {
       "year": 1995,
       "party": "D",
       "words": 21016484,
       "formal_courtesy_hits": 33663,
-      "profanity_hits": 107,
+      "profanity_hits": 108,
+      "slur_hits": 41,
       "formal_courtesy_per_1k": 1.6017427082,
-      "profanity_per_1k": 0.0050912417
+      "profanity_per_1k": 0.0051388234,
+      "slurs_per_1k": 0.0019508496
     },
     {
       "year": 1995,
@@ -1129,8 +1382,10 @@
       "words": 20525767,
       "formal_courtesy_hits": 35414,
       "profanity_hits": 76,
+      "slur_hits": 19,
       "formal_courtesy_per_1k": 1.7253435645,
-      "profanity_per_1k": 0.0037026631
+      "profanity_per_1k": 0.0037026631,
+      "slurs_per_1k": 0.0009256658
     },
     {
       "year": 1997,
@@ -1138,8 +1393,10 @@
       "words": 16278685,
       "formal_courtesy_hits": 28940,
       "profanity_hits": 40,
+      "slur_hits": 11,
       "formal_courtesy_per_1k": 1.7777848764,
-      "profanity_per_1k": 0.0024572009
+      "profanity_per_1k": 0.0024572009,
+      "slurs_per_1k": 0.0006757303
     },
     {
       "year": 1997,
@@ -1147,8 +1404,10 @@
       "words": 17368405,
       "formal_courtesy_hits": 30540,
       "profanity_hits": 40,
+      "slur_hits": 4,
       "formal_courtesy_per_1k": 1.7583652615,
-      "profanity_per_1k": 0.0023030324
+      "profanity_per_1k": 0.0023030324,
+      "slurs_per_1k": 0.0002303032
     },
     {
       "year": 1999,
@@ -1156,17 +1415,21 @@
       "words": 17402965,
       "formal_courtesy_hits": 31593,
       "profanity_hits": 56,
+      "slur_hits": 9,
       "formal_courtesy_per_1k": 1.8153803102,
-      "profanity_per_1k": 0.0032178425
+      "profanity_per_1k": 0.0032178425,
+      "slurs_per_1k": 0.0005171533
     },
     {
       "year": 1999,
       "party": "R",
       "words": 16978675,
       "formal_courtesy_hits": 30238,
-      "profanity_hits": 68,
+      "profanity_hits": 69,
+      "slur_hits": 4,
       "formal_courtesy_per_1k": 1.7809399143,
-      "profanity_per_1k": 0.0040050239
+      "profanity_per_1k": 0.0040639214,
+      "slurs_per_1k": 0.0002355896
     },
     {
       "year": 2001,
@@ -1174,8 +1437,10 @@
       "words": 16578016,
       "formal_courtesy_hits": 24630,
       "profanity_hits": 36,
+      "slur_hits": 7,
       "formal_courtesy_per_1k": 1.4857025111,
-      "profanity_per_1k": 0.0021715506
+      "profanity_per_1k": 0.0021715506,
+      "slurs_per_1k": 0.0004222459
     },
     {
       "year": 2001,
@@ -1183,17 +1448,21 @@
       "words": 13163518,
       "formal_courtesy_hits": 20527,
       "profanity_hits": 23,
+      "slur_hits": 36,
       "formal_courtesy_per_1k": 1.5593855685,
-      "profanity_per_1k": 0.0017472533
+      "profanity_per_1k": 0.0017472533,
+      "slurs_per_1k": 0.0027348312
     },
     {
       "year": 2003,
       "party": "D",
       "words": 18385734,
       "formal_courtesy_hits": 25803,
-      "profanity_hits": 38,
+      "profanity_hits": 39,
+      "slur_hits": 7,
       "formal_courtesy_per_1k": 1.4034250686,
-      "profanity_per_1k": 0.0020668199
+      "profanity_per_1k": 0.0021212098,
+      "slurs_per_1k": 0.00038073
     },
     {
       "year": 2003,
@@ -1201,17 +1470,21 @@
       "words": 14650770,
       "formal_courtesy_hits": 21354,
       "profanity_hits": 30,
+      "slur_hits": 25,
       "formal_courtesy_per_1k": 1.4575343139,
-      "profanity_per_1k": 0.0020476739
+      "profanity_per_1k": 0.0020476739,
+      "slurs_per_1k": 0.001706395
     },
     {
       "year": 2005,
       "party": "D",
       "words": 16930336,
       "formal_courtesy_hits": 17696,
-      "profanity_hits": 33,
+      "profanity_hits": 34,
+      "slur_hits": 21,
       "formal_courtesy_per_1k": 1.045224383,
-      "profanity_per_1k": 0.0019491639
+      "profanity_per_1k": 0.0020082295,
+      "slurs_per_1k": 0.001240377
     },
     {
       "year": 2005,
@@ -1219,8 +1492,10 @@
       "words": 14075918,
       "formal_courtesy_hits": 16772,
       "profanity_hits": 25,
+      "slur_hits": 5,
       "formal_courtesy_per_1k": 1.1915386265,
-      "profanity_per_1k": 0.0017760831
+      "profanity_per_1k": 0.0017760831,
+      "slurs_per_1k": 0.0003552166
     },
     {
       "year": 2007,
@@ -1228,17 +1503,21 @@
       "words": 18559823,
       "formal_courtesy_hits": 14941,
       "profanity_hits": 45,
+      "slur_hits": 10,
       "formal_courtesy_per_1k": 0.805018453,
-      "profanity_per_1k": 0.0024245921
+      "profanity_per_1k": 0.0024245921,
+      "slurs_per_1k": 0.0005387982
     },
     {
       "year": 2007,
       "party": "R",
       "words": 14590202,
       "formal_courtesy_hits": 12774,
-      "profanity_hits": 25,
+      "profanity_hits": 26,
+      "slur_hits": 9,
       "formal_courtesy_per_1k": 0.8755190641,
-      "profanity_per_1k": 0.0017134787
+      "profanity_per_1k": 0.0017820178,
+      "slurs_per_1k": 0.0006168523
     },
     {
       "year": 2009,
@@ -1246,8 +1525,10 @@
       "words": 13398986,
       "formal_courtesy_hits": 10147,
       "profanity_hits": 26,
+      "slur_hits": 4,
       "formal_courtesy_per_1k": 0.7572961118,
-      "profanity_per_1k": 0.0019404453
+      "profanity_per_1k": 0.0019404453,
+      "slurs_per_1k": 0.0002985301
     },
     {
       "year": 2009,
@@ -1255,17 +1536,21 @@
       "words": 11448506,
       "formal_courtesy_hits": 8864,
       "profanity_hits": 26,
+      "slur_hits": 6,
       "formal_courtesy_per_1k": 0.774249496,
-      "profanity_per_1k": 0.0022710387
+      "profanity_per_1k": 0.0022710387,
+      "slurs_per_1k": 0.0005240859
     },
     {
       "year": 2011,
       "party": "D",
       "words": 12795114,
       "formal_courtesy_hits": 11368,
-      "profanity_hits": 37,
+      "profanity_hits": 38,
+      "slur_hits": 7,
       "formal_courtesy_per_1k": 0.8884641434,
-      "profanity_per_1k": 0.0028917288
+      "profanity_per_1k": 0.0029698837,
+      "slurs_per_1k": 0.0005470838
     },
     {
       "year": 2011,
@@ -1273,17 +1558,21 @@
       "words": 10663723,
       "formal_courtesy_hits": 12250,
       "profanity_hits": 36,
+      "slur_hits": 3,
       "formal_courtesy_per_1k": 1.1487545203,
-      "profanity_per_1k": 0.0033759317
+      "profanity_per_1k": 0.0033759317,
+      "slurs_per_1k": 0.0002813276
     },
     {
       "year": 2013,
       "party": "D",
       "words": 10975730,
       "formal_courtesy_hits": 9663,
-      "profanity_hits": 24,
+      "profanity_hits": 25,
+      "slur_hits": 3,
       "formal_courtesy_per_1k": 0.8803970214,
-      "profanity_per_1k": 0.0021866427
+      "profanity_per_1k": 0.0022777528,
+      "slurs_per_1k": 0.0002733303
     },
     {
       "year": 2013,
@@ -1291,8 +1580,10 @@
       "words": 9819009,
       "formal_courtesy_hits": 10052,
       "profanity_hits": 22,
+      "slur_hits": 3,
       "formal_courtesy_per_1k": 1.0237285657,
-      "profanity_per_1k": 0.002240552
+      "profanity_per_1k": 0.002240552,
+      "slurs_per_1k": 0.0003055298
     },
     {
       "year": 2015,
@@ -1300,8 +1591,10 @@
       "words": 8563892,
       "formal_courtesy_hits": 8699,
       "profanity_hits": 25,
+      "slur_hits": 5,
       "formal_courtesy_per_1k": 1.0157764717,
-      "profanity_per_1k": 0.0029192335
+      "profanity_per_1k": 0.0029192335,
+      "slurs_per_1k": 0.0005838467
     },
     {
       "year": 2015,
@@ -1309,98 +1602,120 @@
       "words": 8896825,
       "formal_courtesy_hits": 9943,
       "profanity_hits": 27,
+      "slur_hits": 1,
       "formal_courtesy_per_1k": 1.1175897019,
-      "profanity_per_1k": 0.0030347905
+      "profanity_per_1k": 0.0030347905,
+      "slurs_per_1k": 0.0001123996
     },
     {
       "year": 2017,
       "party": "D",
-      "words": 11370637,
-      "formal_courtesy_hits": 7571,
-      "profanity_hits": 77,
-      "formal_courtesy_per_1k": 0.6658378066,
-      "profanity_per_1k": 0.0067718282
+      "words": 9620184,
+      "formal_courtesy_hits": 7466,
+      "profanity_hits": 64,
+      "slur_hits": 3,
+      "formal_courtesy_per_1k": 0.7760766322,
+      "profanity_per_1k": 0.0066526794,
+      "slurs_per_1k": 0.0003118443
     },
     {
       "year": 2017,
       "party": "R",
-      "words": 10519610,
-      "formal_courtesy_hits": 8943,
-      "profanity_hits": 36,
-      "formal_courtesy_per_1k": 0.8501265731,
-      "profanity_per_1k": 0.0034221801
+      "words": 9331911,
+      "formal_courtesy_hits": 8801,
+      "profanity_hits": 31,
+      "slur_hits": 0,
+      "formal_courtesy_per_1k": 0.9431080086,
+      "profanity_per_1k": 0.0033219348,
+      "slurs_per_1k": 0.0
     },
     {
       "year": 2019,
       "party": "D",
-      "words": 8833588,
-      "formal_courtesy_hits": 7219,
-      "profanity_hits": 79,
-      "formal_courtesy_per_1k": 0.8172217224,
-      "profanity_per_1k": 0.0089431384
+      "words": 7449900,
+      "formal_courtesy_hits": 7181,
+      "profanity_hits": 59,
+      "slur_hits": 0,
+      "formal_courtesy_per_1k": 0.9639055558,
+      "profanity_per_1k": 0.0079195694,
+      "slurs_per_1k": 0.0
     },
     {
       "year": 2019,
       "party": "R",
-      "words": 8412129,
-      "formal_courtesy_hits": 7124,
-      "profanity_hits": 61,
-      "formal_courtesy_per_1k": 0.8468724148,
-      "profanity_per_1k": 0.0072514342
+      "words": 7589652,
+      "formal_courtesy_hits": 7107,
+      "profanity_hits": 56,
+      "slur_hits": 1,
+      "formal_courtesy_per_1k": 0.9364065704,
+      "profanity_per_1k": 0.0073784674,
+      "slurs_per_1k": 0.0001317583
     },
     {
       "year": 2021,
       "party": "D",
-      "words": 7363209,
-      "formal_courtesy_hits": 5188,
-      "profanity_hits": 129,
-      "formal_courtesy_per_1k": 0.7045841019,
-      "profanity_per_1k": 0.0175195353
+      "words": 6152756,
+      "formal_courtesy_hits": 5180,
+      "profanity_hits": 75,
+      "slur_hits": 1,
+      "formal_courtesy_per_1k": 0.8418991424,
+      "profanity_per_1k": 0.0121896594,
+      "slurs_per_1k": 0.0001625288
     },
     {
       "year": 2021,
       "party": "R",
-      "words": 7786036,
-      "formal_courtesy_hits": 6733,
-      "profanity_hits": 236,
-      "formal_courtesy_per_1k": 0.8647532583,
-      "profanity_per_1k": 0.0303106741
+      "words": 6601843,
+      "formal_courtesy_hits": 6683,
+      "profanity_hits": 204,
+      "slur_hits": 0,
+      "formal_courtesy_per_1k": 1.0122930824,
+      "profanity_per_1k": 0.0309004622,
+      "slurs_per_1k": 0.0
     },
     {
       "year": 2023,
       "party": "D",
-      "words": 6409273,
-      "formal_courtesy_hits": 4470,
-      "profanity_hits": 128,
-      "formal_courtesy_per_1k": 0.6974269937,
-      "profanity_per_1k": 0.0199710638
+      "words": 5544901,
+      "formal_courtesy_hits": 4468,
+      "profanity_hits": 123,
+      "slur_hits": 3,
+      "formal_courtesy_per_1k": 0.8057853513,
+      "profanity_per_1k": 0.0221825421,
+      "slurs_per_1k": 0.0005410376
     },
     {
       "year": 2023,
       "party": "R",
-      "words": 7423463,
-      "formal_courtesy_hits": 6345,
-      "profanity_hits": 309,
-      "formal_courtesy_per_1k": 0.854722385,
-      "profanity_per_1k": 0.0416247781
+      "words": 6540420,
+      "formal_courtesy_hits": 6332,
+      "profanity_hits": 294,
+      "slur_hits": 2,
+      "formal_courtesy_per_1k": 0.9681335449,
+      "profanity_per_1k": 0.0449512417,
+      "slurs_per_1k": 0.0003057908
     },
     {
       "year": 2025,
       "party": "D",
-      "words": 7680594,
-      "formal_courtesy_hits": 4205,
-      "profanity_hits": 439,
-      "formal_courtesy_per_1k": 0.5474836972,
-      "profanity_per_1k": 0.0571570376
+      "words": 6443357,
+      "formal_courtesy_hits": 4186,
+      "profanity_hits": 372,
+      "slur_hits": 11,
+      "formal_courtesy_per_1k": 0.6496613489,
+      "profanity_per_1k": 0.05773388,
+      "slurs_per_1k": 0.0017071846
     },
     {
       "year": 2025,
       "party": "R",
-      "words": 5978893,
-      "formal_courtesy_hits": 4325,
-      "profanity_hits": 251,
-      "formal_courtesy_per_1k": 0.7233780568,
-      "profanity_per_1k": 0.0419810155
+      "words": 5395646,
+      "formal_courtesy_hits": 4318,
+      "profanity_hits": 245,
+      "slur_hits": 13,
+      "formal_courtesy_per_1k": 0.8002748883,
+      "profanity_per_1k": 0.0454069819,
+      "slurs_per_1k": 0.0024093501
     }
   ],
   "chamber_series": [
@@ -1410,9 +1725,11 @@
       "chamber": "house",
       "words": 1545776,
       "formal_courtesy_hits": 2933,
-      "profanity_hits": 39,
+      "profanity_hits": 42,
+      "slur_hits": 15,
       "formal_courtesy_per_1k": 1.8974288642,
-      "profanity_per_1k": 0.0252300463
+      "profanity_per_1k": 0.0271708191,
+      "slurs_per_1k": 0.0097038639
     },
     {
       "year": 1873,
@@ -1421,8 +1738,10 @@
       "words": 1141026,
       "formal_courtesy_hits": 211,
       "profanity_hits": 17,
+      "slur_hits": 11,
       "formal_courtesy_per_1k": 0.1849212901,
-      "profanity_per_1k": 0.0148988717
+      "profanity_per_1k": 0.0148988717,
+      "slurs_per_1k": 0.0096404464
     },
     {
       "year": 1873,
@@ -1430,9 +1749,11 @@
       "chamber": "house",
       "words": 3531564,
       "formal_courtesy_hits": 6234,
-      "profanity_hits": 79,
+      "profanity_hits": 80,
+      "slur_hits": 27,
       "formal_courtesy_per_1k": 1.7652235667,
-      "profanity_per_1k": 0.0223696923
+      "profanity_per_1k": 0.022652853,
+      "slurs_per_1k": 0.0076453379
     },
     {
       "year": 1873,
@@ -1440,9 +1761,11 @@
       "chamber": "senate",
       "words": 3799019,
       "formal_courtesy_hits": 1124,
-      "profanity_hits": 58,
+      "profanity_hits": 61,
+      "slur_hits": 30,
       "formal_courtesy_per_1k": 0.2958658538,
-      "profanity_per_1k": 0.0152670992
+      "profanity_per_1k": 0.0160567768,
+      "slurs_per_1k": 0.0078967755
     },
     {
       "year": 1875,
@@ -1451,8 +1774,10 @@
       "words": 2985126,
       "formal_courtesy_hits": 6405,
       "profanity_hits": 47,
+      "slur_hits": 24,
       "formal_courtesy_per_1k": 2.1456380736,
-      "profanity_per_1k": 0.015744729
+      "profanity_per_1k": 0.015744729,
+      "slurs_per_1k": 0.0080398616
     },
     {
       "year": 1875,
@@ -1460,9 +1785,11 @@
       "chamber": "senate",
       "words": 1714468,
       "formal_courtesy_hits": 572,
-      "profanity_hits": 17,
+      "profanity_hits": 18,
+      "slur_hits": 8,
       "formal_courtesy_per_1k": 0.3336311906,
-      "profanity_per_1k": 0.0099156123
+      "profanity_per_1k": 0.0104988836,
+      "slurs_per_1k": 0.0046661705
     },
     {
       "year": 1875,
@@ -1471,8 +1798,10 @@
       "words": 1921099,
       "formal_courtesy_hits": 4266,
       "profanity_hits": 26,
+      "slur_hits": 11,
       "formal_courtesy_per_1k": 2.2206039356,
-      "profanity_per_1k": 0.0135339199
+      "profanity_per_1k": 0.0135339199,
+      "slurs_per_1k": 0.0057258892
     },
     {
       "year": 1875,
@@ -1481,8 +1810,10 @@
       "words": 3160510,
       "formal_courtesy_hits": 1071,
       "profanity_hits": 30,
+      "slur_hits": 26,
       "formal_courtesy_per_1k": 0.3388693597,
-      "profanity_per_1k": 0.0094921389
+      "profanity_per_1k": 0.0094921389,
+      "slurs_per_1k": 0.0082265204
     },
     {
       "year": 1877,
@@ -1491,8 +1822,10 @@
       "words": 2621984,
       "formal_courtesy_hits": 7057,
       "profanity_hits": 11,
+      "slur_hits": 34,
       "formal_courtesy_per_1k": 2.6914733271,
-      "profanity_per_1k": 0.0041952964
+      "profanity_per_1k": 0.0041952964,
+      "slurs_per_1k": 0.0129672797
     },
     {
       "year": 1877,
@@ -1501,8 +1834,10 @@
       "words": 2203825,
       "formal_courtesy_hits": 700,
       "profanity_hits": 12,
+      "slur_hits": 18,
       "formal_courtesy_per_1k": 0.3176295759,
-      "profanity_per_1k": 0.0054450784
+      "profanity_per_1k": 0.0054450784,
+      "slurs_per_1k": 0.0081676177
     },
     {
       "year": 1877,
@@ -1511,8 +1846,10 @@
       "words": 2095624,
       "formal_courtesy_hits": 5126,
       "profanity_hits": 10,
+      "slur_hits": 5,
       "formal_courtesy_per_1k": 2.4460494822,
-      "profanity_per_1k": 0.0047718484
+      "profanity_per_1k": 0.0047718484,
+      "slurs_per_1k": 0.0023859242
     },
     {
       "year": 1877,
@@ -1521,8 +1858,10 @@
       "words": 2791913,
       "formal_courtesy_hits": 723,
       "profanity_hits": 13,
+      "slur_hits": 62,
       "formal_courtesy_per_1k": 0.2589622241,
-      "profanity_per_1k": 0.0046563056
+      "profanity_per_1k": 0.0046563056,
+      "slurs_per_1k": 0.0222069957
     },
     {
       "year": 1879,
@@ -1530,9 +1869,11 @@
       "chamber": "house",
       "words": 3172313,
       "formal_courtesy_hits": 10679,
-      "profanity_hits": 32,
+      "profanity_hits": 33,
+      "slur_hits": 12,
       "formal_courtesy_per_1k": 3.3663134754,
-      "profanity_per_1k": 0.010087277
+      "profanity_per_1k": 0.0104025044,
+      "slurs_per_1k": 0.0037827289
     },
     {
       "year": 1879,
@@ -1541,8 +1882,10 @@
       "words": 3259449,
       "formal_courtesy_hits": 1104,
       "profanity_hits": 18,
+      "slur_hits": 8,
       "formal_courtesy_per_1k": 0.3387075546,
-      "profanity_per_1k": 0.0055224058
+      "profanity_per_1k": 0.0055224058,
+      "slurs_per_1k": 0.0024544026
     },
     {
       "year": 1879,
@@ -1551,8 +1894,10 @@
       "words": 2559496,
       "formal_courtesy_hits": 7024,
       "profanity_hits": 37,
+      "slur_hits": 12,
       "formal_courtesy_per_1k": 2.7442902821,
-      "profanity_per_1k": 0.014455971
+      "profanity_per_1k": 0.014455971,
+      "slurs_per_1k": 0.004688423
     },
     {
       "year": 1879,
@@ -1561,8 +1906,10 @@
       "words": 2675463,
       "formal_courtesy_hits": 682,
       "profanity_hits": 18,
+      "slur_hits": 10,
       "formal_courtesy_per_1k": 0.2549091503,
-      "profanity_per_1k": 0.0067278075
+      "profanity_per_1k": 0.0067278075,
+      "slurs_per_1k": 0.0037376708
     },
     {
       "year": 1881,
@@ -1571,8 +1918,10 @@
       "words": 3053800,
       "formal_courtesy_hits": 9016,
       "profanity_hits": 32,
+      "slur_hits": 78,
       "formal_courtesy_per_1k": 2.9523871897,
-      "profanity_per_1k": 0.0104787478
+      "profanity_per_1k": 0.0104787478,
+      "slurs_per_1k": 0.0255419477
     },
     {
       "year": 1881,
@@ -1581,8 +1930,10 @@
       "words": 4105982,
       "formal_courtesy_hits": 961,
       "profanity_hits": 30,
+      "slur_hits": 105,
       "formal_courtesy_per_1k": 0.2340487611,
-      "profanity_per_1k": 0.0073064129
+      "profanity_per_1k": 0.0073064129,
+      "slurs_per_1k": 0.0255724453
     },
     {
       "year": 1881,
@@ -1591,8 +1942,10 @@
       "words": 3066643,
       "formal_courtesy_hits": 8128,
       "profanity_hits": 18,
+      "slur_hits": 118,
       "formal_courtesy_per_1k": 2.6504552372,
-      "profanity_per_1k": 0.0058696105
+      "profanity_per_1k": 0.0058696105,
+      "slurs_per_1k": 0.0384785578
     },
     {
       "year": 1881,
@@ -1601,8 +1954,10 @@
       "words": 3769665,
       "formal_courtesy_hits": 880,
       "profanity_hits": 25,
+      "slur_hits": 140,
       "formal_courtesy_per_1k": 0.2334424942,
-      "profanity_per_1k": 0.006631889
+      "profanity_per_1k": 0.006631889,
+      "slurs_per_1k": 0.0371385786
     },
     {
       "year": 1883,
@@ -1611,8 +1966,10 @@
       "words": 3192880,
       "formal_courtesy_hits": 8907,
       "profanity_hits": 27,
+      "slur_hits": 41,
       "formal_courtesy_per_1k": 2.7896444589,
-      "profanity_per_1k": 0.0084563153
+      "profanity_per_1k": 0.0084563153,
+      "slurs_per_1k": 0.0128410714
     },
     {
       "year": 1883,
@@ -1621,8 +1978,10 @@
       "words": 1995438,
       "formal_courtesy_hits": 399,
       "profanity_hits": 3,
+      "slur_hits": 9,
       "formal_courtesy_per_1k": 0.1999560999,
-      "profanity_per_1k": 0.0015034293
+      "profanity_per_1k": 0.0015034293,
+      "slurs_per_1k": 0.004510288
     },
     {
       "year": 1883,
@@ -1630,9 +1989,11 @@
       "chamber": "house",
       "words": 2062445,
       "formal_courtesy_hits": 5903,
-      "profanity_hits": 17,
+      "profanity_hits": 18,
+      "slur_hits": 29,
       "formal_courtesy_per_1k": 2.8621369297,
-      "profanity_per_1k": 0.008242644
+      "profanity_per_1k": 0.0087275055,
+      "slurs_per_1k": 0.014060981
     },
     {
       "year": 1883,
@@ -1641,8 +2002,10 @@
       "words": 2450017,
       "formal_courtesy_hits": 369,
       "profanity_hits": 2,
+      "slur_hits": 16,
       "formal_courtesy_per_1k": 0.1506111998,
-      "profanity_per_1k": 0.0008163209
+      "profanity_per_1k": 0.0008163209,
+      "slurs_per_1k": 0.0065305669
     },
     {
       "year": 1885,
@@ -1651,8 +2014,10 @@
       "words": 3519424,
       "formal_courtesy_hits": 9311,
       "profanity_hits": 18,
+      "slur_hits": 22,
       "formal_courtesy_per_1k": 2.6456033715,
-      "profanity_per_1k": 0.0051144733
+      "profanity_per_1k": 0.0051144733,
+      "slurs_per_1k": 0.0062510229
     },
     {
       "year": 1885,
@@ -1661,8 +2026,10 @@
       "words": 2082655,
       "formal_courtesy_hits": 319,
       "profanity_hits": 6,
+      "slur_hits": 17,
       "formal_courtesy_per_1k": 0.1531698721,
-      "profanity_per_1k": 0.002880938
+      "profanity_per_1k": 0.002880938,
+      "slurs_per_1k": 0.0081626578
     },
     {
       "year": 1885,
@@ -1671,8 +2038,10 @@
       "words": 2420875,
       "formal_courtesy_hits": 5870,
       "profanity_hits": 11,
+      "slur_hits": 27,
       "formal_courtesy_per_1k": 2.4247431197,
-      "profanity_per_1k": 0.0045438116
+      "profanity_per_1k": 0.0045438116,
+      "slurs_per_1k": 0.0111529922
     },
     {
       "year": 1885,
@@ -1681,8 +2050,10 @@
       "words": 3733034,
       "formal_courtesy_hits": 750,
       "profanity_hits": 7,
+      "slur_hits": 25,
       "formal_courtesy_per_1k": 0.2009089657,
-      "profanity_per_1k": 0.0018751503
+      "profanity_per_1k": 0.0018751503,
+      "slurs_per_1k": 0.0066969655
     },
     {
       "year": 1887,
@@ -1691,8 +2062,10 @@
       "words": 3853191,
       "formal_courtesy_hits": 11591,
       "profanity_hits": 18,
+      "slur_hits": 64,
       "formal_courtesy_per_1k": 3.0081560971,
-      "profanity_per_1k": 0.0046714528
+      "profanity_per_1k": 0.0046714528,
+      "slurs_per_1k": 0.0166096101
     },
     {
       "year": 1887,
@@ -1701,8 +2074,10 @@
       "words": 2504649,
       "formal_courtesy_hits": 519,
       "profanity_hits": 11,
+      "slur_hits": 146,
       "formal_courtesy_per_1k": 0.2072146636,
-      "profanity_per_1k": 0.0043918329
+      "profanity_per_1k": 0.0043918329,
+      "slurs_per_1k": 0.0582916009
     },
     {
       "year": 1887,
@@ -1711,8 +2086,10 @@
       "words": 2783433,
       "formal_courtesy_hits": 7236,
       "profanity_hits": 12,
+      "slur_hits": 31,
       "formal_courtesy_per_1k": 2.5996673892,
-      "profanity_per_1k": 0.0043112229
+      "profanity_per_1k": 0.0043112229,
+      "slurs_per_1k": 0.0111373257
     },
     {
       "year": 1887,
@@ -1721,8 +2098,10 @@
       "words": 3296753,
       "formal_courtesy_hits": 506,
       "profanity_hits": 5,
+      "slur_hits": 163,
       "formal_courtesy_per_1k": 0.1534843526,
-      "profanity_per_1k": 0.0015166438
+      "profanity_per_1k": 0.0015166438,
+      "slurs_per_1k": 0.0494425879
     },
     {
       "year": 1889,
@@ -1731,8 +2110,10 @@
       "words": 4124799,
       "formal_courtesy_hits": 11316,
       "profanity_hits": 39,
+      "slur_hits": 40,
       "formal_courtesy_per_1k": 2.743406406,
-      "profanity_per_1k": 0.0094550062
+      "profanity_per_1k": 0.0094550062,
+      "slurs_per_1k": 0.0096974422
     },
     {
       "year": 1889,
@@ -1741,8 +2122,10 @@
       "words": 3869470,
       "formal_courtesy_hits": 733,
       "profanity_hits": 22,
+      "slur_hits": 63,
       "formal_courtesy_per_1k": 0.1894316276,
-      "profanity_per_1k": 0.0056855332
+      "profanity_per_1k": 0.0056855332,
+      "slurs_per_1k": 0.0162812995
     },
     {
       "year": 1889,
@@ -1751,8 +2134,10 @@
       "words": 3900018,
       "formal_courtesy_hits": 10379,
       "profanity_hits": 36,
+      "slur_hits": 51,
       "formal_courtesy_per_1k": 2.6612697685,
-      "profanity_per_1k": 0.0092307266
+      "profanity_per_1k": 0.0092307266,
+      "slurs_per_1k": 0.0130768627
     },
     {
       "year": 1889,
@@ -1760,9 +2145,11 @@
       "chamber": "senate",
       "words": 4349980,
       "formal_courtesy_hits": 787,
-      "profanity_hits": 11,
+      "profanity_hits": 12,
+      "slur_hits": 100,
       "formal_courtesy_per_1k": 0.180920372,
-      "profanity_per_1k": 0.0025287473
+      "profanity_per_1k": 0.0027586334,
+      "slurs_per_1k": 0.0229886114
     },
     {
       "year": 1891,
@@ -1771,8 +2158,10 @@
       "words": 3802245,
       "formal_courtesy_hits": 10973,
       "profanity_hits": 44,
+      "slur_hits": 29,
       "formal_courtesy_per_1k": 2.8859266039,
-      "profanity_per_1k": 0.0115721107
+      "profanity_per_1k": 0.0115721107,
+      "slurs_per_1k": 0.007627073
     },
     {
       "year": 1891,
@@ -1781,8 +2170,10 @@
       "words": 1997194,
       "formal_courtesy_hits": 560,
       "profanity_hits": 12,
+      "slur_hits": 38,
       "formal_courtesy_per_1k": 0.2803933919,
-      "profanity_per_1k": 0.0060084298
+      "profanity_per_1k": 0.0060084298,
+      "slurs_per_1k": 0.0190266945
     },
     {
       "year": 1891,
@@ -1791,8 +2182,10 @@
       "words": 1419307,
       "formal_courtesy_hits": 4117,
       "profanity_hits": 9,
+      "slur_hits": 35,
       "formal_courtesy_per_1k": 2.9007114035,
-      "profanity_per_1k": 0.0063411228
+      "profanity_per_1k": 0.0063411228,
+      "slurs_per_1k": 0.0246599221
     },
     {
       "year": 1891,
@@ -1800,9 +2193,11 @@
       "chamber": "senate",
       "words": 2302899,
       "formal_courtesy_hits": 369,
-      "profanity_hits": 10,
+      "profanity_hits": 11,
+      "slur_hits": 114,
       "formal_courtesy_per_1k": 0.1602328196,
-      "profanity_per_1k": 0.0043423528
+      "profanity_per_1k": 0.0047765881,
+      "slurs_per_1k": 0.0495028223
     },
     {
       "year": 1893,
@@ -1811,8 +2206,10 @@
       "words": 5034467,
       "formal_courtesy_hits": 12011,
       "profanity_hits": 75,
+      "slur_hits": 83,
       "formal_courtesy_per_1k": 2.3857540431,
-      "profanity_per_1k": 0.0148973069
+      "profanity_per_1k": 0.0148973069,
+      "slurs_per_1k": 0.016486353
     },
     {
       "year": 1893,
@@ -1821,8 +2218,10 @@
       "words": 3141064,
       "formal_courtesy_hits": 869,
       "profanity_hits": 14,
+      "slur_hits": 26,
       "formal_courtesy_per_1k": 0.2766578459,
-      "profanity_per_1k": 0.0044570884
+      "profanity_per_1k": 0.0044570884,
+      "slurs_per_1k": 0.0082774499
     },
     {
       "year": 1893,
@@ -1831,8 +2230,10 @@
       "words": 3227065,
       "formal_courtesy_hits": 7153,
       "profanity_hits": 17,
+      "slur_hits": 143,
       "formal_courtesy_per_1k": 2.2165652071,
-      "profanity_per_1k": 0.0052679447
+      "profanity_per_1k": 0.0052679447,
+      "slurs_per_1k": 0.0443127114
     },
     {
       "year": 1893,
@@ -1841,8 +2242,10 @@
       "words": 3551360,
       "formal_courtesy_hits": 618,
       "profanity_hits": 13,
+      "slur_hits": 74,
       "formal_courtesy_per_1k": 0.1740178411,
-      "profanity_per_1k": 0.0036605695
+      "profanity_per_1k": 0.0036605695,
+      "slurs_per_1k": 0.0208370878
     },
     {
       "year": 1895,
@@ -1851,8 +2254,10 @@
       "words": 1556075,
       "formal_courtesy_hits": 4220,
       "profanity_hits": 12,
+      "slur_hits": 14,
       "formal_courtesy_per_1k": 2.7119515448,
-      "profanity_per_1k": 0.0077117106
+      "profanity_per_1k": 0.0077117106,
+      "slurs_per_1k": 0.0089969956
     },
     {
       "year": 1895,
@@ -1861,8 +2266,10 @@
       "words": 2065170,
       "formal_courtesy_hits": 606,
       "profanity_hits": 13,
+      "slur_hits": 2,
       "formal_courtesy_per_1k": 0.2934383126,
-      "profanity_per_1k": 0.0062948813
+      "profanity_per_1k": 0.0062948813,
+      "slurs_per_1k": 0.0009684433
     },
     {
       "year": 1895,
@@ -1871,8 +2278,10 @@
       "words": 3596694,
       "formal_courtesy_hits": 8463,
       "profanity_hits": 22,
+      "slur_hits": 20,
       "formal_courtesy_per_1k": 2.3529941663,
-      "profanity_per_1k": 0.0061167283
+      "profanity_per_1k": 0.0061167283,
+      "slurs_per_1k": 0.0055606621
     },
     {
       "year": 1895,
@@ -1881,8 +2290,10 @@
       "words": 1871959,
       "formal_courtesy_hits": 337,
       "profanity_hits": 3,
+      "slur_hits": 8,
       "formal_courtesy_per_1k": 0.1800253104,
-      "profanity_per_1k": 0.0016025992
+      "profanity_per_1k": 0.0016025992,
+      "slurs_per_1k": 0.0042735979
     },
     {
       "year": 1897,
@@ -1891,8 +2302,10 @@
       "words": 2776160,
       "formal_courtesy_hits": 8456,
       "profanity_hits": 26,
+      "slur_hits": 47,
       "formal_courtesy_per_1k": 3.0459339519,
-      "profanity_per_1k": 0.0093654544
+      "profanity_per_1k": 0.0093654544,
+      "slurs_per_1k": 0.01692986
     },
     {
       "year": 1897,
@@ -1901,8 +2314,10 @@
       "words": 2956662,
       "formal_courtesy_hits": 449,
       "profanity_hits": 11,
+      "slur_hits": 20,
       "formal_courtesy_per_1k": 0.1518604426,
-      "profanity_per_1k": 0.0037204117
+      "profanity_per_1k": 0.0037204117,
+      "slurs_per_1k": 0.006764385
     },
     {
       "year": 1897,
@@ -1911,8 +2326,10 @@
       "words": 3608532,
       "formal_courtesy_hits": 9839,
       "profanity_hits": 30,
+      "slur_hits": 21,
       "formal_courtesy_per_1k": 2.7265935289,
-      "profanity_per_1k": 0.00831363
+      "profanity_per_1k": 0.00831363,
+      "slurs_per_1k": 0.005819541
     },
     {
       "year": 1897,
@@ -1921,8 +2338,10 @@
       "words": 2424894,
       "formal_courtesy_hits": 466,
       "profanity_hits": 3,
+      "slur_hits": 7,
       "formal_courtesy_per_1k": 0.1921733486,
-      "profanity_per_1k": 0.0012371675
+      "profanity_per_1k": 0.0012371675,
+      "slurs_per_1k": 0.0028867241
     },
     {
       "year": 1899,
@@ -1931,8 +2350,10 @@
       "words": 2382092,
       "formal_courtesy_hits": 5460,
       "profanity_hits": 33,
+      "slur_hits": 39,
       "formal_courtesy_per_1k": 2.2921029079,
-      "profanity_per_1k": 0.0138533692
+      "profanity_per_1k": 0.0138533692,
+      "slurs_per_1k": 0.0163721636
     },
     {
       "year": 1899,
@@ -1941,8 +2362,10 @@
       "words": 2013678,
       "formal_courtesy_hits": 413,
       "profanity_hits": 8,
+      "slur_hits": 32,
       "formal_courtesy_per_1k": 0.2050973393,
-      "profanity_per_1k": 0.0039728298
+      "profanity_per_1k": 0.0039728298,
+      "slurs_per_1k": 0.0158913193
     },
     {
       "year": 1899,
@@ -1951,8 +2374,10 @@
       "words": 2874568,
       "formal_courtesy_hits": 6880,
       "profanity_hits": 16,
+      "slur_hits": 26,
       "formal_courtesy_per_1k": 2.3934031131,
-      "profanity_per_1k": 0.0055660538
+      "profanity_per_1k": 0.0055660538,
+      "slurs_per_1k": 0.0090448373
     },
     {
       "year": 1899,
@@ -1961,8 +2386,10 @@
       "words": 2385949,
       "formal_courtesy_hits": 478,
       "profanity_hits": 6,
+      "slur_hits": 22,
       "formal_courtesy_per_1k": 0.2003395714,
-      "profanity_per_1k": 0.0025147227
+      "profanity_per_1k": 0.0025147227,
+      "slurs_per_1k": 0.0092206497
     },
     {
       "year": 1901,
@@ -1971,8 +2398,10 @@
       "words": 2480545,
       "formal_courtesy_hits": 5508,
       "profanity_hits": 22,
+      "slur_hits": 97,
       "formal_courtesy_per_1k": 2.2204797736,
-      "profanity_per_1k": 0.0088690187
+      "profanity_per_1k": 0.0088690187,
+      "slurs_per_1k": 0.0391043097
     },
     {
       "year": 1901,
@@ -1981,8 +2410,10 @@
       "words": 1648216,
       "formal_courtesy_hits": 284,
       "profanity_hits": 10,
+      "slur_hits": 157,
       "formal_courtesy_per_1k": 0.1723075131,
-      "profanity_per_1k": 0.006067166
+      "profanity_per_1k": 0.006067166,
+      "slurs_per_1k": 0.0952545055
     },
     {
       "year": 1901,
@@ -1991,8 +2422,10 @@
       "words": 2919851,
       "formal_courtesy_hits": 6946,
       "profanity_hits": 18,
+      "slur_hits": 89,
       "formal_courtesy_per_1k": 2.3788885118,
-      "profanity_per_1k": 0.0061646981
+      "profanity_per_1k": 0.0061646981,
+      "slurs_per_1k": 0.0304810074
     },
     {
       "year": 1901,
@@ -2001,8 +2434,10 @@
       "words": 2414106,
       "formal_courtesy_hits": 610,
       "profanity_hits": 13,
+      "slur_hits": 159,
       "formal_courtesy_per_1k": 0.252681531,
-      "profanity_per_1k": 0.0053850162
+      "profanity_per_1k": 0.0053850162,
+      "slurs_per_1k": 0.0658628909
     },
     {
       "year": 1903,
@@ -2011,8 +2446,10 @@
       "words": 2183620,
       "formal_courtesy_hits": 5196,
       "profanity_hits": 20,
+      "slur_hits": 46,
       "formal_courtesy_per_1k": 2.3795349008,
-      "profanity_per_1k": 0.0091591028
+      "profanity_per_1k": 0.0091591028,
+      "slurs_per_1k": 0.0210659364
     },
     {
       "year": 1903,
@@ -2021,8 +2458,10 @@
       "words": 1553090,
       "formal_courtesy_hits": 312,
       "profanity_hits": 18,
+      "slur_hits": 30,
       "formal_courtesy_per_1k": 0.200889839,
-      "profanity_per_1k": 0.0115897984
+      "profanity_per_1k": 0.0115897984,
+      "slurs_per_1k": 0.0193163307
     },
     {
       "year": 1903,
@@ -2031,8 +2470,10 @@
       "words": 2411361,
       "formal_courtesy_hits": 6106,
       "profanity_hits": 13,
+      "slur_hits": 30,
       "formal_courtesy_per_1k": 2.5321799598,
-      "profanity_per_1k": 0.0053911463
+      "profanity_per_1k": 0.0053911463,
+      "slurs_per_1k": 0.0124411069
     },
     {
       "year": 1903,
@@ -2041,8 +2482,10 @@
       "words": 1917987,
       "formal_courtesy_hits": 473,
       "profanity_hits": 0,
+      "slur_hits": 17,
       "formal_courtesy_per_1k": 0.2466127247,
-      "profanity_per_1k": 0.0
+      "profanity_per_1k": 0.0,
+      "slurs_per_1k": 0.0088634594
     },
     {
       "year": 1905,
@@ -2051,8 +2494,10 @@
       "words": 2801718,
       "formal_courtesy_hits": 6330,
       "profanity_hits": 16,
+      "slur_hits": 60,
       "formal_courtesy_per_1k": 2.2593280266,
-      "profanity_per_1k": 0.0057107817
+      "profanity_per_1k": 0.0057107817,
+      "slurs_per_1k": 0.0214154315
     },
     {
       "year": 1905,
@@ -2061,8 +2506,10 @@
       "words": 1985434,
       "formal_courtesy_hits": 249,
       "profanity_hits": 10,
+      "slur_hits": 83,
       "formal_courtesy_per_1k": 0.1254133857,
-      "profanity_per_1k": 0.0050366822
+      "profanity_per_1k": 0.0050366822,
+      "slurs_per_1k": 0.0418044619
     },
     {
       "year": 1905,
@@ -2071,8 +2518,10 @@
       "words": 3992736,
       "formal_courtesy_hits": 8983,
       "profanity_hits": 10,
+      "slur_hits": 41,
       "formal_courtesy_per_1k": 2.2498357016,
-      "profanity_per_1k": 0.0025045483
+      "profanity_per_1k": 0.0025045483,
+      "slurs_per_1k": 0.0102686479
     },
     {
       "year": 1905,
@@ -2081,8 +2530,10 @@
       "words": 2775509,
       "formal_courtesy_hits": 466,
       "profanity_hits": 12,
+      "slur_hits": 6,
       "formal_courtesy_per_1k": 0.1678971317,
-      "profanity_per_1k": 0.0043235313
+      "profanity_per_1k": 0.0043235313,
+      "slurs_per_1k": 0.0021617656
     },
     {
       "year": 1907,
@@ -2091,8 +2542,10 @@
       "words": 2378592,
       "formal_courtesy_hits": 5538,
       "profanity_hits": 9,
+      "slur_hits": 43,
       "formal_courtesy_per_1k": 2.3282681519,
-      "profanity_per_1k": 0.0037837511
+      "profanity_per_1k": 0.0037837511,
+      "slurs_per_1k": 0.0180779217
     },
     {
       "year": 1907,
@@ -2101,8 +2554,10 @@
       "words": 1369469,
       "formal_courtesy_hits": 263,
       "profanity_hits": 6,
+      "slur_hits": 13,
       "formal_courtesy_per_1k": 0.192045238,
-      "profanity_per_1k": 0.0043812602
+      "profanity_per_1k": 0.0043812602,
+      "slurs_per_1k": 0.0094927304
     },
     {
       "year": 1907,
@@ -2111,8 +2566,10 @@
       "words": 3049794,
       "formal_courtesy_hits": 7817,
       "profanity_hits": 6,
+      "slur_hits": 38,
       "formal_courtesy_per_1k": 2.5631239356,
-      "profanity_per_1k": 0.001967346
+      "profanity_per_1k": 0.001967346,
+      "slurs_per_1k": 0.0124598579
     },
     {
       "year": 1907,
@@ -2121,8 +2578,10 @@
       "words": 2244876,
       "formal_courtesy_hits": 434,
       "profanity_hits": 14,
+      "slur_hits": 38,
       "formal_courtesy_per_1k": 0.1933291638,
-      "profanity_per_1k": 0.0062364246
+      "profanity_per_1k": 0.0062364246,
+      "slurs_per_1k": 0.0169274383
     },
     {
       "year": 1909,
@@ -2131,8 +2590,10 @@
       "words": 3925966,
       "formal_courtesy_hits": 8800,
       "profanity_hits": 23,
+      "slur_hits": 37,
       "formal_courtesy_per_1k": 2.2414865539,
-      "profanity_per_1k": 0.0058584308
+      "profanity_per_1k": 0.0058584308,
+      "slurs_per_1k": 0.0094244321
     },
     {
       "year": 1909,
@@ -2141,8 +2602,10 @@
       "words": 2171434,
       "formal_courtesy_hits": 326,
       "profanity_hits": 7,
+      "slur_hits": 14,
       "formal_courtesy_per_1k": 0.1501312036,
-      "profanity_per_1k": 0.0032236762
+      "profanity_per_1k": 0.0032236762,
+      "slurs_per_1k": 0.0064473523
     },
     {
       "year": 1909,
@@ -2151,8 +2614,10 @@
       "words": 5259826,
       "formal_courtesy_hits": 13841,
       "profanity_hits": 17,
+      "slur_hits": 22,
       "formal_courtesy_per_1k": 2.6314558695,
-      "profanity_per_1k": 0.0032320461
+      "profanity_per_1k": 0.0032320461,
+      "slurs_per_1k": 0.0041826479
     },
     {
       "year": 1909,
@@ -2161,8 +2626,10 @@
       "words": 5076481,
       "formal_courtesy_hits": 847,
       "profanity_hits": 8,
+      "slur_hits": 17,
       "formal_courtesy_per_1k": 0.1668478617,
-      "profanity_per_1k": 0.0015758948
+      "profanity_per_1k": 0.0015758948,
+      "slurs_per_1k": 0.0033487764
     },
     {
       "year": 1911,
@@ -2171,8 +2638,10 @@
       "words": 6355693,
       "formal_courtesy_hits": 17258,
       "profanity_hits": 36,
+      "slur_hits": 71,
       "formal_courtesy_per_1k": 2.7153608584,
-      "profanity_per_1k": 0.0056642132
+      "profanity_per_1k": 0.0056642132,
+      "slurs_per_1k": 0.0111710871
     },
     {
       "year": 1911,
@@ -2180,9 +2649,11 @@
       "chamber": "senate",
       "words": 2855687,
       "formal_courtesy_hits": 552,
-      "profanity_hits": 19,
+      "profanity_hits": 20,
+      "slur_hits": 38,
       "formal_courtesy_per_1k": 0.1932984952,
-      "profanity_per_1k": 0.0066533902
+      "profanity_per_1k": 0.0070035687,
+      "slurs_per_1k": 0.0133067805
     },
     {
       "year": 1911,
@@ -2191,8 +2662,10 @@
       "words": 4947184,
       "formal_courtesy_hits": 13305,
       "profanity_hits": 35,
+      "slur_hits": 46,
       "formal_courtesy_per_1k": 2.6894087626,
-      "profanity_per_1k": 0.0070747318
+      "profanity_per_1k": 0.0070747318,
+      "slurs_per_1k": 0.0092982189
     },
     {
       "year": 1911,
@@ -2201,8 +2674,10 @@
       "words": 4394853,
       "formal_courtesy_hits": 883,
       "profanity_hits": 21,
+      "slur_hits": 16,
       "formal_courtesy_per_1k": 0.2009168452,
-      "profanity_per_1k": 0.0047783168
+      "profanity_per_1k": 0.0047783168,
+      "slurs_per_1k": 0.0036406223
     },
     {
       "year": 1913,
@@ -2211,8 +2686,10 @@
       "words": 7600628,
       "formal_courtesy_hits": 20239,
       "profanity_hits": 46,
+      "slur_hits": 54,
       "formal_courtesy_per_1k": 2.6628062839,
-      "profanity_per_1k": 0.0060521315
+      "profanity_per_1k": 0.0060521315,
+      "slurs_per_1k": 0.0071046761
     },
     {
       "year": 1913,
@@ -2221,8 +2698,10 @@
       "words": 6074414,
       "formal_courtesy_hits": 1859,
       "profanity_hits": 39,
+      "slur_hits": 45,
       "formal_courtesy_per_1k": 0.3060377511,
-      "profanity_per_1k": 0.0064203724
+      "profanity_per_1k": 0.0064203724,
+      "slurs_per_1k": 0.007408122
     },
     {
       "year": 1913,
@@ -2230,9 +2709,11 @@
       "chamber": "house",
       "words": 6065520,
       "formal_courtesy_hits": 16134,
-      "profanity_hits": 34,
+      "profanity_hits": 35,
+      "slur_hits": 47,
       "formal_courtesy_per_1k": 2.6599533099,
-      "profanity_per_1k": 0.0056054551
+      "profanity_per_1k": 0.0057703214,
+      "slurs_per_1k": 0.0077487173
     },
     {
       "year": 1913,
@@ -2241,8 +2722,10 @@
       "words": 7033431,
       "formal_courtesy_hits": 2089,
       "profanity_hits": 28,
+      "slur_hits": 21,
       "formal_courtesy_per_1k": 0.2970100937,
-      "profanity_per_1k": 0.0039809874
+      "profanity_per_1k": 0.0039809874,
+      "slurs_per_1k": 0.0029857405
     },
     {
       "year": 1915,
@@ -2251,8 +2734,10 @@
       "words": 4071905,
       "formal_courtesy_hits": 9739,
       "profanity_hits": 20,
+      "slur_hits": 31,
       "formal_courtesy_per_1k": 2.3917552104,
-      "profanity_per_1k": 0.0049117059
+      "profanity_per_1k": 0.0049117059,
+      "slurs_per_1k": 0.0076131442
     },
     {
       "year": 1915,
@@ -2261,8 +2746,10 @@
       "words": 4622356,
       "formal_courtesy_hits": 1542,
       "profanity_hits": 32,
+      "slur_hits": 49,
       "formal_courtesy_per_1k": 0.3335961142,
-      "profanity_per_1k": 0.0069228766
+      "profanity_per_1k": 0.0069228766,
+      "slurs_per_1k": 0.0106006547
     },
     {
       "year": 1915,
@@ -2270,9 +2757,11 @@
       "chamber": "house",
       "words": 4359562,
       "formal_courtesy_hits": 9950,
-      "profanity_hits": 26,
+      "profanity_hits": 27,
+      "slur_hits": 44,
       "formal_courtesy_per_1k": 2.2823393726,
-      "profanity_per_1k": 0.0059639019
+      "profanity_per_1k": 0.0061932827,
+      "slurs_per_1k": 0.010092757
     },
     {
       "year": 1915,
@@ -2281,8 +2770,10 @@
       "words": 4169810,
       "formal_courtesy_hits": 1189,
       "profanity_hits": 20,
+      "slur_hits": 19,
       "formal_courtesy_per_1k": 0.2851448867,
-      "profanity_per_1k": 0.0047963816
+      "profanity_per_1k": 0.0047963816,
+      "slurs_per_1k": 0.0045565625
     },
     {
       "year": 1917,
@@ -2290,9 +2781,11 @@
       "chamber": "house",
       "words": 5546230,
       "formal_courtesy_hits": 13546,
-      "profanity_hits": 28,
+      "profanity_hits": 29,
+      "slur_hits": 27,
       "formal_courtesy_per_1k": 2.4423797787,
-      "profanity_per_1k": 0.0050484744
+      "profanity_per_1k": 0.005228777,
+      "slurs_per_1k": 0.0048681717
     },
     {
       "year": 1917,
@@ -2300,9 +2793,11 @@
       "chamber": "senate",
       "words": 6102655,
       "formal_courtesy_hits": 2445,
-      "profanity_hits": 28,
+      "profanity_hits": 29,
+      "slur_hits": 31,
       "formal_courtesy_per_1k": 0.4006452929,
-      "profanity_per_1k": 0.004588167
+      "profanity_per_1k": 0.0047520301,
+      "slurs_per_1k": 0.0050797563
     },
     {
       "year": 1917,
@@ -2310,9 +2805,11 @@
       "chamber": "house",
       "words": 6673413,
       "formal_courtesy_hits": 14538,
-      "profanity_hits": 27,
+      "profanity_hits": 28,
+      "slur_hits": 29,
       "formal_courtesy_per_1k": 2.1784954715,
-      "profanity_per_1k": 0.0040459057
+      "profanity_per_1k": 0.0041957541,
+      "slurs_per_1k": 0.0043456025
     },
     {
       "year": 1917,
@@ -2321,8 +2818,10 @@
       "words": 5153646,
       "formal_courtesy_hits": 1690,
       "profanity_hits": 16,
+      "slur_hits": 26,
       "formal_courtesy_per_1k": 0.3279231829,
-      "profanity_per_1k": 0.0031045982
+      "profanity_per_1k": 0.0031045982,
+      "slurs_per_1k": 0.005044972
     },
     {
       "year": 1919,
@@ -2331,8 +2830,10 @@
       "words": 4620974,
       "formal_courtesy_hits": 12085,
       "profanity_hits": 35,
+      "slur_hits": 35,
       "formal_courtesy_per_1k": 2.6152495123,
-      "profanity_per_1k": 0.0075741608
+      "profanity_per_1k": 0.0075741608,
+      "slurs_per_1k": 0.0075741608
     },
     {
       "year": 1919,
@@ -2341,8 +2842,10 @@
       "words": 4846732,
       "formal_courtesy_hits": 1336,
       "profanity_hits": 35,
+      "slur_hits": 54,
       "formal_courtesy_per_1k": 0.2756496542,
-      "profanity_per_1k": 0.0072213607
+      "profanity_per_1k": 0.0072213607,
+      "slurs_per_1k": 0.0111415279
     },
     {
       "year": 1919,
@@ -2350,9 +2853,11 @@
       "chamber": "house",
       "words": 6012547,
       "formal_courtesy_hits": 13637,
-      "profanity_hits": 28,
+      "profanity_hits": 29,
+      "slur_hits": 37,
       "formal_courtesy_per_1k": 2.2680903783,
-      "profanity_per_1k": 0.0046569283
+      "profanity_per_1k": 0.0048232471,
+      "slurs_per_1k": 0.006153798
     },
     {
       "year": 1919,
@@ -2361,8 +2866,10 @@
       "words": 4722986,
       "formal_courtesy_hits": 1171,
       "profanity_hits": 23,
+      "slur_hits": 31,
       "formal_courtesy_per_1k": 0.2479363691,
-      "profanity_per_1k": 0.0048698006
+      "profanity_per_1k": 0.0048698006,
+      "slurs_per_1k": 0.0065636443
     },
     {
       "year": 1921,
@@ -2371,8 +2878,10 @@
       "words": 4206892,
       "formal_courtesy_hits": 10797,
       "profanity_hits": 41,
+      "slur_hits": 62,
       "formal_courtesy_per_1k": 2.5665027769,
-      "profanity_per_1k": 0.0097459122
+      "profanity_per_1k": 0.0097459122,
+      "slurs_per_1k": 0.0147377209
     },
     {
       "year": 1921,
@@ -2381,8 +2890,10 @@
       "words": 7829614,
       "formal_courtesy_hits": 2913,
       "profanity_hits": 113,
+      "slur_hits": 120,
       "formal_courtesy_per_1k": 0.3720489925,
-      "profanity_per_1k": 0.0144323845
+      "profanity_per_1k": 0.0144323845,
+      "slurs_per_1k": 0.0153264261
     },
     {
       "year": 1921,
@@ -2391,8 +2902,10 @@
       "words": 6862348,
       "formal_courtesy_hits": 15220,
       "profanity_hits": 52,
+      "slur_hits": 49,
       "formal_courtesy_per_1k": 2.2178997626,
-      "profanity_per_1k": 0.0075775813
+      "profanity_per_1k": 0.0075775813,
+      "slurs_per_1k": 0.0071404132
     },
     {
       "year": 1921,
@@ -2401,8 +2914,10 @@
       "words": 6576679,
       "formal_courtesy_hits": 1760,
       "profanity_hits": 39,
+      "slur_hits": 45,
       "formal_courtesy_per_1k": 0.2676122706,
-      "profanity_per_1k": 0.0059300446
+      "profanity_per_1k": 0.0059300446,
+      "slurs_per_1k": 0.0068423592
     },
     {
       "year": 1923,
@@ -2410,9 +2925,11 @@
       "chamber": "house",
       "words": 4072297,
       "formal_courtesy_hits": 9138,
-      "profanity_hits": 45,
+      "profanity_hits": 46,
+      "slur_hits": 55,
       "formal_courtesy_per_1k": 2.2439424236,
-      "profanity_per_1k": 0.0110502746
+      "profanity_per_1k": 0.0112958362,
+      "slurs_per_1k": 0.0135058911
     },
     {
       "year": 1923,
@@ -2421,8 +2938,10 @@
       "words": 3266212,
       "formal_courtesy_hits": 1248,
       "profanity_hits": 30,
+      "slur_hits": 22,
       "formal_courtesy_per_1k": 0.3820939976,
-      "profanity_per_1k": 0.0091849519
+      "profanity_per_1k": 0.0091849519,
+      "slurs_per_1k": 0.0067356314
     },
     {
       "year": 1923,
@@ -2431,8 +2950,10 @@
       "words": 3687385,
       "formal_courtesy_hits": 8113,
       "profanity_hits": 17,
+      "slur_hits": 21,
       "formal_courtesy_per_1k": 2.2002042098,
-      "profanity_per_1k": 0.0046103133
+      "profanity_per_1k": 0.0046103133,
+      "slurs_per_1k": 0.0056950929
     },
     {
       "year": 1923,
@@ -2440,9 +2961,11 @@
       "chamber": "senate",
       "words": 2466625,
       "formal_courtesy_hits": 859,
-      "profanity_hits": 10,
+      "profanity_hits": 11,
+      "slur_hits": 19,
       "formal_courtesy_per_1k": 0.3482491258,
-      "profanity_per_1k": 0.0040541225
+      "profanity_per_1k": 0.0044595348,
+      "slurs_per_1k": 0.0077028328
     },
     {
       "year": 1925,
@@ -2451,8 +2974,10 @@
       "words": 3431605,
       "formal_courtesy_hits": 8048,
       "profanity_hits": 29,
+      "slur_hits": 35,
       "formal_courtesy_per_1k": 2.3452582684,
-      "profanity_per_1k": 0.0084508561
+      "profanity_per_1k": 0.0084508561,
+      "slurs_per_1k": 0.0101993091
     },
     {
       "year": 1925,
@@ -2460,9 +2985,11 @@
       "chamber": "senate",
       "words": 3132032,
       "formal_courtesy_hits": 1257,
-      "profanity_hits": 22,
+      "profanity_hits": 23,
+      "slur_hits": 21,
       "formal_courtesy_per_1k": 0.4013368957,
-      "profanity_per_1k": 0.0070241939
+      "profanity_per_1k": 0.0073434754,
+      "slurs_per_1k": 0.0067049123
     },
     {
       "year": 1925,
@@ -2471,8 +2998,10 @@
       "words": 3514226,
       "formal_courtesy_hits": 7971,
       "profanity_hits": 17,
+      "slur_hits": 7,
       "formal_courtesy_per_1k": 2.2682092728,
-      "profanity_per_1k": 0.0048374806
+      "profanity_per_1k": 0.0048374806,
+      "slurs_per_1k": 0.0019919038
     },
     {
       "year": 1925,
@@ -2481,8 +3010,10 @@
       "words": 3042116,
       "formal_courtesy_hits": 1197,
       "profanity_hits": 12,
+      "slur_hits": 7,
       "formal_courtesy_per_1k": 0.3934761199,
-      "profanity_per_1k": 0.0039446228
+      "profanity_per_1k": 0.0039446228,
+      "slurs_per_1k": 0.0023010299
     },
     {
       "year": 1927,
@@ -2491,8 +3022,10 @@
       "words": 2470738,
       "formal_courtesy_hits": 4953,
       "profanity_hits": 30,
+      "slur_hits": 16,
       "formal_courtesy_per_1k": 2.0046641935,
-      "profanity_per_1k": 0.0121421211
+      "profanity_per_1k": 0.0121421211,
+      "slurs_per_1k": 0.0064757979
     },
     {
       "year": 1927,
@@ -2501,8 +3034,10 @@
       "words": 2867185,
       "formal_courtesy_hits": 873,
       "profanity_hits": 33,
+      "slur_hits": 33,
       "formal_courtesy_per_1k": 0.3044798295,
-      "profanity_per_1k": 0.0115095468
+      "profanity_per_1k": 0.0115095468,
+      "slurs_per_1k": 0.0115095468
     },
     {
       "year": 1927,
@@ -2511,8 +3046,10 @@
       "words": 2828821,
       "formal_courtesy_hits": 6727,
       "profanity_hits": 23,
+      "slur_hits": 23,
       "formal_courtesy_per_1k": 2.3780225048,
-      "profanity_per_1k": 0.0081305957
+      "profanity_per_1k": 0.0081305957,
+      "slurs_per_1k": 0.0081305957
     },
     {
       "year": 1927,
@@ -2521,8 +3058,10 @@
       "words": 2096512,
       "formal_courtesy_hits": 741,
       "profanity_hits": 10,
+      "slur_hits": 8,
       "formal_courtesy_per_1k": 0.3534441968,
-      "profanity_per_1k": 0.0047698272
+      "profanity_per_1k": 0.0047698272,
+      "slurs_per_1k": 0.0038158618
     },
     {
       "year": 1929,
@@ -2531,8 +3070,10 @@
       "words": 3359410,
       "formal_courtesy_hits": 7311,
       "profanity_hits": 36,
+      "slur_hits": 18,
       "formal_courtesy_per_1k": 2.1762750007,
-      "profanity_per_1k": 0.0107161674
+      "profanity_per_1k": 0.0107161674,
+      "slurs_per_1k": 0.0053580837
     },
     {
       "year": 1929,
@@ -2541,8 +3082,10 @@
       "words": 5218994,
       "formal_courtesy_hits": 1761,
       "profanity_hits": 50,
+      "slur_hits": 24,
       "formal_courtesy_per_1k": 0.3374213498,
-      "profanity_per_1k": 0.0095803904
+      "profanity_per_1k": 0.0095803904,
+      "slurs_per_1k": 0.0045985874
     },
     {
       "year": 1929,
@@ -2551,8 +3094,10 @@
       "words": 4653570,
       "formal_courtesy_hits": 10191,
       "profanity_hits": 19,
+      "slur_hits": 11,
       "formal_courtesy_per_1k": 2.1899316009,
-      "profanity_per_1k": 0.0040828869
+      "profanity_per_1k": 0.0040828869,
+      "slurs_per_1k": 0.0023637766
     },
     {
       "year": 1929,
@@ -2561,8 +3106,10 @@
       "words": 4707223,
       "formal_courtesy_hits": 1528,
       "profanity_hits": 54,
+      "slur_hits": 26,
       "formal_courtesy_per_1k": 0.3246075234,
-      "profanity_per_1k": 0.0114717318
+      "profanity_per_1k": 0.0114717318,
+      "slurs_per_1k": 0.0055234264
     },
     {
       "year": 1931,
@@ -2571,8 +3118,10 @@
       "words": 4453424,
       "formal_courtesy_hits": 9824,
       "profanity_hits": 37,
+      "slur_hits": 23,
       "formal_courtesy_per_1k": 2.2059431125,
-      "profanity_per_1k": 0.0083082141
+      "profanity_per_1k": 0.0083082141,
+      "slurs_per_1k": 0.0051645655
     },
     {
       "year": 1931,
@@ -2581,8 +3130,10 @@
       "words": 3863819,
       "formal_courtesy_hits": 1545,
       "profanity_hits": 15,
+      "slur_hits": 49,
       "formal_courtesy_per_1k": 0.3998634512,
-      "profanity_per_1k": 0.0038821694
+      "profanity_per_1k": 0.0038821694,
+      "slurs_per_1k": 0.0126817535
     },
     {
       "year": 1931,
@@ -2591,8 +3142,10 @@
       "words": 3650738,
       "formal_courtesy_hits": 8872,
       "profanity_hits": 13,
+      "slur_hits": 13,
       "formal_courtesy_per_1k": 2.4301935663,
-      "profanity_per_1k": 0.0035609238
+      "profanity_per_1k": 0.0035609238,
+      "slurs_per_1k": 0.0035609238
     },
     {
       "year": 1931,
@@ -2601,8 +3154,10 @@
       "words": 3219710,
       "formal_courtesy_hits": 919,
       "profanity_hits": 12,
+      "slur_hits": 31,
       "formal_courtesy_per_1k": 0.2854294331,
-      "profanity_per_1k": 0.0037270437
+      "profanity_per_1k": 0.0037270437,
+      "slurs_per_1k": 0.0096281963
     },
     {
       "year": 1933,
@@ -2611,8 +3166,10 @@
       "words": 4518786,
       "formal_courtesy_hits": 10825,
       "profanity_hits": 38,
+      "slur_hits": 27,
       "formal_courtesy_per_1k": 2.3955549123,
-      "profanity_per_1k": 0.0084093383
+      "profanity_per_1k": 0.0084093383,
+      "slurs_per_1k": 0.0059750561
     },
     {
       "year": 1933,
@@ -2621,8 +3178,10 @@
       "words": 3588826,
       "formal_courtesy_hits": 1404,
       "profanity_hits": 23,
+      "slur_hits": 20,
       "formal_courtesy_per_1k": 0.3912142857,
-      "profanity_per_1k": 0.006408781
+      "profanity_per_1k": 0.006408781,
+      "slurs_per_1k": 0.0055728531
     },
     {
       "year": 1933,
@@ -2631,8 +3190,10 @@
       "words": 2213757,
       "formal_courtesy_hits": 5164,
       "profanity_hits": 28,
+      "slur_hits": 13,
       "formal_courtesy_per_1k": 2.3326860175,
-      "profanity_per_1k": 0.0126481813
+      "profanity_per_1k": 0.0126481813,
+      "slurs_per_1k": 0.0058723699
     },
     {
       "year": 1933,
@@ -2641,8 +3202,10 @@
       "words": 2414204,
       "formal_courtesy_hits": 786,
       "profanity_hits": 12,
+      "slur_hits": 5,
       "formal_courtesy_per_1k": 0.3255731496,
-      "profanity_per_1k": 0.0049705824
+      "profanity_per_1k": 0.0049705824,
+      "slurs_per_1k": 0.002071076
     },
     {
       "year": 1935,
@@ -2651,8 +3214,10 @@
       "words": 6413787,
       "formal_courtesy_hits": 15351,
       "profanity_hits": 47,
+      "slur_hits": 41,
       "formal_courtesy_per_1k": 2.3934377615,
-      "profanity_per_1k": 0.007327964
+      "profanity_per_1k": 0.007327964,
+      "slurs_per_1k": 0.0063924792
     },
     {
       "year": 1935,
@@ -2661,8 +3226,10 @@
       "words": 5249453,
       "formal_courtesy_hits": 1932,
       "profanity_hits": 55,
+      "slur_hits": 34,
       "formal_courtesy_per_1k": 0.3680383461,
-      "profanity_per_1k": 0.0104772821
+      "profanity_per_1k": 0.0104772821,
+      "slurs_per_1k": 0.0064768653
     },
     {
       "year": 1935,
@@ -2671,8 +3238,10 @@
       "words": 3020050,
       "formal_courtesy_hits": 6915,
       "profanity_hits": 40,
+      "slur_hits": 22,
       "formal_courtesy_per_1k": 2.2896971904,
-      "profanity_per_1k": 0.0132448138
+      "profanity_per_1k": 0.0132448138,
+      "slurs_per_1k": 0.0072846476
     },
     {
       "year": 1935,
@@ -2681,8 +3250,10 @@
       "words": 1657734,
       "formal_courtesy_hits": 497,
       "profanity_hits": 20,
+      "slur_hits": 8,
       "formal_courtesy_per_1k": 0.2998068448,
-      "profanity_per_1k": 0.0120646618
+      "profanity_per_1k": 0.0120646618,
+      "slurs_per_1k": 0.0048258647
     },
     {
       "year": 1937,
@@ -2691,8 +3262,10 @@
       "words": 5301017,
       "formal_courtesy_hits": 16940,
       "profanity_hits": 62,
+      "slur_hits": 35,
       "formal_courtesy_per_1k": 3.1956132191,
-      "profanity_per_1k": 0.0116958689
+      "profanity_per_1k": 0.0116958689,
+      "slurs_per_1k": 0.0066025067
     },
     {
       "year": 1937,
@@ -2701,8 +3274,10 @@
       "words": 5478906,
       "formal_courtesy_hits": 1963,
       "profanity_hits": 41,
+      "slur_hits": 44,
       "formal_courtesy_per_1k": 0.3582832047,
-      "profanity_per_1k": 0.0074832457
+      "profanity_per_1k": 0.0074832457,
+      "slurs_per_1k": 0.0080308003
     },
     {
       "year": 1937,
@@ -2710,9 +3285,11 @@
       "chamber": "house",
       "words": 2989464,
       "formal_courtesy_hits": 8813,
-      "profanity_hits": 32,
+      "profanity_hits": 33,
+      "slur_hits": 24,
       "formal_courtesy_per_1k": 2.9480201133,
-      "profanity_per_1k": 0.01070426
+      "profanity_per_1k": 0.0110387682,
+      "slurs_per_1k": 0.008028195
     },
     {
       "year": 1937,
@@ -2721,8 +3298,10 @@
       "words": 1128666,
       "formal_courtesy_hits": 271,
       "profanity_hits": 27,
+      "slur_hits": 4,
       "formal_courtesy_per_1k": 0.240106462,
-      "profanity_per_1k": 0.023922046
+      "profanity_per_1k": 0.023922046,
+      "slurs_per_1k": 0.0035440068
     },
     {
       "year": 1939,
@@ -2731,8 +3310,10 @@
       "words": 5771022,
       "formal_courtesy_hits": 19984,
       "profanity_hits": 28,
+      "slur_hits": 41,
       "formal_courtesy_per_1k": 3.4628181975,
-      "profanity_per_1k": 0.0048518269
+      "profanity_per_1k": 0.0048518269,
+      "slurs_per_1k": 0.0071044609
     },
     {
       "year": 1939,
@@ -2741,8 +3322,10 @@
       "words": 6745281,
       "formal_courtesy_hits": 2545,
       "profanity_hits": 38,
+      "slur_hits": 17,
       "formal_courtesy_per_1k": 0.3773008122,
-      "profanity_per_1k": 0.0056335681
+      "profanity_per_1k": 0.0056335681,
+      "slurs_per_1k": 0.0025202805
     },
     {
       "year": 1939,
@@ -2751,8 +3334,10 @@
       "words": 5049865,
       "formal_courtesy_hits": 14206,
       "profanity_hits": 39,
+      "slur_hits": 32,
       "formal_courtesy_per_1k": 2.8131445098,
-      "profanity_per_1k": 0.0077229787
+      "profanity_per_1k": 0.0077229787,
+      "slurs_per_1k": 0.0063368031
     },
     {
       "year": 1939,
@@ -2761,8 +3346,10 @@
       "words": 1750253,
       "formal_courtesy_hits": 930,
       "profanity_hits": 14,
+      "slur_hits": 5,
       "formal_courtesy_per_1k": 0.5313517531,
-      "profanity_per_1k": 0.0079988436
+      "profanity_per_1k": 0.0079988436,
+      "slurs_per_1k": 0.0028567299
     },
     {
       "year": 1941,
@@ -2771,8 +3358,10 @@
       "words": 5523789,
       "formal_courtesy_hits": 18350,
       "profanity_hits": 57,
+      "slur_hits": 166,
       "formal_courtesy_per_1k": 3.3219951016,
-      "profanity_per_1k": 0.0103190039
+      "profanity_per_1k": 0.0103190039,
+      "slurs_per_1k": 0.0300518358
     },
     {
       "year": 1941,
@@ -2781,8 +3370,10 @@
       "words": 5429692,
       "formal_courtesy_hits": 2131,
       "profanity_hits": 34,
+      "slur_hits": 78,
       "formal_courtesy_per_1k": 0.3924716172,
-      "profanity_per_1k": 0.0062618653
+      "profanity_per_1k": 0.0062618653,
+      "slurs_per_1k": 0.0143654557
     },
     {
       "year": 1941,
@@ -2791,8 +3382,10 @@
       "words": 4706525,
       "formal_courtesy_hits": 13223,
       "profanity_hits": 67,
+      "slur_hits": 110,
       "formal_courtesy_per_1k": 2.8095038271,
-      "profanity_per_1k": 0.014235556
+      "profanity_per_1k": 0.014235556,
+      "slurs_per_1k": 0.0233718083
     },
     {
       "year": 1941,
@@ -2801,8 +3394,10 @@
       "words": 1801308,
       "formal_courtesy_hits": 610,
       "profanity_hits": 8,
+      "slur_hits": 8,
       "formal_courtesy_per_1k": 0.3386428084,
-      "profanity_per_1k": 0.0044412172
+      "profanity_per_1k": 0.0044412172,
+      "slurs_per_1k": 0.0044412172
     },
     {
       "year": 1943,
@@ -2811,8 +3406,10 @@
       "words": 5451808,
       "formal_courtesy_hits": 19196,
       "profanity_hits": 45,
+      "slur_hits": 285,
       "formal_courtesy_per_1k": 3.5210337561,
-      "profanity_per_1k": 0.0082541425
+      "profanity_per_1k": 0.0082541425,
+      "slurs_per_1k": 0.0522762357
     },
     {
       "year": 1943,
@@ -2821,8 +3418,10 @@
       "words": 4595294,
       "formal_courtesy_hits": 1858,
       "profanity_hits": 24,
+      "slur_hits": 152,
       "formal_courtesy_per_1k": 0.4043266873,
-      "profanity_per_1k": 0.0052227344
+      "profanity_per_1k": 0.0052227344,
+      "slurs_per_1k": 0.0330773178
     },
     {
       "year": 1943,
@@ -2831,8 +3430,10 @@
       "words": 5420438,
       "formal_courtesy_hits": 15939,
       "profanity_hits": 67,
+      "slur_hits": 278,
       "formal_courtesy_per_1k": 2.9405372776,
-      "profanity_per_1k": 0.0123606247
+      "profanity_per_1k": 0.0123606247,
+      "slurs_per_1k": 0.0512873683
     },
     {
       "year": 1943,
@@ -2841,8 +3442,10 @@
       "words": 2572743,
       "formal_courtesy_hits": 1085,
       "profanity_hits": 10,
+      "slur_hits": 68,
       "formal_courtesy_per_1k": 0.4217288707,
-      "profanity_per_1k": 0.003886902
+      "profanity_per_1k": 0.003886902,
+      "slurs_per_1k": 0.0264309338
     },
     {
       "year": 1945,
@@ -2851,8 +3454,10 @@
       "words": 5147445,
       "formal_courtesy_hits": 17832,
       "profanity_hits": 22,
+      "slur_hits": 161,
       "formal_courtesy_per_1k": 3.4642429399,
-      "profanity_per_1k": 0.004273965
+      "profanity_per_1k": 0.004273965,
+      "slurs_per_1k": 0.0312776533
     },
     {
       "year": 1945,
@@ -2861,8 +3466,10 @@
       "words": 5646598,
       "formal_courtesy_hits": 2321,
       "profanity_hits": 35,
+      "slur_hits": 85,
       "formal_courtesy_per_1k": 0.4110439596,
-      "profanity_per_1k": 0.0061984225
+      "profanity_per_1k": 0.0061984225,
+      "slurs_per_1k": 0.0150533117
     },
     {
       "year": 1945,
@@ -2871,8 +3478,10 @@
       "words": 4854353,
       "formal_courtesy_hits": 14040,
       "profanity_hits": 40,
+      "slur_hits": 180,
       "formal_courtesy_per_1k": 2.8922494924,
-      "profanity_per_1k": 0.008240027
+      "profanity_per_1k": 0.008240027,
+      "slurs_per_1k": 0.0370801217
     },
     {
       "year": 1945,
@@ -2881,8 +3490,10 @@
       "words": 4111888,
       "formal_courtesy_hits": 2566,
       "profanity_hits": 27,
+      "slur_hits": 66,
       "formal_courtesy_per_1k": 0.6240442347,
-      "profanity_per_1k": 0.0065663267
+      "profanity_per_1k": 0.0065663267,
+      "slurs_per_1k": 0.0160510208
     },
     {
       "year": 1947,
@@ -2891,8 +3502,10 @@
       "words": 3206707,
       "formal_courtesy_hits": 9616,
       "profanity_hits": 9,
+      "slur_hits": 43,
       "formal_courtesy_per_1k": 2.998714881,
-      "profanity_per_1k": 0.0028066175
+      "profanity_per_1k": 0.0028066175,
+      "slurs_per_1k": 0.0134093947
     },
     {
       "year": 1947,
@@ -2901,8 +3514,10 @@
       "words": 3881337,
       "formal_courtesy_hits": 1911,
       "profanity_hits": 15,
+      "slur_hits": 20,
       "formal_courtesy_per_1k": 0.4923561134,
-      "profanity_per_1k": 0.0038646477
+      "profanity_per_1k": 0.0038646477,
+      "slurs_per_1k": 0.0051528636
     },
     {
       "year": 1947,
@@ -2911,8 +3526,10 @@
       "words": 4623885,
       "formal_courtesy_hits": 14494,
       "profanity_hits": 21,
+      "slur_hits": 26,
       "formal_courtesy_per_1k": 3.134593529,
-      "profanity_per_1k": 0.0045416354
+      "profanity_per_1k": 0.0045416354,
+      "slurs_per_1k": 0.0056229772
     },
     {
       "year": 1947,
@@ -2921,8 +3538,10 @@
       "words": 5216126,
       "formal_courtesy_hits": 4089,
       "profanity_hits": 13,
+      "slur_hits": 10,
       "formal_courtesy_per_1k": 0.7839151125,
-      "profanity_per_1k": 0.0024922711
+      "profanity_per_1k": 0.0024922711,
+      "slurs_per_1k": 0.0019171316
     },
     {
       "year": 1949,
@@ -2931,8 +3550,10 @@
       "words": 5530922,
       "formal_courtesy_hits": 18239,
       "profanity_hits": 24,
+      "slur_hits": 53,
       "formal_courtesy_per_1k": 3.297641876,
-      "profanity_per_1k": 0.0043392404
+      "profanity_per_1k": 0.0043392404,
+      "slurs_per_1k": 0.0095824891
     },
     {
       "year": 1949,
@@ -2941,8 +3562,10 @@
       "words": 7604587,
       "formal_courtesy_hits": 5918,
       "profanity_hits": 21,
+      "slur_hits": 19,
       "formal_courtesy_per_1k": 0.7782145171,
-      "profanity_per_1k": 0.0027614912
+      "profanity_per_1k": 0.0027614912,
+      "slurs_per_1k": 0.002498492
     },
     {
       "year": 1949,
@@ -2951,8 +3574,10 @@
       "words": 4365118,
       "formal_courtesy_hits": 13369,
       "profanity_hits": 20,
+      "slur_hits": 38,
       "formal_courtesy_per_1k": 3.0626892561,
-      "profanity_per_1k": 0.0045817776
+      "profanity_per_1k": 0.0045817776,
+      "slurs_per_1k": 0.0087053775
     },
     {
       "year": 1949,
@@ -2961,8 +3586,10 @@
       "words": 7516014,
       "formal_courtesy_hits": 6177,
       "profanity_hits": 41,
+      "slur_hits": 20,
       "formal_courtesy_per_1k": 0.8218451961,
-      "profanity_per_1k": 0.0054550191
+      "profanity_per_1k": 0.0054550191,
+      "slurs_per_1k": 0.0026609849
     },
     {
       "year": 1951,
@@ -2971,8 +3598,10 @@
       "words": 4651085,
       "formal_courtesy_hits": 15644,
       "profanity_hits": 20,
+      "slur_hits": 331,
       "formal_courtesy_per_1k": 3.3635162548,
-      "profanity_per_1k": 0.0043000719
+      "profanity_per_1k": 0.0043000719,
+      "slurs_per_1k": 0.0711661903
     },
     {
       "year": 1951,
@@ -2981,8 +3610,10 @@
       "words": 5369931,
       "formal_courtesy_hits": 5063,
       "profanity_hits": 22,
+      "slur_hits": 303,
       "formal_courtesy_per_1k": 0.9428426548,
-      "profanity_per_1k": 0.0040968869
+      "profanity_per_1k": 0.0040968869,
+      "slurs_per_1k": 0.056425306
     },
     {
       "year": 1951,
@@ -2990,9 +3621,11 @@
       "chamber": "house",
       "words": 4090200,
       "formal_courtesy_hits": 13220,
-      "profanity_hits": 16,
+      "profanity_hits": 17,
+      "slur_hits": 52,
       "formal_courtesy_per_1k": 3.232115789,
-      "profanity_per_1k": 0.0039117892
+      "profanity_per_1k": 0.004156276,
+      "slurs_per_1k": 0.0127133148
     },
     {
       "year": 1951,
@@ -3001,8 +3634,10 @@
       "words": 4528142,
       "formal_courtesy_hits": 4311,
       "profanity_hits": 27,
+      "slur_hits": 68,
       "formal_courtesy_per_1k": 0.9520461152,
-      "profanity_per_1k": 0.0059627105
+      "profanity_per_1k": 0.0059627105,
+      "slurs_per_1k": 0.0150171969
     },
     {
       "year": 1953,
@@ -3011,8 +3646,10 @@
       "words": 4386531,
       "formal_courtesy_hits": 12571,
       "profanity_hits": 9,
+      "slur_hits": 135,
       "formal_courtesy_per_1k": 2.8658181146,
-      "profanity_per_1k": 0.0020517352
+      "profanity_per_1k": 0.0020517352,
+      "slurs_per_1k": 0.0307760278
     },
     {
       "year": 1953,
@@ -3021,8 +3658,10 @@
       "words": 6195741,
       "formal_courtesy_hits": 6240,
       "profanity_hits": 14,
+      "slur_hits": 72,
       "formal_courtesy_per_1k": 1.0071434555,
-      "profanity_per_1k": 0.0022596167
+      "profanity_per_1k": 0.0022596167,
+      "slurs_per_1k": 0.011620886
     },
     {
       "year": 1953,
@@ -3031,8 +3670,10 @@
       "words": 4329488,
       "formal_courtesy_hits": 13953,
       "profanity_hits": 6,
+      "slur_hits": 70,
       "formal_courtesy_per_1k": 3.2227829249,
-      "profanity_per_1k": 0.0013858452
+      "profanity_per_1k": 0.0013858452,
+      "slurs_per_1k": 0.0161681936
     },
     {
       "year": 1953,
@@ -3041,8 +3682,10 @@
       "words": 5240418,
       "formal_courtesy_hits": 5498,
       "profanity_hits": 14,
+      "slur_hits": 26,
       "formal_courtesy_per_1k": 1.0491529492,
-      "profanity_per_1k": 0.0026715426
+      "profanity_per_1k": 0.0026715426,
+      "slurs_per_1k": 0.0049614363
     },
     {
       "year": 1955,
@@ -3051,8 +3694,10 @@
       "words": 5252068,
       "formal_courtesy_hits": 15145,
       "profanity_hits": 15,
+      "slur_hits": 43,
       "formal_courtesy_per_1k": 2.8836260307,
-      "profanity_per_1k": 0.0028560179
+      "profanity_per_1k": 0.0028560179,
+      "slurs_per_1k": 0.0081872512
     },
     {
       "year": 1955,
@@ -3061,8 +3706,10 @@
       "words": 5425072,
       "formal_courtesy_hits": 4149,
       "profanity_hits": 4,
+      "slur_hits": 8,
       "formal_courtesy_per_1k": 0.7647824766,
-      "profanity_per_1k": 0.0007373174
+      "profanity_per_1k": 0.0007373174,
+      "slurs_per_1k": 0.0014746348
     },
     {
       "year": 1955,
@@ -3071,8 +3718,10 @@
       "words": 3338032,
       "formal_courtesy_hits": 10177,
       "profanity_hits": 5,
+      "slur_hits": 16,
       "formal_courtesy_per_1k": 3.0488024081,
-      "profanity_per_1k": 0.0014978886
+      "profanity_per_1k": 0.0014978886,
+      "slurs_per_1k": 0.0047932434
     },
     {
       "year": 1955,
@@ -3081,8 +3730,10 @@
       "words": 3255020,
       "formal_courtesy_hits": 2535,
       "profanity_hits": 3,
+      "slur_hits": 9,
       "formal_courtesy_per_1k": 0.7787970581,
-      "profanity_per_1k": 0.0009216533
+      "profanity_per_1k": 0.0009216533,
+      "slurs_per_1k": 0.00276496
     },
     {
       "year": 1957,
@@ -3091,8 +3742,10 @@
       "words": 6386579,
       "formal_courtesy_hits": 17056,
       "profanity_hits": 19,
+      "slur_hits": 51,
       "formal_courtesy_per_1k": 2.6706003324,
-      "profanity_per_1k": 0.0029749886
+      "profanity_per_1k": 0.0029749886,
+      "slurs_per_1k": 0.0079854958
     },
     {
       "year": 1957,
@@ -3101,8 +3754,10 @@
       "words": 8495257,
       "formal_courtesy_hits": 7061,
       "profanity_hits": 12,
+      "slur_hits": 2,
       "formal_courtesy_per_1k": 0.831169675,
-      "profanity_per_1k": 0.0014125529
+      "profanity_per_1k": 0.0014125529,
+      "slurs_per_1k": 0.0002354255
     },
     {
       "year": 1957,
@@ -3111,8 +3766,10 @@
       "words": 4594969,
       "formal_courtesy_hits": 14304,
       "profanity_hits": 10,
+      "slur_hits": 20,
       "formal_courtesy_per_1k": 3.112969859,
-      "profanity_per_1k": 0.0021762932
+      "profanity_per_1k": 0.0021762932,
+      "slurs_per_1k": 0.0043525865
     },
     {
       "year": 1957,
@@ -3121,8 +3778,10 @@
       "words": 4710983,
       "formal_courtesy_hits": 3675,
       "profanity_hits": 3,
+      "slur_hits": 6,
       "formal_courtesy_per_1k": 0.7800919681,
-      "profanity_per_1k": 0.0006368098
+      "profanity_per_1k": 0.0006368098,
+      "slurs_per_1k": 0.0012736195
     },
     {
       "year": 1959,
@@ -3131,8 +3790,10 @@
       "words": 6579648,
       "formal_courtesy_hits": 16912,
       "profanity_hits": 10,
+      "slur_hits": 32,
       "formal_courtesy_per_1k": 2.570350268,
-      "profanity_per_1k": 0.0015198381
+      "profanity_per_1k": 0.0015198381,
+      "slurs_per_1k": 0.0048634821
     },
     {
       "year": 1959,
@@ -3141,8 +3802,10 @@
       "words": 10881711,
       "formal_courtesy_hits": 8604,
       "profanity_hits": 34,
+      "slur_hits": 16,
       "formal_courtesy_per_1k": 0.7906844797,
-      "profanity_per_1k": 0.0031245086
+      "profanity_per_1k": 0.0031245086,
+      "slurs_per_1k": 0.001470357
     },
     {
       "year": 1959,
@@ -3151,8 +3814,10 @@
       "words": 3634681,
       "formal_courtesy_hits": 10531,
       "profanity_hits": 14,
+      "slur_hits": 20,
       "formal_courtesy_per_1k": 2.8973656835,
-      "profanity_per_1k": 0.0038517823
+      "profanity_per_1k": 0.0038517823,
+      "slurs_per_1k": 0.0055025462
     },
     {
       "year": 1959,
@@ -3161,8 +3826,10 @@
       "words": 4585312,
       "formal_courtesy_hits": 4082,
       "profanity_hits": 16,
+      "slur_hits": 2,
       "formal_courtesy_per_1k": 0.8902338598,
-      "profanity_per_1k": 0.0034894027
+      "profanity_per_1k": 0.0034894027,
+      "slurs_per_1k": 0.0004361753
     },
     {
       "year": 1961,
@@ -3171,8 +3838,10 @@
       "words": 6500257,
       "formal_courtesy_hits": 19041,
       "profanity_hits": 14,
+      "slur_hits": 18,
       "formal_courtesy_per_1k": 2.9292687966,
-      "profanity_per_1k": 0.002153761
+      "profanity_per_1k": 0.002153761,
+      "slurs_per_1k": 0.0027691213
     },
     {
       "year": 1961,
@@ -3181,8 +3850,10 @@
       "words": 10472583,
       "formal_courtesy_hits": 7036,
       "profanity_hits": 23,
+      "slur_hits": 57,
       "formal_courtesy_per_1k": 0.6718495332,
-      "profanity_per_1k": 0.0021962108
+      "profanity_per_1k": 0.0021962108,
+      "slurs_per_1k": 0.0054427833
     },
     {
       "year": 1961,
@@ -3190,9 +3861,11 @@
       "chamber": "house",
       "words": 5389392,
       "formal_courtesy_hits": 16598,
-      "profanity_hits": 16,
+      "profanity_hits": 18,
+      "slur_hits": 22,
       "formal_courtesy_per_1k": 3.0797537088,
-      "profanity_per_1k": 0.002968795
+      "profanity_per_1k": 0.0033398944,
+      "slurs_per_1k": 0.0040820931
     },
     {
       "year": 1961,
@@ -3201,8 +3874,10 @@
       "words": 5459875,
       "formal_courtesy_hits": 4090,
       "profanity_hits": 14,
+      "slur_hits": 8,
       "formal_courtesy_per_1k": 0.7491013988,
-      "profanity_per_1k": 0.0025641613
+      "profanity_per_1k": 0.0025641613,
+      "slurs_per_1k": 0.001465235
     },
     {
       "year": 1963,
@@ -3211,8 +3886,10 @@
       "words": 7266865,
       "formal_courtesy_hits": 19594,
       "profanity_hits": 24,
+      "slur_hits": 58,
       "formal_courtesy_per_1k": 2.6963484254,
-      "profanity_per_1k": 0.0033026622
+      "profanity_per_1k": 0.0033026622,
+      "slurs_per_1k": 0.0079814335
     },
     {
       "year": 1963,
@@ -3221,8 +3898,10 @@
       "words": 12404968,
       "formal_courtesy_hits": 7362,
       "profanity_hits": 31,
+      "slur_hits": 40,
       "formal_courtesy_per_1k": 0.5934719058,
-      "profanity_per_1k": 0.0024989988
+      "profanity_per_1k": 0.0024989988,
+      "slurs_per_1k": 0.0032245146
     },
     {
       "year": 1963,
@@ -3231,8 +3910,10 @@
       "words": 5819557,
       "formal_courtesy_hits": 17494,
       "profanity_hits": 22,
+      "slur_hits": 35,
       "formal_courtesy_per_1k": 3.006070737,
-      "profanity_per_1k": 0.0037803565
+      "profanity_per_1k": 0.0037803565,
+      "slurs_per_1k": 0.0060142035
     },
     {
       "year": 1963,
@@ -3241,8 +3922,10 @@
       "words": 5238495,
       "formal_courtesy_hits": 3245,
       "profanity_hits": 17,
+      "slur_hits": 17,
       "formal_courtesy_per_1k": 0.6194527245,
-      "profanity_per_1k": 0.0032452069
+      "profanity_per_1k": 0.0032452069,
+      "slurs_per_1k": 0.0032452069
     },
     {
       "year": 1965,
@@ -3251,8 +3934,10 @@
       "words": 11067278,
       "formal_courtesy_hits": 28858,
       "profanity_hits": 33,
+      "slur_hits": 56,
       "formal_courtesy_per_1k": 2.6075065612,
-      "profanity_per_1k": 0.002981763
+      "profanity_per_1k": 0.002981763,
+      "slurs_per_1k": 0.0050599614
     },
     {
       "year": 1965,
@@ -3261,8 +3946,10 @@
       "words": 11602774,
       "formal_courtesy_hits": 6351,
       "profanity_hits": 31,
+      "slur_hits": 31,
       "formal_courtesy_per_1k": 0.5473691033,
-      "profanity_per_1k": 0.0026717749
+      "profanity_per_1k": 0.0026717749,
+      "slurs_per_1k": 0.0026717749
     },
     {
       "year": 1965,
@@ -3270,9 +3957,11 @@
       "chamber": "house",
       "words": 6674730,
       "formal_courtesy_hits": 20401,
-      "profanity_hits": 18,
+      "profanity_hits": 19,
+      "slur_hits": 18,
       "formal_courtesy_per_1k": 3.0564532198,
-      "profanity_per_1k": 0.0026967383
+      "profanity_per_1k": 0.0028465571,
+      "slurs_per_1k": 0.0026967383
     },
     {
       "year": 1965,
@@ -3281,8 +3970,10 @@
       "words": 4502575,
       "formal_courtesy_hits": 2353,
       "profanity_hits": 14,
+      "slur_hits": 9,
       "formal_courtesy_per_1k": 0.5225898514,
-      "profanity_per_1k": 0.0031093319
+      "profanity_per_1k": 0.0031093319,
+      "slurs_per_1k": 0.0019988562
     },
     {
       "year": 1967,
@@ -3291,8 +3982,10 @@
       "words": 11156954,
       "formal_courtesy_hits": 30206,
       "profanity_hits": 37,
+      "slur_hits": 30,
       "formal_courtesy_per_1k": 2.7073697714,
-      "profanity_per_1k": 0.0033163173
+      "profanity_per_1k": 0.0033163173,
+      "slurs_per_1k": 0.002688906
     },
     {
       "year": 1967,
@@ -3301,8 +3994,10 @@
       "words": 11880755,
       "formal_courtesy_hits": 7076,
       "profanity_hits": 33,
+      "slur_hits": 18,
       "formal_courtesy_per_1k": 0.5955850449,
-      "profanity_per_1k": 0.0027776013
+      "profanity_per_1k": 0.0027776013,
+      "slurs_per_1k": 0.0015150552
     },
     {
       "year": 1967,
@@ -3311,8 +4006,10 @@
       "words": 7851999,
       "formal_courtesy_hits": 23474,
       "profanity_hits": 33,
+      "slur_hits": 18,
       "formal_courtesy_per_1k": 2.9895571816,
-      "profanity_per_1k": 0.0042027514
+      "profanity_per_1k": 0.0042027514,
+      "slurs_per_1k": 0.0022924099
     },
     {
       "year": 1967,
@@ -3321,8 +4018,10 @@
       "words": 5422293,
       "formal_courtesy_hits": 3567,
       "profanity_hits": 18,
+      "slur_hits": 5,
       "formal_courtesy_per_1k": 0.6578397737,
-      "profanity_per_1k": 0.0033196288
+      "profanity_per_1k": 0.0033196288,
+      "slurs_per_1k": 0.0009221191
     },
     {
       "year": 1969,
@@ -3331,8 +4030,10 @@
       "words": 10374305,
       "formal_courtesy_hits": 24685,
       "profanity_hits": 68,
+      "slur_hits": 44,
       "formal_courtesy_per_1k": 2.379436502,
-      "profanity_per_1k": 0.006554656
+      "profanity_per_1k": 0.006554656,
+      "slurs_per_1k": 0.004241248
     },
     {
       "year": 1969,
@@ -3341,8 +4042,10 @@
       "words": 13127630,
       "formal_courtesy_hits": 9242,
       "profanity_hits": 50,
+      "slur_hits": 27,
       "formal_courtesy_per_1k": 0.7040113105,
-      "profanity_per_1k": 0.0038087606
+      "profanity_per_1k": 0.0038087606,
+      "slurs_per_1k": 0.0020567307
     },
     {
       "year": 1969,
@@ -3351,8 +4054,10 @@
       "words": 6353525,
       "formal_courtesy_hits": 17285,
       "profanity_hits": 22,
+      "slur_hits": 7,
       "formal_courtesy_per_1k": 2.7205370247,
-      "profanity_per_1k": 0.0034626448
+      "profanity_per_1k": 0.0034626448,
+      "slurs_per_1k": 0.0011017506
     },
     {
       "year": 1969,
@@ -3361,8 +4066,10 @@
       "words": 8153769,
       "formal_courtesy_hits": 5765,
       "profanity_hits": 31,
+      "slur_hits": 7,
       "formal_courtesy_per_1k": 0.707034992,
-      "profanity_per_1k": 0.0038019228
+      "profanity_per_1k": 0.0038019228,
+      "slurs_per_1k": 0.0008584987
     },
     {
       "year": 1971,
@@ -3371,8 +4078,10 @@
       "words": 9443572,
       "formal_courtesy_hits": 21295,
       "profanity_hits": 40,
+      "slur_hits": 31,
       "formal_courtesy_per_1k": 2.2549730123,
-      "profanity_per_1k": 0.0042356854
+      "profanity_per_1k": 0.0042356854,
+      "slurs_per_1k": 0.0032826562
     },
     {
       "year": 1971,
@@ -3381,8 +4090,10 @@
       "words": 12252286,
       "formal_courtesy_hits": 8979,
       "profanity_hits": 35,
+      "slur_hits": 22,
       "formal_courtesy_per_1k": 0.7328428344,
-      "profanity_per_1k": 0.0028566098
+      "profanity_per_1k": 0.0028566098,
+      "slurs_per_1k": 0.0017955833
     },
     {
       "year": 1971,
@@ -3391,8 +4102,10 @@
       "words": 5471005,
       "formal_courtesy_hits": 14841,
       "profanity_hits": 29,
+      "slur_hits": 8,
       "formal_courtesy_per_1k": 2.7126643094,
-      "profanity_per_1k": 0.0053006714
+      "profanity_per_1k": 0.0053006714,
+      "slurs_per_1k": 0.0014622542
     },
     {
       "year": 1971,
@@ -3401,8 +4114,10 @@
       "words": 7382514,
       "formal_courtesy_hits": 4420,
       "profanity_hits": 19,
+      "slur_hits": 5,
       "formal_courtesy_per_1k": 0.5987120377,
-      "profanity_per_1k": 0.002573649
+      "profanity_per_1k": 0.002573649,
+      "slurs_per_1k": 0.0006772761
     },
     {
       "year": 1973,
@@ -3411,8 +4126,10 @@
       "words": 10299830,
       "formal_courtesy_hits": 26834,
       "profanity_hits": 58,
+      "slur_hits": 58,
       "formal_courtesy_per_1k": 2.6052857183,
-      "profanity_per_1k": 0.0056311609
+      "profanity_per_1k": 0.0056311609,
+      "slurs_per_1k": 0.0056311609
     },
     {
       "year": 1973,
@@ -3421,8 +4138,10 @@
       "words": 13051067,
       "formal_courtesy_hits": 9604,
       "profanity_hits": 39,
+      "slur_hits": 23,
       "formal_courtesy_per_1k": 0.7358785301,
-      "profanity_per_1k": 0.0029882614
+      "profanity_per_1k": 0.0029882614,
+      "slurs_per_1k": 0.001762308
     },
     {
       "year": 1973,
@@ -3430,9 +4149,11 @@
       "chamber": "house",
       "words": 6645538,
       "formal_courtesy_hits": 23115,
-      "profanity_hits": 48,
+      "profanity_hits": 49,
+      "slur_hits": 10,
       "formal_courtesy_per_1k": 3.4782736928,
-      "profanity_per_1k": 0.0072228915
+      "profanity_per_1k": 0.0073733684,
+      "slurs_per_1k": 0.0015047691
     },
     {
       "year": 1973,
@@ -3441,8 +4162,10 @@
       "words": 7615284,
       "formal_courtesy_hits": 5607,
       "profanity_hits": 27,
+      "slur_hits": 9,
       "formal_courtesy_per_1k": 0.7362824551,
-      "profanity_per_1k": 0.0035455014
+      "profanity_per_1k": 0.0035455014,
+      "slurs_per_1k": 0.0011818338
     },
     {
       "year": 1975,
@@ -3451,8 +4174,10 @@
       "words": 10827766,
       "formal_courtesy_hits": 33061,
       "profanity_hits": 63,
+      "slur_hits": 4,
       "formal_courtesy_per_1k": 3.0533537574,
-      "profanity_per_1k": 0.0058183747
+      "profanity_per_1k": 0.0058183747,
+      "slurs_per_1k": 0.0003694206
     },
     {
       "year": 1975,
@@ -3461,8 +4186,10 @@
       "words": 12831679,
       "formal_courtesy_hits": 9802,
       "profanity_hits": 37,
+      "slur_hits": 8,
       "formal_courtesy_per_1k": 0.7638906802,
-      "profanity_per_1k": 0.0028834886
+      "profanity_per_1k": 0.0028834886,
+      "slurs_per_1k": 0.000623457
     },
     {
       "year": 1975,
@@ -3471,8 +4198,10 @@
       "words": 5976744,
       "formal_courtesy_hits": 22850,
       "profanity_hits": 35,
+      "slur_hits": 6,
       "formal_courtesy_per_1k": 3.82315187,
-      "profanity_per_1k": 0.0058560313
+      "profanity_per_1k": 0.0058560313,
+      "slurs_per_1k": 0.0010038911
     },
     {
       "year": 1975,
@@ -3481,8 +4210,10 @@
       "words": 7743581,
       "formal_courtesy_hits": 6132,
       "profanity_hits": 30,
+      "slur_hits": 8,
       "formal_courtesy_per_1k": 0.7918816888,
-      "profanity_per_1k": 0.0038741766
+      "profanity_per_1k": 0.0038741766,
+      "slurs_per_1k": 0.0010331137
     },
     {
       "year": 1977,
@@ -3490,9 +4221,11 @@
       "chamber": "house",
       "words": 10295954,
       "formal_courtesy_hits": 34577,
-      "profanity_hits": 51,
+      "profanity_hits": 52,
+      "slur_hits": 5,
       "formal_courtesy_per_1k": 3.3583094874,
-      "profanity_per_1k": 0.0049534021
+      "profanity_per_1k": 0.0050505276,
+      "slurs_per_1k": 0.0004856277
     },
     {
       "year": 1977,
@@ -3501,8 +4234,10 @@
       "words": 12912161,
       "formal_courtesy_hits": 10476,
       "profanity_hits": 32,
+      "slur_hits": 5,
       "formal_courtesy_per_1k": 0.8113281735,
-      "profanity_per_1k": 0.0024782838
+      "profanity_per_1k": 0.0024782838,
+      "slurs_per_1k": 0.0003872319
     },
     {
       "year": 1977,
@@ -3511,8 +4246,10 @@
       "words": 6716742,
       "formal_courtesy_hits": 26464,
       "profanity_hits": 33,
+      "slur_hits": 2,
       "formal_courtesy_per_1k": 3.9400054372,
-      "profanity_per_1k": 0.0049130963
+      "profanity_per_1k": 0.0049130963,
+      "slurs_per_1k": 0.0002977634
     },
     {
       "year": 1977,
@@ -3521,8 +4258,10 @@
       "words": 8876474,
       "formal_courtesy_hits": 8334,
       "profanity_hits": 36,
+      "slur_hits": 34,
       "formal_courtesy_per_1k": 0.938886319,
-      "profanity_per_1k": 0.0040556644
+      "profanity_per_1k": 0.0040556644,
+      "slurs_per_1k": 0.0038303498
     },
     {
       "year": 1979,
@@ -3530,9 +4269,11 @@
       "chamber": "house",
       "words": 9890925,
       "formal_courtesy_hits": 32363,
-      "profanity_hits": 41,
+      "profanity_hits": 43,
+      "slur_hits": 9,
       "formal_courtesy_per_1k": 3.2719892224,
-      "profanity_per_1k": 0.0041452139
+      "profanity_per_1k": 0.0043474195,
+      "slurs_per_1k": 0.000909925
     },
     {
       "year": 1979,
@@ -3541,8 +4282,10 @@
       "words": 11410680,
       "formal_courtesy_hits": 8307,
       "profanity_hits": 24,
+      "slur_hits": 22,
       "formal_courtesy_per_1k": 0.7280021874,
-      "profanity_per_1k": 0.0021032927
+      "profanity_per_1k": 0.0021032927,
+      "slurs_per_1k": 0.0019280183
     },
     {
       "year": 1979,
@@ -3551,8 +4294,10 @@
       "words": 6941735,
       "formal_courtesy_hits": 25205,
       "profanity_hits": 38,
+      "slur_hits": 3,
       "formal_courtesy_per_1k": 3.6309366462,
-      "profanity_per_1k": 0.0054741358
+      "profanity_per_1k": 0.0054741358,
+      "slurs_per_1k": 0.0004321686
     },
     {
       "year": 1979,
@@ -3561,8 +4306,10 @@
       "words": 8579504,
       "formal_courtesy_hits": 6676,
       "profanity_hits": 38,
+      "slur_hits": 8,
       "formal_courtesy_per_1k": 0.7781335611,
-      "profanity_per_1k": 0.0044291605
+      "profanity_per_1k": 0.0044291605,
+      "slurs_per_1k": 0.0009324548
     },
     {
       "year": 1981,
@@ -3571,8 +4318,10 @@
       "words": 8041543,
       "formal_courtesy_hits": 21254,
       "profanity_hits": 42,
+      "slur_hits": 9,
       "formal_courtesy_per_1k": 2.643025101,
-      "profanity_per_1k": 0.0052228782
+      "profanity_per_1k": 0.0052228782,
+      "slurs_per_1k": 0.0011191882
     },
     {
       "year": 1981,
@@ -3581,8 +4330,10 @@
       "words": 8603269,
       "formal_courtesy_hits": 4993,
       "profanity_hits": 54,
+      "slur_hits": 5,
       "formal_courtesy_per_1k": 0.5803607908,
-      "profanity_per_1k": 0.0062766839
+      "profanity_per_1k": 0.0062766839,
+      "slurs_per_1k": 0.0005811744
     },
     {
       "year": 1981,
@@ -3591,8 +4342,10 @@
       "words": 5510668,
       "formal_courtesy_hits": 16674,
       "profanity_hits": 25,
+      "slur_hits": 4,
       "formal_courtesy_per_1k": 3.025767475,
-      "profanity_per_1k": 0.0045366551
+      "profanity_per_1k": 0.0045366551,
+      "slurs_per_1k": 0.0007258648
     },
     {
       "year": 1981,
@@ -3600,9 +4353,11 @@
       "chamber": "senate",
       "words": 9562704,
       "formal_courtesy_hits": 8461,
-      "profanity_hits": 46,
+      "profanity_hits": 50,
+      "slur_hits": 7,
       "formal_courtesy_per_1k": 0.884791582,
-      "profanity_per_1k": 0.0048103549
+      "profanity_per_1k": 0.0052286466,
+      "slurs_per_1k": 0.0007320105
     },
     {
       "year": 1983,
@@ -3610,9 +4365,11 @@
       "chamber": "house",
       "words": 8959638,
       "formal_courtesy_hits": 23077,
-      "profanity_hits": 61,
+      "profanity_hits": 62,
+      "slur_hits": 16,
       "formal_courtesy_per_1k": 2.5756620971,
-      "profanity_per_1k": 0.0068083108
+      "profanity_per_1k": 0.0069199224,
+      "slurs_per_1k": 0.0017857864
     },
     {
       "year": 1983,
@@ -3621,8 +4378,10 @@
       "words": 7849051,
       "formal_courtesy_hits": 4078,
       "profanity_hits": 37,
+      "slur_hits": 14,
       "formal_courtesy_per_1k": 0.5195532555,
-      "profanity_per_1k": 0.0047139457
+      "profanity_per_1k": 0.0047139457,
+      "slurs_per_1k": 0.0017836551
     },
     {
       "year": 1983,
@@ -3631,8 +4390,10 @@
       "words": 6441228,
       "formal_courtesy_hits": 20831,
       "profanity_hits": 29,
+      "slur_hits": 5,
       "formal_courtesy_per_1k": 3.2340106576,
-      "profanity_per_1k": 0.0045022471
+      "profanity_per_1k": 0.0045022471,
+      "slurs_per_1k": 0.0007762495
     },
     {
       "year": 1983,
@@ -3640,9 +4401,11 @@
       "chamber": "senate",
       "words": 9518443,
       "formal_courtesy_hits": 6951,
-      "profanity_hits": 43,
+      "profanity_hits": 45,
+      "slur_hits": 12,
       "formal_courtesy_per_1k": 0.7302664942,
-      "profanity_per_1k": 0.0045175456
+      "profanity_per_1k": 0.004727664,
+      "slurs_per_1k": 0.0012607104
     },
     {
       "year": 1985,
@@ -3651,8 +4414,10 @@
       "words": 8433348,
       "formal_courtesy_hits": 21876,
       "profanity_hits": 38,
+      "slur_hits": 31,
       "formal_courtesy_per_1k": 2.5939875836,
-      "profanity_per_1k": 0.004505921
+      "profanity_per_1k": 0.004505921,
+      "slurs_per_1k": 0.0036758829
     },
     {
       "year": 1985,
@@ -3661,8 +4426,10 @@
       "words": 10015444,
       "formal_courtesy_hits": 6144,
       "profanity_hits": 31,
+      "slur_hits": 3,
       "formal_courtesy_per_1k": 0.6134525838,
-      "profanity_per_1k": 0.0030952197
+      "profanity_per_1k": 0.0030952197,
+      "slurs_per_1k": 0.0002995374
     },
     {
       "year": 1985,
@@ -3671,8 +4438,10 @@
       "words": 6934064,
       "formal_courtesy_hits": 21586,
       "profanity_hits": 33,
+      "slur_hits": 7,
       "formal_courtesy_per_1k": 3.1130373184,
-      "profanity_per_1k": 0.0047591138
+      "profanity_per_1k": 0.0047591138,
+      "slurs_per_1k": 0.001009509
     },
     {
       "year": 1985,
@@ -3680,9 +4449,11 @@
       "chamber": "senate",
       "words": 10093958,
       "formal_courtesy_hits": 7237,
-      "profanity_hits": 44,
+      "profanity_hits": 45,
+      "slur_hits": 9,
       "formal_courtesy_per_1k": 0.7169635538,
-      "profanity_per_1k": 0.0043590433
+      "profanity_per_1k": 0.0044581125,
+      "slurs_per_1k": 0.0008916225
     },
     {
       "year": 1987,
@@ -3691,8 +4462,10 @@
       "words": 7929865,
       "formal_courtesy_hits": 20464,
       "profanity_hits": 29,
+      "slur_hits": 9,
       "formal_courtesy_per_1k": 2.5806240081,
-      "profanity_per_1k": 0.003657061
+      "profanity_per_1k": 0.003657061,
+      "slurs_per_1k": 0.00113495
     },
     {
       "year": 1987,
@@ -3701,8 +4474,10 @@
       "words": 11703018,
       "formal_courtesy_hits": 7722,
       "profanity_hits": 39,
+      "slur_hits": 10,
       "formal_courtesy_per_1k": 0.6598297977,
-      "profanity_per_1k": 0.0033324737
+      "profanity_per_1k": 0.0033324737,
+      "slurs_per_1k": 0.0008544804
     },
     {
       "year": 1987,
@@ -3711,8 +4486,10 @@
       "words": 6618073,
       "formal_courtesy_hits": 21309,
       "profanity_hits": 28,
+      "slur_hits": 9,
       "formal_courtesy_per_1k": 3.2198194248,
-      "profanity_per_1k": 0.0042308388
+      "profanity_per_1k": 0.0042308388,
+      "slurs_per_1k": 0.0013599125
     },
     {
       "year": 1987,
@@ -3720,9 +4497,11 @@
       "chamber": "senate",
       "words": 9931315,
       "formal_courtesy_hits": 6480,
-      "profanity_hits": 43,
+      "profanity_hits": 44,
+      "slur_hits": 13,
       "formal_courtesy_per_1k": 0.6524815697,
-      "profanity_per_1k": 0.0043297388
+      "profanity_per_1k": 0.0044304304,
+      "slurs_per_1k": 0.0013089908
     },
     {
       "year": 1989,
@@ -3731,8 +4510,10 @@
       "words": 7927933,
       "formal_courtesy_hits": 22569,
       "profanity_hits": 80,
+      "slur_hits": 19,
       "formal_courtesy_per_1k": 2.8467697696,
-      "profanity_per_1k": 0.0100909026
+      "profanity_per_1k": 0.0100909026,
+      "slurs_per_1k": 0.0023965894
     },
     {
       "year": 1989,
@@ -3741,8 +4522,10 @@
       "words": 11529744,
       "formal_courtesy_hits": 6110,
       "profanity_hits": 63,
+      "slur_hits": 10,
       "formal_courtesy_per_1k": 0.5299337088,
-      "profanity_per_1k": 0.0054641283
+      "profanity_per_1k": 0.0054641283,
+      "slurs_per_1k": 0.0008673219
     },
     {
       "year": 1989,
@@ -3751,8 +4534,10 @@
       "words": 6163048,
       "formal_courtesy_hits": 21532,
       "profanity_hits": 40,
+      "slur_hits": 4,
       "formal_courtesy_per_1k": 3.4937258318,
-      "profanity_per_1k": 0.0064902951
+      "profanity_per_1k": 0.0064902951,
+      "slurs_per_1k": 0.0006490295
     },
     {
       "year": 1989,
@@ -3761,8 +4546,10 @@
       "words": 8856368,
       "formal_courtesy_hits": 5616,
       "profanity_hits": 32,
+      "slur_hits": 8,
       "formal_courtesy_per_1k": 0.6341199914,
-      "profanity_per_1k": 0.0036132193
+      "profanity_per_1k": 0.0036132193,
+      "slurs_per_1k": 0.0009033048
     },
     {
       "year": 1991,
@@ -3771,8 +4558,10 @@
       "words": 8598087,
       "formal_courtesy_hits": 23228,
       "profanity_hits": 120,
+      "slur_hits": 12,
       "formal_courtesy_per_1k": 2.7015311662,
-      "profanity_per_1k": 0.0139565929
+      "profanity_per_1k": 0.0139565929,
+      "slurs_per_1k": 0.0013956593
     },
     {
       "year": 1991,
@@ -3781,8 +4570,10 @@
       "words": 12286280,
       "formal_courtesy_hits": 5861,
       "profanity_hits": 60,
+      "slur_hits": 19,
       "formal_courtesy_per_1k": 0.4770361737,
-      "profanity_per_1k": 0.0048834961
+      "profanity_per_1k": 0.0048834961,
+      "slurs_per_1k": 0.0015464404
     },
     {
       "year": 1991,
@@ -3791,8 +4582,10 @@
       "words": 6457503,
       "formal_courtesy_hits": 20700,
       "profanity_hits": 52,
+      "slur_hits": 3,
       "formal_courtesy_per_1k": 3.2055734237,
-      "profanity_per_1k": 0.0080526482
+      "profanity_per_1k": 0.0080526482,
+      "slurs_per_1k": 0.0004645759
     },
     {
       "year": 1991,
@@ -3801,8 +4594,10 @@
       "words": 8429734,
       "formal_courtesy_hits": 4236,
       "profanity_hits": 53,
+      "slur_hits": 1,
       "formal_courtesy_per_1k": 0.5025069593,
-      "profanity_per_1k": 0.0062872684
+      "profanity_per_1k": 0.0062872684,
+      "slurs_per_1k": 0.0001186277
     },
     {
       "year": 1993,
@@ -3811,8 +4606,10 @@
       "words": 7179245,
       "formal_courtesy_hits": 20230,
       "profanity_hits": 80,
+      "slur_hits": 8,
       "formal_courtesy_per_1k": 2.817845052,
-      "profanity_per_1k": 0.011143233
+      "profanity_per_1k": 0.011143233,
+      "slurs_per_1k": 0.0011143233
     },
     {
       "year": 1993,
@@ -3821,8 +4618,10 @@
       "words": 11222862,
       "formal_courtesy_hits": 5629,
       "profanity_hits": 47,
+      "slur_hits": 12,
       "formal_courtesy_per_1k": 0.5015654652,
-      "profanity_per_1k": 0.0041878801
+      "profanity_per_1k": 0.0041878801,
+      "slurs_per_1k": 0.001069246
     },
     {
       "year": 1993,
@@ -3830,9 +4629,11 @@
       "chamber": "house",
       "words": 7104604,
       "formal_courtesy_hits": 20169,
-      "profanity_hits": 41,
+      "profanity_hits": 42,
+      "slur_hits": 7,
       "formal_courtesy_per_1k": 2.8388633624,
-      "profanity_per_1k": 0.0057709057
+      "profanity_per_1k": 0.0059116595,
+      "slurs_per_1k": 0.0009852766
     },
     {
       "year": 1993,
@@ -3840,9 +4641,11 @@
       "chamber": "senate",
       "words": 9443378,
       "formal_courtesy_hits": 4212,
-      "profanity_hits": 46,
+      "profanity_hits": 47,
+      "slur_hits": 8,
       "formal_courtesy_per_1k": 0.4460268349,
-      "profanity_per_1k": 0.0048711383
+      "profanity_per_1k": 0.0049770326,
+      "slurs_per_1k": 0.0008471545
     },
     {
       "year": 1995,
@@ -3850,9 +4653,11 @@
       "chamber": "house",
       "words": 9413030,
       "formal_courtesy_hits": 28848,
-      "profanity_hits": 74,
+      "profanity_hits": 75,
+      "slur_hits": 34,
       "formal_courtesy_per_1k": 3.064687991,
-      "profanity_per_1k": 0.0078614431
+      "profanity_per_1k": 0.0079676788,
+      "slurs_per_1k": 0.0036120144
     },
     {
       "year": 1995,
@@ -3861,8 +4666,10 @@
       "words": 11603454,
       "formal_courtesy_hits": 4815,
       "profanity_hits": 33,
+      "slur_hits": 7,
       "formal_courtesy_per_1k": 0.4149626482,
-      "profanity_per_1k": 0.0028439808
+      "profanity_per_1k": 0.0028439808,
+      "slurs_per_1k": 0.0006032686
     },
     {
       "year": 1995,
@@ -3871,8 +4678,10 @@
       "words": 9369318,
       "formal_courtesy_hits": 30936,
       "profanity_hits": 56,
+      "slur_hits": 14,
       "formal_courtesy_per_1k": 3.3018411799,
-      "profanity_per_1k": 0.0059769558
+      "profanity_per_1k": 0.0059769558,
+      "slurs_per_1k": 0.001494239
     },
     {
       "year": 1995,
@@ -3881,8 +4690,10 @@
       "words": 11156449,
       "formal_courtesy_hits": 4478,
       "profanity_hits": 20,
+      "slur_hits": 5,
       "formal_courtesy_per_1k": 0.4013821961,
-      "profanity_per_1k": 0.0017926851
+      "profanity_per_1k": 0.0017926851,
+      "slurs_per_1k": 0.0004481713
     },
     {
       "year": 1997,
@@ -3891,8 +4702,10 @@
       "words": 7482195,
       "formal_courtesy_hits": 26003,
       "profanity_hits": 29,
+      "slur_hits": 5,
       "formal_courtesy_per_1k": 3.4753170694,
-      "profanity_per_1k": 0.003875868
+      "profanity_per_1k": 0.003875868,
+      "slurs_per_1k": 0.0006682531
     },
     {
       "year": 1997,
@@ -3901,8 +4714,10 @@
       "words": 8796490,
       "formal_courtesy_hits": 2937,
       "profanity_hits": 11,
+      "slur_hits": 6,
       "formal_courtesy_per_1k": 0.3338831739,
-      "profanity_per_1k": 0.0012504988
+      "profanity_per_1k": 0.0012504988,
+      "slurs_per_1k": 0.0006820902
     },
     {
       "year": 1997,
@@ -3911,8 +4726,10 @@
       "words": 7910027,
       "formal_courtesy_hits": 27224,
       "profanity_hits": 27,
+      "slur_hits": 0,
       "formal_courtesy_per_1k": 3.4417075947,
-      "profanity_per_1k": 0.0034133891
+      "profanity_per_1k": 0.0034133891,
+      "slurs_per_1k": 0.0
     },
     {
       "year": 1997,
@@ -3921,8 +4738,10 @@
       "words": 9458378,
       "formal_courtesy_hits": 3316,
       "profanity_hits": 13,
+      "slur_hits": 4,
       "formal_courtesy_per_1k": 0.3505886527,
-      "profanity_per_1k": 0.0013744428
+      "profanity_per_1k": 0.0013744428,
+      "slurs_per_1k": 0.0004229055
     },
     {
       "year": 1999,
@@ -3931,8 +4750,10 @@
       "words": 7661039,
       "formal_courtesy_hits": 28095,
       "profanity_hits": 41,
+      "slur_hits": 4,
       "formal_courtesy_per_1k": 3.6672571436,
-      "profanity_per_1k": 0.0053517545
+      "profanity_per_1k": 0.0053517545,
+      "slurs_per_1k": 0.0005221224
     },
     {
       "year": 1999,
@@ -3941,8 +4762,10 @@
       "words": 9741926,
       "formal_courtesy_hits": 3498,
       "profanity_hits": 15,
+      "slur_hits": 5,
       "formal_courtesy_per_1k": 0.3590665747,
-      "profanity_per_1k": 0.0015397366
+      "profanity_per_1k": 0.0015397366,
+      "slurs_per_1k": 0.0005132455
     },
     {
       "year": 1999,
@@ -3950,9 +4773,11 @@
       "chamber": "house",
       "words": 7895727,
       "formal_courtesy_hits": 27451,
-      "profanity_hits": 55,
+      "profanity_hits": 56,
+      "slur_hits": 4,
       "formal_courtesy_per_1k": 3.4766906201,
-      "profanity_per_1k": 0.006965793
+      "profanity_per_1k": 0.0070924438,
+      "slurs_per_1k": 0.0005066031
     },
     {
       "year": 1999,
@@ -3961,8 +4786,10 @@
       "words": 9082948,
       "formal_courtesy_hits": 2787,
       "profanity_hits": 13,
+      "slur_hits": 0,
       "formal_courtesy_per_1k": 0.3068387048,
-      "profanity_per_1k": 0.0014312534
+      "profanity_per_1k": 0.0014312534,
+      "slurs_per_1k": 0.0
     },
     {
       "year": 2001,
@@ -3971,8 +4798,10 @@
       "words": 6430574,
       "formal_courtesy_hits": 20899,
       "profanity_hits": 17,
+      "slur_hits": 4,
       "formal_courtesy_per_1k": 3.2499431622,
-      "profanity_per_1k": 0.0026436209
+      "profanity_per_1k": 0.0026436209,
+      "slurs_per_1k": 0.0006220285
     },
     {
       "year": 2001,
@@ -3981,8 +4810,10 @@
       "words": 10147442,
       "formal_courtesy_hits": 3731,
       "profanity_hits": 19,
+      "slur_hits": 3,
       "formal_courtesy_per_1k": 0.3676788692,
-      "profanity_per_1k": 0.0018723931
+      "profanity_per_1k": 0.0018723931,
+      "slurs_per_1k": 0.000295641
     },
     {
       "year": 2001,
@@ -3991,8 +4822,10 @@
       "words": 5768849,
       "formal_courtesy_hits": 18521,
       "profanity_hits": 10,
+      "slur_hits": 4,
       "formal_courtesy_per_1k": 3.2105191174,
-      "profanity_per_1k": 0.001733448
+      "profanity_per_1k": 0.001733448,
+      "slurs_per_1k": 0.0006933792
     },
     {
       "year": 2001,
@@ -4001,8 +4834,10 @@
       "words": 7394669,
       "formal_courtesy_hits": 2006,
       "profanity_hits": 13,
+      "slur_hits": 32,
       "formal_courtesy_per_1k": 0.2712765101,
-      "profanity_per_1k": 0.0017580232
+      "profanity_per_1k": 0.0017580232,
+      "slurs_per_1k": 0.0043274418
     },
     {
       "year": 2003,
@@ -4011,8 +4846,10 @@
       "words": 7847963,
       "formal_courtesy_hits": 22944,
       "profanity_hits": 24,
+      "slur_hits": 1,
       "formal_courtesy_per_1k": 2.923561184,
-      "profanity_per_1k": 0.0030581184
+      "profanity_per_1k": 0.0030581184,
+      "slurs_per_1k": 0.0001274216
     },
     {
       "year": 2003,
@@ -4020,9 +4857,11 @@
       "chamber": "senate",
       "words": 10537771,
       "formal_courtesy_hits": 2859,
-      "profanity_hits": 14,
+      "profanity_hits": 15,
+      "slur_hits": 6,
       "formal_courtesy_per_1k": 0.2713097485,
-      "profanity_per_1k": 0.0013285542
+      "profanity_per_1k": 0.0014234509,
+      "slurs_per_1k": 0.0005693804
     },
     {
       "year": 2003,
@@ -4031,8 +4870,10 @@
       "words": 6258278,
       "formal_courtesy_hits": 18619,
       "profanity_hits": 17,
+      "slur_hits": 3,
       "formal_courtesy_per_1k": 2.9750995402,
-      "profanity_per_1k": 0.0027164022
+      "profanity_per_1k": 0.0027164022,
+      "slurs_per_1k": 0.0004793651
     },
     {
       "year": 2003,
@@ -4041,8 +4882,10 @@
       "words": 8392492,
       "formal_courtesy_hits": 2735,
       "profanity_hits": 13,
+      "slur_hits": 22,
       "formal_courtesy_per_1k": 0.3258865186,
-      "profanity_per_1k": 0.0015490036
+      "profanity_per_1k": 0.0015490036,
+      "slurs_per_1k": 0.0026213906
     },
     {
       "year": 2005,
@@ -4051,8 +4894,10 @@
       "words": 7773495,
       "formal_courtesy_hits": 15803,
       "profanity_hits": 14,
+      "slur_hits": 14,
       "formal_courtesy_per_1k": 2.0329337061,
-      "profanity_per_1k": 0.0018009917
+      "profanity_per_1k": 0.0018009917,
+      "slurs_per_1k": 0.0018009917
     },
     {
       "year": 2005,
@@ -4060,9 +4905,11 @@
       "chamber": "senate",
       "words": 9156841,
       "formal_courtesy_hits": 1893,
-      "profanity_hits": 19,
+      "profanity_hits": 20,
+      "slur_hits": 7,
       "formal_courtesy_per_1k": 0.2067306836,
-      "profanity_per_1k": 0.0020749514
+      "profanity_per_1k": 0.0021841594,
+      "slurs_per_1k": 0.0007644558
     },
     {
       "year": 2005,
@@ -4071,8 +4918,10 @@
       "words": 6695741,
       "formal_courtesy_hits": 14958,
       "profanity_hits": 18,
+      "slur_hits": 4,
       "formal_courtesy_per_1k": 2.2339573768,
-      "profanity_per_1k": 0.002688276
+      "profanity_per_1k": 0.002688276,
+      "slurs_per_1k": 0.0005973947
     },
     {
       "year": 2005,
@@ -4081,8 +4930,10 @@
       "words": 7380177,
       "formal_courtesy_hits": 1814,
       "profanity_hits": 7,
+      "slur_hits": 1,
       "formal_courtesy_per_1k": 0.2457935629,
-      "profanity_per_1k": 0.0009484867
+      "profanity_per_1k": 0.0009484867,
+      "slurs_per_1k": 0.0001354981
     },
     {
       "year": 2007,
@@ -4091,8 +4942,10 @@
       "words": 8997916,
       "formal_courtesy_hits": 13172,
       "profanity_hits": 22,
+      "slur_hits": 4,
       "formal_courtesy_per_1k": 1.4638945285,
-      "profanity_per_1k": 0.0024450106
+      "profanity_per_1k": 0.0024450106,
+      "slurs_per_1k": 0.0004445474
     },
     {
       "year": 2007,
@@ -4101,8 +4954,10 @@
       "words": 9561907,
       "formal_courtesy_hits": 1769,
       "profanity_hits": 23,
+      "slur_hits": 6,
       "formal_courtesy_per_1k": 0.1850049368,
-      "profanity_per_1k": 0.0024053779
+      "profanity_per_1k": 0.0024053779,
+      "slurs_per_1k": 0.0006274899
     },
     {
       "year": 2007,
@@ -4110,9 +4965,11 @@
       "chamber": "house",
       "words": 7903736,
       "formal_courtesy_hits": 11203,
-      "profanity_hits": 17,
+      "profanity_hits": 18,
+      "slur_hits": 5,
       "formal_courtesy_per_1k": 1.4174309466,
-      "profanity_per_1k": 0.0021508816
+      "profanity_per_1k": 0.002277404,
+      "slurs_per_1k": 0.0006326122
     },
     {
       "year": 2007,
@@ -4121,8 +4978,10 @@
       "words": 6686466,
       "formal_courtesy_hits": 1571,
       "profanity_hits": 8,
+      "slur_hits": 4,
       "formal_courtesy_per_1k": 0.2349522154,
-      "profanity_per_1k": 0.0011964467
+      "profanity_per_1k": 0.0011964467,
+      "slurs_per_1k": 0.0005982233
     },
     {
       "year": 2009,
@@ -4131,8 +4990,10 @@
       "words": 6070110,
       "formal_courtesy_hits": 8729,
       "profanity_hits": 14,
+      "slur_hits": 2,
       "formal_courtesy_per_1k": 1.4380299533,
-      "profanity_per_1k": 0.0023063832
+      "profanity_per_1k": 0.0023063832,
+      "slurs_per_1k": 0.0003294833
     },
     {
       "year": 2009,
@@ -4141,8 +5002,10 @@
       "words": 7328876,
       "formal_courtesy_hits": 1418,
       "profanity_hits": 12,
+      "slur_hits": 2,
       "formal_courtesy_per_1k": 0.1934812378,
-      "profanity_per_1k": 0.0016373589
+      "profanity_per_1k": 0.0016373589,
+      "slurs_per_1k": 0.0002728931
     },
     {
       "year": 2009,
@@ -4151,8 +5014,10 @@
       "words": 6251746,
       "formal_courtesy_hits": 7848,
       "profanity_hits": 18,
+      "slur_hits": 5,
       "formal_courtesy_per_1k": 1.2553293112,
-      "profanity_per_1k": 0.0028791957
+      "profanity_per_1k": 0.0028791957,
+      "slurs_per_1k": 0.0007997766
     },
     {
       "year": 2009,
@@ -4161,8 +5026,10 @@
       "words": 5196760,
       "formal_courtesy_hits": 1016,
       "profanity_hits": 8,
+      "slur_hits": 1,
       "formal_courtesy_per_1k": 0.1955064309,
-      "profanity_per_1k": 0.0015394207
+      "profanity_per_1k": 0.0015394207,
+      "slurs_per_1k": 0.0001924276
     },
     {
       "year": 2011,
@@ -4170,9 +5037,11 @@
       "chamber": "house",
       "words": 6228853,
       "formal_courtesy_hits": 10408,
-      "profanity_hits": 23,
+      "profanity_hits": 24,
+      "slur_hits": 5,
       "formal_courtesy_per_1k": 1.6709336374,
-      "profanity_per_1k": 0.0036924936
+      "profanity_per_1k": 0.0038530368,
+      "slurs_per_1k": 0.000802716
     },
     {
       "year": 2011,
@@ -4181,8 +5050,10 @@
       "words": 6566261,
       "formal_courtesy_hits": 960,
       "profanity_hits": 14,
+      "slur_hits": 2,
       "formal_courtesy_per_1k": 0.1462019253,
-      "profanity_per_1k": 0.0021321114
+      "profanity_per_1k": 0.0021321114,
+      "slurs_per_1k": 0.0003045873
     },
     {
       "year": 2011,
@@ -4191,8 +5062,10 @@
       "words": 5797641,
       "formal_courtesy_hits": 11500,
       "profanity_hits": 16,
+      "slur_hits": 3,
       "formal_courtesy_per_1k": 1.9835653846,
-      "profanity_per_1k": 0.0027597431
+      "profanity_per_1k": 0.0027597431,
+      "slurs_per_1k": 0.0005174518
     },
     {
       "year": 2011,
@@ -4201,8 +5074,10 @@
       "words": 4866082,
       "formal_courtesy_hits": 750,
       "profanity_hits": 20,
+      "slur_hits": 0,
       "formal_courtesy_per_1k": 0.1541281055,
-      "profanity_per_1k": 0.0041100828
+      "profanity_per_1k": 0.0041100828,
+      "slurs_per_1k": 0.0
     },
     {
       "year": 2013,
@@ -4210,9 +5085,11 @@
       "chamber": "house",
       "words": 5162910,
       "formal_courtesy_hits": 8717,
-      "profanity_hits": 21,
+      "profanity_hits": 22,
+      "slur_hits": 1,
       "formal_courtesy_per_1k": 1.6883889125,
-      "profanity_per_1k": 0.0040674736
+      "profanity_per_1k": 0.0042611628,
+      "slurs_per_1k": 0.0001936892
     },
     {
       "year": 2013,
@@ -4221,8 +5098,10 @@
       "words": 5812820,
       "formal_courtesy_hits": 946,
       "profanity_hits": 3,
+      "slur_hits": 2,
       "formal_courtesy_per_1k": 0.1627437285,
-      "profanity_per_1k": 0.0005161006
+      "profanity_per_1k": 0.0005161006,
+      "slurs_per_1k": 0.0003440671
     },
     {
       "year": 2013,
@@ -4231,8 +5110,10 @@
       "words": 5125000,
       "formal_courtesy_hits": 9182,
       "profanity_hits": 11,
+      "slur_hits": 3,
       "formal_courtesy_per_1k": 1.7916097561,
-      "profanity_per_1k": 0.0021463415
+      "profanity_per_1k": 0.0021463415,
+      "slurs_per_1k": 0.0005853659
     },
     {
       "year": 2013,
@@ -4241,8 +5122,10 @@
       "words": 4694009,
       "formal_courtesy_hits": 870,
       "profanity_hits": 11,
+      "slur_hits": 0,
       "formal_courtesy_per_1k": 0.1853426357,
-      "profanity_per_1k": 0.0023434126
+      "profanity_per_1k": 0.0023434126,
+      "slurs_per_1k": 0.0
     },
     {
       "year": 2015,
@@ -4251,8 +5134,10 @@
       "words": 4362012,
       "formal_courtesy_hits": 8107,
       "profanity_hits": 13,
+      "slur_hits": 1,
       "formal_courtesy_per_1k": 1.8585460104,
-      "profanity_per_1k": 0.0029802761
+      "profanity_per_1k": 0.0029802761,
+      "slurs_per_1k": 0.000229252
     },
     {
       "year": 2015,
@@ -4261,8 +5146,10 @@
       "words": 4201880,
       "formal_courtesy_hits": 592,
       "profanity_hits": 12,
+      "slur_hits": 4,
       "formal_courtesy_per_1k": 0.1408893162,
-      "profanity_per_1k": 0.0028558645
+      "profanity_per_1k": 0.0028558645,
+      "slurs_per_1k": 0.0009519548
     },
     {
       "year": 2015,
@@ -4271,8 +5158,10 @@
       "words": 4468757,
       "formal_courtesy_hits": 9380,
       "profanity_hits": 11,
+      "slur_hits": 1,
       "formal_courtesy_per_1k": 2.099017691,
-      "profanity_per_1k": 0.0024615346
+      "profanity_per_1k": 0.0024615346,
+      "slurs_per_1k": 0.0002237759
     },
     {
       "year": 2015,
@@ -4281,208 +5170,250 @@
       "words": 4428068,
       "formal_courtesy_hits": 563,
       "profanity_hits": 16,
+      "slur_hits": 0,
       "formal_courtesy_per_1k": 0.1271434856,
-      "profanity_per_1k": 0.003613314
+      "profanity_per_1k": 0.003613314,
+      "slurs_per_1k": 0.0
     },
     {
       "year": 2017,
       "party": "D",
       "chamber": "house",
-      "words": 5422232,
-      "formal_courtesy_hits": 6984,
+      "words": 4704304,
+      "formal_courtesy_hits": 6922,
+      "profanity_hits": 38,
+      "slur_hits": 3,
+      "formal_courtesy_per_1k": 1.4714185138,
+      "profanity_per_1k": 0.0080777093,
+      "slurs_per_1k": 0.0006377139
+    },
+    {
+      "year": 2017,
+      "party": "D",
+      "chamber": "senate",
+      "words": 4915880,
+      "formal_courtesy_hits": 544,
+      "profanity_hits": 26,
+      "slur_hits": 0,
+      "formal_courtesy_per_1k": 0.1106617737,
+      "profanity_per_1k": 0.0052889818,
+      "slurs_per_1k": 0.0
+    },
+    {
+      "year": 2017,
+      "party": "R",
+      "chamber": "house",
+      "words": 5231037,
+      "formal_courtesy_hits": 8271,
+      "profanity_hits": 14,
+      "slur_hits": 0,
+      "formal_courtesy_per_1k": 1.5811396478,
+      "profanity_per_1k": 0.0026763336,
+      "slurs_per_1k": 0.0
+    },
+    {
+      "year": 2017,
+      "party": "R",
+      "chamber": "senate",
+      "words": 4100874,
+      "formal_courtesy_hits": 530,
+      "profanity_hits": 17,
+      "slur_hits": 0,
+      "formal_courtesy_per_1k": 0.1292407423,
+      "profanity_per_1k": 0.0041454578,
+      "slurs_per_1k": 0.0
+    },
+    {
+      "year": 2019,
+      "party": "D",
+      "chamber": "house",
+      "words": 4150930,
+      "formal_courtesy_hits": 6806,
+      "profanity_hits": 41,
+      "slur_hits": 0,
+      "formal_courtesy_per_1k": 1.6396325643,
+      "profanity_per_1k": 0.0098773046,
+      "slurs_per_1k": 0.0
+    },
+    {
+      "year": 2019,
+      "party": "D",
+      "chamber": "senate",
+      "words": 3298970,
+      "formal_courtesy_hits": 375,
+      "profanity_hits": 18,
+      "slur_hits": 0,
+      "formal_courtesy_per_1k": 0.113671843,
+      "profanity_per_1k": 0.0054562485,
+      "slurs_per_1k": 0.0
+    },
+    {
+      "year": 2019,
+      "party": "R",
+      "chamber": "house",
+      "words": 3785141,
+      "formal_courtesy_hits": 6750,
+      "profanity_hits": 31,
+      "slur_hits": 1,
+      "formal_courtesy_per_1k": 1.7832889184,
+      "profanity_per_1k": 0.0081899195,
+      "slurs_per_1k": 0.000264191
+    },
+    {
+      "year": 2019,
+      "party": "R",
+      "chamber": "senate",
+      "words": 3804511,
+      "formal_courtesy_hits": 357,
+      "profanity_hits": 25,
+      "slur_hits": 0,
+      "formal_courtesy_per_1k": 0.0938359752,
+      "profanity_per_1k": 0.0065711467,
+      "slurs_per_1k": 0.0
+    },
+    {
+      "year": 2021,
+      "party": "D",
+      "chamber": "house",
+      "words": 3196031,
+      "formal_courtesy_hits": 4937,
       "profanity_hits": 40,
-      "formal_courtesy_per_1k": 1.2880304642,
-      "profanity_per_1k": 0.0073770359
-    },
-    {
-      "year": 2017,
-      "party": "D",
-      "chamber": "senate",
-      "words": 5948405,
-      "formal_courtesy_hits": 587,
-      "profanity_hits": 37,
-      "formal_courtesy_per_1k": 0.0986819156,
-      "profanity_per_1k": 0.0062201548
-    },
-    {
-      "year": 2017,
-      "party": "R",
-      "chamber": "house",
-      "words": 5788646,
-      "formal_courtesy_hits": 8376,
-      "profanity_hits": 18,
-      "formal_courtesy_per_1k": 1.4469705005,
-      "profanity_per_1k": 0.0031095355
-    },
-    {
-      "year": 2017,
-      "party": "R",
-      "chamber": "senate",
-      "words": 4730964,
-      "formal_courtesy_hits": 567,
-      "profanity_hits": 18,
-      "formal_courtesy_per_1k": 0.1198487243,
-      "profanity_per_1k": 0.0038047214
-    },
-    {
-      "year": 2019,
-      "party": "D",
-      "chamber": "house",
-      "words": 4767998,
-      "formal_courtesy_hits": 6821,
-      "profanity_hits": 46,
-      "formal_courtesy_per_1k": 1.4305794591,
-      "profanity_per_1k": 0.0096476551
-    },
-    {
-      "year": 2019,
-      "party": "D",
-      "chamber": "senate",
-      "words": 4065590,
-      "formal_courtesy_hits": 398,
-      "profanity_hits": 33,
-      "formal_courtesy_per_1k": 0.0978947705,
-      "profanity_per_1k": 0.0081169031
-    },
-    {
-      "year": 2019,
-      "party": "R",
-      "chamber": "house",
-      "words": 4047516,
-      "formal_courtesy_hits": 6753,
-      "profanity_hits": 33,
-      "formal_courtesy_per_1k": 1.6684307116,
-      "profanity_per_1k": 0.0081531487
-    },
-    {
-      "year": 2019,
-      "party": "R",
-      "chamber": "senate",
-      "words": 4364613,
-      "formal_courtesy_hits": 371,
-      "profanity_hits": 28,
-      "formal_courtesy_per_1k": 0.0850018089,
-      "profanity_per_1k": 0.0064152309
-    },
-    {
-      "year": 2021,
-      "party": "D",
-      "chamber": "house",
-      "words": 3860858,
-      "formal_courtesy_hits": 4943,
-      "profanity_hits": 50,
-      "formal_courtesy_per_1k": 1.2802853666,
-      "profanity_per_1k": 0.0129504892
+      "slur_hits": 0,
+      "formal_courtesy_per_1k": 1.544728446,
+      "profanity_per_1k": 0.0125155232,
+      "slurs_per_1k": 0.0
     },
     {
       "year": 2021,
       "party": "D",
       "chamber": "senate",
-      "words": 3502351,
-      "formal_courtesy_hits": 245,
-      "profanity_hits": 79,
-      "formal_courtesy_per_1k": 0.0699530116,
-      "profanity_per_1k": 0.0225562772
+      "words": 2956725,
+      "formal_courtesy_hits": 243,
+      "profanity_hits": 35,
+      "slur_hits": 1,
+      "formal_courtesy_per_1k": 0.0821855262,
+      "profanity_per_1k": 0.0118374215,
+      "slurs_per_1k": 0.000338212
     },
     {
       "year": 2021,
       "party": "R",
       "chamber": "house",
-      "words": 3786194,
-      "formal_courtesy_hits": 6431,
-      "profanity_hits": 162,
-      "formal_courtesy_per_1k": 1.6985394832,
-      "profanity_per_1k": 0.042787031
+      "words": 3499039,
+      "formal_courtesy_hits": 6420,
+      "profanity_hits": 161,
+      "slur_hits": 0,
+      "formal_courtesy_per_1k": 1.8347894951,
+      "profanity_per_1k": 0.0460126338,
+      "slurs_per_1k": 0.0
     },
     {
       "year": 2021,
       "party": "R",
       "chamber": "senate",
-      "words": 3999842,
-      "formal_courtesy_hits": 302,
-      "profanity_hits": 74,
-      "formal_courtesy_per_1k": 0.0755029824,
-      "profanity_per_1k": 0.0185007308
-    },
-    {
-      "year": 2023,
-      "party": "D",
-      "chamber": "house",
-      "words": 3703368,
-      "formal_courtesy_hits": 4331,
-      "profanity_hits": 85,
-      "formal_courtesy_per_1k": 1.1694760013,
-      "profanity_per_1k": 0.0229520804
-    },
-    {
-      "year": 2023,
-      "party": "D",
-      "chamber": "senate",
-      "words": 2705905,
-      "formal_courtesy_hits": 139,
+      "words": 3102804,
+      "formal_courtesy_hits": 263,
       "profanity_hits": 43,
-      "formal_courtesy_per_1k": 0.0513691353,
-      "profanity_per_1k": 0.0158911713
+      "slur_hits": 0,
+      "formal_courtesy_per_1k": 0.084762041,
+      "profanity_per_1k": 0.0138584326,
+      "slurs_per_1k": 0.0
+    },
+    {
+      "year": 2023,
+      "party": "D",
+      "chamber": "house",
+      "words": 3369745,
+      "formal_courtesy_hits": 4324,
+      "profanity_hits": 85,
+      "slur_hits": 2,
+      "formal_courtesy_per_1k": 1.2831831489,
+      "profanity_per_1k": 0.0252244606,
+      "slurs_per_1k": 0.0005935167
+    },
+    {
+      "year": 2023,
+      "party": "D",
+      "chamber": "senate",
+      "words": 2175156,
+      "formal_courtesy_hits": 144,
+      "profanity_hits": 38,
+      "slur_hits": 1,
+      "formal_courtesy_per_1k": 0.0662021483,
+      "profanity_per_1k": 0.0174700113,
+      "slurs_per_1k": 0.0004597371
     },
     {
       "year": 2023,
       "party": "R",
       "chamber": "house",
-      "words": 4587478,
-      "formal_courtesy_hits": 6080,
-      "profanity_hits": 253,
-      "formal_courtesy_per_1k": 1.3253469553,
-      "profanity_per_1k": 0.0551501282
+      "words": 4340238,
+      "formal_courtesy_hits": 6084,
+      "profanity_hits": 242,
+      "slur_hits": 2,
+      "formal_courtesy_per_1k": 1.4017664469,
+      "profanity_per_1k": 0.055757311,
+      "slurs_per_1k": 0.0004608042
     },
     {
       "year": 2023,
       "party": "R",
       "chamber": "senate",
-      "words": 2835985,
-      "formal_courtesy_hits": 265,
-      "profanity_hits": 56,
-      "formal_courtesy_per_1k": 0.0934419611,
-      "profanity_per_1k": 0.0197462257
+      "words": 2200182,
+      "formal_courtesy_hits": 248,
+      "profanity_hits": 52,
+      "slur_hits": 0,
+      "formal_courtesy_per_1k": 0.1127179479,
+      "profanity_per_1k": 0.0236344084,
+      "slurs_per_1k": 0.0
     },
     {
       "year": 2025,
       "party": "D",
       "chamber": "house",
-      "words": 3335984,
-      "formal_courtesy_hits": 4009,
+      "words": 3208329,
+      "formal_courtesy_hits": 4008,
       "profanity_hits": 217,
-      "formal_courtesy_per_1k": 1.2017443729,
-      "profanity_per_1k": 0.0650482736
+      "slur_hits": 11,
+      "formal_courtesy_per_1k": 1.2492484405,
+      "profanity_per_1k": 0.067636455,
+      "slurs_per_1k": 0.0034285761
     },
     {
       "year": 2025,
       "party": "D",
       "chamber": "senate",
-      "words": 4344610,
-      "formal_courtesy_hits": 196,
-      "profanity_hits": 222,
-      "formal_courtesy_per_1k": 0.0451133704,
-      "profanity_per_1k": 0.051097797
+      "words": 3235028,
+      "formal_courtesy_hits": 178,
+      "profanity_hits": 155,
+      "slur_hits": 0,
+      "formal_courtesy_per_1k": 0.0550227077,
+      "profanity_per_1k": 0.047913032,
+      "slurs_per_1k": 0.0
     },
     {
       "year": 2025,
       "party": "R",
       "chamber": "house",
-      "words": 3124683,
-      "formal_courtesy_hits": 4109,
+      "words": 3019606,
+      "formal_courtesy_hits": 4116,
       "profanity_hits": 190,
-      "formal_courtesy_per_1k": 1.315013395,
-      "profanity_per_1k": 0.0608061682
+      "slur_hits": 13,
+      "formal_courtesy_per_1k": 1.3630917411,
+      "profanity_per_1k": 0.0629221163,
+      "slurs_per_1k": 0.0043051974
     },
     {
       "year": 2025,
       "party": "R",
       "chamber": "senate",
-      "words": 2854210,
-      "formal_courtesy_hits": 216,
-      "profanity_hits": 61,
-      "formal_courtesy_per_1k": 0.0756776831,
-      "profanity_per_1k": 0.0213719383
+      "words": 2376040,
+      "formal_courtesy_hits": 202,
+      "profanity_hits": 55,
+      "slur_hits": 0,
+      "formal_courtesy_per_1k": 0.0850154038,
+      "profanity_per_1k": 0.0231477585,
+      "slurs_per_1k": 0.0
     }
   ],
   "first_year": 1873,
