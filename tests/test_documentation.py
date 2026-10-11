@@ -85,3 +85,14 @@ def test_adjudication_guide_renders_original_fields_and_allowed_values():
     fields = json.loads(document.select_one("pre code.language-json").get_text())
     assert fields == ["sample_id", *allowed, "rationale"]
     assert len(document.find_all("h2")) == 5
+
+
+def test_readme_has_no_uncensored_profanity_or_slurs():
+    from analysis.score.scorers import Scorers
+
+    document = _render(ROOT / "README.md")
+    visible = document.get_text(" ", strip=True)
+    visible += " " + " ".join(image.get("alt", "") for image in document.find_all("img"))
+    counts = Scorers().score_turn(visible)
+    assert counts["profanity_hits"] == 0
+    assert counts["slur_hits"] == 0

@@ -41,6 +41,9 @@ every source entry. These are word counts, not judgments of intent. Recognized q
 inserted material are filtered, but detection is imperfect; some printed or quoted language can
 remain. A member who repeats a slur to condemn it is also counted.
 
+Profanity examples are masked in the README and public dashboard. Exact word lists and
+downloadable audit data remain unmasked for reproducibility.
+
 ## Explore the evidence
 
 **The analysis:** [what each measure counts and the key figures](docs/ANALYSIS.md),
