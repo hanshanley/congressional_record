@@ -58,6 +58,17 @@ jobs:
               --since "${year}-01-01" \
               --until "${year}-12-31"
           done
+          boundary_year=$((end_year + 1))
+          if [[ "$boundary_year" -le "$(date -u +%Y)" ]]; then
+            boundary_end="${boundary_year}-01-03"
+            today="$(date -u +%F)"
+            if [[ "$boundary_end" > "$today" ]]; then
+              boundary_end="$today"
+            fi
+            python scripts/update_speakers.py \
+              --since "${boundary_year}-01-01" \
+              --until "$boundary_end"
+          fi
 
       - name: Upload Congress ${{ matrix.congress }}
         uses: actions/upload-artifact@v4
@@ -94,7 +105,7 @@ jobs:
           run-id: ${{ inputs.source_run_id || github.run_id }}
           github-token: ${{ github.token }}
 
-      - name: Validate historical term counts
+      - name: Repair boundary dates and validate historical term counts
         env:
           BACKFILL_CONGRESSES: ${{ inputs.congresses }}
           RESCORED_SPEAKERS: ${{ runner.temp }}/rescored-speakers
@@ -108,6 +119,7 @@ jobs:
           import pandas as pd
 
           from analysis.speakers import incomplete_profanity_term_rows
+          from scripts.update_speakers import main as update_speakers
 
           congresses = json.loads(os.environ["BACKFILL_CONGRESSES"])
           if (
@@ -121,7 +133,19 @@ jobs:
           for congress in congresses:
               path = root / f"congress_{congress}.parquet"
               frame = pd.read_parquet(path)
-              if "slur_hits" not in frame or frame["slur_hits"].isna().any():
+              if "slur_hits" not in frame:
+                  raise SystemExit(f"{path}: no slur scores; a full rescore is required")
+              missing_dates = sorted(set(frame.loc[frame["slur_hits"].isna(), "date"].astype(str)))
+              boundary_year = 1789 + 2 * congress
+              boundaries = {f"{boundary_year}-01-0{day}" for day in (1, 2, 3)}
+              if not set(missing_dates).issubset(boundaries):
+                  raise SystemExit(f"{path}: unscored dates outside the January boundary: {missing_dates}")
+              for date in missing_dates:
+                  print(f"Repairing unscored boundary date {date}", flush=True)
+                  if update_speakers(["--daily", str(root), "--since", date, "--until", date]) != 0:
+                      raise SystemExit(f"{path}: boundary repair failed for {date}")
+              frame = pd.read_parquet(path)
+              if frame["slur_hits"].isna().any():
                   raise SystemExit(f"{path}: slur scoring is incomplete")
               incomplete = incomplete_profanity_term_rows(frame)
               if not incomplete.empty:

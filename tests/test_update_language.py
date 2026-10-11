@@ -358,3 +358,49 @@ def test_backfill_recovery_rejects_missing_requested_artifact_even_with_committe
     with pytest.raises(FileNotFoundError, match="congress_119"):
         exec(compile(validation, "<workflow-validation>", "exec"), {})
     assert existing.read_text() == "old committed data"
+
+
+@pytest.mark.parametrize("missing_date", ["2013-01-02", "2012-12-30"])
+def test_backfill_recovery_repairs_only_unscored_congress_boundary_dates(
+    tmp_path, monkeypatch, missing_date,
+):
+    from scripts import update_speakers
+
+    root = Path(__file__).resolve().parents[1]
+    workflow = (root / ".github/workflows/backfill-all-speaker-terms.yml").read_text()
+    validation = textwrap.dedent(
+        workflow.split("          python - <<'PY'\n", 1)[1].split("\n          PY", 1)[0]
+    )
+    artifacts = tmp_path / "artifacts"
+    artifacts.mkdir()
+    path = artifacts / "congress_112.parquet"
+    pd.DataFrame({
+        "date": ["2012-12-29", missing_date],
+        "slur_hits": pd.array([0, pd.NA], dtype="Int64"),
+        "profanity_hits": [0, 0],
+        "profanity_terms": ["{}", "{}"],
+    }).to_parquet(path)
+    calls = []
+
+    def repair(argv):
+        calls.append(argv)
+        frame = pd.read_parquet(path)
+        frame["slur_hits"] = frame["slur_hits"].fillna(1)
+        frame.to_parquet(path)
+        return 0
+
+    monkeypatch.setattr(update_speakers, "main", repair)
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setenv("BACKFILL_CONGRESSES", "[112]")
+    monkeypatch.setenv("RESCORED_SPEAKERS", str(artifacts))
+    if missing_date == "2013-01-02":
+        exec(compile(validation, "<workflow-validation>", "exec"), {})
+        assert calls == [
+            ["--daily", str(artifacts), "--since", missing_date, "--until", missing_date],
+        ]
+        saved = pd.read_parquet(tmp_path / "data/site/speaker_daily/congress_112.parquet")
+        assert saved["slur_hits"].tolist() == [0, 1]
+    else:
+        with pytest.raises(SystemExit, match="outside the January boundary"):
+            exec(compile(validation, "<workflow-validation>", "exec"), {})
+        assert calls == []
