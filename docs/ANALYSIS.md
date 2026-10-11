@@ -151,7 +151,7 @@ member who repeats a slur to describe or condemn it is still counted.
 
 ```bash
 .venv/bin/python -m pip install jupyter   # or: uv pip install jupyter
-jupyter lab notebooks/congressional_civility.ipynb
+jupyter lab docs/congressional_civility.ipynb
 ```
 
 The notebook loads the metrics table, plots House/Senate party trends, and scores a sample of

@@ -39,9 +39,10 @@ jobs:
         with:
           python-version: "3.12"
           cache: pip
+          cache-dependency-path: "requirements*.txt"
 
       - name: Install dependencies
-        run: pip install -r requirements.txt -r requirements-analysis.txt -r requirements-dev.txt
+        run: pip install -r requirements-dev.txt
 
       - name: Run tests
         run: python -m pytest tests/ -q
@@ -92,9 +93,10 @@ jobs:
         with:
           python-version: "3.12"
           cache: pip
+          cache-dependency-path: "requirements*.txt"
 
       - name: Install dependencies
-        run: pip install -r requirements.txt -r requirements-analysis.txt -r requirements-dev.txt
+        run: pip install -r requirements-dev.txt
 
       - name: Download rescored partitions
         uses: actions/download-artifact@v4

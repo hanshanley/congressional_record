@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Validate a single batch result file against the input batch and allowed values."""
 import json, sys, os
+from pathlib import Path
 
 ALLOWED = {
     'target_exists': {'yes','no','uncertain'},
@@ -22,8 +23,9 @@ ALLOWED = {
 CATS = [k for k in ALLOWED]
 
 def main(bi):
-    inp = f'_adj_work/input/batch_{bi:02d}.json'
-    res = f'_adj_work/results/batch_{bi:02d}.json'
+    root = Path(__file__).resolve().parent
+    inp = root / 'input' / f'batch_{bi:02d}.json'
+    res = root / 'results' / f'batch_{bi:02d}.json'
     if not os.path.exists(res):
         print(f'MISSING result file: {res}'); return 1
     with open(inp, encoding='utf-8') as f: indata = json.load(f)

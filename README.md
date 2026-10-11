@@ -70,8 +70,19 @@ and the [shared plotting style](docs/PLOTTING.md). Every figure is in
 
 ```bash
 python3 -m venv .venv
-./.venv/bin/pip install -r requirements.txt -r requirements-analysis.txt -r requirements-dev.txt
+./.venv/bin/pip install -r requirements-dev.txt
 ```
+
+| Folder | Purpose |
+|---|---|
+| `analysis/`, `crec/` | Analysis code and GovInfo source clients |
+| `scripts/` | Commands for updates and builds |
+| `data/` | Website state, archived validation, and ignored downloads |
+| `site/` | Generated public website |
+| `outputs/` | Publication figures and exact chart data |
+| `docs/` | Methods, instructions, and the interactive notebook |
+| `tests/` | Offline regression tests |
+| `.github/` | Workflows and legacy redirect pages |
 
 The routine commands, run from the repo root:
 

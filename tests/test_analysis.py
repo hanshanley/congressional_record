@@ -24,6 +24,32 @@ from analysis.ingest.schema import congress_from_year, year_from_congress  # noq
 from analysis.score.registry import METRICS, SCORE_KEYS  # noqa: E402
 
 
+def test_relocated_adjudication_validator_finds_batches_from_another_directory(
+    tmp_path, monkeypatch,
+):
+    import json
+    import runpy
+    import shutil
+
+    root = Path(__file__).resolve().parents[1]
+    archive = tmp_path / "adjudication"
+    archive.mkdir()
+    script = archive / "validate_result.py"
+    shutil.copy2(root / "data/validation/adjudication/validate_result.py", script)
+    module = runpy.run_path(str(script))
+    (archive / "input").mkdir()
+    (archive / "results").mkdir()
+    (archive / "input/batch_00.json").write_text(json.dumps([{"sample_id": "sample"}]))
+    result = {
+        **{key: sorted(values)[0] for key, values in module["ALLOWED"].items()},
+        "sample_id": "sample",
+        "rationale": "Test annotation.",
+    }
+    (archive / "results/batch_00.json").write_text(json.dumps([result]))
+    monkeypatch.chdir(tmp_path)
+    assert module["main"](0) == 0
+
+
 def test_congress_year_roundtrip() -> None:
     assert congress_from_year(1873) == 43
     assert congress_from_year(2017) == 115

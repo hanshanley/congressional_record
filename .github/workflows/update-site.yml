@@ -47,9 +47,10 @@ jobs:
         with:
           python-version: "3.12"
           cache: pip
+          cache-dependency-path: "requirements*.txt"
 
       - name: Install dependencies
-        run: pip install -r requirements.txt -r requirements-analysis.txt -r requirements-dev.txt
+        run: pip install -r requirements-dev.txt
 
       - name: Run tests
         # A scheduled job that silently publishes wrong numbers is worse than one
@@ -110,7 +111,7 @@ jobs:
 
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: redirect-site
+          path: .github/pages
 
   deploy:
     needs: update

@@ -1,3 +1,5 @@
-# Test-only dependencies. Kept separate from the runtime requirements so the
-# scheduled site update installs exactly what it needs to gate a publish.
+# Complete contributor/CI setup; narrower runtime manifests remain available.
+-r requirements.txt
+-r requirements-analysis.txt
 pytest>=8.0
+nbformat>=5.10

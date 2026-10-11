@@ -1,4 +1,4 @@
-"""Build notebooks/congressional_civility.ipynb (interactive data + plots + toxicity check)."""
+"""Build docs/congressional_civility.ipynb (interactive data and plots)."""
 
 from __future__ import annotations
 
@@ -56,8 +56,13 @@ from pathlib import Path
 import pandas as pd
 import matplotlib.pyplot as plt
 
-# Make the analysis package importable when running from notebooks/.
-ROOT = Path.cwd().parent if Path.cwd().name == "notebooks" else Path.cwd()
+ROOT = next(
+    (path for path in (Path.cwd(), *Path.cwd().parents)
+     if (path / "analysis" / "run.py").is_file()),
+    None,
+)
+if ROOT is None:
+    raise RuntimeError("Open this notebook from inside the congressional_record repository.")
 sys.path.insert(0, str(ROOT))
 
 from analysis.plotting import theme, charts   # shared Substack-style toolkit
@@ -233,7 +238,7 @@ md(r"""
 
 def main() -> None:
     nb["cells"] = cells
-    out = Path("notebooks/congressional_civility.ipynb")
+    out = Path(__file__).resolve().parents[1] / "docs" / "congressional_civility.ipynb"
     out.parent.mkdir(parents=True, exist_ok=True)
     nbf.write(nb, str(out))
     print(f"wrote {out} ({len(cells)} cells)")

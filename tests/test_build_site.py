@@ -8,6 +8,7 @@ workflow referencing dependencies and files that do not exist.
 from __future__ import annotations
 
 import importlib.util
+import ast
 import json
 import re
 import subprocess
@@ -903,13 +904,46 @@ def test_workflow_installs_every_requirements_file_it_needs():
 
 
 def test_workflow_references_scripts_that_exist():
-    workflow = (ROOT / ".github" / "workflows" / "update-site.yml").read_text()
-    for script in (
-        "scripts/update_speakers.py", "scripts/update_language.py",
-        "scripts/update_bills.py", "scripts/build_site.py",
-    ):
-        assert script in workflow
-        assert (ROOT / script).exists()
+    for path in (ROOT / ".github" / "workflows").glob("*.yml"):
+        workflow = path.read_text()
+        for script in set(re.findall(r"scripts/[a-z_]+\.py", workflow)):
+            assert (ROOT / script).exists(), f"{path.name}: {script}"
+
+
+def test_redirect_deployment_uses_existing_relocated_assets():
+    workflow = (ROOT / ".github/workflows/update-site.yml").read_text()
+    assert "path: .github/pages" in workflow
+    for relative in ("index.html", "404.html", "activity/index.html"):
+        document = BeautifulSoup(
+            (ROOT / ".github/pages" / relative).read_text(), "html.parser",
+        )
+        assert "/congressional_profanity/" in document.select_one(
+            'link[rel="canonical"]',
+        )["href"]
+        assert document.select_one('meta[http-equiv="refresh"]')
+
+
+@pytest.mark.parametrize("directory", [".", "docs"])
+def test_relocated_notebook_resolves_repo_root_and_matches_generator(monkeypatch, directory):
+    notebook = json.loads((ROOT / "docs/congressional_civility.ipynb").read_text())
+    cell = next(cell for cell in notebook["cells"] if cell["cell_type"] == "code")
+    source = "".join(cell["source"])
+    generator = ast.parse((ROOT / "scripts/build_notebook.py").read_text())
+    first_code = next(
+        node.value.args[0].value
+        for node in generator.body
+        if isinstance(node, ast.Expr)
+        and isinstance(node.value, ast.Call)
+        and isinstance(node.value.func, ast.Name)
+        and node.value.func.id == "code"
+    )
+    assert source == first_code.strip("\n")
+    monkeypatch.chdir(ROOT / directory)
+    monkeypatch.setattr(sys, "path", sys.path.copy())
+    scope = {}
+    exec(source.split("from analysis.plotting", 1)[0], scope)
+    assert scope["ROOT"] == ROOT
+    assert sys.path[0] == str(ROOT)
 
 
 def test_workflow_needs_no_api_key_secret():
