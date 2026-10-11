@@ -6,7 +6,12 @@ on:
       congresses:
         description: JSON array of Congress numbers to rescore
         required: true
-        default: "[103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118]"
+        default: "[103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119]"
+        type: string
+      source_run_id:
+        description: "Recover publication using artifacts from a completed backfill run"
+        required: false
+        default: ""
         type: string
 
 concurrency:
@@ -14,10 +19,12 @@ concurrency:
   cancel-in-progress: false
 
 permissions:
+  actions: read
   contents: write
 
 jobs:
   backfill:
+    if: ${{ inputs.source_run_id == '' }}
     runs-on: ubuntu-latest
     timeout-minutes: 180
     strategy:
@@ -61,10 +68,14 @@ jobs:
 
   publish:
     needs: backfill
+    if: ${{ always() && !cancelled() && (needs.backfill.result == 'success' || (inputs.source_run_id != '' && needs.backfill.result == 'skipped')) }}
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: master
+          fetch-depth: 0
 
       - uses: actions/setup-python@v5
         with:
@@ -78,43 +89,85 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           pattern: speaker-congress-*
-          path: data/site/speaker_daily
+          path: ${{ runner.temp }}/rescored-speakers
           merge-multiple: true
+          run-id: ${{ inputs.source_run_id || github.run_id }}
+          github-token: ${{ github.token }}
 
       - name: Validate historical term counts
+        env:
+          BACKFILL_CONGRESSES: ${{ inputs.congresses }}
+          RESCORED_SPEAKERS: ${{ runner.temp }}/rescored-speakers
         run: |
           python - <<'PY'
+          import json
+          import os
           from pathlib import Path
+          import shutil
 
           import pandas as pd
 
           from analysis.speakers import incomplete_profanity_term_rows
 
-          root = Path("data/site/speaker_daily")
-          for congress in range(103, 119):
+          congresses = json.loads(os.environ["BACKFILL_CONGRESSES"])
+          if (
+              not isinstance(congresses, list)
+              or not congresses
+              or any(type(congress) is not int or congress < 103 for congress in congresses)
+              or len(set(congresses)) != len(congresses)
+          ):
+              raise SystemExit("congresses must be a nonempty array of distinct Congress numbers >= 103")
+          root = Path(os.environ["RESCORED_SPEAKERS"])
+          for congress in congresses:
               path = root / f"congress_{congress}.parquet"
               frame = pd.read_parquet(path)
+              if "slur_hits" not in frame or frame["slur_hits"].isna().any():
+                  raise SystemExit(f"{path}: slur scoring is incomplete")
               incomplete = incomplete_profanity_term_rows(frame)
               if not incomplete.empty:
                   raise SystemExit(
                       f"{path}: {len(incomplete)} rows have inconsistent profanity terms"
                   )
+          destination = Path("data/site/speaker_daily")
+          destination.mkdir(parents=True, exist_ok=True)
+          for congress in congresses:
+              name = f"congress_{congress}.parquet"
+              shutil.copy2(root / name, destination / name)
           PY
           python -m pytest tests/ -q
 
       - name: Rebuild and commit site
         run: |
-          python scripts/build_site.py
-          python scripts/build_term_graphs.py
-          git add data/site/speaker_daily site outputs/figures/profanity_terms
-          if git diff --cached --quiet; then
-            echo "Site outputs are unchanged."
-          else
-            git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git commit \
-              -m "Publish historical speaker profanity terms" \
-              -m "Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>" \
-              -m "Copilot-Session: 20de2f9c-02b3-4617-b28a-82ccd88b0490"
-            git push
+          git config user.name "hanshanley"
+          git config user.email "hwahhanley@gmail.com"
+          git add data/site/speaker_daily
+          if ! git diff --cached --quiet; then
+            git commit -m "Publish rescored historical speaker language"
           fi
+
+          for attempt in 1 2 3; do
+            # Incorporate presentation changes before rendering the saved scores.
+            git pull --rebase origin master
+            python scripts/build_site.py
+            python scripts/build_term_graphs.py
+            git add site outputs/figures/profanity_terms
+            if ! git diff --cached --quiet; then
+              git commit -m "Rebuild site with historical speaker language"
+            fi
+            if [[ "$(git rev-list --count origin/master..HEAD)" -eq 0 ]]; then
+              echo "Site outputs are unchanged."
+              exit 0
+            fi
+            remote_head="$(git rev-parse origin/master)"
+            if git push origin HEAD:master; then
+              exit 0
+            fi
+            git fetch origin master
+            if [[ "$(git rev-parse origin/master)" == "$remote_head" ]]; then
+              echo "::error::Push failed without a concurrent branch update; publication stopped."
+              exit 1
+            fi
+            echo "::warning::master advanced during publication attempt $attempt; rebuilding."
+          done
+          echo "::error::master kept advancing; publication did not finish after three attempts."
+          exit 1

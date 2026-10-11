@@ -2,11 +2,16 @@ from __future__ import annotations
 
 import datetime as dt
 from argparse import Namespace
+import os
 from pathlib import Path
+import subprocess
+import sys
+import textwrap
 
 import pandas as pd
 import pyarrow as pa
 import pyarrow.parquet as pq
+import pytest
 
 from analysis.daily_language import (
     restrict_to_complete_metrics,
@@ -242,3 +247,114 @@ def test_daily_workflow_does_not_inject_author_trailers():
     workflow = (root / ".github" / "workflows" / "update-site.yml").read_text()
     assert "Co-authored-by:" not in workflow
     assert "Copilot-Session:" not in workflow
+
+
+@pytest.mark.parametrize("concurrent_update", [True, False])
+def test_backfill_publication_rebuilds_after_branch_advance_and_stops_other_push_failures(
+    tmp_path, concurrent_update,
+):
+    root = Path(__file__).resolve().parents[1]
+    workflow = (root / ".github/workflows/backfill-all-speaker-terms.yml").read_text()
+    publish = textwrap.dedent(
+        workflow.split("      - name: Rebuild and commit site\n        run: |\n", 1)[1]
+    )
+    remote = tmp_path / "remote.git"
+    publisher = tmp_path / "publisher"
+    editor = tmp_path / "editor"
+
+    def git(*args, cwd=tmp_path):
+        return subprocess.run(
+            ["git", *map(str, args)], cwd=cwd, check=True,
+            capture_output=True, text=True,
+        ).stdout.strip()
+
+    git("init", "--bare", "--initial-branch=master", remote)
+    git("clone", remote, publisher)
+    git("config", "user.name", "Test", cwd=publisher)
+    git("config", "user.email", "test@example.com", cwd=publisher)
+    git("config", "commit.gpgsign", "false", cwd=publisher)
+    (publisher / "template.txt").write_text("original style")
+    scripts = publisher / "scripts"
+    scripts.mkdir()
+    (scripts / "build_site.py").write_text(
+        "from pathlib import Path\n"
+        "Path('site').mkdir(exist_ok=True)\n"
+        "Path('site/index.html').write_text(Path('template.txt').read_text())\n"
+    )
+    (scripts / "build_term_graphs.py").write_text(
+        "from pathlib import Path\n"
+        "out = Path('outputs/figures/profanity_terms')\n"
+        "out.mkdir(parents=True, exist_ok=True)\n"
+        "(out / 'index.json').write_text('{}')\n"
+    )
+    git("add", ".", cwd=publisher)
+    git("commit", "-m", "Initial", cwd=publisher)
+    git("push", "origin", "master", cwd=publisher)
+    git("clone", remote, editor)
+    git("config", "user.name", "Editor", cwd=editor)
+    git("config", "user.email", "editor@example.com", cwd=editor)
+    git("config", "commit.gpgsign", "false", cwd=editor)
+    scores = publisher / "data/site/speaker_daily"
+    scores.mkdir(parents=True)
+    (scores / "congress_119.parquet").write_text("rescored data")
+
+    hook = publisher / ".git/hooks/pre-push"
+    if concurrent_update:
+        hook.write_text(
+            "#!/bin/sh\nset -e\n"
+            "if [ ! -f .git/simulated-update ]; then\n"
+            "  touch .git/simulated-update\n"
+            f"  cd '{editor}'\n"
+            "  printf 'new style' > template.txt\n"
+            "  git add template.txt\n"
+            "  git commit -m 'New presentation'\n"
+            "  git push origin master\n"
+            "fi\n"
+        )
+    else:
+        hook.write_text("#!/bin/sh\nexit 1\n")
+    hook.chmod(0o755)
+    binaries = tmp_path / "bin"
+    binaries.mkdir()
+    (binaries / "python").symlink_to(sys.executable)
+
+    result = subprocess.run(
+        ["bash", "-e", "-c", publish], cwd=publisher,
+        env={**os.environ, "PATH": str(binaries) + os.pathsep + os.environ["PATH"]},
+        capture_output=True, text=True,
+    )
+    if concurrent_update:
+        assert result.returncode == 0, result.stdout + result.stderr
+        git("pull", "--ff-only", cwd=editor)
+        assert (editor / "site/index.html").read_text() == "new style"
+        assert (editor / "data/site/speaker_daily/congress_119.parquet").read_text() == "rescored data"
+        messages = git("log", "--format=%B", cwd=editor)
+        assert "New presentation" in messages
+        assert "Co-authored-by:" not in messages
+        assert "Copilot-Session:" not in messages
+    else:
+        assert result.returncode != 0
+        assert "Push failed without a concurrent branch update" in result.stdout
+        assert "master advanced during publication" not in result.stdout
+
+
+def test_backfill_recovery_rejects_missing_requested_artifact_even_with_committed_data(
+    tmp_path, monkeypatch,
+):
+    root = Path(__file__).resolve().parents[1]
+    workflow = (root / ".github/workflows/backfill-all-speaker-terms.yml").read_text()
+    validation = textwrap.dedent(
+        workflow.split("          python - <<'PY'\n", 1)[1].split("\n          PY", 1)[0]
+    )
+    artifacts = tmp_path / "artifacts"
+    artifacts.mkdir()
+    committed = tmp_path / "data/site/speaker_daily"
+    committed.mkdir(parents=True)
+    existing = committed / "congress_119.parquet"
+    existing.write_text("old committed data")
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setenv("BACKFILL_CONGRESSES", "[119]")
+    monkeypatch.setenv("RESCORED_SPEAKERS", str(artifacts))
+    with pytest.raises(FileNotFoundError, match="congress_119"):
+        exec(compile(validation, "<workflow-validation>", "exec"), {})
+    assert existing.read_text() == "old committed data"
