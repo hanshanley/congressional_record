@@ -166,6 +166,12 @@ def test_build_writes_html_json_and_figures(store, tmp_path):
     assert len(terms.select("figure img")) == 2
     for image in terms.select("figure img"):
         assert (out / "terms" / image["src"]).exists()
+        assert image.find_parent("noscript") is not None
+    assert len(terms.select(".term-family-plot")) == 2
+    exported_families = json.loads(
+        (out / "figures/profanity_terms/index.json").read_text(),
+    )["terms"]
+    assert json.loads(terms.select_one("#term-family-data").string) == exported_families
     for rel in ("index.html", "activity/index.html"):
         document = (out / rel).read_text()
         radii = re.findall(r"border(?:-[a-z]+)*-radius\s*:\s*([^;}]+)", document)

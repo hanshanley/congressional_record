@@ -210,14 +210,19 @@ courtesy, profanity, and slurs.">
                    font-size:.78rem; }
   .section-nav a::after { content:" ↓"; }
   .section-nav a:hover { color:var(--ink); text-decoration:underline; }
-  .language-page .feature-section { padding-top:1.75rem;
+  .language-page .feature-section,.terms-page .feature-section { padding-top:1.75rem;
                                     scroll-margin-top:1.5rem; }
-  .language-page .feature-section ~ .feature-section { margin-top:3rem;
+  .language-page .feature-section ~ .feature-section,
+  .terms-page .feature-section ~ .feature-section { margin-top:3rem;
                                                      border-top:1px solid var(--hair); }
   .language-page .section-head { display:block; margin-bottom:.75rem; padding:0; border:0; }
   .language-page .section-head > div { display:grid; grid-template-columns:1fr;
                                      gap:.5rem; }
-  .language-page h2 { font-size:clamp(1.7rem,2.5vw,2.15rem); line-height:1.12; text-wrap:balance; }
+  .language-page h2,.terms-page h2 { font-size:clamp(1.7rem,2.5vw,2.15rem);
+                                   line-height:1.12; text-wrap:balance; }
+  .terms-page figure { margin:.75rem 0 0; }
+  .terms-page .feature-section > .definition { margin:.5rem 0 0; }
+  .terms-page figcaption { margin-top:.5rem; font-size:.8rem; color:var(--muted); }
   .language-page .section-dek { margin:0; max-width:44rem; color:var(--muted);
                               font-size:.95rem; line-height:1.5; }
   .language-page .section-head .eyebrow { grid-column:1 / -1; margin:0;
@@ -538,71 +543,9 @@ const chartColors = {
   grid: '#D9D1C2',
   paper: '#F2EFE7',
 };
-let selectedLongRunMetric = 'profanity_per_1k';
-let selectedLongRunChamber = 'all';
-let selectedRecentMetric = 'profanity';
-let selectedRecentView = 'trend';
-let selectedRecentChamber = 'all';
-let selectedTermView = 'leaders';
-let selectedTermParty = 'all';
-let selectedTermChamber = 'all';
-let showAllTerms = false;
-const TERM_INITIAL_ROWS = 12;
-const termLeaderDescription = document.getElementById('term-leaders-description')
-  .textContent.trim().replace(/\s+/g, ' ');
-let currentLanguage = null;
-let currentLongRun = null;
-
-const STATE_TILES = {
-  ME:[10,0], VT:[8,1], NH:[9,1], MA:[10,1],
-  WA:[0,2], ID:[1,2], MT:[2,2], ND:[3,2], MN:[4,2], WI:[5,2],
-  MI:[7,2], NY:[8,2], RI:[9,2], CT:[10,2],
-  OR:[0,3], NV:[1,3], WY:[2,3], SD:[3,3], IA:[4,3], IL:[5,3],
-  IN:[6,3], OH:[7,3], PA:[8,3], NJ:[9,3],
-  CA:[0,4], UT:[1,4], CO:[2,4], NE:[3,4], MO:[4,4], KY:[5,4],
-  WV:[6,4], VA:[7,4], MD:[8,4], DE:[9,4], DC:[10,4],
-  AZ:[0,5], NM:[1,5], KS:[2,5], AR:[3,5], TN:[4,5], NC:[5,5], SC:[6,5],
-  AK:[0,6], HI:[1,6], OK:[2,6], LA:[3,6], MS:[4,6], AL:[5,6], GA:[6,6],
-  TX:[2,7], FL:[7,7],
-};
 
 function isCompactChart() {
   return window.innerWidth < 600;
-}
-
-function updateHash(values) {
-  const params = new URLSearchParams(location.hash.slice(1));
-  Object.entries(values).forEach(([key, value]) => params.set(key, value));
-  history.replaceState(null, '', `#${params.toString()}`);
-}
-
-function chamberLabel(chamber) {
-  return chamber === 'all' ? 'House + Senate' :
-    chamber[0].toUpperCase() + chamber.slice(1);
-}
-
-function longRunSeries(longRun) {
-  return selectedLongRunChamber === 'all'
-    ? longRun.series
-    : longRun.chamber_series.filter(row => row.chamber === selectedLongRunChamber);
-}
-
-function recentSeries(language) {
-  return selectedRecentChamber === 'all'
-    ? language.series
-    : language.chamber_series.filter(row => row.chamber === selectedRecentChamber);
-}
-
-function recentMembers(language, key) {
-  return selectedRecentChamber === 'all'
-    ? language.members[key]
-    : language.members_by_chamber[selectedRecentChamber][key];
-}
-
-function recentTermDetailAvailable(language) {
-  return selectedTermChamber === 'all'
-    ? language.profanity_term_detail_available
-    : language.profanity_term_detail_available_by_chamber[selectedTermChamber];
 }
 
 function svgNode(tag, attributes = {}, text = '') {
@@ -786,6 +729,154 @@ function addAccessibleTable(wrapper, captionText, headers, rows) {
   wrapper.appendChild(accessible);
 }
 
+function renderYearlyPanel(sourceSeries, metric, scopeLabel) {
+  const wrapper = document.createElement('section');
+  wrapper.className = 'mini-chart long-run-panel';
+  addPanelHeading(wrapper, metric, metric.units);
+  addPartyLegend(wrapper);
+  const tooltip = addTooltip(wrapper);
+  const compact = isCompactChart();
+  const width = compact ? 360 : 760;
+  const height = compact ? 290 : 270;
+  const margin = compact
+    ? {left: 42, right: 14, top: 14, bottom: 42}
+    : {left: 62, right: 24, top: 14, bottom: 44};
+  const plotWidth = width - margin.left - margin.right;
+  const plotHeight = height - margin.top - margin.bottom;
+  const svg = svgNode('svg', {
+    viewBox: `0 0 ${width} ${height}`,
+    role: 'img',
+    'aria-label': `${metric.label}, Democrats compared with Republicans, ${scopeLabel}`,
+  });
+  const years = [...new Set(sourceSeries.map(row => Number(row.year)))].sort((a, b) => a - b);
+  const values = sourceSeries.map(row => Number(row[metric.rate]) || 0);
+  const maxValue = Math.max(0.01, ...values) * 1.08;
+  const x = year => margin.left + (
+    (year - years[0]) / Math.max(1, years[years.length - 1] - years[0])
+  ) * plotWidth;
+  const y = value => margin.top + plotHeight - (value / maxValue) * plotHeight;
+  for (let tick = 0; tick <= 4; tick += 1) {
+    const value = maxValue * tick / 4;
+    const py = y(value);
+    svg.appendChild(svgNode('line', {
+      x1: margin.left, x2: width - margin.right, y1: py, y2: py,
+      stroke: chartColors.grid, 'stroke-width': 1,
+    }));
+    addSvgText(svg, margin.left - 9, py + 4, value.toFixed(2), {
+      'text-anchor': 'end', fill: chartColors.muted, 'font-size': compact ? 9 : 9.5,
+    });
+  }
+  const yearLabelIndices = new Set(spacedLabelIndices(years.length, compact ? 4 : 7));
+  years.forEach((year, index) => {
+    if (!yearLabelIndices.has(index)) return;
+    addSvgText(svg, x(year), height - 14, String(year), {
+      'text-anchor': 'middle', fill: chartColors.muted, 'font-size': compact ? 9 : 9.5,
+    });
+  });
+  [['D', 'Democrats'], ['R', 'Republicans']].forEach(([party, label]) => {
+    const rows = sourceSeries.filter(row => row.party === party)
+      .sort((a, b) => Number(a.year) - Number(b.year));
+    const points = rows.map(row => [
+      x(Number(row.year)), y(Number(row[metric.rate]) || 0), row,
+    ]);
+    svg.appendChild(svgNode('polyline', {
+      points: points.map(point => `${point[0]},${point[1]}`).join(' '),
+      fill: 'none', stroke: chartColors[party], 'stroke-width': 2.5,
+      'stroke-dasharray': party === 'R' ? '8 4' : '',
+      'vector-effect': 'non-scaling-stroke', 'data-party': party,
+    }));
+    points.forEach(([px, py, row], index) => {
+      if (index % 4 === 0 || index === points.length - 1) {
+        svg.appendChild(svgNode('circle', {
+          cx: px, cy: py, r: 2.2, fill: chartColors[party], 'data-party': party,
+        }));
+      }
+      const mark = svgNode('circle', {
+        cx: px, cy: py, r: 7, fill: 'transparent', 'data-party': party,
+      });
+      bindTooltip(mark, wrapper, tooltip,
+        `${row.year} ${label}: ${Number(row[metric.rate]).toFixed(3)} ${metric.units} ` +
+        `(${Number(row[metric.hits]).toLocaleString()} hits; ` +
+        `${Number(row.words).toLocaleString()} words)`);
+      svg.appendChild(mark);
+    });
+  });
+  wrapper.appendChild(svg);
+  addAccessibleTable(
+    wrapper,
+    `${metric.label}, ${scopeLabel}`,
+    ['Year', 'Party', metric.units, 'Hits', 'Words'],
+    sourceSeries.map(row => [
+      row.year, partyName(row.party), Number(row[metric.rate]).toFixed(3),
+      Number(row[metric.hits]).toLocaleString(), Number(row.words).toLocaleString(),
+    ]),
+  );
+  return wrapper;
+}
+
+let selectedLongRunMetric = 'profanity_per_1k';
+let selectedLongRunChamber = 'all';
+let selectedRecentMetric = 'profanity';
+let selectedRecentView = 'trend';
+let selectedRecentChamber = 'all';
+let selectedTermView = 'leaders';
+let selectedTermParty = 'all';
+let selectedTermChamber = 'all';
+let showAllTerms = false;
+const TERM_INITIAL_ROWS = 12;
+const termLeaderDescription = document.getElementById('term-leaders-description')
+  .textContent.trim().replace(/\s+/g, ' ');
+let currentLanguage = null;
+let currentLongRun = null;
+
+const STATE_TILES = {
+  ME:[10,0], VT:[8,1], NH:[9,1], MA:[10,1],
+  WA:[0,2], ID:[1,2], MT:[2,2], ND:[3,2], MN:[4,2], WI:[5,2],
+  MI:[7,2], NY:[8,2], RI:[9,2], CT:[10,2],
+  OR:[0,3], NV:[1,3], WY:[2,3], SD:[3,3], IA:[4,3], IL:[5,3],
+  IN:[6,3], OH:[7,3], PA:[8,3], NJ:[9,3],
+  CA:[0,4], UT:[1,4], CO:[2,4], NE:[3,4], MO:[4,4], KY:[5,4],
+  WV:[6,4], VA:[7,4], MD:[8,4], DE:[9,4], DC:[10,4],
+  AZ:[0,5], NM:[1,5], KS:[2,5], AR:[3,5], TN:[4,5], NC:[5,5], SC:[6,5],
+  AK:[0,6], HI:[1,6], OK:[2,6], LA:[3,6], MS:[4,6], AL:[5,6], GA:[6,6],
+  TX:[2,7], FL:[7,7],
+};
+
+function updateHash(values) {
+  const params = new URLSearchParams(location.hash.slice(1));
+  Object.entries(values).forEach(([key, value]) => params.set(key, value));
+  history.replaceState(null, '', `#${params.toString()}`);
+}
+
+function chamberLabel(chamber) {
+  return chamber === 'all' ? 'House + Senate' :
+    chamber[0].toUpperCase() + chamber.slice(1);
+}
+
+function longRunSeries(longRun) {
+  return selectedLongRunChamber === 'all'
+    ? longRun.series
+    : longRun.chamber_series.filter(row => row.chamber === selectedLongRunChamber);
+}
+
+function recentSeries(language) {
+  return selectedRecentChamber === 'all'
+    ? language.series
+    : language.chamber_series.filter(row => row.chamber === selectedRecentChamber);
+}
+
+function recentMembers(language, key) {
+  return selectedRecentChamber === 'all'
+    ? language.members[key]
+    : language.members_by_chamber[selectedRecentChamber][key];
+}
+
+function recentTermDetailAvailable(language) {
+  return selectedTermChamber === 'all'
+    ? language.profanity_term_detail_available
+    : language.profanity_term_detail_available_by_chamber[selectedTermChamber];
+}
+
 function syncSelect(select, items, selected, onSelect) {
   const signature = items.map(item => `${item.key}:${item.label}`).join('|');
   if (select.dataset.signature !== signature) {
@@ -900,91 +991,10 @@ function renderTrendPanel(language, key) {
 }
 
 function renderLongRunPanel(longRun, key) {
-  const metric = longRun.metrics[key];
-  const wrapper = document.createElement('section');
-  wrapper.className = 'mini-chart long-run-panel';
-  addPanelHeading(wrapper, metric, metric.units);
-  addPartyLegend(wrapper);
-  const tooltip = addTooltip(wrapper);
-  const compact = isCompactChart();
-  const width = compact ? 360 : 760;
-  const height = compact ? 290 : 270;
-  const margin = compact
-    ? {left: 42, right: 14, top: 14, bottom: 42}
-    : {left: 62, right: 24, top: 14, bottom: 44};
-  const plotWidth = width - margin.left - margin.right;
-  const plotHeight = height - margin.top - margin.bottom;
-  const svg = svgNode('svg', {
-    viewBox: `0 0 ${width} ${height}`,
-    role: 'img',
-    'aria-label': `${metric.label}, Democrats compared with Republicans, ` +
-      `${longRun.first_year} to ${longRun.last_year}, ${chamberLabel(selectedLongRunChamber)}`,
-  });
-  const sourceSeries = longRunSeries(longRun);
-  const years = [...new Set(sourceSeries.map(row => Number(row.year)))].sort((a, b) => a - b);
-  const values = sourceSeries.map(row => Number(row[metric.rate]) || 0);
-  const maxValue = Math.max(0.01, ...values) * 1.08;
-  const x = year => margin.left + (
-    (year - years[0]) / Math.max(1, years[years.length - 1] - years[0])
-  ) * plotWidth;
-  const y = value => margin.top + plotHeight - (value / maxValue) * plotHeight;
-  for (let tick = 0; tick <= 4; tick += 1) {
-    const value = maxValue * tick / 4;
-    const py = y(value);
-    svg.appendChild(svgNode('line', {
-      x1: margin.left, x2: width - margin.right, y1: py, y2: py,
-      stroke: chartColors.grid, 'stroke-width': 1,
-    }));
-    addSvgText(svg, margin.left - 9, py + 4, value.toFixed(2), {
-      'text-anchor': 'end', fill: chartColors.muted, 'font-size': compact ? 9 : 9.5,
-    });
-  }
-  const yearLabelIndices = new Set(spacedLabelIndices(years.length, compact ? 4 : 7));
-  years.forEach((year, index) => {
-    if (!yearLabelIndices.has(index)) return;
-    addSvgText(svg, x(year), height - 14, String(year), {
-      'text-anchor': 'middle', fill: chartColors.muted, 'font-size': compact ? 9 : 9.5,
-    });
-  });
-  [['D', 'Democrats'], ['R', 'Republicans']].forEach(([party, label]) => {
-    const rows = sourceSeries.filter(row => row.party === party)
-      .sort((a, b) => Number(a.year) - Number(b.year));
-    const points = rows.map(row => [
-      x(Number(row.year)), y(Number(row[metric.rate]) || 0), row,
-    ]);
-    svg.appendChild(svgNode('polyline', {
-      points: points.map(point => `${point[0]},${point[1]}`).join(' '),
-      fill: 'none', stroke: chartColors[party], 'stroke-width': 2.5,
-      'stroke-dasharray': party === 'R' ? '8 4' : '',
-      'vector-effect': 'non-scaling-stroke', 'data-party': party,
-    }));
-    points.forEach(([px, py, row], index) => {
-      if (index % 4 === 0 || index === points.length - 1) {
-        svg.appendChild(svgNode('circle', {
-          cx: px, cy: py, r: 2.2, fill: chartColors[party], 'data-party': party,
-        }));
-      }
-      const mark = svgNode('circle', {
-        cx: px, cy: py, r: 7, fill: 'transparent', 'data-party': party,
-      });
-      bindTooltip(mark, wrapper, tooltip,
-        `${row.year} ${label}: ${Number(row[metric.rate]).toFixed(3)} ${metric.units} ` +
-        `(${Number(row[metric.hits]).toLocaleString()} hits; ` +
-        `${Number(row.words).toLocaleString()} words)`);
-      svg.appendChild(mark);
-    });
-  });
-  wrapper.appendChild(svg);
-  addAccessibleTable(
-    wrapper,
-    `${metric.label}, ${longRun.first_year} to ${longRun.last_year}`,
-    ['Year', 'Party', metric.units, 'Hits', 'Words'],
-    sourceSeries.map(row => [
-      row.year, partyName(row.party), Number(row[metric.rate]).toFixed(3),
-      Number(row[metric.hits]).toLocaleString(), Number(row.words).toLocaleString(),
-    ]),
+  return renderYearlyPanel(
+    longRunSeries(longRun), longRun.metrics[key],
+    `${longRun.first_year} to ${longRun.last_year}, ${chamberLabel(selectedLongRunChamber)}`,
   );
-  return wrapper;
 }
 
 function renderLongRun(longRun) {

@@ -206,14 +206,19 @@
                    font-size:.78rem; }
   .section-nav a::after { content:" ↓"; }
   .section-nav a:hover { color:var(--ink); text-decoration:underline; }
-  .language-page .feature-section { padding-top:1.75rem;
+  .language-page .feature-section,.terms-page .feature-section { padding-top:1.75rem;
                                     scroll-margin-top:1.5rem; }
-  .language-page .feature-section ~ .feature-section { margin-top:3rem;
+  .language-page .feature-section ~ .feature-section,
+  .terms-page .feature-section ~ .feature-section { margin-top:3rem;
                                                      border-top:1px solid var(--hair); }
   .language-page .section-head { display:block; margin-bottom:.75rem; padding:0; border:0; }
   .language-page .section-head > div { display:grid; grid-template-columns:1fr;
                                      gap:.5rem; }
-  .language-page h2 { font-size:clamp(1.7rem,2.5vw,2.15rem); line-height:1.12; text-wrap:balance; }
+  .language-page h2,.terms-page h2 { font-size:clamp(1.7rem,2.5vw,2.15rem);
+                                   line-height:1.12; text-wrap:balance; }
+  .terms-page figure { margin:.75rem 0 0; }
+  .terms-page .feature-section > .definition { margin:.5rem 0 0; }
+  .terms-page figcaption { margin-top:.5rem; font-size:.8rem; color:var(--muted); }
   .language-page .section-dek { margin:0; max-width:44rem; color:var(--muted);
                               font-size:.95rem; line-height:1.5; }
   .language-page .section-head .eyebrow { grid-column:1 / -1; margin:0;
@@ -388,19 +393,326 @@
 <nav aria-label="Primary navigation"><ul><li><a href="/">Latest</a></li><li><a href="/archive/">Archive</a></li><li><a href="/about/">About</a></li><li><a href="https://docs.google.com/forms/d/e/1FAIpQLSeHPhVHdJ0xdCYq3wDYjkOIxgVdErP4qszNOBQYrnyzTz3xyQ/viewform" class="subscribe-link">Subscribe</a></li></ul></nav>
 </div>
 </header>
-<main id="main-content"><article class="feature dashboard-page">
+<main id="main-content"><article class="feature dashboard-page terms-page">
 <header class="feature-header"><p class="kicker">Congress / Vocabulary</p>
 <h1>Five swear-word families</h1>
 <p class="dek">The most-used families in member-attributed House and Senate text, ranked by total matches.
 Variants are combined; annual rates use each party's attributed word total.</p>
 <div class="byline"><p>By Hans W. A. Hanley</p><p>1994-01-25 to 2026-09-30</p></div></header>
 <nav class="feature-nav" aria-label="Dashboard pages"><a href="../">The Language of Congress</a><a href="../activity/">Member Activity &amp; Bills</a><a href="./" aria-current="page">Word-family graphs</a></nav>
-<p class="warning">Lexical matches in published member-attributed text, not verified personally uttered curses. Quotation-mark masking and inserted-material detection are imperfect; literal uses and quoted or printed material can still match.</p>
+<details class="notes"><summary>Sources and how to read these graphs</summary>
+<p>Lexical matches in published member-attributed text, not verified personally uttered curses. Quotation-mark masking and inserted-material detection are imperfect; literal uses and quoted or printed material can still match.</p>
 <p>These graphs use GovInfo member-level data, not the separate Stanford series back to 1873.</p>
-<section class="feature-section"><h2><span class="censored-term" tabindex="0" data-term="damn" aria-label="damn" title="Uncensored term: damn">da*n</span></h2><p>1,149 matched uses across the covered period. Grouped forms: <span class="censored-term" tabindex="0" data-term="dammit" aria-label="dammit" title="Uncensored term: dammit">da***t</span>, <span class="censored-term" tabindex="0" data-term="damn" aria-label="damn" title="Uncensored term: damn">da*n</span>, <span class="censored-term" tabindex="0" data-term="damned" aria-label="damned" title="Uncensored term: damned">da***d</span>, <span class="censored-term" tabindex="0" data-term="god damn" aria-label="god damn" title="Uncensored term: god damn">g*d da*n</span>, <span class="censored-term" tabindex="0" data-term="goddammit" aria-label="goddammit" title="Uncensored term: goddammit">go******t</span>, <span class="censored-term" tabindex="0" data-term="goddamn" aria-label="goddamn" title="Uncensored term: goddamn">go****n</span>, <span class="censored-term" tabindex="0" data-term="goddamned" aria-label="goddamned" title="Uncensored term: goddamned">go******d</span>.</p><figure><img src="../figures/profanity_terms/damn_per_100k.png" alt="da*n family matches per 100,000 words, Democrats and Republicans" loading="lazy" style="width:100%;height:auto"><figcaption><a href="../figures/profanity_terms/damn_per_100k.png" download>Download PNG</a></figcaption></figure></section><section class="feature-section"><h2><span class="censored-term" tabindex="0" data-term="hell" aria-label="hell" title="Uncensored term: hell">he*l</span></h2><p>477 matched uses across the covered period. Grouped forms: <span class="censored-term" tabindex="0" data-term="go to hell" aria-label="go to hell" title="Uncensored term: go to hell">go to he*l</span>, <span class="censored-term" tabindex="0" data-term="hell of a" aria-label="hell of a" title="Uncensored term: hell of a">he*l of a</span>, <span class="censored-term" tabindex="0" data-term="helluva" aria-label="helluva" title="Uncensored term: helluva">he****a</span>, <span class="censored-term" tabindex="0" data-term="what the hell" aria-label="what the hell" title="Uncensored term: what the hell">wh*t the he*l</span>.</p><figure><img src="../figures/profanity_terms/hell_per_100k.png" alt="he*l family matches per 100,000 words, Democrats and Republicans" loading="lazy" style="width:100%;height:auto"><figcaption><a href="../figures/profanity_terms/hell_per_100k.png" download>Download PNG</a></figcaption></figure></section><section class="feature-section"><h2><span class="censored-term" tabindex="0" data-term="crap" aria-label="crap" title="Uncensored term: crap">cr*p</span></h2><p>441 matched uses across the covered period. Grouped forms: <span class="censored-term" tabindex="0" data-term="crap" aria-label="crap" title="Uncensored term: crap">cr*p</span>, <span class="censored-term" tabindex="0" data-term="crappy" aria-label="crappy" title="Uncensored term: crappy">cr***y</span>.</p><figure><img src="../figures/profanity_terms/crap_per_100k.png" alt="cr*p family matches per 100,000 words, Democrats and Republicans" loading="lazy" style="width:100%;height:auto"><figcaption><a href="../figures/profanity_terms/crap_per_100k.png" download>Download PNG</a></figcaption></figure></section><section class="feature-section"><h2><span class="censored-term" tabindex="0" data-term="ass" aria-label="ass" title="Uncensored term: ass">a*s</span></h2><p>69 matched uses across the covered period. Grouped forms: <span class="censored-term" tabindex="0" data-term="ass" aria-label="ass" title="Uncensored term: ass">a*s</span>, <span class="censored-term" tabindex="0" data-term="asses" aria-label="asses" title="Uncensored term: asses">as**s</span>, <span class="censored-term" tabindex="0" data-term="half-assed" aria-label="half-assed" title="Uncensored term: half-assed">ha**-****d</span>, <span class="censored-term" tabindex="0" data-term="kick ass" aria-label="kick ass" title="Uncensored term: kick ass">ki*k a*s</span>, <span class="censored-term" tabindex="0" data-term="kicking ass" aria-label="kicking ass" title="Uncensored term: kicking ass">ki****g a*s</span>.</p><figure><img src="../figures/profanity_terms/ass_per_100k.png" alt="a*s family matches per 100,000 words, Democrats and Republicans" loading="lazy" style="width:100%;height:auto"><figcaption><a href="../figures/profanity_terms/ass_per_100k.png" download>Download PNG</a></figcaption></figure></section><section class="feature-section"><h2><span class="censored-term" tabindex="0" data-term="bastard" aria-label="bastard" title="Uncensored term: bastard">ba****d</span></h2><p>45 matched uses across the covered period. Grouped forms: <span class="censored-term" tabindex="0" data-term="bastard" aria-label="bastard" title="Uncensored term: bastard">ba****d</span>, <span class="censored-term" tabindex="0" data-term="bastards" aria-label="bastards" title="Uncensored term: bastards">ba*****s</span>.</p><figure><img src="../figures/profanity_terms/bastard_per_100k.png" alt="ba****d family matches per 100,000 words, Democrats and Republicans" loading="lazy" style="width:100%;height:auto"><figcaption><a href="../figures/profanity_terms/bastard_per_100k.png" download>Download PNG</a></figcaption></figure></section>
+</details>
+<section class="feature-section"><h2><span class="censored-term" tabindex="0" data-term="damn" aria-label="damn" title="Uncensored term: damn">da*n</span></h2><p class="definition">1,149 matched uses across the covered period. Grouped forms: <span class="censored-term" tabindex="0" data-term="dammit" aria-label="dammit" title="Uncensored term: dammit">da***t</span>, <span class="censored-term" tabindex="0" data-term="damn" aria-label="damn" title="Uncensored term: damn">da*n</span>, <span class="censored-term" tabindex="0" data-term="damned" aria-label="damned" title="Uncensored term: damned">da***d</span>, <span class="censored-term" tabindex="0" data-term="god damn" aria-label="god damn" title="Uncensored term: god damn">g*d da*n</span>, <span class="censored-term" tabindex="0" data-term="goddammit" aria-label="goddammit" title="Uncensored term: goddammit">go******t</span>, <span class="censored-term" tabindex="0" data-term="goddamn" aria-label="goddamn" title="Uncensored term: goddamn">go****n</span>, <span class="censored-term" tabindex="0" data-term="goddamned" aria-label="goddamned" title="Uncensored term: goddamned">go******d</span>.</p><figure><div id="term-family-0" class="term-family-plot"><noscript><img src="../figures/profanity_terms/damn_per_100k.png" alt="da*n family matches per 100,000 words, Democrats and Republicans" loading="lazy" style="width:100%;height:auto"></noscript></div><figcaption><a href="../figures/profanity_terms/damn_per_100k.png" download>Download PNG</a></figcaption></figure></section><section class="feature-section"><h2><span class="censored-term" tabindex="0" data-term="hell" aria-label="hell" title="Uncensored term: hell">he*l</span></h2><p class="definition">477 matched uses across the covered period. Grouped forms: <span class="censored-term" tabindex="0" data-term="go to hell" aria-label="go to hell" title="Uncensored term: go to hell">go to he*l</span>, <span class="censored-term" tabindex="0" data-term="hell of a" aria-label="hell of a" title="Uncensored term: hell of a">he*l of a</span>, <span class="censored-term" tabindex="0" data-term="helluva" aria-label="helluva" title="Uncensored term: helluva">he****a</span>, <span class="censored-term" tabindex="0" data-term="what the hell" aria-label="what the hell" title="Uncensored term: what the hell">wh*t the he*l</span>.</p><figure><div id="term-family-1" class="term-family-plot"><noscript><img src="../figures/profanity_terms/hell_per_100k.png" alt="he*l family matches per 100,000 words, Democrats and Republicans" loading="lazy" style="width:100%;height:auto"></noscript></div><figcaption><a href="../figures/profanity_terms/hell_per_100k.png" download>Download PNG</a></figcaption></figure></section><section class="feature-section"><h2><span class="censored-term" tabindex="0" data-term="crap" aria-label="crap" title="Uncensored term: crap">cr*p</span></h2><p class="definition">441 matched uses across the covered period. Grouped forms: <span class="censored-term" tabindex="0" data-term="crap" aria-label="crap" title="Uncensored term: crap">cr*p</span>, <span class="censored-term" tabindex="0" data-term="crappy" aria-label="crappy" title="Uncensored term: crappy">cr***y</span>.</p><figure><div id="term-family-2" class="term-family-plot"><noscript><img src="../figures/profanity_terms/crap_per_100k.png" alt="cr*p family matches per 100,000 words, Democrats and Republicans" loading="lazy" style="width:100%;height:auto"></noscript></div><figcaption><a href="../figures/profanity_terms/crap_per_100k.png" download>Download PNG</a></figcaption></figure></section><section class="feature-section"><h2><span class="censored-term" tabindex="0" data-term="ass" aria-label="ass" title="Uncensored term: ass">a*s</span></h2><p class="definition">69 matched uses across the covered period. Grouped forms: <span class="censored-term" tabindex="0" data-term="ass" aria-label="ass" title="Uncensored term: ass">a*s</span>, <span class="censored-term" tabindex="0" data-term="asses" aria-label="asses" title="Uncensored term: asses">as**s</span>, <span class="censored-term" tabindex="0" data-term="half-assed" aria-label="half-assed" title="Uncensored term: half-assed">ha**-****d</span>, <span class="censored-term" tabindex="0" data-term="kick ass" aria-label="kick ass" title="Uncensored term: kick ass">ki*k a*s</span>, <span class="censored-term" tabindex="0" data-term="kicking ass" aria-label="kicking ass" title="Uncensored term: kicking ass">ki****g a*s</span>.</p><figure><div id="term-family-3" class="term-family-plot"><noscript><img src="../figures/profanity_terms/ass_per_100k.png" alt="a*s family matches per 100,000 words, Democrats and Republicans" loading="lazy" style="width:100%;height:auto"></noscript></div><figcaption><a href="../figures/profanity_terms/ass_per_100k.png" download>Download PNG</a></figcaption></figure></section><section class="feature-section"><h2><span class="censored-term" tabindex="0" data-term="bastard" aria-label="bastard" title="Uncensored term: bastard">ba****d</span></h2><p class="definition">45 matched uses across the covered period. Grouped forms: <span class="censored-term" tabindex="0" data-term="bastard" aria-label="bastard" title="Uncensored term: bastard">ba****d</span>, <span class="censored-term" tabindex="0" data-term="bastards" aria-label="bastards" title="Uncensored term: bastards">ba*****s</span>.</p><figure><div id="term-family-4" class="term-family-plot"><noscript><img src="../figures/profanity_terms/bastard_per_100k.png" alt="ba****d family matches per 100,000 words, Democrats and Republicans" loading="lazy" style="width:100%;height:auto"></noscript></div><figcaption><a href="../figures/profanity_terms/bastard_per_100k.png" download>Download PNG</a></figcaption></figure></section>
 <p><a href="../figures/profanity_terms/timeseries.csv">Download yearly counts (CSV)</a> · <a href="../figures/profanity_terms/index.json">Grouped forms and coverage (JSON)</a></p>
 </article></main><footer class="site-footer">
 <div><p class="kicker">Endnote</p><p>The Margin of Error is written by <a href="https://www.hanshanley.com/">Hans W. A. Hanley</a>.</p></div>
 <div class="footer-links"><a href="/rss.xml">RSS</a><a href="/are-you-an-ai/">AI index</a><a href="https://github.com/hanshanley/congressional_record">Data &amp; code</a><a href="https://docs.google.com/forms/d/e/1FAIpQLSeHPhVHdJ0xdCYq3wDYjkOIxgVdErP4qszNOBQYrnyzTz3xyQ/viewform">Subscribe</a></div>
 <p class="copyright">© 2026 Hans W. A. Hanley</p>
-</footer></body></html>
+</footer>
+<script type="application/json" id="term-family-data">[{"term":"damn","label":"da*n","total_hits":1149,"variants":["dammit","damn","damned","god damn","goddammit","goddamn","goddamned"],"series":[{"year":1994,"party":"D","words":9787225,"hits":17,"rate_per_100k":0.17369581265373996},{"year":1994,"party":"R","words":9169866,"hits":20,"rate_per_100k":0.2181056953285904},{"year":1995,"party":"D","words":14284814,"hits":21,"rate_per_100k":0.1470092645238503},{"year":1995,"party":"R","words":13694666,"hits":20,"rate_per_100k":0.14604226200186263},{"year":1996,"party":"D","words":8399474,"hits":18,"rate_per_100k":0.21429913349335922},{"year":1996,"party":"R","words":9713371,"hits":11,"rate_per_100k":0.11324595755685642},{"year":1997,"party":"D","words":8497057,"hits":6,"rate_per_100k":0.07061268389749534},{"year":1997,"party":"R","words":9853267,"hits":2,"rate_per_100k":0.020297836240507842},{"year":1998,"party":"D","words":8779545,"hits":6,"rate_per_100k":0.0683406714129263},{"year":1998,"party":"R","words":9968189,"hits":14,"rate_per_100k":0.14044677523670548},{"year":1999,"party":"D","words":10394178,"hits":13,"rate_per_100k":0.1250700151565617},{"year":1999,"party":"R","words":11283397,"hits":9,"rate_per_100k":0.0797632131529184},{"year":2000,"party":"D","words":9407826,"hits":10,"rate_per_100k":0.1062944829124178},{"year":2000,"party":"R","words":9750725,"hits":7,"rate_per_100k":0.07178953359878368},{"year":2001,"party":"D","words":9866655,"hits":8,"rate_per_100k":0.08108117695409438},{"year":2001,"party":"R","words":8220645,"hits":8,"rate_per_100k":0.09731596486650379},{"year":2002,"party":"D","words":8536273,"hits":6,"rate_per_100k":0.07028828623451945},{"year":2002,"party":"R","words":6732413,"hits":2,"rate_per_100k":0.02970703074811364},{"year":2003,"party":"D","words":11615704,"hits":11,"rate_per_100k":0.09469938283551303},{"year":2003,"party":"R","words":9102888,"hits":8,"rate_per_100k":0.08788419675162432},{"year":2004,"party":"D","words":8624966,"hits":8,"rate_per_100k":0.09275398882731828},{"year":2004,"party":"R","words":7635381,"hits":2,"rate_per_100k":0.026193846777259708},{"year":2005,"party":"D","words":10367713,"hits":8,"rate_per_100k":0.0771626297911603},{"year":2005,"party":"R","words":9345850,"hits":5,"rate_per_100k":0.05349968167689402},{"year":2006,"party":"D","words":7833121,"hits":4,"rate_per_100k":0.05106521398048109},{"year":2006,"party":"R","words":7639305,"hits":5,"rate_per_100k":0.0654509801611534},{"year":2007,"party":"D","words":12216413,"hits":12,"rate_per_100k":0.09822850619081068},{"year":2007,"party":"R","words":10432423,"hits":5,"rate_per_100k":0.04792750447331363},{"year":2008,"party":"D","words":7822541,"hits":12,"rate_per_100k":0.1534028393075856},{"year":2008,"party":"R","words":6651205,"hits":6,"rate_per_100k":0.09020921772821616},{"year":2009,"party":"D","words":10016660,"hits":6,"rate_per_100k":0.059900206256376876},{"year":2009,"party":"R","words":9742796,"hits":10,"rate_per_100k":0.1026399403210331},{"year":2010,"party":"D","words":7830101,"hits":7,"rate_per_100k":0.08939859141025129},{"year":2010,"party":"R","words":5785453,"hits":5,"rate_per_100k":0.08642365602140403},{"year":2011,"party":"D","words":7629574,"hits":10,"rate_per_100k":0.13106891682287897},{"year":2011,"party":"R","words":6573108,"hits":4,"rate_per_100k":0.06085401304831748},{"year":2012,"party":"D","words":5915307,"hits":4,"rate_per_100k":0.06762117333893236},{"year":2012,"party":"R","words":4920660,"hits":6,"rate_per_100k":0.12193486239650779},{"year":2013,"party":"D","words":6468498,"hits":5,"rate_per_100k":0.07729769723976107},{"year":2013,"party":"R","words":6050486,"hits":8,"rate_per_100k":0.1322207835866408},{"year":2014,"party":"D","words":5372939,"hits":5,"rate_per_100k":0.09305893850646732},{"year":2014,"party":"R","words":4833275,"hits":7,"rate_per_100k":0.14482933414713625},{"year":2015,"party":"D","words":5625871,"hits":10,"rate_per_100k":0.17775025413842585},{"year":2015,"party":"R","words":6297045,"hits":7,"rate_per_100k":0.11116325196977313},{"year":2016,"party":"D","words":4455132,"hits":8,"rate_per_100k":0.17956819236781313},{"year":2016,"party":"R","words":4740324,"hits":9,"rate_per_100k":0.18986043991929666},{"year":2017,"party":"D","words":6738336,"hits":15,"rate_per_100k":0.22260688692282488},{"year":2017,"party":"R","words":5404689,"hits":3,"rate_per_100k":0.05550735666751593},{"year":2018,"party":"D","words":4359279,"hits":21,"rate_per_100k":0.4817310385501823},{"year":2018,"party":"R","words":4858326,"hits":5,"rate_per_100k":0.10291610731762339},{"year":2019,"party":"D","words":4710883,"hits":14,"rate_per_100k":0.29718420092369097},{"year":2019,"party":"R","words":4553712,"hits":17,"rate_per_100k":0.37332180866949866},{"year":2020,"party":"D","words":3931399,"hits":29,"rate_per_100k":0.7376508973014441},{"year":2020,"party":"R","words":3689100,"hits":15,"rate_per_100k":0.406603236561763},{"year":2021,"party":"D","words":3740775,"hits":31,"rate_per_100k":0.8287052816595492},{"year":2021,"party":"R","words":4070089,"hits":38,"rate_per_100k":0.9336405174432304},{"year":2022,"party":"D","words":3467106,"hits":23,"rate_per_100k":0.6633774681247127},{"year":2022,"party":"R","words":3599215,"hits":57,"rate_per_100k":1.583678663264073},{"year":2023,"party":"D","words":3155925,"hits":33,"rate_per_100k":1.0456522255757028},{"year":2023,"party":"R","words":3643000,"hits":60,"rate_per_100k":1.6469942355201757},{"year":2024,"party":"D","words":3145886,"hits":39,"rate_per_100k":1.2397143443850158},{"year":2024,"party":"R","words":3675636,"hits":53,"rate_per_100k":1.4419273290391106},{"year":2025,"party":"D","words":4837822,"hits":146,"rate_per_100k":3.017886974758476},{"year":2025,"party":"R","words":3351540,"hits":27,"rate_per_100k":0.8055998138169319},{"year":2026,"party":"D","words":2721519,"hits":79,"rate_per_100k":2.9027906841730666},{"year":2026,"party":"R","words":2544782,"hits":49,"rate_per_100k":1.9255087469182035}],"filename":"damn_per_100k.png"},{"term":"hell","label":"he*l","total_hits":477,"variants":["go to hell","hell of a","helluva","what the hell"],"series":[{"year":1994,"party":"D","words":9787225,"hits":6,"rate_per_100k":0.061304404466025864},{"year":1994,"party":"R","words":9169866,"hits":4,"rate_per_100k":0.04362113906571808},{"year":1995,"party":"D","words":14284814,"hits":11,"rate_per_100k":0.07700485284582634},{"year":1995,"party":"R","words":13694666,"hits":8,"rate_per_100k":0.05841690480074505},{"year":1996,"party":"D","words":8399474,"hits":1,"rate_per_100k":0.011905507416297735},{"year":1996,"party":"R","words":9713371,"hits":4,"rate_per_100k":0.04118034820249324},{"year":1997,"party":"D","words":8497057,"hits":2,"rate_per_100k":0.02353756129916511},{"year":1997,"party":"R","words":9853267,"hits":0,"rate_per_100k":0.0},{"year":1998,"party":"D","words":8779545,"hits":3,"rate_per_100k":0.03417033570646315},{"year":1998,"party":"R","words":9968189,"hits":3,"rate_per_100k":0.030095737550722604},{"year":1999,"party":"D","words":10394178,"hits":3,"rate_per_100k":0.028862311189975773},{"year":1999,"party":"R","words":11283397,"hits":3,"rate_per_100k":0.026587737717639465},{"year":2000,"party":"D","words":9407826,"hits":4,"rate_per_100k":0.04251779316496712},{"year":2000,"party":"R","words":9750725,"hits":2,"rate_per_100k":0.020511295313938194},{"year":2001,"party":"D","words":9866655,"hits":1,"rate_per_100k":0.010135147119261797},{"year":2001,"party":"R","words":8220645,"hits":1,"rate_per_100k":0.012164495608312974},{"year":2002,"party":"D","words":8536273,"hits":2,"rate_per_100k":0.023429428744839813},{"year":2002,"party":"R","words":6732413,"hits":1,"rate_per_100k":0.01485351537405682},{"year":2003,"party":"D","words":11615704,"hits":2,"rate_per_100k":0.017218069606456915},{"year":2003,"party":"R","words":9102888,"hits":2,"rate_per_100k":0.02197104918790608},{"year":2004,"party":"D","words":8624966,"hits":4,"rate_per_100k":0.04637699441365914},{"year":2004,"party":"R","words":7635381,"hits":3,"rate_per_100k":0.03929077016588956},{"year":2005,"party":"D","words":10367713,"hits":2,"rate_per_100k":0.019290657447790075},{"year":2005,"party":"R","words":9345850,"hits":2,"rate_per_100k":0.02139987267075761},{"year":2006,"party":"D","words":7833121,"hits":0,"rate_per_100k":0.0},{"year":2006,"party":"R","words":7639305,"hits":0,"rate_per_100k":0.0},{"year":2007,"party":"D","words":12216413,"hits":6,"rate_per_100k":0.04911425309540534},{"year":2007,"party":"R","words":10432423,"hits":2,"rate_per_100k":0.019171001789325452},{"year":2008,"party":"D","words":7822541,"hits":1,"rate_per_100k":0.0127835699422988},{"year":2008,"party":"R","words":6651205,"hits":1,"rate_per_100k":0.015034869621369362},{"year":2009,"party":"D","words":10016660,"hits":1,"rate_per_100k":0.009983367709396146},{"year":2009,"party":"R","words":9742796,"hits":9,"rate_per_100k":0.09237594628892978},{"year":2010,"party":"D","words":7830101,"hits":2,"rate_per_100k":0.025542454688643225},{"year":2010,"party":"R","words":5785453,"hits":1,"rate_per_100k":0.017284731204280805},{"year":2011,"party":"D","words":7629574,"hits":6,"rate_per_100k":0.07864135009372739},{"year":2011,"party":"R","words":6573108,"hits":3,"rate_per_100k":0.045640509786238105},{"year":2012,"party":"D","words":5915307,"hits":2,"rate_per_100k":0.03381058666946618},{"year":2012,"party":"R","words":4920660,"hits":6,"rate_per_100k":0.12193486239650779},{"year":2013,"party":"D","words":6468498,"hits":5,"rate_per_100k":0.07729769723976107},{"year":2013,"party":"R","words":6050486,"hits":2,"rate_per_100k":0.0330551958966602},{"year":2014,"party":"D","words":5372939,"hits":6,"rate_per_100k":0.11167072620776078},{"year":2014,"party":"R","words":4833275,"hits":3,"rate_per_100k":0.06206971463448697},{"year":2015,"party":"D","words":5625871,"hits":2,"rate_per_100k":0.03555005082768517},{"year":2015,"party":"R","words":6297045,"hits":3,"rate_per_100k":0.04764139370133134},{"year":2016,"party":"D","words":4455132,"hits":2,"rate_per_100k":0.04489204809195328},{"year":2016,"party":"R","words":4740324,"hits":2,"rate_per_100k":0.04219120887095481},{"year":2017,"party":"D","words":6738336,"hits":8,"rate_per_100k":0.1187236730255066},{"year":2017,"party":"R","words":5404689,"hits":2,"rate_per_100k":0.03700490444501062},{"year":2018,"party":"D","words":4359279,"hits":7,"rate_per_100k":0.16057701285006076},{"year":2018,"party":"R","words":4858326,"hits":4,"rate_per_100k":0.08233288585409872},{"year":2019,"party":"D","words":4710883,"hits":5,"rate_per_100k":0.10613721461560391},{"year":2019,"party":"R","words":4553712,"hits":0,"rate_per_100k":0.0},{"year":2020,"party":"D","words":3931399,"hits":7,"rate_per_100k":0.17805366486586582},{"year":2020,"party":"R","words":3689100,"hits":4,"rate_per_100k":0.10842752974980348},{"year":2021,"party":"D","words":3740775,"hits":16,"rate_per_100k":0.4277188550500899},{"year":2021,"party":"R","words":4070089,"hits":13,"rate_per_100k":0.31940333491478934},{"year":2022,"party":"D","words":3467106,"hits":9,"rate_per_100k":0.2595824875270615},{"year":2022,"party":"R","words":3599215,"hits":21,"rate_per_100k":0.5834605601499215},{"year":2023,"party":"D","words":3155925,"hits":13,"rate_per_100k":0.4119236040146708},{"year":2023,"party":"R","words":3643000,"hits":32,"rate_per_100k":0.8783969256107603},{"year":2024,"party":"D","words":3145886,"hits":20,"rate_per_100k":0.6357509458384697},{"year":2024,"party":"R","words":3675636,"hits":23,"rate_per_100k":0.6257420484509347},{"year":2025,"party":"D","words":4837822,"hits":71,"rate_per_100k":1.4676025699167932},{"year":2025,"party":"R","words":3351540,"hits":19,"rate_per_100k":0.5669035726859891},{"year":2026,"party":"D","words":2721519,"hits":47,"rate_per_100k":1.7269767361535966},{"year":2026,"party":"R","words":2544782,"hits":17,"rate_per_100k":0.668033646889989}],"filename":"hell_per_100k.png"},{"term":"crap","label":"cr*p","total_hits":441,"variants":["crap","crappy"],"series":[{"year":1994,"party":"D","words":9787225,"hits":2,"rate_per_100k":0.02043480148867529},{"year":1994,"party":"R","words":9169866,"hits":1,"rate_per_100k":0.01090528476642952},{"year":1995,"party":"D","words":14284814,"hits":5,"rate_per_100k":0.03500220583901197},{"year":1995,"party":"R","words":13694666,"hits":5,"rate_per_100k":0.03651056550046566},{"year":1996,"party":"D","words":8399474,"hits":1,"rate_per_100k":0.011905507416297735},{"year":1996,"party":"R","words":9713371,"hits":4,"rate_per_100k":0.04118034820249324},{"year":1997,"party":"D","words":8497057,"hits":0,"rate_per_100k":0.0},{"year":1997,"party":"R","words":9853267,"hits":0,"rate_per_100k":0.0},{"year":1998,"party":"D","words":8779545,"hits":1,"rate_per_100k":0.011390111902154382},{"year":1998,"party":"R","words":9968189,"hits":2,"rate_per_100k":0.02006382503381507},{"year":1999,"party":"D","words":10394178,"hits":5,"rate_per_100k":0.04810385198329296},{"year":1999,"party":"R","words":11283397,"hits":33,"rate_per_100k":0.29246511489403415},{"year":2000,"party":"D","words":9407826,"hits":0,"rate_per_100k":0.0},{"year":2000,"party":"R","words":9750725,"hits":3,"rate_per_100k":0.03076694297090729},{"year":2001,"party":"D","words":9866655,"hits":0,"rate_per_100k":0.0},{"year":2001,"party":"R","words":8220645,"hits":3,"rate_per_100k":0.03649348682493892},{"year":2002,"party":"D","words":8536273,"hits":1,"rate_per_100k":0.011714714372419907},{"year":2002,"party":"R","words":6732413,"hits":0,"rate_per_100k":0.0},{"year":2003,"party":"D","words":11615704,"hits":0,"rate_per_100k":0.0},{"year":2003,"party":"R","words":9102888,"hits":1,"rate_per_100k":0.01098552459395304},{"year":2004,"party":"D","words":8624966,"hits":4,"rate_per_100k":0.04637699441365914},{"year":2004,"party":"R","words":7635381,"hits":3,"rate_per_100k":0.03929077016588956},{"year":2005,"party":"D","words":10367713,"hits":0,"rate_per_100k":0.0},{"year":2005,"party":"R","words":9345850,"hits":2,"rate_per_100k":0.02139987267075761},{"year":2006,"party":"D","words":7833121,"hits":1,"rate_per_100k":0.012766303495120273},{"year":2006,"party":"R","words":7639305,"hits":1,"rate_per_100k":0.01309019603223068},{"year":2007,"party":"D","words":12216413,"hits":0,"rate_per_100k":0.0},{"year":2007,"party":"R","words":10432423,"hits":1,"rate_per_100k":0.009585500894662726},{"year":2008,"party":"D","words":7822541,"hits":0,"rate_per_100k":0.0},{"year":2008,"party":"R","words":6651205,"hits":1,"rate_per_100k":0.015034869621369362},{"year":2009,"party":"D","words":10016660,"hits":1,"rate_per_100k":0.009983367709396146},{"year":2009,"party":"R","words":9742796,"hits":4,"rate_per_100k":0.04105597612841324},{"year":2010,"party":"D","words":7830101,"hits":0,"rate_per_100k":0.0},{"year":2010,"party":"R","words":5785453,"hits":3,"rate_per_100k":0.051854193612842416},{"year":2011,"party":"D","words":7629574,"hits":3,"rate_per_100k":0.03932067504686369},{"year":2011,"party":"R","words":6573108,"hits":2,"rate_per_100k":0.03042700652415874},{"year":2012,"party":"D","words":5915307,"hits":0,"rate_per_100k":0.0},{"year":2012,"party":"R","words":4920660,"hits":2,"rate_per_100k":0.04064495413216926},{"year":2013,"party":"D","words":6468498,"hits":1,"rate_per_100k":0.015459539447952213},{"year":2013,"party":"R","words":6050486,"hits":2,"rate_per_100k":0.0330551958966602},{"year":2014,"party":"D","words":5372939,"hits":2,"rate_per_100k":0.037223575402586924},{"year":2014,"party":"R","words":4833275,"hits":0,"rate_per_100k":0.0},{"year":2015,"party":"D","words":5625871,"hits":0,"rate_per_100k":0.0},{"year":2015,"party":"R","words":6297045,"hits":3,"rate_per_100k":0.04764139370133134},{"year":2016,"party":"D","words":4455132,"hits":1,"rate_per_100k":0.02244602404597664},{"year":2016,"party":"R","words":4740324,"hits":0,"rate_per_100k":0.0},{"year":2017,"party":"D","words":6738336,"hits":2,"rate_per_100k":0.02968091825637665},{"year":2017,"party":"R","words":5404689,"hits":4,"rate_per_100k":0.07400980889002123},{"year":2018,"party":"D","words":4359279,"hits":3,"rate_per_100k":0.06881871979288318},{"year":2018,"party":"R","words":4858326,"hits":3,"rate_per_100k":0.061749664390574034},{"year":2019,"party":"D","words":4710883,"hits":0,"rate_per_100k":0.0},{"year":2019,"party":"R","words":4553712,"hits":5,"rate_per_100k":0.10980053196161725},{"year":2020,"party":"D","words":3931399,"hits":3,"rate_per_100k":0.07630871351394249},{"year":2020,"party":"R","words":3689100,"hits":5,"rate_per_100k":0.13553441218725434},{"year":2021,"party":"D","words":3740775,"hits":2,"rate_per_100k":0.053464856881261236},{"year":2021,"party":"R","words":4070089,"hits":19,"rate_per_100k":0.4668202587216152},{"year":2022,"party":"D","words":3467106,"hits":1,"rate_per_100k":0.02884249861411794},{"year":2022,"party":"R","words":3599215,"hits":52,"rate_per_100k":1.4447594822759964},{"year":2023,"party":"D","words":3155925,"hits":1,"rate_per_100k":0.0316864310780516},{"year":2023,"party":"R","words":3643000,"hits":46,"rate_per_100k":1.262695580565468},{"year":2024,"party":"D","words":3145886,"hits":3,"rate_per_100k":0.09536264187577045},{"year":2024,"party":"R","words":3675636,"hits":63,"rate_per_100k":1.713989089235169},{"year":2025,"party":"D","words":4837822,"hits":13,"rate_per_100k":0.2687159635058917},{"year":2025,"party":"R","words":3351540,"hits":72,"rate_per_100k":2.148266170178485},{"year":2026,"party":"D","words":2721519,"hits":7,"rate_per_100k":0.25720930112925905},{"year":2026,"party":"R","words":2544782,"hits":33,"rate_per_100k":1.2967711969040963}],"filename":"crap_per_100k.png"},{"term":"ass","label":"a*s","total_hits":69,"variants":["ass","asses","half-assed","kick ass","kicking ass"],"series":[{"year":1994,"party":"D","words":9787225,"hits":2,"rate_per_100k":0.02043480148867529},{"year":1994,"party":"R","words":9169866,"hits":2,"rate_per_100k":0.02181056953285904},{"year":1995,"party":"D","words":14284814,"hits":3,"rate_per_100k":0.021001323503407186},{"year":1995,"party":"R","words":13694666,"hits":1,"rate_per_100k":0.0073021131000931315},{"year":1996,"party":"D","words":8399474,"hits":0,"rate_per_100k":0.0},{"year":1996,"party":"R","words":9713371,"hits":0,"rate_per_100k":0.0},{"year":1997,"party":"D","words":8497057,"hits":0,"rate_per_100k":0.0},{"year":1997,"party":"R","words":9853267,"hits":2,"rate_per_100k":0.020297836240507842},{"year":1998,"party":"D","words":8779545,"hits":0,"rate_per_100k":0.0},{"year":1998,"party":"R","words":9968189,"hits":2,"rate_per_100k":0.02006382503381507},{"year":1999,"party":"D","words":10394178,"hits":1,"rate_per_100k":0.00962077039665859},{"year":1999,"party":"R","words":11283397,"hits":2,"rate_per_100k":0.01772515847842631},{"year":2000,"party":"D","words":9407826,"hits":1,"rate_per_100k":0.01062944829124178},{"year":2000,"party":"R","words":9750725,"hits":0,"rate_per_100k":0.0},{"year":2001,"party":"D","words":9866655,"hits":0,"rate_per_100k":0.0},{"year":2001,"party":"R","words":8220645,"hits":0,"rate_per_100k":0.0},{"year":2002,"party":"D","words":8536273,"hits":1,"rate_per_100k":0.011714714372419907},{"year":2002,"party":"R","words":6732413,"hits":0,"rate_per_100k":0.0},{"year":2003,"party":"D","words":11615704,"hits":0,"rate_per_100k":0.0},{"year":2003,"party":"R","words":9102888,"hits":1,"rate_per_100k":0.01098552459395304},{"year":2004,"party":"D","words":8624966,"hits":2,"rate_per_100k":0.02318849720682957},{"year":2004,"party":"R","words":7635381,"hits":0,"rate_per_100k":0.0},{"year":2005,"party":"D","words":10367713,"hits":3,"rate_per_100k":0.028935986171685114},{"year":2005,"party":"R","words":9345850,"hits":0,"rate_per_100k":0.0},{"year":2006,"party":"D","words":7833121,"hits":1,"rate_per_100k":0.012766303495120273},{"year":2006,"party":"R","words":7639305,"hits":1,"rate_per_100k":0.01309019603223068},{"year":2007,"party":"D","words":12216413,"hits":1,"rate_per_100k":0.008185708849234223},{"year":2007,"party":"R","words":10432423,"hits":1,"rate_per_100k":0.009585500894662726},{"year":2008,"party":"D","words":7822541,"hits":0,"rate_per_100k":0.0},{"year":2008,"party":"R","words":6651205,"hits":0,"rate_per_100k":0.0},{"year":2009,"party":"D","words":10016660,"hits":1,"rate_per_100k":0.009983367709396146},{"year":2009,"party":"R","words":9742796,"hits":0,"rate_per_100k":0.0},{"year":2010,"party":"D","words":7830101,"hits":2,"rate_per_100k":0.025542454688643225},{"year":2010,"party":"R","words":5785453,"hits":0,"rate_per_100k":0.0},{"year":2011,"party":"D","words":7629574,"hits":0,"rate_per_100k":0.0},{"year":2011,"party":"R","words":6573108,"hits":0,"rate_per_100k":0.0},{"year":2012,"party":"D","words":5915307,"hits":1,"rate_per_100k":0.01690529333473309},{"year":2012,"party":"R","words":4920660,"hits":0,"rate_per_100k":0.0},{"year":2013,"party":"D","words":6468498,"hits":0,"rate_per_100k":0.0},{"year":2013,"party":"R","words":6050486,"hits":0,"rate_per_100k":0.0},{"year":2014,"party":"D","words":5372939,"hits":0,"rate_per_100k":0.0},{"year":2014,"party":"R","words":4833275,"hits":1,"rate_per_100k":0.020689904878162323},{"year":2015,"party":"D","words":5625871,"hits":0,"rate_per_100k":0.0},{"year":2015,"party":"R","words":6297045,"hits":2,"rate_per_100k":0.03176092913422089},{"year":2016,"party":"D","words":4455132,"hits":0,"rate_per_100k":0.0},{"year":2016,"party":"R","words":4740324,"hits":3,"rate_per_100k":0.06328681330643222},{"year":2017,"party":"D","words":6738336,"hits":1,"rate_per_100k":0.014840459128188325},{"year":2017,"party":"R","words":5404689,"hits":0,"rate_per_100k":0.0},{"year":2018,"party":"D","words":4359279,"hits":1,"rate_per_100k":0.022939573264294393},{"year":2018,"party":"R","words":4858326,"hits":0,"rate_per_100k":0.0},{"year":2019,"party":"D","words":4710883,"hits":0,"rate_per_100k":0.0},{"year":2019,"party":"R","words":4553712,"hits":0,"rate_per_100k":0.0},{"year":2020,"party":"D","words":3931399,"hits":1,"rate_per_100k":0.02543623783798083},{"year":2020,"party":"R","words":3689100,"hits":2,"rate_per_100k":0.05421376487490174},{"year":2021,"party":"D","words":3740775,"hits":0,"rate_per_100k":0.0},{"year":2021,"party":"R","words":4070089,"hits":3,"rate_per_100k":0.07370846190341292},{"year":2022,"party":"D","words":3467106,"hits":1,"rate_per_100k":0.02884249861411794},{"year":2022,"party":"R","words":3599215,"hits":3,"rate_per_100k":0.08335150859284594},{"year":2023,"party":"D","words":3155925,"hits":3,"rate_per_100k":0.09505929323415481},{"year":2023,"party":"R","words":3643000,"hits":2,"rate_per_100k":0.05489980785067252},{"year":2024,"party":"D","words":3145886,"hits":1,"rate_per_100k":0.031787547291923485},{"year":2024,"party":"R","words":3675636,"hits":2,"rate_per_100k":0.054412352039211714},{"year":2025,"party":"D","words":4837822,"hits":6,"rate_per_100k":0.12402275238733464},{"year":2025,"party":"R","words":3351540,"hits":3,"rate_per_100k":0.08951109042410355},{"year":2026,"party":"D","words":2721519,"hits":2,"rate_per_100k":0.07348837175121688},{"year":2026,"party":"R","words":2544782,"hits":1,"rate_per_100k":0.0392960968758817}],"filename":"ass_per_100k.png"},{"term":"bastard","label":"ba****d","total_hits":45,"variants":["bastard","bastards"],"series":[{"year":1994,"party":"D","words":9787225,"hits":2,"rate_per_100k":0.02043480148867529},{"year":1994,"party":"R","words":9169866,"hits":0,"rate_per_100k":0.0},{"year":1995,"party":"D","words":14284814,"hits":2,"rate_per_100k":0.01400088233560479},{"year":1995,"party":"R","words":13694666,"hits":3,"rate_per_100k":0.021906339300279392},{"year":1996,"party":"D","words":8399474,"hits":0,"rate_per_100k":0.0},{"year":1996,"party":"R","words":9713371,"hits":1,"rate_per_100k":0.01029508705062331},{"year":1997,"party":"D","words":8497057,"hits":0,"rate_per_100k":0.0},{"year":1997,"party":"R","words":9853267,"hits":1,"rate_per_100k":0.010148918120253921},{"year":1998,"party":"D","words":8779545,"hits":1,"rate_per_100k":0.011390111902154382},{"year":1998,"party":"R","words":9968189,"hits":0,"rate_per_100k":0.0},{"year":1999,"party":"D","words":10394178,"hits":0,"rate_per_100k":0.0},{"year":1999,"party":"R","words":11283397,"hits":0,"rate_per_100k":0.0},{"year":2000,"party":"D","words":9407826,"hits":0,"rate_per_100k":0.0},{"year":2000,"party":"R","words":9750725,"hits":0,"rate_per_100k":0.0},{"year":2001,"party":"D","words":9866655,"hits":0,"rate_per_100k":0.0},{"year":2001,"party":"R","words":8220645,"hits":3,"rate_per_100k":0.03649348682493892},{"year":2002,"party":"D","words":8536273,"hits":1,"rate_per_100k":0.011714714372419907},{"year":2002,"party":"R","words":6732413,"hits":2,"rate_per_100k":0.02970703074811364},{"year":2003,"party":"D","words":11615704,"hits":0,"rate_per_100k":0.0},{"year":2003,"party":"R","words":9102888,"hits":0,"rate_per_100k":0.0},{"year":2004,"party":"D","words":8624966,"hits":0,"rate_per_100k":0.0},{"year":2004,"party":"R","words":7635381,"hits":0,"rate_per_100k":0.0},{"year":2005,"party":"D","words":10367713,"hits":1,"rate_per_100k":0.009645328723895038},{"year":2005,"party":"R","words":9345850,"hits":0,"rate_per_100k":0.0},{"year":2006,"party":"D","words":7833121,"hits":0,"rate_per_100k":0.0},{"year":2006,"party":"R","words":7639305,"hits":0,"rate_per_100k":0.0},{"year":2007,"party":"D","words":12216413,"hits":0,"rate_per_100k":0.0},{"year":2007,"party":"R","words":10432423,"hits":0,"rate_per_100k":0.0},{"year":2008,"party":"D","words":7822541,"hits":0,"rate_per_100k":0.0},{"year":2008,"party":"R","words":6651205,"hits":0,"rate_per_100k":0.0},{"year":2009,"party":"D","words":10016660,"hits":0,"rate_per_100k":0.0},{"year":2009,"party":"R","words":9742796,"hits":0,"rate_per_100k":0.0},{"year":2010,"party":"D","words":7830101,"hits":1,"rate_per_100k":0.012771227344321612},{"year":2010,"party":"R","words":5785453,"hits":1,"rate_per_100k":0.017284731204280805},{"year":2011,"party":"D","words":7629574,"hits":0,"rate_per_100k":0.0},{"year":2011,"party":"R","words":6573108,"hits":0,"rate_per_100k":0.0},{"year":2012,"party":"D","words":5915307,"hits":0,"rate_per_100k":0.0},{"year":2012,"party":"R","words":4920660,"hits":6,"rate_per_100k":0.12193486239650779},{"year":2013,"party":"D","words":6468498,"hits":1,"rate_per_100k":0.015459539447952213},{"year":2013,"party":"R","words":6050486,"hits":0,"rate_per_100k":0.0},{"year":2014,"party":"D","words":5372939,"hits":0,"rate_per_100k":0.0},{"year":2014,"party":"R","words":4833275,"hits":0,"rate_per_100k":0.0},{"year":2015,"party":"D","words":5625871,"hits":0,"rate_per_100k":0.0},{"year":2015,"party":"R","words":6297045,"hits":0,"rate_per_100k":0.0},{"year":2016,"party":"D","words":4455132,"hits":0,"rate_per_100k":0.0},{"year":2016,"party":"R","words":4740324,"hits":0,"rate_per_100k":0.0},{"year":2017,"party":"D","words":6738336,"hits":0,"rate_per_100k":0.0},{"year":2017,"party":"R","words":5404689,"hits":0,"rate_per_100k":0.0},{"year":2018,"party":"D","words":4359279,"hits":0,"rate_per_100k":0.0},{"year":2018,"party":"R","words":4858326,"hits":1,"rate_per_100k":0.02058322146352468},{"year":2019,"party":"D","words":4710883,"hits":0,"rate_per_100k":0.0},{"year":2019,"party":"R","words":4553712,"hits":0,"rate_per_100k":0.0},{"year":2020,"party":"D","words":3931399,"hits":0,"rate_per_100k":0.0},{"year":2020,"party":"R","words":3689100,"hits":0,"rate_per_100k":0.0},{"year":2021,"party":"D","words":3740775,"hits":0,"rate_per_100k":0.0},{"year":2021,"party":"R","words":4070089,"hits":6,"rate_per_100k":0.14741692380682583},{"year":2022,"party":"D","words":3467106,"hits":0,"rate_per_100k":0.0},{"year":2022,"party":"R","words":3599215,"hits":2,"rate_per_100k":0.055567672395230625},{"year":2023,"party":"D","words":3155925,"hits":0,"rate_per_100k":0.0},{"year":2023,"party":"R","words":3643000,"hits":3,"rate_per_100k":0.08234971177600878},{"year":2024,"party":"D","words":3145886,"hits":0,"rate_per_100k":0.0},{"year":2024,"party":"R","words":3675636,"hits":1,"rate_per_100k":0.027206176019605857},{"year":2025,"party":"D","words":4837822,"hits":2,"rate_per_100k":0.04134091746244488},{"year":2025,"party":"R","words":3351540,"hits":1,"rate_per_100k":0.02983703014136785},{"year":2026,"party":"D","words":2721519,"hits":0,"rate_per_100k":0.0},{"year":2026,"party":"R","words":2544782,"hits":3,"rate_per_100k":0.11788829062764512}],"filename":"bastard_per_100k.png"}]</script>
+<script>
+const SVG_NS = 'http://www.w3.org/2000/svg';
+const chartColors = {
+  D: '#3D6F8C',
+  R: '#A9442E',
+  I: '#4A7C59',
+  other: '#655F55',
+  text: '#171713',
+  muted: '#655F55',
+  grid: '#D9D1C2',
+  paper: '#F2EFE7',
+};
+
+function isCompactChart() {
+  return window.innerWidth < 600;
+}
+
+function svgNode(tag, attributes = {}, text = '') {
+  const node = document.createElementNS(SVG_NS, tag);
+  Object.entries(attributes).forEach(([name, value]) => node.setAttribute(name, value));
+  if (text !== '') node.textContent = text;
+  return node;
+}
+
+function addSvgText(svg, x, y, text, attributes = {}) {
+  const node = svgNode('text', {x, y, ...attributes}, text);
+  svg.appendChild(node);
+  return node;
+}
+
+function formatPeriod(period) {
+  if (!period.includes('-')) return period;
+  const [year, month] = period.split('-').map(Number);
+  return new Intl.DateTimeFormat('en', {
+    month: 'short', year: 'numeric', timeZone: 'UTC',
+  }).format(new Date(Date.UTC(year, month - 1, 1)));
+}
+
+function formatRate(value) {
+  return Number(value).toLocaleString(undefined, {
+    minimumFractionDigits: 1, maximumFractionDigits: 1,
+  });
+}
+
+function censorTerm(term) {
+  const [first, ...rest] = String(term).split(' ');
+  const letterCount = [...first].filter(character => /[A-Za-z]/.test(character)).length;
+  let letterIndex = 0;
+  const censored = [...first].map(character => {
+    if (!/[A-Za-z]/.test(character)) return character;
+    const keep = letterIndex < (letterCount >= 4 ? 2 : 1) || letterIndex === letterCount - 1;
+    letterIndex += 1;
+    return keep ? character : '*';
+  }).join('');
+  return [censored, ...rest].join(' ');
+}
+
+function censoredTermNode(term, detail = '') {
+  const value = String(term);
+  const node = document.createElement('span');
+  node.className = 'censored-term';
+  node.tabIndex = 0;
+  node.textContent = censorTerm(value);
+  node.dataset.term = value;
+  node.setAttribute('aria-label', value);
+  node.title = detail ? `Uncensored term: ${value}. ${detail}` : `Uncensored term: ${value}`;
+  return node;
+}
+
+function spacedLabelIndices(length, maxLabels = 7) {
+  if (length <= maxLabels) return [...Array(length).keys()];
+  const step = Math.ceil((length - 1) / (maxLabels - 1));
+  const indices = [];
+  for (let index = 0; index < length; index += step) indices.push(index);
+  const last = length - 1;
+  if (indices[indices.length - 1] !== last) {
+    if (last - indices[indices.length - 1] < Math.max(2, Math.floor(step / 2))) {
+      indices[indices.length - 1] = last;
+    } else {
+      indices.push(last);
+    }
+  }
+  return indices;
+}
+
+function addTooltip(wrapper) {
+  const tooltip = document.createElement('div');
+  tooltip.className = 'chart-tooltip';
+  tooltip.hidden = true;
+  wrapper.appendChild(tooltip);
+  return tooltip;
+}
+
+function bindTooltip(mark, wrapper, tooltip, text) {
+  mark.classList.add('data-mark');
+  mark.setAttribute('tabindex', '0');
+  mark.setAttribute('aria-label', text);
+  const showAt = (left, top) => {
+    tooltip.textContent = text;
+    tooltip.hidden = false;
+    const maxLeft = Math.max(8, wrapper.clientWidth - tooltip.offsetWidth - 8);
+    const maxTop = Math.max(8, wrapper.clientHeight - tooltip.offsetHeight - 8);
+    tooltip.style.left = `${Math.max(8, Math.min(left, maxLeft))}px`;
+    tooltip.style.top = `${Math.max(8, Math.min(top, maxTop))}px`;
+  };
+  mark.addEventListener('pointermove', event => {
+    const bounds = wrapper.getBoundingClientRect();
+    showAt(event.clientX - bounds.left + 12, event.clientY - bounds.top + 12);
+  });
+  mark.addEventListener('pointerleave', () => { tooltip.hidden = true; });
+  mark.addEventListener('focus', () => {
+    const bounds = wrapper.getBoundingClientRect();
+    const markBounds = mark.getBoundingClientRect();
+    showAt(markBounds.left - bounds.left + markBounds.width / 2,
+      markBounds.top - bounds.top + markBounds.height + 8);
+  });
+  mark.addEventListener('blur', () => { tooltip.hidden = true; });
+}
+
+function addPanelHeading(wrapper, metric, detail) {
+  const heading = document.createElement('div');
+  heading.className = 'mini-chart-heading';
+  const title = document.createElement('h3');
+  title.className = 'sr-only';
+  title.textContent = metric.label;
+  const subtitle = document.createElement('p');
+  subtitle.className = 'definition';
+  subtitle.textContent = detail || '';
+  heading.append(title, subtitle);
+  if (metric.definition) {
+    const definition = document.createElement('details');
+    definition.className = 'chart-definition';
+    const summary = document.createElement('summary');
+    summary.textContent = 'What this measure counts';
+    const text = document.createElement('p');
+    text.className = 'definition';
+    text.textContent = metric.definition;
+    definition.append(summary, text);
+    heading.appendChild(definition);
+  }
+  wrapper.appendChild(heading);
+}
+
+function partyName(party) {
+  return party === 'D' ? 'Democrats' : 'Republicans';
+}
+
+function addPartyLegend(wrapper) {
+  const legend = document.createElement('div');
+  legend.className = 'chart-legend';
+  legend.setAttribute('aria-label', 'Chart legend');
+  [['D', 'Democrats'], ['R', 'Republicans']].forEach(([party, label]) => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'chart-toggle';
+    button.setAttribute('aria-pressed', 'true');
+    button.innerHTML = `<i style="background:${chartColors[party]}"></i>${label}`;
+    button.addEventListener('click', () => {
+      const active = button.getAttribute('aria-pressed') !== 'true';
+      button.setAttribute('aria-pressed', String(active));
+      wrapper.querySelectorAll(`[data-party="${party}"]`)
+        .forEach(element => { element.style.display = active ? '' : 'none'; });
+    });
+    legend.appendChild(button);
+  });
+  wrapper.appendChild(legend);
+}
+
+function addAccessibleTable(wrapper, captionText, headers, rows) {
+  const accessible = document.createElement('div');
+  accessible.className = 'sr-only';
+  const table = document.createElement('table');
+  const caption = document.createElement('caption');
+  caption.textContent = captionText;
+  const thead = document.createElement('thead');
+  const headerRow = document.createElement('tr');
+  headers.forEach(header => {
+    const th = document.createElement('th');
+    th.scope = 'col';
+    th.textContent = header;
+    headerRow.appendChild(th);
+  });
+  thead.appendChild(headerRow);
+  const tbody = document.createElement('tbody');
+  rows.forEach(values => {
+    const row = document.createElement('tr');
+    values.forEach(value => {
+      const cell = document.createElement('td');
+      cell.textContent = value;
+      row.appendChild(cell);
+    });
+    tbody.appendChild(row);
+  });
+  table.append(caption, thead, tbody);
+  accessible.appendChild(table);
+  wrapper.appendChild(accessible);
+}
+
+function renderYearlyPanel(sourceSeries, metric, scopeLabel) {
+  const wrapper = document.createElement('section');
+  wrapper.className = 'mini-chart long-run-panel';
+  addPanelHeading(wrapper, metric, metric.units);
+  addPartyLegend(wrapper);
+  const tooltip = addTooltip(wrapper);
+  const compact = isCompactChart();
+  const width = compact ? 360 : 760;
+  const height = compact ? 290 : 270;
+  const margin = compact
+    ? {left: 42, right: 14, top: 14, bottom: 42}
+    : {left: 62, right: 24, top: 14, bottom: 44};
+  const plotWidth = width - margin.left - margin.right;
+  const plotHeight = height - margin.top - margin.bottom;
+  const svg = svgNode('svg', {
+    viewBox: `0 0 ${width} ${height}`,
+    role: 'img',
+    'aria-label': `${metric.label}, Democrats compared with Republicans, ${scopeLabel}`,
+  });
+  const years = [...new Set(sourceSeries.map(row => Number(row.year)))].sort((a, b) => a - b);
+  const values = sourceSeries.map(row => Number(row[metric.rate]) || 0);
+  const maxValue = Math.max(0.01, ...values) * 1.08;
+  const x = year => margin.left + (
+    (year - years[0]) / Math.max(1, years[years.length - 1] - years[0])
+  ) * plotWidth;
+  const y = value => margin.top + plotHeight - (value / maxValue) * plotHeight;
+  for (let tick = 0; tick <= 4; tick += 1) {
+    const value = maxValue * tick / 4;
+    const py = y(value);
+    svg.appendChild(svgNode('line', {
+      x1: margin.left, x2: width - margin.right, y1: py, y2: py,
+      stroke: chartColors.grid, 'stroke-width': 1,
+    }));
+    addSvgText(svg, margin.left - 9, py + 4, value.toFixed(2), {
+      'text-anchor': 'end', fill: chartColors.muted, 'font-size': compact ? 9 : 9.5,
+    });
+  }
+  const yearLabelIndices = new Set(spacedLabelIndices(years.length, compact ? 4 : 7));
+  years.forEach((year, index) => {
+    if (!yearLabelIndices.has(index)) return;
+    addSvgText(svg, x(year), height - 14, String(year), {
+      'text-anchor': 'middle', fill: chartColors.muted, 'font-size': compact ? 9 : 9.5,
+    });
+  });
+  [['D', 'Democrats'], ['R', 'Republicans']].forEach(([party, label]) => {
+    const rows = sourceSeries.filter(row => row.party === party)
+      .sort((a, b) => Number(a.year) - Number(b.year));
+    const points = rows.map(row => [
+      x(Number(row.year)), y(Number(row[metric.rate]) || 0), row,
+    ]);
+    svg.appendChild(svgNode('polyline', {
+      points: points.map(point => `${point[0]},${point[1]}`).join(' '),
+      fill: 'none', stroke: chartColors[party], 'stroke-width': 2.5,
+      'stroke-dasharray': party === 'R' ? '8 4' : '',
+      'vector-effect': 'non-scaling-stroke', 'data-party': party,
+    }));
+    points.forEach(([px, py, row], index) => {
+      if (index % 4 === 0 || index === points.length - 1) {
+        svg.appendChild(svgNode('circle', {
+          cx: px, cy: py, r: 2.2, fill: chartColors[party], 'data-party': party,
+        }));
+      }
+      const mark = svgNode('circle', {
+        cx: px, cy: py, r: 7, fill: 'transparent', 'data-party': party,
+      });
+      bindTooltip(mark, wrapper, tooltip,
+        `${row.year} ${label}: ${Number(row[metric.rate]).toFixed(3)} ${metric.units} ` +
+        `(${Number(row[metric.hits]).toLocaleString()} hits; ` +
+        `${Number(row.words).toLocaleString()} words)`);
+      svg.appendChild(mark);
+    });
+  });
+  wrapper.appendChild(svg);
+  addAccessibleTable(
+    wrapper,
+    `${metric.label}, ${scopeLabel}`,
+    ['Year', 'Party', metric.units, 'Hits', 'Words'],
+    sourceSeries.map(row => [
+      row.year, partyName(row.party), Number(row[metric.rate]).toFixed(3),
+      Number(row[metric.hits]).toLocaleString(), Number(row.words).toLocaleString(),
+    ]),
+  );
+  return wrapper;
+}
+
+const families = JSON.parse(document.getElementById('term-family-data').textContent);
+function renderFamilies() {
+  families.forEach((family, index) => {
+    const years = family.series.map(row => Number(row.year));
+    document.getElementById(`term-family-${index}`).replaceChildren(
+      renderYearlyPanel(family.series, {
+        label: `${family.label} word family`,
+        rate: 'rate_per_100k',
+        hits: 'hits',
+        units: 'hits per 100,000 words',
+      }, `${Math.min(...years)} to ${Math.max(...years)}, House + Senate`),
+    );
+  });
+}
+renderFamilies();
+let resizeTimer;
+window.addEventListener('resize', () => {
+  window.clearTimeout(resizeTimer);
+  resizeTimer = window.setTimeout(renderFamilies, 150);
+});
+</script></body></html>

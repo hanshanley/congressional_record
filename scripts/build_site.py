@@ -105,7 +105,7 @@ ACTIVITY_NUMERIC_COLUMNS = {
 
 LANGUAGE_MEMBER_TOP = 8
 
-INTERACTIVE_CHART_JS = r"""
+CHART_BASE_JS = r"""
 const SVG_NS = 'http://www.w3.org/2000/svg';
 const chartColors = {
   D: '#3D6F8C',
@@ -117,6 +117,13 @@ const chartColors = {
   grid: '#D9D1C2',
   paper: '#F2EFE7',
 };
+
+function isCompactChart() {
+  return window.innerWidth < 600;
+}
+"""
+
+INTERACTIVE_CHART_STATE_JS = r"""
 let selectedLongRunMetric = 'profanity_per_1k';
 let selectedLongRunChamber = 'all';
 let selectedRecentMetric = 'profanity';
@@ -144,10 +151,6 @@ const STATE_TILES = {
   AK:[0,6], HI:[1,6], OK:[2,6], LA:[3,6], MS:[4,6], AL:[5,6], GA:[6,6],
   TX:[2,7], FL:[7,7],
 };
-
-function isCompactChart() {
-  return window.innerWidth < 600;
-}
 
 function updateHash(values) {
   const params = new URLSearchParams(location.hash.slice(1));
@@ -183,7 +186,9 @@ function recentTermDetailAvailable(language) {
     ? language.profanity_term_detail_available
     : language.profanity_term_detail_available_by_chamber[selectedTermChamber];
 }
+"""
 
+CHART_HELPERS_JS = r"""
 function svgNode(tag, attributes = {}, text = '') {
   const node = document.createElementNS(SVG_NS, tag);
   Object.entries(attributes).forEach(([name, value]) => node.setAttribute(name, value));
@@ -364,7 +369,9 @@ function addAccessibleTable(wrapper, captionText, headers, rows) {
   accessible.appendChild(table);
   wrapper.appendChild(accessible);
 }
+"""
 
+RECENT_CHART_JS = r"""
 function syncSelect(select, items, selected, onSelect) {
   const signature = items.map(item => `${item.key}:${item.label}`).join('|');
   if (select.dataset.signature !== signature) {
@@ -477,9 +484,10 @@ function renderTrendPanel(language, key) {
   );
   return wrapper;
 }
+"""
 
-function renderLongRunPanel(longRun, key) {
-  const metric = longRun.metrics[key];
+YEARLY_CHART_JS = r"""
+function renderYearlyPanel(sourceSeries, metric, scopeLabel) {
   const wrapper = document.createElement('section');
   wrapper.className = 'mini-chart long-run-panel';
   addPanelHeading(wrapper, metric, metric.units);
@@ -496,10 +504,8 @@ function renderLongRunPanel(longRun, key) {
   const svg = svgNode('svg', {
     viewBox: `0 0 ${width} ${height}`,
     role: 'img',
-    'aria-label': `${metric.label}, Democrats compared with Republicans, ` +
-      `${longRun.first_year} to ${longRun.last_year}, ${chamberLabel(selectedLongRunChamber)}`,
+    'aria-label': `${metric.label}, Democrats compared with Republicans, ${scopeLabel}`,
   });
-  const sourceSeries = longRunSeries(longRun);
   const years = [...new Set(sourceSeries.map(row => Number(row.year)))].sort((a, b) => a - b);
   const values = sourceSeries.map(row => Number(row[metric.rate]) || 0);
   const maxValue = Math.max(0.01, ...values) * 1.08;
@@ -556,7 +562,7 @@ function renderLongRunPanel(longRun, key) {
   wrapper.appendChild(svg);
   addAccessibleTable(
     wrapper,
-    `${metric.label}, ${longRun.first_year} to ${longRun.last_year}`,
+    `${metric.label}, ${scopeLabel}`,
     ['Year', 'Party', metric.units, 'Hits', 'Words'],
     sourceSeries.map(row => [
       row.year, partyName(row.party), Number(row[metric.rate]).toFixed(3),
@@ -564,6 +570,17 @@ function renderLongRunPanel(longRun, key) {
     ]),
   );
   return wrapper;
+}
+"""
+
+INTERACTIVE_CHART_JS = (
+    CHART_BASE_JS + CHART_HELPERS_JS + YEARLY_CHART_JS
+    + INTERACTIVE_CHART_STATE_JS + RECENT_CHART_JS + r"""
+function renderLongRunPanel(longRun, key) {
+  return renderYearlyPanel(
+    longRunSeries(longRun), longRun.metrics[key],
+    `${longRun.first_year} to ${longRun.last_year}, ${chamberLabel(selectedLongRunChamber)}`,
+  );
 }
 
 function renderLongRun(longRun) {
@@ -1168,6 +1185,30 @@ function renderTermExplorer(language) {
     : 'Term-level detail has not been backfilled for this historical scope.';
 }
 """
+)
+
+TERM_CHART_JS = CHART_BASE_JS + CHART_HELPERS_JS + YEARLY_CHART_JS + r"""
+const families = JSON.parse(document.getElementById('term-family-data').textContent);
+function renderFamilies() {
+  families.forEach((family, index) => {
+    const years = family.series.map(row => Number(row.year));
+    document.getElementById(`term-family-${index}`).replaceChildren(
+      renderYearlyPanel(family.series, {
+        label: `${family.label} word family`,
+        rate: 'rate_per_100k',
+        hits: 'hits',
+        units: 'hits per 100,000 words',
+      }, `${Math.min(...years)} to ${Math.max(...years)}, House + Senate`),
+    );
+  });
+}
+renderFamilies();
+let resizeTimer;
+window.addEventListener('resize', () => {
+  window.clearTimeout(resizeTimer);
+  resizeTimer = window.setTimeout(renderFamilies, 150);
+});
+"""
 
 ACTIVITY_JS = r"""
 const DATA_ROOT = '../data';
@@ -1553,14 +1594,19 @@ MAIN_CSS = """
                    font-size:.78rem; }
   .section-nav a::after { content:" ↓"; }
   .section-nav a:hover { color:var(--ink); text-decoration:underline; }
-  .language-page .feature-section { padding-top:1.75rem;
+  .language-page .feature-section,.terms-page .feature-section { padding-top:1.75rem;
                                     scroll-margin-top:1.5rem; }
-  .language-page .feature-section ~ .feature-section { margin-top:3rem;
+  .language-page .feature-section ~ .feature-section,
+  .terms-page .feature-section ~ .feature-section { margin-top:3rem;
                                                      border-top:1px solid var(--hair); }
   .language-page .section-head { display:block; margin-bottom:.75rem; padding:0; border:0; }
   .language-page .section-head > div { display:grid; grid-template-columns:1fr;
                                      gap:.5rem; }
-  .language-page h2 { font-size:clamp(1.7rem,2.5vw,2.15rem); line-height:1.12; text-wrap:balance; }
+  .language-page h2,.terms-page h2 { font-size:clamp(1.7rem,2.5vw,2.15rem);
+                                   line-height:1.12; text-wrap:balance; }
+  .terms-page figure { margin:.75rem 0 0; }
+  .terms-page .feature-section > .definition { margin:.5rem 0 0; }
+  .terms-page figcaption { margin-top:.5rem; font-size:.8rem; color:var(--muted); }
   .language-page .section-dek { margin:0; max-width:44rem; color:var(--muted);
                               font-size:.95rem; line-height:1.5; }
   .language-page .section-head .eyebrow { grid-column:1 / -1; margin:0;
@@ -3082,17 +3128,20 @@ const activityNumericColumns = {_script_json(ACTIVITY_NUMERIC_COLUMNS)};
 def _render_term_graphs_html(payload: dict, generated_utc: str) -> str:
     coverage = payload.get("coverage", {})
     sections = []
-    for item in payload["terms"]:
+    for index, item in enumerate(payload["terms"]):
         filename = html.escape(item["filename"], quote=True)
         sections.append(
             '<section class="feature-section">'
             f"<h2>{_censored_term_cell(item['term'])}</h2>"
-            f'<p>{_fmt_int(item["total_hits"])} matched uses across the covered period. '
+            f'<p class="definition">{_fmt_int(item["total_hits"])} matched uses across the covered period. '
             f'Grouped forms: {", ".join(str(_censored_term_cell(term)) for term in item["variants"])}.</p>'
             '<figure>'
+            f'<div id="term-family-{index}" class="term-family-plot">'
+            '<noscript>'
             f'<img src="../figures/profanity_terms/{filename}" '
             f'alt="{html.escape(item["label"], quote=True)} family matches per 100,000 words, '
             'Democrats and Republicans" loading="lazy" style="width:100%;height:auto">'
+            '</noscript></div>'
             f'<figcaption><a href="../figures/profanity_terms/{filename}" download>Download PNG</a>'
             '</figcaption></figure></section>'
         )
@@ -3118,18 +3167,22 @@ def _render_term_graphs_html(payload: dict, generated_utc: str) -> str:
 {_head_links(PUBLIC_URL + "terms/")}
 <style>{HOUSE_CSS}{MAIN_CSS}</style></head>
 <body><a class="skip-link" href="#main-content">Skip to content</a>{_site_header()}
-<main id="main-content"><article class="feature dashboard-page">
+<main id="main-content"><article class="feature dashboard-page terms-page">
 <header class="feature-header"><p class="kicker">Congress / Vocabulary</p>
 <h1>Five swear-word families</h1>
 <p class="dek">The most-used families in member-attributed House and Senate text, ranked by total matches.
 Variants are combined; annual rates use each party's attributed word total.</p>
 <div class="byline"><p>By Hans W. A. Hanley</p><p>{html.escape(dates)}</p></div></header>
 {_feature_nav("terms")}
-<p class="warning">{limitation}</p>
+<details class="notes"><summary>Sources and how to read these graphs</summary>
+<p>{limitation}</p>
 <p>These graphs use GovInfo member-level data, not the separate Stanford series back to 1873.</p>
+</details>
 {"".join(sections)}
 {downloads}
-</article></main>{_site_footer(generated_utc)}</body></html>"""
+</article></main>{_site_footer(generated_utc)}
+<script type="application/json" id="term-family-data">{_script_json(payload["terms"])}</script>
+<script>{TERM_CHART_JS}</script></body></html>"""
 
 
 def main(argv: Optional[List[str]] = None) -> int:
