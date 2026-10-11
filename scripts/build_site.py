@@ -1065,8 +1065,9 @@ function renderStateMap(language, records) {
   Object.entries(STATE_TILES).forEach(([state, [column, row]]) => {
     const winner = winners.get(state);
     const ratio = winner ? Math.sqrt(winner.hits / maxHits) : 0;
-    const shades = ['#E8E2D5', '#D8CFBD', '#C2B59C', '#9C8E74', '#675D4D', '#2D2A24'];
-    const shade = winner ? shades[Math.min(5, Math.max(1, Math.ceil(ratio * 5)))] : shades[0];
+    const shades = ['#E1E1E1', '#EEE8F5', '#D5C5E8', '#B397D1', '#765195', '#492565'];
+    const shadeIndex = winner ? Math.min(5, Math.max(1, Math.ceil(ratio * 5))) : 0;
+    const shade = shades[shadeIndex];
     const group = svgNode('g', {transform: `translate(${column * 78 + 10} ${row * 75 + 18})`});
     const tile = svgNode('rect', {
       width: 70, height: 67, rx: 0, fill: shade, stroke: chartColors.paper, 'stroke-width': 2,
@@ -1079,19 +1080,19 @@ function renderStateMap(language, records) {
     tile.setAttribute('aria-label', tooltip);
     tile.appendChild(svgNode('title', {}, tooltip));
     group.appendChild(tile);
-    const dark = ratio > 0.62;
+    const labelColor = shadeIndex >= 4 ? chartColors.paper : chartColors.text;
     group.appendChild(svgNode('text', {
-      x: 8, y: 18, fill: dark ? chartColors.paper : chartColors.text, 'font-size': 12,
+      x: 8, y: 18, fill: labelColor, 'font-size': 12,
       'font-weight': 700,
     }, state));
     if (winner) {
       const label = censoredLabel;
       group.appendChild(svgNode('text', {
-        x: 35, y: 42, fill: dark ? chartColors.paper : chartColors.text, 'font-size': 10,
+        x: 35, y: 42, fill: labelColor, 'font-size': 10,
         'text-anchor': 'middle', 'font-weight': 700,
       }, label.length > 11 ? `${label.slice(0, 10)}…` : label));
       group.appendChild(svgNode('text', {
-        x: 35, y: 56, fill: dark ? '#E8E2D5' : chartColors.muted, 'font-size': 9,
+        x: 35, y: 56, fill: labelColor, 'font-size': 9,
         'text-anchor': 'middle',
       }, winner.hits.toLocaleString()));
     }
@@ -1633,7 +1634,7 @@ MAIN_CSS = """
   .term-explorer-grid { display:grid; grid-template-columns:1fr; gap:1.25rem; }
   .term-explorer-grid[data-view="frequency"] { grid-template-columns:1fr; }
   .term-explorer-grid .card { margin:0; }
-  .state-map-card { max-width:48rem; padding:1rem 0; }
+  .term-explorer-grid .state-map-card { width:min(100%,48rem); margin:0 auto; padding:1rem 0; }
   .language-page .table-wrap { border-top:1px solid var(--rule); }
   .state-map-card figcaption { margin:0 0 1rem; color:var(--muted); font-size:.92rem;
                                line-height:1.45; }
