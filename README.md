@@ -32,12 +32,11 @@ full-history chart in [`outputs/figures/`](outputs/figures).
 | Measure | What matches | Sources |
 |---|---|---|
 | **Formal courtesy** | Parliamentary address and deference: “the gentleman from”, “my distinguished colleague”, “I yield”. | Hand-curated |
-| **Profanity** | Curse and obscene words in a mild tier (`damn`, `crap`) and a strong tier (`shit`, `fuck`). | Hand-curated; cross-checked against LDNOOBW, Surge AI, and [Kaggle](https://www.kaggle.com/datasets/konradb/profanities-in-english-collection) |
+| **Profanity** | Curse and obscene words, grouped into mild and strong tiers. | Hand-curated; cross-checked against LDNOOBW, Surge AI, and [Kaggle](https://www.kaggle.com/datasets/konradb/profanities-in-english-collection) |
 | **Slurs** | Ethnic, sexual-orientation and gender-identity, and disability slurs used in the US. | Wikipedia's [ethnic](https://en.wikipedia.org/wiki/List_of_ethnic_slurs), [homophobic](https://en.wikipedia.org/wiki/Category:Homophobic_slurs), and [disability](https://en.wikipedia.org/wiki/List_of_disability-related_terms_with_negative_connotations) lists; cross-checked against [Kaggle](https://www.kaggle.com/datasets/konradb/profanities-in-english-collection) |
 
-Profanity and slurs are exact lists, and no word is in both. Words that are also ordinary words,
-names, places, or clinical terms (“chink in the armor”, “Redskins”, “queer”, “Gaylord”,
-“retarded”) are never scored, and verb uses such as “retard the growth” are dropped.
+Profanity and slurs are exact lists, and no word is in both. Potential slur entries that are
+also ordinary words, names, places, or clinical terms are excluded, as are ordinary verb uses.
 [`slurs_provenance.tsv`](analysis/score/lexicons/slurs_provenance.tsv) records the decision for
 every source entry. These are word counts, not judgments of intent. Recognized quotations and
 inserted material are filtered, but detection is imperfect; some printed or quoted language can
@@ -49,8 +48,8 @@ hides any measure that older rows have not been scored for rather than showing f
 
 Individual graphs for the five most-used swear-word families are in
 [`outputs/figures/profanity_terms/`](outputs/figures/profanity_terms/), with exact yearly counts
-in `timeseries.csv`. Forms such as `fuck`, `fucked`, and `fucking` are combined; compounds such
-as `motherfucker` stay separate. These word-level graphs use **1994–present GovInfo member data**,
+in `timeseries.csv`. Inflected forms are combined; distinct compounds stay separate.
+These word-level graphs use **1994–present GovInfo member data**,
 not the Stanford aggregate series back to 1873, and refresh with the daily build.
 
 ## Explore the evidence
