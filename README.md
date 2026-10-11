@@ -1,6 +1,5 @@
 <div align="center">
   <h1>The Language of Congress</h1>
-  <p><strong>Official records. Reproducible analysis. 150 years of floor speech.</strong></p>
   <p>How formal courtesy, profanity, and slurs in the Congressional Record have changed
   since 1873, by party and chamber.</p>
   <p>
@@ -43,15 +42,6 @@ every source entry. These are word counts, not judgments of intent. Recognized q
 inserted material are filtered, but detection is imperfect; some printed or quoted language can
 remain. A member who repeats a slur to condemn it is also counted.
 
-Changing a word list changes past counts, so the historical series must be rescored with the
-`rebuild-historical-language` and `backfill-all-speaker-terms` workflows. Until then, the site
-hides any measure that older rows have not been scored for rather than showing false zeros.
-
-Individual graphs for the five most-used swear-word families are in
-[`outputs/figures/profanity_terms/`](outputs/figures/profanity_terms/), with exact yearly counts
-in `timeseries.csv`. Forms such as `fuck`, `fucked`, and `fucking` are combined; compounds such
-as `motherfucker` stay separate. These word-level graphs use **1994–present GovInfo member data**,
-not the Stanford aggregate series back to 1873, and refresh with the daily build.
 
 ## Explore the evidence
 
