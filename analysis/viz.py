@@ -91,6 +91,7 @@ def _plot_by_party(ax, g: pd.DataFrame, col: str, parties=("D", "R"), *,
         ends.append((party, sub["year"].iloc[-1], float(sub[col].iloc[-1])))
     charts.fit_time_axis(ax, right_padding=0.13 if label_ends else 0.0)
     _set_year_ticks(ax, g)
+    ax.set_ylim(bottom=0)
     if label_ends and ends:
         _place_end_labels(ax, ends)
 

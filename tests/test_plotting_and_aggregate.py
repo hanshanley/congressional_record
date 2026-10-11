@@ -234,7 +234,8 @@ def test_last50_figures_filter_years_without_changing_rates(
     frame = pd.DataFrame([
         {"congress": congress_from_year(year), "year": year, "chamber": chamber,
          "party": party, "words": 10_000, "formal_courtesy_hits": 12,
-         "profanity_hits": hits, "slur_hits": 1}
+         "profanity_hits": hits, "slur_hits": 1,
+         "profanity_mild_hits": hits, "profanity_strong_hits": 0}
         for year, hits in ((1976, 100), (1977, 2), (2025, 3))
         for chamber in ("house", "senate") for party in ("D", "R")
     ])
@@ -272,6 +273,8 @@ def test_last50_figures_filter_years_without_changing_rates(
             assert right > last
             assert all(first <= tick <= last for tick in axis.get_xticks())
             assert axis.get_xticks()[-1] == last
+            assert axis.get_ylim()[0] == 0
+            assert min(axis.get_yticks()) == 0
             boxes = [label.get_window_extent(renderer)
                      for label in axis.get_xticklabels() if label.get_visible()]
             boxes.sort(key=lambda box: box.x0)
@@ -281,7 +284,7 @@ def test_last50_figures_filter_years_without_changing_rates(
     monkeypatch.setattr(Figure, "savefig", check_labels)
     names = {path.name for path in viz.render(metrics, tmp_path / "outputs")}
     full_names = {name for name in names if "_last50" not in name}
-    assert len(full_names) == 12
+    assert len(full_names) == 14
     assert {name.removesuffix(".png") + "_last50.png" for name in full_names} <= names
     full = captured["profanity_per_1k.png"]["lines"]
     recent = captured["profanity_per_1k_last50.png"]["lines"]
@@ -412,6 +415,7 @@ def test_site_language_trends_draws_both_party_series(monkeypatch, tmp_path) -> 
     fig = captured["fig"]
     assert [axis.get_title() for axis in fig.axes] == ["Profanity", "Slurs"]
     assert all(len(axis.lines) == 2 for axis in fig.axes)
+    assert all(axis.get_ylim()[0] == 0 for axis in fig.axes)
     from matplotlib.dates import date2num
     expected_limits = (
         date2num(pd.Timestamp("2025-01-01")),

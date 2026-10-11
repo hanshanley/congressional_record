@@ -2024,6 +2024,7 @@ def _chart_leaderboard(board: pd.DataFrame, figs: Path, min_words: int) -> Path:
     )
     ax.grid(axis="x", linestyle="-", linewidth=0.5)
     ax.grid(axis="y", visible=False)
+    ax.set_xlim(left=0)
     return charts.finish(
         fig,
         ax,
@@ -2053,6 +2054,7 @@ def _chart_trend(series: pd.DataFrame, figs: Path) -> Path:
             markersize=style["markersize"],
         )
     charts.fit_time_axis(ax)
+    ax.set_ylim(bottom=0)
     ax.xaxis.set_major_locator(MaxNLocator(integer=True))
     charts.style_axes(
         ax,

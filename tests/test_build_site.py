@@ -193,6 +193,32 @@ def test_long_run_endpoint_tracks_real_coverage_without_changing_counts(store, t
 # ------------------------------------------------------------------------- output
 
 
+def test_site_fallbacks_start_numeric_axes_at_zero(store, tmp_path):
+    from matplotlib.figure import Figure
+    from analysis.speakers import leaderboard
+
+    path, _, _ = store
+    module = _load_build_site()
+    daily = module.load_daily(path)
+    board = leaderboard(daily, congress=119, top=20, min_words=1000)
+    series = module.timeseries(daily)
+    bounds = {}
+    savefig = Figure.savefig
+
+    def check(fig, filename, *args, **kwargs):
+        axis = fig.axes[0]
+        name = Path(filename).name
+        bounds[name] = (
+            axis.get_xlim()[0] if name == "leaderboard.png" else axis.get_ylim()[0]
+        )
+        return savefig(fig, filename, *args, **kwargs)
+
+    with patch.object(Figure, "savefig", check):
+        module._chart_leaderboard(board, tmp_path, 1000)
+        module._chart_trend(series, tmp_path)
+    assert bounds == {"leaderboard.png": 0, "trend.png": 0}
+
+
 def test_build_writes_html_json_and_figures(store, tmp_path):
     path, _, bills = store
     module = _load_build_site()
