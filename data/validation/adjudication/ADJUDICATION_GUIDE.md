@@ -1,3 +1,9 @@
+# Historical adjudication guide
+
+> **Archived rubric.** These batches use an earlier, broader codebook. This guide preserves
+> their original annotation fields; it does not describe the current three-measure scorer.
+> For current validation, see the [validation rubric](../../../docs/VALIDATION_RUBRIC.md).
+
 You are an ADJUDICATOR resolving disagreements between two independent model-assisted
 annotation passes (Pass A and Pass B) over REAL Congressional Record passages.
 
@@ -5,37 +11,40 @@ Your job: for each sample in your assigned batch, INDEPENDENTLY read the passage
 the FINAL value of every field. The two passes are decision aids, NOT authorities. Do not
 merely copy A or B; decide from the passage text itself.
 
-====================================================================================
-STRICT FILE POLICY
-====================================================================================
+## Strict file policy
+
 Read ONLY two files: (1) this guide, and (2) your single assigned batch input JSON file.
 Do NOT read, cat, grep, open, or otherwise access ANY other file in the repository
 (no .parquet, no scoring/lexicon/metrics/calibration/sampling files, no other CSV/JSON).
 All data you need is in your batch file. Write exactly one output file (your results JSON).
 
-====================================================================================
-RUBRIC (allowed values + rule). These are OCCURRENCE/CONTENT judgments about the passage.
-====================================================================================
-target_exists           yes|no|uncertain  A person, party, caucus, or clearly identified group is the object of the relevant language.
-outparty_target_exists  yes|no|uncertain  The passage EXPLICITLY refers to the party OPPOSING the recorded speaker's party. Do NOT infer from ideology alone.
-target_party            D|R|I|other|none|uncertain  Party of the target when text supports it; NEVER infer from ideology alone. If no target -> none.
-formulaic_address       yes|no|uncertain  Conventional parliamentary courtesy or address, regardless of substantive warmth.
-procedural_deference    yes|no|uncertain  Courtesy required by floor procedure: yielding, recognition, regular order, reserving time.
-gratitude_praise        yes|no|uncertain  Genuine thanks, praise, appreciation, commendation, or respect.
-bipartisan_cooperation  yes|no|uncertain  EXPLICIT shared work, compromise, common ground, or cross-party cooperation.
-personal_attack         yes|no|uncertain  Attack on a person's honesty, integrity, competence, character, or fitness.
-misconduct_allegation   yes|no|uncertain  Text ALLEGES illegal, corrupt, unethical, or abusive conduct; this never establishes conduct occurred.
-ideological_label       yes|no|uncertain  Ideological categorization such as socialist, communist, fascist, or authoritarian.
-profanity               yes|no|uncertain  Genuine curse/obscene expression, not neutral medical, sexual, religious, identity, or criminal vocabulary.
-identity_slur           yes|no|uncertain  Identity-directed slur occurs. Occurrence does not imply endorsement.
-quoted_or_read_in       yes|no|uncertain  Relevant language is quoted, read into the Record, condemned, or attributed to another source.
-ambiguous               yes|no            Context is insufficient or supports materially different readings.
-confidence              low|medium|high   Your confidence in the adjudicated labels for this row.
-rationale               free text         Concise (1-2 sentences). Explain the DECISIVE passage evidence and any quotation/target ambiguity. Do NOT say which pass you picked.
+## Rubric
 
-====================================================================================
-HOW THE TWO PASSES BEHAVE (use to weigh, not to obey)
-====================================================================================
+These are OCCURRENCE/CONTENT judgments about the passage.
+
+| Field | Allowed values | Rule |
+|---|---|---|
+| `target_exists` | `yes`, `no`, `uncertain` | A person, party, caucus, or clearly identified group is the object of the relevant language. |
+| `outparty_target_exists` | `yes`, `no`, `uncertain` | The passage EXPLICITLY refers to the party OPPOSING the recorded speaker's party. Do NOT infer from ideology alone. |
+| `target_party` | `D`, `R`, `I`, `other`, `none`, `uncertain` | Party of the target when text supports it; NEVER infer from ideology alone. If no target -> none. |
+| `formulaic_address` | `yes`, `no`, `uncertain` | Conventional parliamentary courtesy or address, regardless of substantive warmth. |
+| `procedural_deference` | `yes`, `no`, `uncertain` | Courtesy required by floor procedure: yielding, recognition, regular order, reserving time. |
+| `gratitude_praise` | `yes`, `no`, `uncertain` | Genuine thanks, praise, appreciation, commendation, or respect. |
+| `bipartisan_cooperation` | `yes`, `no`, `uncertain` | EXPLICIT shared work, compromise, common ground, or cross-party cooperation. |
+| `personal_attack` | `yes`, `no`, `uncertain` | Attack on a person's honesty, integrity, competence, character, or fitness. |
+| `misconduct_allegation` | `yes`, `no`, `uncertain` | Text ALLEGES illegal, corrupt, unethical, or abusive conduct; this never establishes conduct occurred. |
+| `ideological_label` | `yes`, `no`, `uncertain` | Ideological categorization such as socialist, communist, fascist, or authoritarian. |
+| `profanity` | `yes`, `no`, `uncertain` | Genuine curse/obscene expression, not neutral medical, sexual, religious, identity, or criminal vocabulary. |
+| `identity_slur` | `yes`, `no`, `uncertain` | Identity-directed slur occurs. Occurrence does not imply endorsement. |
+| `quoted_or_read_in` | `yes`, `no`, `uncertain` | Relevant language is quoted, read into the Record, condemned, or attributed to another source. |
+| `ambiguous` | `yes`, `no` | Context is insufficient or supports materially different readings. |
+| `confidence` | `low`, `medium`, `high` | Your confidence in the adjudicated labels for this row. |
+| `rationale` | Free text | Concise (1-2 sentences). Explain the DECISIVE passage evidence and any quotation/target ambiguity. Do NOT say which pass you picked. |
+
+## How the two passes behave
+
+Use these descriptions to weigh the judgments, not to obey them.
+
 - Pass B is a KEYWORD/LEXICON-CUE annotator: it mechanically flags labels when certain
   surface words appear, ignoring context. It OVER-triggers (e.g., literal "common ground"
   -> bipartisan_cooperation even when the phrase is "common ground of the language of the
@@ -45,9 +54,8 @@ HOW THE TWO PASSES BEHAVE (use to weigh, not to obey)
   present (e.g., a slur or curse word) or occasionally over/under-call semantic fields.
 - Therefore: verify every label against the ACTUAL passage text. Trust neither blindly.
 
-====================================================================================
-FIELD GUIDANCE & COMMON PITFALLS
-====================================================================================
+## Field guidance and common pitfalls
+
 - OCR NOTE: passages are OCR'd historical text. Periods often replace commas; words may be
   fused ("mourningmourning"); read charitably and interpret meaning.
 - target_exists: A pure policy/procedural argument with no person/party as the object -> no.
@@ -93,14 +101,32 @@ FIELD GUIDANCE & COMMON PITFALLS
   or it materially supports different readings (e.g., cannot tell if endorsing or condemning).
 - confidence: high when the text is clear; medium when some inference; low when very unclear.
 
-====================================================================================
-OUTPUT
-====================================================================================
+## Output
+
 Write a JSON array to your assigned RESULTS path. One object per sample, in the SAME ORDER as
 the input batch, each object with EXACTLY these keys:
-  "sample_id", "target_exists", "outparty_target_exists", "target_party", "formulaic_address",
-  "procedural_deference", "gratitude_praise", "bipartisan_cooperation", "personal_attack",
-  "misconduct_allegation", "ideological_label", "profanity", "identity_slur", "quoted_or_read_in",
-  "ambiguous", "confidence", "rationale"
+
+```json
+[
+  "sample_id",
+  "target_exists",
+  "outparty_target_exists",
+  "target_party",
+  "formulaic_address",
+  "procedural_deference",
+  "gratitude_praise",
+  "bipartisan_cooperation",
+  "personal_attack",
+  "misconduct_allegation",
+  "ideological_label",
+  "profanity",
+  "identity_slur",
+  "quoted_or_read_in",
+  "ambiguous",
+  "confidence",
+  "rationale"
+]
+```
+
 Every field must be non-empty and use ONLY the allowed values above. Do not add extra keys.
 Cover EVERY sample_id in your batch, including rows where A and B already agreed (still verify).

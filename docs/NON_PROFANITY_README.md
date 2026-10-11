@@ -4,7 +4,7 @@
 > misconduct, combined comity, ideological labels, out-party context, the “Democrat party”
 > pejorative, and VADER sentiment. The project now measures formal courtesy, profanity, and
 > slurs only. This critique describes the codebook as of commit `94a31af`; the lexicon
-> files it links to can be read at that commit.
+> implementation links below point to that revision, including retired lexicons.
 
 **Bottom line:** these are reproducible counts of selected words and phrases, not
 measurements of a member's true civility, sincerity, cooperation, or wrongdoing.
@@ -21,12 +21,12 @@ identity slurs are included because the implementation treats them separately.
 
 | Source file | Responsibility |
 |---|---|
-| [`scorers.py`](../analysis/score/scorers.py) | Matching, exclusions, reference detection, and per-turn counts. |
-| [`lexicons/`](../analysis/score/lexicons/) | The active lists of counted expressions. |
-| [`registry.py`](../analysis/score/registry.py) | Metric names, raw-count keys, denominators, units, and codebook version. |
-| [`aggregate.py`](../analysis/aggregate.py) | Long-run totals by source, Congress, chamber, and party; primary-source selection. |
-| [`daily_language.py`](../analysis/daily_language.py) | Daily D/R House/Senate totals for the six headline categories. |
-| [`validate.py`](../analysis/validate.py) | Sampling and comparison with adjudicated model annotations. |
+| [`scorers.py`](https://github.com/hanshanley/congressional_record/blob/94a31af1aca00da1ce062d8c4e6675edfa092e58/analysis/score/scorers.py) | Matching, exclusions, reference detection, and per-turn counts. |
+| [`lexicons/`](https://github.com/hanshanley/congressional_record/tree/94a31af1aca00da1ce062d8c4e6675edfa092e58/analysis/score/lexicons) | The active lists of counted expressions. |
+| [`registry.py`](https://github.com/hanshanley/congressional_record/blob/94a31af1aca00da1ce062d8c4e6675edfa092e58/analysis/score/registry.py) | Metric names, raw-count keys, denominators, units, and codebook version. |
+| [`aggregate.py`](https://github.com/hanshanley/congressional_record/blob/94a31af1aca00da1ce062d8c4e6675edfa092e58/analysis/aggregate.py) | Long-run totals by source, Congress, chamber, and party; primary-source selection. |
+| [`daily_language.py`](https://github.com/hanshanley/congressional_record/blob/94a31af1aca00da1ce062d8c4e6675edfa092e58/analysis/daily_language.py) | Daily D/R House/Senate totals for the six headline categories. |
+| [`validate.py`](https://github.com/hanshanley/congressional_record/blob/94a31af1aca00da1ce062d8c4e6675edfa092e58/analysis/validate.py) | Sampling and comparison with adjudicated model annotations. |
 
 The default scorer lowercases each turn and tokenizes with
 `[a-z0-9]+(?:[-'\u2019][a-z0-9]+)*`. Internal apostrophes and hyphens are preserved;
@@ -72,7 +72,7 @@ a date, and a nonprocedural turn.
 
 **Quotation caveat:** `score_turn`, long-run aggregation, and daily language
 aggregation do not mask embedded quotations. Separate member profanity summaries
-in [`speakers.py`](../analysis/speakers.py) mask quotations before scoring. Those
+in [`speakers.py`](https://github.com/hanshanley/congressional_record/blob/94a31af1aca00da1ce062d8c4e6675edfa092e58/analysis/speakers.py) mask quotations before scoring. Those
 attribution safeguards must not be assumed to apply to all language metrics.
 An ingested nonprocedural turn can still contain quotations or read-in language.
 
@@ -88,14 +88,14 @@ not exhaustive linguistic definitions.
 
 | Category / output | Actual detector | What the count does **not** establish |
 |---|---|---|
-| Formulaic courtesy: `formal_courtesy_per_1k` | [`formal_courtesy.txt`](../analysis/score/lexicons/formal_courtesy.txt): parliamentary address such as `my distinguished colleague`, `the gentleman from`, `i yield to`, `with all due respect`, plus standalone `comity` and `civility`. | Sincerity, warmth, cross-party respect, or even an act of courtesy. Mentioning civility also counts. |
-| Gratitude/praise: `gratitude_praise_per_1k` | [`gratitude_praise.txt`](../analysis/score/lexicons/gratitude_praise.txt): thirteen expressions, including `i thank my colleague`, `i salute`, `i congratulate`, and `i have the highest respect`. | Who is praised, whether it is sincere, or whether it concerns Congress. Many ordinary expressions of thanks are absent. |
-| Cooperation: `cooperation_per_1k` | [`cooperation.txt`](../analysis/score/lexicons/cooperation.txt): six entries involving reaching/working across the aisle, `in a bipartisan`, or `bipartisan spirit`. | Successful joint work. Calls for cooperation, failed cooperation, and some institutional descriptions can match. |
-| Personal attack: `hostility_per_1k` | [`hostility.txt`](../analysis/score/lexicons/hostility.txt): eleven entries including `liar`, `hypocrite`, `coward`, `phony`, `incompetent`, `buffoon`, and `shame on you`. | A resolved personal target, speaker endorsement, or exhaustive coverage of attacks. No target is required for the headline count. |
-| Misconduct language: `misconduct_per_1k` | [`misconduct.txt`](../analysis/score/lexicons/misconduct.txt): fifteen exact entries, including `corrupt`, `corruption`, `bribery`, `money laundering`, `obstruction of justice`, and `abuse of power`. | That an allegation was actually asserted against someone, that it targets the other party, or that wrongdoing occurred. Legal-topic discussion can match. |
+| Formulaic courtesy: `formal_courtesy_per_1k` | [`formal_courtesy.txt`](https://github.com/hanshanley/congressional_record/blob/94a31af1aca00da1ce062d8c4e6675edfa092e58/analysis/score/lexicons/formal_courtesy.txt): parliamentary address such as `my distinguished colleague`, `the gentleman from`, `i yield to`, `with all due respect`, plus standalone `comity` and `civility`. | Sincerity, warmth, cross-party respect, or even an act of courtesy. Mentioning civility also counts. |
+| Gratitude/praise: `gratitude_praise_per_1k` | [`gratitude_praise.txt`](https://github.com/hanshanley/congressional_record/blob/94a31af1aca00da1ce062d8c4e6675edfa092e58/analysis/score/lexicons/gratitude_praise.txt): thirteen expressions, including `i thank my colleague`, `i salute`, `i congratulate`, and `i have the highest respect`. | Who is praised, whether it is sincere, or whether it concerns Congress. Many ordinary expressions of thanks are absent. |
+| Cooperation: `cooperation_per_1k` | [`cooperation.txt`](https://github.com/hanshanley/congressional_record/blob/94a31af1aca00da1ce062d8c4e6675edfa092e58/analysis/score/lexicons/cooperation.txt): six entries involving reaching/working across the aisle, `in a bipartisan`, or `bipartisan spirit`. | Successful joint work. Calls for cooperation, failed cooperation, and some institutional descriptions can match. |
+| Personal attack: `hostility_per_1k` | [`hostility.txt`](https://github.com/hanshanley/congressional_record/blob/94a31af1aca00da1ce062d8c4e6675edfa092e58/analysis/score/lexicons/hostility.txt): eleven entries including `liar`, `hypocrite`, `coward`, `phony`, `incompetent`, `buffoon`, and `shame on you`. | A resolved personal target, speaker endorsement, or exhaustive coverage of attacks. No target is required for the headline count. |
+| Misconduct language: `misconduct_per_1k` | [`misconduct.txt`](https://github.com/hanshanley/congressional_record/blob/94a31af1aca00da1ce062d8c4e6675edfa092e58/analysis/score/lexicons/misconduct.txt): fifteen exact entries, including `corrupt`, `corruption`, `bribery`, `money laundering`, `obstruction of justice`, and `abuse of power`. | That an allegation was actually asserted against someone, that it targets the other party, or that wrongdoing occurred. Legal-topic discussion can match. |
 | Combined comity: `comity_per_1k` | Sum of courtesy, gratitude/praise, and cooperation hits. | A separately trained or validated civility construct. It combines unlike behaviors with equal per-hit weight. |
-| Ideological labels: `ideological_label_per_1k` | [`ideological_labels.txt`](../analysis/score/lexicons/ideological_labels.txt): `socialist`, `communist`, `marxist`, `fascist`, `authoritarian`, `the radical left`, and `the radical right`, with default inflection. | An insult or personal attack. This family is registered as neutral. |
-| Identity slurs: `profanity_slurs_per_1k` | [`slurs.txt`](../analysis/score/lexicons/slurs.txt): a separate curated exact-form list. The historical output name retains `profanity_`, but these hits are excluded from total profanity. | Endorsement or identity-directed abuse by the speaker. Quoting or condemning a slur still requires contextual review. |
+| Ideological labels: `ideological_label_per_1k` | [`ideological_labels.txt`](https://github.com/hanshanley/congressional_record/blob/94a31af1aca00da1ce062d8c4e6675edfa092e58/analysis/score/lexicons/ideological_labels.txt): `socialist`, `communist`, `marxist`, `fascist`, `authoritarian`, `the radical left`, and `the radical right`, with default inflection. | An insult or personal attack. This family is registered as neutral. |
+| Identity slurs: `profanity_slurs_per_1k` | [`slurs.txt`](https://github.com/hanshanley/congressional_record/blob/94a31af1aca00da1ce062d8c4e6675edfa092e58/analysis/score/lexicons/slurs.txt): a separate curated exact-form list. The historical output name retains `profanity_`, but these hits are excluded from total profanity. | Endorsement or identity-directed abuse by the speaker. Quoting or condemning a slur still requires contextual review. |
 | Party-label marker: `democrat_party_pej_per_1k` | Exact case-normalized regex `\bdemocrat\s+party\b`, wherever it occurs. | Pejorative intent. Despite its name and `target_required` registry flag, this detector does not enforce an opposing-party target or speaker-party restriction. |
 
 **Optional sentiment is different.** With `use_sentiment=True` (the analysis CLI's
@@ -135,7 +135,7 @@ Reference detection combines the following, merging overlapping spans:
 | R | Tokens `democrat` or `democrats`; `democratic` followed by the same selected nouns. |
 | I, other, or unknown | No party-name detector. |
 
-All parties can additionally match [`outgroup.txt`](../analysis/score/lexicons/outgroup.txt)
+All parties can additionally match [`outgroup.txt`](https://github.com/hanshanley/congressional_record/blob/94a31af1aca00da1ce062d8c4e6675edfa092e58/analysis/score/lexicons/outgroup.txt)
 idioms such as `across the aisle`, `the other side`, or `the other party`.
 Consequently, an independent can get idiom hits without a resolved opposing party,
 and a generic "other side" need not refer to congressional partisans at all.
