@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate publication graphs for the ten most-used swear-word families."""
+"""Generate publication graphs for the five most-used swear-word families."""
 
 from __future__ import annotations
 
@@ -19,7 +19,7 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--daily", type=Path, default=ROOT / "data/site/speaker_daily")
     parser.add_argument("--out", type=Path, default=ROOT / "outputs/figures/profanity_terms")
-    parser.add_argument("--top", type=int, default=10)
+    parser.add_argument("--top", type=int, default=5)
     args = parser.parse_args(argv)
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
     daily = load_daily(args.daily)

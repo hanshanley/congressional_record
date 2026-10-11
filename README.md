@@ -47,7 +47,7 @@ Changing a word list changes past counts, so the historical series must be resco
 `rebuild-historical-language` and `backfill-all-speaker-terms` workflows. Until then, the site
 hides any measure that older rows have not been scored for rather than showing false zeros.
 
-Individual graphs for the ten most-used swear-word families are in
+Individual graphs for the five most-used swear-word families are in
 [`outputs/figures/profanity_terms/`](outputs/figures/profanity_terms/), with exact yearly counts
 in `timeseries.csv`. Forms such as `fuck`, `fucked`, and `fucking` are combined; compounds such
 as `motherfucker` stay separate. These word-level graphs use **1994–present GovInfo member data**,
@@ -82,7 +82,7 @@ The routine commands, run from the repo root:
 ./.venv/bin/python scripts/update_language.py   # refresh current-Congress trend metrics
 ./.venv/bin/python scripts/update_bills.py      # refresh current-Congress bill statuses
 ./.venv/bin/python scripts/build_site.py        # render site/ from the committed tables
-./.venv/bin/python scripts/build_term_graphs.py # top ten swear-word families -> outputs/figures/
+./.venv/bin/python scripts/build_term_graphs.py # top five swear-word families -> outputs/figures/
 ./.venv/bin/python -m pytest tests/ -q          # offline test suite
 ```
 

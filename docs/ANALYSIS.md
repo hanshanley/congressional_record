@@ -74,7 +74,7 @@ profanity list, which lacked the Kaggle compound forms.
 ### Individual swear-word families
 
 [`outputs/figures/profanity_terms/`](../outputs/figures/profanity_terms/) contains one graph
-for each of the ten most-used families, selected by combined Democratic/Republican matches.
+for each of the five most-used families, selected by combined Democratic/Republican matches.
 Inflections, spacing and phrasal variants follow the explicit mapping in `analysis/speakers.py`:
 `fuck`, `fucked` and `fucking` combine into `fuck`; distinct compounds such as `motherfucker`
 and `bullshit` are not stemmed together. Ties are broken alphabetically.

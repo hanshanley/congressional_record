@@ -161,7 +161,7 @@ def test_build_writes_html_json_and_figures(store, tmp_path):
                 "figures/language_trends.png", "figures/language_members.png"):
         assert (out / rel).exists(), rel
     terms = BeautifulSoup((out / "terms/index.html").read_text(), "html.parser")
-    assert terms.h1.get_text() == "Ten swear-word families"
+    assert terms.h1.get_text() == "Five swear-word families"
     assert terms.select_one('a[aria-current="page"]')["href"] == "./"
     assert len(terms.select("figure img")) == 2
     for image in terms.select("figure img"):

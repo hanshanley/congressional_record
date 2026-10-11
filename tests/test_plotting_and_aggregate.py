@@ -446,7 +446,7 @@ def test_direct_labels_remain_distinguishable_when_both_series_end_at_zero() -> 
     plt.close(fig)
 
 
-def test_term_graphs_render_top_ten_and_remove_stale_family_files(tmp_path) -> None:
+def test_term_graphs_render_top_five_and_remove_stale_family_files(tmp_path) -> None:
     import json
     import pandas as pd
     from analysis.plotting import term_charts
@@ -466,15 +466,14 @@ def test_term_graphs_render_top_ten_and_remove_stale_family_files(tmp_path) -> N
         ]
     ])
     payload = term_charts.render(daily, tmp_path)
-    assert len(payload["terms"]) == len(list(tmp_path.glob("*_per_100k.png"))) == 10
+    assert len(payload["terms"]) == len(list(tmp_path.glob("*_per_100k.png"))) == 5
     assert {item["term"] for item in payload["terms"]} == {
-        "damn", "crap", "fuck", "bitch", "bullshit", "shit",
-        "bastard", "ass", "jackass", "hell",
+        "damn", "crap", "fuck", "bitch", "bullshit",
     }
     persisted = json.loads((tmp_path / "index.json").read_text())
     assert persisted == payload
     exported = pd.read_csv(tmp_path / "timeseries.csv")
-    assert len(exported["term"].unique()) == 10
+    assert len(exported["term"].unique()) == 5
     assert all((tmp_path / item["filename"]).is_file() for item in payload["terms"])
     term_charts.render(daily, tmp_path, top=1)
     assert len(list(tmp_path.glob("*_per_100k.png"))) == 1

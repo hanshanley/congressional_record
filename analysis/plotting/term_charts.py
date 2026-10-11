@@ -17,7 +17,7 @@ from . import charts, theme
 LOG = logging.getLogger(__name__)
 
 
-def render(daily: pd.DataFrame, out_dir: Path, *, top: int = 10) -> dict:
+def render(daily: pd.DataFrame, out_dir: Path, *, top: int = 5) -> dict:
     """Publish graphs and their exact counts; refuse incomplete stored term data."""
     payload = profanity_family_timeseries(daily, top=top)
     if not payload["terms"]:

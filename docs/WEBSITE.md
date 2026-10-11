@@ -1,6 +1,6 @@
 # The website
 
-The `terms/` page presents individual annual graphs for the ten most-used swear-word families
+The `terms/` page presents individual annual graphs for the five most-used swear-word families
 in the GovInfo member data (1994–present), with CSV/JSON downloads. It combines forms such as
 `fuck` and `fucking`, keeps distinct compounds separate, and ranks families by total D/R matches.
 The figures are lexical counts, not verified instances of personally uttered curses; quoted,

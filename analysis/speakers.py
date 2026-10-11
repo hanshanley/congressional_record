@@ -282,7 +282,7 @@ def censor_profanity_term(term: str) -> str:
     )
 
 
-def profanity_family_timeseries(daily: pd.DataFrame, *, top: int = 10) -> dict:
+def profanity_family_timeseries(daily: pd.DataFrame, *, top: int = 5) -> dict:
     """Rank families by total hits and calculate annual, word-weighted D/R rates."""
     if top <= 0:
         raise ValueError("top must be positive")

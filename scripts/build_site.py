@@ -290,6 +290,7 @@ function addPanelHeading(wrapper, metric, detail) {
   const heading = document.createElement('div');
   heading.className = 'mini-chart-heading';
   const title = document.createElement('h3');
+  title.className = 'sr-only';
   title.textContent = metric.label;
   const subtitle = document.createElement('p');
   subtitle.className = 'definition';
@@ -1498,23 +1499,24 @@ HOUSE_CSS = """
                   font-size:.7rem; text-transform:uppercase; }
   .copyright { color:var(--muted); font-family:var(--mono); font-size:.62rem;
                text-transform:uppercase; }
-  .dashboard-page .feature-header { grid-template-columns:1fr; gap:.85rem;
-                                    padding:clamp(2rem,4vw,3rem) 0 1.75rem; border:0; }
+  .dashboard-page .feature-header { grid-template-columns:1fr; gap:.65rem;
+                                    padding:2rem 0 1.25rem; border:0; }
   .dashboard-page .feature-header > * { grid-column:1; grid-row:auto; }
-  .dashboard-page h1 { max-width:28ch; font-size:clamp(2.6rem,4.5vw,3.8rem);
-                        line-height:1.06; text-wrap:balance; }
+  .dashboard-page .feature-header .kicker { margin:0; }
+  .dashboard-page h1 { max-width:28ch; font-size:clamp(2.2rem,3.6vw,3.1rem);
+                        line-height:1.12; text-wrap:balance; }
   .dashboard-page .dek { margin:0; max-width:44rem; font-size:1.15rem;
                          font-style:normal; line-height:1.45; }
   .dashboard-page .byline { display:flex; flex-wrap:wrap; gap:.3rem 1.25rem;
-                            margin:.75rem 0 0; padding:0; border:0;
+                            margin:.5rem 0 0; padding:0; border:0;
                             font-size:.62rem; color:var(--muted); }
   .dashboard-page .byline p { margin:0; }
-  .dashboard-page .feature-nav { margin:0; padding:0; display:flex; gap:.5rem; }
-  .dashboard-page .feature-nav > span { width:100%; color:var(--muted); }
-  .dashboard-page .feature-nav a { padding:.7rem 1rem; border:1px solid var(--rule);
-                                  background:var(--paper-deep); font-size:.75rem;
+  .dashboard-page .feature-nav { margin:0; padding:0 0 .6rem; display:flex; gap:.25rem;
+                                 border-bottom:1px solid var(--hair); }
+  .dashboard-page .feature-nav a { padding:.5rem .75rem; border:0;
+                                  background:transparent; font-size:.78rem;
                                   letter-spacing:.03em; text-transform:none; }
-  .dashboard-page .feature-nav a:hover { border-color:var(--ink); }
+  .dashboard-page .feature-nav a:hover { background:var(--paper-deep); }
   .dashboard-page .feature-nav a[aria-current="page"] {
     background:var(--ink); border-color:var(--ink); color:var(--paper);
   }
@@ -1536,26 +1538,26 @@ HOUSE_CSS = """
     .feature-nav { margin-left:0; }
     .section-head { grid-template-columns:1fr; gap:.4rem; }
     .site-footer { grid-template-columns:1fr; }
-    .dashboard-page h1 { font-size:clamp(2.2rem,8vw,3.2rem); }
-    .dashboard-page .feature-nav { display:grid; grid-template-columns:1fr; gap:.35rem; }
-    .dashboard-page .feature-nav a { padding:.65rem .85rem; }
+    .dashboard-page h1 { font-size:clamp(2.1rem,8vw,2.8rem); }
+    .dashboard-page .feature-nav { gap:.2rem; }
+    .dashboard-page .feature-nav a { padding:.5rem .65rem; }
   }
 """
 
 MAIN_CSS = """
   .section-nav { display:flex; flex-wrap:wrap; align-items:baseline;
-                 gap:.6rem 1.25rem; margin:1.5rem 0 0; padding:0; }
+                 gap:.6rem 1.25rem; margin:.85rem 0 0; padding:0; }
   .section-nav > span { font-family:var(--mono); font-size:.62rem;
                         color:var(--muted); }
   .section-nav a { text-decoration:none; color:var(--muted); font-family:var(--sans);
                    font-size:.78rem; }
   .section-nav a::after { content:" ↓"; }
   .section-nav a:hover { color:var(--ink); text-decoration:underline; }
-  .language-page .feature-section { padding-top:clamp(2rem,4vw,3rem);
+  .language-page .feature-section { padding-top:1.75rem;
                                     scroll-margin-top:1.5rem; }
   .language-page .feature-section ~ .feature-section { margin-top:3rem;
                                                      border-top:1px solid var(--hair); }
-  .language-page .section-head { display:block; margin-bottom:1.5rem; padding:0; border:0; }
+  .language-page .section-head { display:block; margin-bottom:.75rem; padding:0; border:0; }
   .language-page .section-head > div { display:grid; grid-template-columns:1fr;
                                      gap:.5rem; }
   .language-page h2 { font-size:clamp(1.7rem,2.5vw,2.15rem); line-height:1.12; text-wrap:balance; }
@@ -1565,7 +1567,7 @@ MAIN_CSS = """
                                        font-size:.6rem; }
   .language-page .term-section-header .definition { grid-column:1 / -1; margin:.5rem 0 0; }
   .explorer-controls { display:grid; grid-template-columns:repeat(2,minmax(12rem,16rem));
-                       gap:1.25rem 2rem; margin:0 0 1.5rem; padding:1rem 0;
+                       gap:1.25rem 2rem; margin:0 0 1rem; padding:.5rem 0;
                        border:0; }
   .long-run-controls { grid-template-columns:repeat(2,minmax(0,14rem)); }
   .language-page select { border-bottom-color:var(--rule); font-size:1rem; }
@@ -1728,7 +1730,7 @@ MAIN_CSS = """
 """
 
 ACTIVITY_CSS = """
-  .activity-page .feature-section { padding-top:2rem; }
+  .activity-page .feature-section { padding-top:1.75rem; }
   .toolbar { display:grid; grid-template-columns:minmax(0,1fr) 14rem; gap:1.5rem 3rem;
              align-items:end; margin:0 0 1.75rem; }
   .control-caption { margin:0 0 .4rem; color:var(--muted); font-family:var(--mono);
@@ -1852,7 +1854,7 @@ def _feature_nav(current: str) -> str:
         current_attr = ' aria-current="page"' if key == current else ""
         links.append(f'<a href="{hrefs[key]}"{current_attr}>{label}</a>')
     return (
-        '<nav class="feature-nav" aria-label="Dashboard pages"><span>Pages</span>'
+        '<nav class="feature-nav" aria-label="Dashboard pages">'
         + "".join(links) + "</nav>"
     )
 
@@ -3118,7 +3120,7 @@ def _render_term_graphs_html(payload: dict, generated_utc: str) -> str:
 <body><a class="skip-link" href="#main-content">Skip to content</a>{_site_header()}
 <main id="main-content"><article class="feature dashboard-page">
 <header class="feature-header"><p class="kicker">Congress / Vocabulary</p>
-<h1>Ten swear-word families</h1>
+<h1>Five swear-word families</h1>
 <p class="dek">The most-used families in member-attributed House and Senate text, ranked by total matches.
 Variants are combined; annual rates use each party's attributed word total.</p>
 <div class="byline"><p>By Hans W. A. Hanley</p><p>{html.escape(dates)}</p></div></header>

@@ -158,23 +158,24 @@ passage, enactment, and profanity tables by Congress.">
                   font-size:.7rem; text-transform:uppercase; }
   .copyright { color:var(--muted); font-family:var(--mono); font-size:.62rem;
                text-transform:uppercase; }
-  .dashboard-page .feature-header { grid-template-columns:1fr; gap:.85rem;
-                                    padding:clamp(2rem,4vw,3rem) 0 1.75rem; border:0; }
+  .dashboard-page .feature-header { grid-template-columns:1fr; gap:.65rem;
+                                    padding:2rem 0 1.25rem; border:0; }
   .dashboard-page .feature-header > * { grid-column:1; grid-row:auto; }
-  .dashboard-page h1 { max-width:28ch; font-size:clamp(2.6rem,4.5vw,3.8rem);
-                        line-height:1.06; text-wrap:balance; }
+  .dashboard-page .feature-header .kicker { margin:0; }
+  .dashboard-page h1 { max-width:28ch; font-size:clamp(2.2rem,3.6vw,3.1rem);
+                        line-height:1.12; text-wrap:balance; }
   .dashboard-page .dek { margin:0; max-width:44rem; font-size:1.15rem;
                          font-style:normal; line-height:1.45; }
   .dashboard-page .byline { display:flex; flex-wrap:wrap; gap:.3rem 1.25rem;
-                            margin:.75rem 0 0; padding:0; border:0;
+                            margin:.5rem 0 0; padding:0; border:0;
                             font-size:.62rem; color:var(--muted); }
   .dashboard-page .byline p { margin:0; }
-  .dashboard-page .feature-nav { margin:0; padding:0; display:flex; gap:.5rem; }
-  .dashboard-page .feature-nav > span { width:100%; color:var(--muted); }
-  .dashboard-page .feature-nav a { padding:.7rem 1rem; border:1px solid var(--rule);
-                                  background:var(--paper-deep); font-size:.75rem;
+  .dashboard-page .feature-nav { margin:0; padding:0 0 .6rem; display:flex; gap:.25rem;
+                                 border-bottom:1px solid var(--hair); }
+  .dashboard-page .feature-nav a { padding:.5rem .75rem; border:0;
+                                  background:transparent; font-size:.78rem;
                                   letter-spacing:.03em; text-transform:none; }
-  .dashboard-page .feature-nav a:hover { border-color:var(--ink); }
+  .dashboard-page .feature-nav a:hover { background:var(--paper-deep); }
   .dashboard-page .feature-nav a[aria-current="page"] {
     background:var(--ink); border-color:var(--ink); color:var(--paper);
   }
@@ -196,12 +197,12 @@ passage, enactment, and profanity tables by Congress.">
     .feature-nav { margin-left:0; }
     .section-head { grid-template-columns:1fr; gap:.4rem; }
     .site-footer { grid-template-columns:1fr; }
-    .dashboard-page h1 { font-size:clamp(2.2rem,8vw,3.2rem); }
-    .dashboard-page .feature-nav { display:grid; grid-template-columns:1fr; gap:.35rem; }
-    .dashboard-page .feature-nav a { padding:.65rem .85rem; }
+    .dashboard-page h1 { font-size:clamp(2.1rem,8vw,2.8rem); }
+    .dashboard-page .feature-nav { gap:.2rem; }
+    .dashboard-page .feature-nav a { padding:.5rem .65rem; }
   }
 
-  .activity-page .feature-section { padding-top:2rem; }
+  .activity-page .feature-section { padding-top:1.75rem; }
   .toolbar { display:grid; grid-template-columns:minmax(0,1fr) 14rem; gap:1.5rem 3rem;
              align-items:end; margin:0 0 1.75rem; }
   .control-caption { margin:0 0 .4rem; color:var(--muted); font-family:var(--mono);
@@ -270,7 +271,7 @@ and profanity by Congress.</p>
 <p>Updated through October 9, 2026</p>
 </div>
 </header>
-<nav class="feature-nav" aria-label="Dashboard pages"><span>Pages</span><a href="../">The Language of Congress</a><a href="./" aria-current="page">Member Activity &amp; Bills</a><a href="../terms/">Word-family graphs</a></nav>
+<nav class="feature-nav" aria-label="Dashboard pages"><a href="../">The Language of Congress</a><a href="./" aria-current="page">Member Activity &amp; Bills</a><a href="../terms/">Word-family graphs</a></nav>
 <section class="feature-section" aria-label="Activity tables">
 <div class="toolbar">
 <div class="activity-measure-control">
