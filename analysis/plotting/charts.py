@@ -64,6 +64,20 @@ def end_label(ax, x, y, text: str, color: str, **kwargs) -> None:
     theme.end_label(ax, x, y, text, color, **kwargs)
 
 
+def place_end_labels(ax, ends) -> None:
+    """Separate direct series labels when the final values coincide."""
+    ymin, ymax = ax.get_ylim()
+    gap = (ymax - ymin) * 0.055
+    ordered = sorted(ends, key=lambda end: end[1])
+    positions = [end[1] for end in ordered]
+    for index in range(1, len(positions)):
+        positions[index] = max(positions[index], positions[index - 1] + gap)
+    if positions and positions[-1] + gap * 0.5 > ymax:
+        ax.set_ylim(top=positions[-1] + gap * 0.5)
+    for (x, _, text, color), y in zip(ordered, positions):
+        end_label(ax, x, y, text, color)
+
+
 def marker_line(ax, x: float, color: str | None = None, style: str = ":") -> None:
     """Vertical reference marker (e.g. a data-source boundary year).
 

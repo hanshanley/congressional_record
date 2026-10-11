@@ -255,6 +255,94 @@ def grouped_profanity_terms(value) -> Counter:
     return grouped
 
 
+def censor_profanity_term(term: str) -> str:
+    """Use the website's display masking without changing the stored surface form."""
+    def masked(word: str) -> str:
+        letter_count = sum(character.isalpha() for character in word)
+        letter_index = 0
+        characters = []
+        for character in word:
+            if character.isalpha():
+                keep = (
+                    letter_index < (2 if letter_count >= 4 else 1)
+                    or letter_index == letter_count - 1
+                )
+                letter_index += 1
+                if not keep:
+                    character = "*"
+            characters.append(character)
+        return "".join(characters)
+
+    words = str(term).split(" ")
+    profanity_words = {family.split(" ")[0] for family in PROFANITY_TERM_FAMILIES}
+    profanity_words.update(form for form in _TERM_FAMILY_BY_FORM if " " not in form)
+    return " ".join(
+        masked(word) if index == 0 or word.lower() in profanity_words else word
+        for index, word in enumerate(words)
+    )
+
+
+def profanity_family_timeseries(daily: pd.DataFrame, *, top: int = 10) -> dict:
+    """Rank families by total hits and calculate annual, word-weighted D/R rates."""
+    if top <= 0:
+        raise ValueError("top must be positive")
+    frame = daily[
+        daily["chamber"].isin(["house", "senate"]) & daily["party"].isin(["D", "R"])
+    ].copy()
+    if frame.empty:
+        return {"coverage": {}, "terms": []}
+    incomplete = incomplete_profanity_term_rows(frame)
+    if not incomplete.empty:
+        raise ValueError(
+            f"{len(incomplete)} floor member-day rows have incomplete profanity terms; "
+            "finish the backfill before drawing word-family graphs"
+        )
+    frame["year"] = pd.to_datetime(frame["date"], errors="raise").dt.year
+    denominators = frame.groupby(["year", "party"])["words"].sum()
+    if (denominators <= 0).any():
+        raise ValueError("word-family rates require a positive annual word denominator")
+    annual: Dict[Tuple[int, str], Counter] = defaultdict(Counter)
+    totals: Counter = Counter()
+    variants: Dict[str, set[str]] = defaultdict(set)
+    for row in frame[["year", "party", _TERM_COUNTS_COLUMN]].itertuples(index=False):
+        grouped = Counter()
+        for term, hits in parse_profanity_terms(row.profanity_terms).items():
+            family = _TERM_FAMILY_BY_FORM.get(term, term)
+            grouped[family] += hits
+            variants[family].add(term)
+        annual[(row.year, row.party)].update(grouped)
+        totals.update(grouped)
+    terms = []
+    for family, hits in sorted(totals.items(), key=lambda item: (-item[1], item[0]))[:top]:
+        series = []
+        for (year, party), words in denominators.items():
+            count = int(annual[(int(year), party)][family])
+            series.append({
+                "year": int(year), "party": party, "words": int(words),
+                "hits": count, "rate_per_100k": 100_000 * count / int(words),
+            })
+        terms.append({
+            "term": family, "label": censor_profanity_term(family),
+            "total_hits": int(hits), "variants": sorted(variants[family]),
+            "series": series,
+        })
+    return {
+        "limitation": (
+            "Lexical matches in published member-attributed text, not verified personally "
+            "uttered curses. Quotation-mark masking and inserted-material detection are "
+            "imperfect; literal uses and quoted or printed material can still match."
+        ),
+        "coverage": {
+            "first_date": str(frame["date"].min()),
+            "last_date": str(frame["date"].max()),
+            "words": int(frame["words"].sum()),
+            "parties": ["D", "R"],
+            "source": "GovInfo Congressional Record",
+        },
+        "terms": terms,
+    }
+
+
 def favorite_profanity_term(value) -> Tuple[str, int]:
     """Return the most frequent term family and count, breaking ties alphabetically."""
     counts = grouped_profanity_terms(value)

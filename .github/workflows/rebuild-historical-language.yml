@@ -108,7 +108,8 @@ jobs:
           git pull --rebase origin master
           python scripts/build_site.py
           python scripts/update_language.py --reset
-          git add -A data/site site
+          python scripts/build_term_graphs.py
+          git add -A data/site site outputs/figures/profanity_terms
           if ! git diff --cached --quiet; then
             if [[ "$historical_commit" == true ]]; then
               git commit --amend --no-edit

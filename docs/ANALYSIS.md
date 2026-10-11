@@ -71,6 +71,29 @@ appear once the historical rebuild workflow (`rebuild-historical-language.yml`) 
 corpus with codebook v5. Until then the committed courtesy and profanity figures use the previous
 profanity list, which lacked the Kaggle compound forms.
 
+### Individual swear-word families
+
+[`outputs/figures/profanity_terms/`](../outputs/figures/profanity_terms/) contains one graph
+for each of the ten most-used families, selected by combined Democratic/Republican matches.
+Inflections, spacing and phrasal variants follow the explicit mapping in `analysis/speakers.py`:
+`fuck`, `fucked` and `fucking` combine into `fuck`; distinct compounds such as `motherfucker`
+and `bullshit` are not stemmed together. Ties are broken alphabetically.
+
+Each graph shows annual matches per 100,000 attributed words, separately for Democrats and
+Republicans. Years with recorded speech but no family matches show zero; incomplete term counts
+are rejected rather than treated as zero. `timeseries.csv` contains exact hits, denominators and
+rates, and `index.json` records observed variants and the actual coverage dates.
+
+These graphs use the member-level GovInfo table beginning January 25, 1994, **not** the
+1873–2017 Stanford full-text series. They show lexical matches in the published text, not
+verified personally uttered curses. Quotation and inserted-material detection is imperfect:
+for example, rare pre-2017 stronger matches can come from quoted or printed material.
+The member backfill will rescore this table; graphs regenerate during daily updates.
+
+```bash
+python scripts/build_term_graphs.py
+```
+
 ## What it measures
 
 * **Formal courtesy**: conventional parliamentary address and deference.

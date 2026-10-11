@@ -39,12 +39,19 @@ Profanity and slurs are exact lists, and no word is in both. Words that are also
 names, places, or clinical terms (“chink in the armor”, “Redskins”, “queer”, “Gaylord”,
 “retarded”) are never scored, and verb uses such as “retard the growth” are dropped.
 [`slurs_provenance.tsv`](analysis/score/lexicons/slurs_provenance.tsv) records the decision for
-every source entry. These are word counts, not judgments of intent: quoted material is excluded
-from member rates, but a member who repeats a slur to condemn it is still counted.
+every source entry. These are word counts, not judgments of intent. Recognized quotations and
+inserted material are filtered, but detection is imperfect; some printed or quoted language can
+remain. A member who repeats a slur to condemn it is also counted.
 
 Changing a word list changes past counts, so the historical series must be rescored with the
 `rebuild-historical-language` and `backfill-all-speaker-terms` workflows. Until then, the site
 hides any measure that older rows have not been scored for rather than showing false zeros.
+
+Individual graphs for the ten most-used swear-word families are in
+[`outputs/figures/profanity_terms/`](outputs/figures/profanity_terms/), with exact yearly counts
+in `timeseries.csv`. Forms such as `fuck`, `fucked`, and `fucking` are combined; compounds such
+as `motherfucker` stay separate. These word-level graphs use **1994–present GovInfo member data**,
+not the Stanford aggregate series back to 1873, and refresh with the daily build.
 
 ## Explore the evidence
 
@@ -75,6 +82,7 @@ The routine commands, run from the repo root:
 ./.venv/bin/python scripts/update_language.py   # refresh current-Congress trend metrics
 ./.venv/bin/python scripts/update_bills.py      # refresh current-Congress bill statuses
 ./.venv/bin/python scripts/build_site.py        # render site/ from the committed tables
+./.venv/bin/python scripts/build_term_graphs.py # top ten swear-word families -> outputs/figures/
 ./.venv/bin/python -m pytest tests/ -q          # offline test suite
 ```
 

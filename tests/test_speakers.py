@@ -478,6 +478,54 @@ def test_language_timeseries_uses_months_and_compares_parties():
     assert set(chamber["chamber"]) == {"house", "senate"}
 
 
+def test_family_timeseries_combines_inflections_and_uses_party_word_totals():
+    from analysis.speakers import profanity_family_timeseries
+
+    daily = _daily([
+        ["A", "2025-01-02", "house", "Alpha", "D", "CA", 119, 1, 1_000, 2, 0, 0, 0],
+        ["B", "2025-02-02", "senate", "Beta", "D", "NY", 119, 1, 9_000, 1, 0, 0, 0],
+        ["C", "2025-03-02", "house", "Gamma", "R", "TX", 119, 1, 20_000, 1, 0, 0, 0],
+        ["D", "2026-01-02", "house", "Delta", "D", "CA", 119, 1, 1_000, 1, 0, 0, 0],
+        ["E", "2026-02-02", "senate", "Epsilon", "R", "FL", 119, 1, 1_000, 0, 0, 0, 0],
+        ["F", "2025-02-02", "extensions", "Printed", "D", "MA", 119, 1, 1, 100, 0, 0, 0],
+    ])
+    daily["profanity_terms"] = [
+        '{"fuck":1,"fucking":1}', '{"fucked":1}', '{"damn":1}',
+        '{"motherfucker":1}', "{}", '{"crap":100}',
+    ]
+    payload = profanity_family_timeseries(daily, top=2)
+    assert [item["term"] for item in payload["terms"]] == ["fuck", "damn"]
+    fuck = payload["terms"][0]
+    assert fuck["total_hits"] == 3
+    assert fuck["variants"] == ["fuck", "fucked", "fucking"]
+    assert fuck["label"] == "fu*k"
+    assert next(row for row in fuck["series"] if row["year"] == 2025 and row["party"] == "D") == {
+        "year": 2025, "party": "D", "words": 10_000, "hits": 3, "rate_per_100k": 30.0,
+    }
+    assert next(row for row in fuck["series"] if row["year"] == 2025 and row["party"] == "R")["rate_per_100k"] == 0.0
+    assert next(row for row in fuck["series"] if row["year"] == 2026 and row["party"] == "D")["hits"] == 0
+    assert payload["coverage"]["words"] == 32_000
+
+
+def test_family_timeseries_refuses_missing_term_counts():
+    from analysis.speakers import profanity_family_timeseries
+
+    daily = _daily([
+        ["A", "2015-01-02", "house", "Alpha", "D", "CA", 114, 1, 1000, 1, 0, 0, 0],
+    ])
+    with pytest.raises(ValueError, match="incomplete profanity terms"):
+        profanity_family_timeseries(daily)
+
+
+def test_multitoken_term_labels_mask_profanity_after_the_first_word():
+    from analysis.speakers import censor_profanity_term
+
+    assert censor_profanity_term("god damn") == "g*d da*n"
+    assert censor_profanity_term("kick ass") == "ki*k a*s"
+    assert censor_profanity_term("taking the piss") == "ta***g the pi*s"
+    assert censor_profanity_term("fuck you") == "fu*k you"
+
+
 def test_language_member_rates_keep_measures_separate_and_apply_threshold():
     daily = _daily([
         ["A", "2025-01-02", "house", "Alpha", "D", "CA", 119,

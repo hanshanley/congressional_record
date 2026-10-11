@@ -105,7 +105,8 @@ jobs:
       - name: Rebuild and commit site
         run: |
           python scripts/build_site.py
-          git add data/site/speaker_daily site
+          python scripts/build_term_graphs.py
+          git add data/site/speaker_daily site outputs/figures/profanity_terms
           if git diff --cached --quiet; then
             echo "Site outputs are unchanged."
           else

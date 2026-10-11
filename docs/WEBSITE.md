@@ -1,5 +1,12 @@
 # The website
 
+The `terms/` page presents individual annual graphs for the ten most-used swear-word families
+in the GovInfo member data (1994–present), with CSV/JSON downloads. It combines forms such as
+`fuck` and `fucking`, keeps distinct compounds separate, and ranks families by total D/R matches.
+The figures are lexical counts, not verified instances of personally uttered curses; quoted,
+inserted or literal uses can survive imperfect filtering. These graphs are not the Stanford
+series back to 1873. The daily build updates the page and its matching publication PNGs.
+
 The homepage, published at <https://www.themarginoferror.com/congressional_profanity/>, leads
 with interactive long-run panels for formal courtesy, profanity, and slurs. Each panel compares Democrats with Republicans from 1873 to the
 present and includes visible party controls, direct end labels, hover/focus values, and a

@@ -90,7 +90,8 @@ jobs:
           # cannot be overwritten by stale generated HTML.
           git pull --rebase origin master
           python scripts/build_site.py
-          git add site
+          python scripts/build_term_graphs.py
+          git add site outputs/figures/profanity_terms
           if ! git diff --cached --quiet; then
             if [[ "$data_commit" == true ]]; then
               git commit --amend --no-edit

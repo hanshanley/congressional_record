@@ -72,15 +72,10 @@ def _by_year_chamber_party(df: pd.DataFrame) -> pd.DataFrame:
 
 def _place_end_labels(ax, ends) -> None:
     """Draw end-of-line party labels, nudged apart vertically when series converge."""
-    ymin, ymax = ax.get_ylim()
-    gap = (ymax - ymin) * 0.055
-    ordered = sorted(ends, key=lambda e: e[2])  # by end y-value, low -> high
-    ys = [e[2] for e in ordered]
-    for i in range(1, len(ys)):
-        if ys[i] - ys[i - 1] < gap:
-            ys[i] = ys[i - 1] + gap
-    for (party, x, _), y in zip(ordered, ys):
-        charts.end_label(ax, x, y, theme.PARTY_LABELS[party], theme.PARTY_COLORS[party])
+    charts.place_end_labels(ax, [
+        (x, y, theme.PARTY_LABELS[party], theme.PARTY_COLORS[party])
+        for party, x, y in ends
+    ])
 
 
 def _plot_by_party(ax, g: pd.DataFrame, col: str, parties=("D", "R"), *,

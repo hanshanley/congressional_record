@@ -229,6 +229,8 @@ def test_daily_workflow_updates_every_data_surface_before_building():
     assert "scripts/update_speakers.py" in workflow
     assert "scripts/update_language.py" in workflow
     assert "scripts/update_bills.py" in workflow
+    assert "scripts/build_term_graphs.py" in workflow
+    assert "git add site outputs/figures/profanity_terms" in workflow
     assert workflow.index("scripts/update_language.py") < workflow.index(
         "scripts/build_site.py"
     )

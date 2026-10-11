@@ -30,10 +30,11 @@ from analysis.bills import (  # noqa: E402
     member_activity,
 )
 from analysis.daily_language import restrict_to_complete_metrics  # noqa: E402
-from analysis.plotting import charts, site_charts, theme  # noqa: E402
+from analysis.plotting import charts, site_charts, term_charts, theme  # noqa: E402
 from analysis.score.registry import HEADLINE_METRICS  # noqa: E402
 from analysis.speakers import (  # noqa: E402
     LANGUAGE_METRICS,
+    censor_profanity_term,
     incomplete_profanity_term_rows,
     language_member_rates,
     language_metric_available,
@@ -1815,14 +1816,16 @@ def _long_date(value: str) -> str:
 
 
 def _feature_nav(current: str) -> str:
-    """Links between the two dashboard pages, relative to the current page."""
+    """Links between dashboard pages, relative to the current page."""
     pages = (
         ("language", "The Language of Congress"),
         ("activity", "Member Activity &amp; Bills"),
+        ("terms", "Word-family graphs"),
     )
     hrefs = {
-        "language": {"language": "./", "activity": "activity/"},
-        "activity": {"language": "../", "activity": "./"},
+        "language": {"language": "./", "activity": "activity/", "terms": "terms/"},
+        "activity": {"language": "../", "activity": "./", "terms": "../terms/"},
+        "terms": {"language": "../", "activity": "../activity/", "terms": "./"},
     }[current]
     links = []
     for key, label in pages:
@@ -2468,22 +2471,7 @@ def _examples_cell(row: dict) -> _TrustedHTML:
 def _censored_term_cell(term: str, detail: str = "") -> _TrustedHTML:
     """Render a censored term whose full value is available on hover and focus."""
     value = str(term)
-    first, separator, remainder = value.partition(" ")
-    letter_count = sum(character.isalpha() for character in first)
-    letter_index = 0
-    censored_chars = []
-    for character in first:
-        if character.isalpha():
-            keep = (
-                letter_index < (2 if letter_count >= 4 else 1)
-                or letter_index == letter_count - 1
-            )
-            letter_index += 1
-            if not keep:
-                censored_chars.append("*")
-                continue
-        censored_chars.append(character)
-    censored = "".join(censored_chars) + (separator + remainder if separator else "")
+    censored = censor_profanity_term(value)
     tooltip = f"Uncensored term: {value}"
     if detail:
         tooltip += f". {detail}"
@@ -3068,6 +3056,59 @@ const activityNumericColumns = {_script_json(ACTIVITY_NUMERIC_COLUMNS)};
 """
 
 
+def _render_term_graphs_html(payload: dict, generated_utc: str) -> str:
+    coverage = payload.get("coverage", {})
+    sections = []
+    for item in payload["terms"]:
+        filename = html.escape(item["filename"], quote=True)
+        sections.append(
+            '<section class="feature-section">'
+            f"<h2>{_censored_term_cell(item['term'])}</h2>"
+            f'<p>{_fmt_int(item["total_hits"])} matched uses across the covered period. '
+            f'Grouped forms: {", ".join(str(_censored_term_cell(term)) for term in item["variants"])}.</p>'
+            '<figure>'
+            f'<img src="../figures/profanity_terms/{filename}" '
+            f'alt="{html.escape(item["label"], quote=True)} family matches per 100,000 words, '
+            'Democrats and Republicans" loading="lazy" style="width:100%;height:auto">'
+            f'<figcaption><a href="../figures/profanity_terms/{filename}" download>Download PNG</a>'
+            '</figcaption></figure></section>'
+        )
+    if not sections:
+        sections.append(
+            '<p class="warning">Word-level graphs are unavailable until all historical '
+            'term counts are complete. No missing counts are shown as zero.</p>'
+        )
+    dates = (
+        f'{coverage["first_date"]} to {coverage["last_date"]}'
+        if coverage else "Not yet available"
+    )
+    limitation = html.escape(payload.get("limitation", ""))
+    downloads = (
+        '<p><a href="../figures/profanity_terms/timeseries.csv">Download yearly counts (CSV)</a> · '
+        '<a href="../figures/profanity_terms/index.json">Grouped forms and coverage (JSON)</a></p>'
+        if payload["terms"] else ""
+    )
+    return f"""<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Swear-word families — The Margin of Error</title>
+{_head_links(PUBLIC_URL + "terms/")}
+<style>{HOUSE_CSS}{MAIN_CSS}</style></head>
+<body><a class="skip-link" href="#main-content">Skip to content</a>{_site_header()}
+<main id="main-content"><article class="feature">
+<header class="feature-header"><p class="kicker">Congress / Vocabulary</p>
+<h1>Ten swear-word families</h1>
+<p class="dek">The most-used families in member-attributed House and Senate text, ranked by total matches.
+Variants are combined; annual rates use each party's attributed word total.</p>
+<div class="byline"><p>By Hans W. A. Hanley</p><p>{html.escape(dates)}</p></div></header>
+{_feature_nav("terms")}
+<p class="warning">{limitation}</p>
+<p>These graphs use GovInfo member-level data, not the separate Stanford series back to 1873.</p>
+{"".join(sections)}
+{downloads}
+</article></main>{_site_footer(generated_utc)}</body></html>"""
+
+
 def main(argv: Optional[List[str]] = None) -> int:
     args = parse_args(argv)
     logging.basicConfig(
@@ -3184,6 +3225,28 @@ def main(argv: Optional[List[str]] = None) -> int:
         )
         _chart_leaderboard(profanity, figs, args.min_words)
         _chart_trend(series, figs)
+
+    term_scope = daily[
+        daily["chamber"].isin(["house", "senate"]) & daily["party"].isin(["D", "R"])
+    ]
+    if incomplete_profanity_term_rows(term_scope).empty:
+        with theme.house_style():
+            term_graphs = term_charts.render(daily, figs / "profanity_terms")
+    else:
+        LOG.warning("historical term counts incomplete; individual word-family graphs withheld")
+        term_graphs = {"coverage": {}, "terms": []}
+        term_figures = figs / "profanity_terms"
+        for path in [
+            *term_figures.glob("*_per_100k.png"),
+            term_figures / "index.json", term_figures / "timeseries.csv",
+        ]:
+            if path.exists():
+                path.unlink()
+    terms_dir = out / "terms"
+    terms_dir.mkdir(parents=True, exist_ok=True)
+    (terms_dir / "index.html").write_text(
+        _render_term_graphs_html(term_graphs, generated_utc), encoding="utf-8"
+    )
 
     # Retain the original machine-readable outputs for existing embeds.
     legacy_profanity = _legacy_profanity_leaderboard(

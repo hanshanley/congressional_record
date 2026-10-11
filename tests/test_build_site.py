@@ -155,9 +155,17 @@ def test_build_writes_html_json_and_figures(store, tmp_path):
                 "data/leaderboard.json", "data/timeseries.json",
                 "data/meta.json", "data/congresses.json", "data/congress_119.json",
                 "data/long_run_language.json",
+                "terms/index.html", "figures/profanity_terms/index.json",
+                "figures/profanity_terms/timeseries.csv",
                 "figures/leaderboard.png", "figures/trend.png",
                 "figures/language_trends.png", "figures/language_members.png"):
         assert (out / rel).exists(), rel
+    terms = BeautifulSoup((out / "terms/index.html").read_text(), "html.parser")
+    assert terms.h1.get_text() == "Ten swear-word families"
+    assert terms.select_one('a[aria-current="page"]')["href"] == "./"
+    assert len(terms.select("figure img")) == 2
+    for image in terms.select("figure img"):
+        assert (out / "terms" / image["src"]).exists()
     for rel in ("index.html", "activity/index.html"):
         document = (out / rel).read_text()
         radii = re.findall(r"border(?:-[a-z]+)*-radius\s*:\s*([^;}]+)", document)

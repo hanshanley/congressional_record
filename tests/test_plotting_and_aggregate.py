@@ -428,6 +428,58 @@ def test_time_axis_keeps_a_single_period_visible() -> None:
     plt.close(fig)
 
 
+def test_direct_labels_remain_distinguishable_when_both_series_end_at_zero() -> None:
+    import matplotlib.pyplot as plt
+
+    fig, ax = charts.new_figure()
+    charts.line(ax, [2020, 2025], [1.0, 0.0], color=theme.PARTY_COLORS["D"])
+    charts.line(ax, [2020, 2025], [2.0, 0.0], color=theme.PARTY_COLORS["R"])
+    ax.set_ylim(bottom=0)
+    charts.place_end_labels(ax, [
+        (2025, 0.0, theme.PARTY_LABELS[party], theme.PARTY_COLORS[party])
+        for party in ("D", "R")
+    ])
+    fig.canvas.draw()
+    renderer = fig.canvas.get_renderer()
+    first, second = [label.get_window_extent(renderer) for label in ax.texts]
+    assert not first.overlaps(second)
+    plt.close(fig)
+
+
+def test_term_graphs_render_top_ten_and_remove_stale_family_files(tmp_path) -> None:
+    import json
+    import pandas as pd
+    from analysis.plotting import term_charts
+
+    terms = [
+        "damn", "crap", "fuck", "bitch", "bullshit", "shit",
+        "bastard", "ass", "jackass", "what the hell", "bugger",
+    ]
+    counts = {term: len(terms) - index for index, term in enumerate(terms)}
+    daily = pd.DataFrame([
+        {"date": date, "chamber": chamber, "party": party, "words": 10_000,
+         "profanity_hits": sum(values.values()), "profanity_terms": json.dumps(values)}
+        for date, chamber, party, values in [
+            ("2015-01-01", "house", "D", counts),
+            ("2015-01-01", "senate", "R", {}),
+            ("2025-01-01", "house", "D", {"fucking": 2}),
+        ]
+    ])
+    payload = term_charts.render(daily, tmp_path)
+    assert len(payload["terms"]) == len(list(tmp_path.glob("*_per_100k.png"))) == 10
+    assert {item["term"] for item in payload["terms"]} == {
+        "damn", "crap", "fuck", "bitch", "bullshit", "shit",
+        "bastard", "ass", "jackass", "hell",
+    }
+    persisted = json.loads((tmp_path / "index.json").read_text())
+    assert persisted == payload
+    exported = pd.read_csv(tmp_path / "timeseries.csv")
+    assert len(exported["term"].unique()) == 10
+    assert all((tmp_path / item["filename"]).is_file() for item in payload["terms"])
+    term_charts.render(daily, tmp_path, top=1)
+    assert len(list(tmp_path.glob("*_per_100k.png"))) == 1
+
+
 if __name__ == "__main__":
     failures = 0
     for name, fn in sorted(globals().items()):
