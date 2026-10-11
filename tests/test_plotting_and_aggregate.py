@@ -230,7 +230,7 @@ def test_last50_figures_filter_years_without_changing_rates(tmp_path, monkeypatc
     frame = pd.DataFrame([
         {"congress": congress_from_year(year), "year": year, "chamber": chamber,
          "party": party, "words": 10_000, "formal_courtesy_hits": 12,
-         "profanity_hits": hits}
+         "profanity_hits": hits, "slur_hits": 1}
         for year, hits in ((1976, 100), (1977, 2), (2025, 3))
         for chamber in ("house", "senate") for party in ("D", "R")
     ])
@@ -260,6 +260,8 @@ def test_last50_figures_filter_years_without_changing_rates(tmp_path, monkeypatc
             left, right = axis.get_xlim()
             assert abs(left - (first - 0.01 * (last - first))) < 1e-8
             assert right > last
+            assert all(first <= tick <= last for tick in axis.get_xticks())
+            assert axis.get_xticks()[-1] == last
             boxes = [label.get_window_extent(renderer)
                      for label in axis.get_xticklabels() if label.get_visible()]
             boxes.sort(key=lambda box: box.x0)
@@ -269,7 +271,7 @@ def test_last50_figures_filter_years_without_changing_rates(tmp_path, monkeypatc
     monkeypatch.setattr(Figure, "savefig", check_labels)
     names = {path.name for path in viz.render(metrics, tmp_path / "outputs")}
     full_names = {name for name in names if "_last50" not in name}
-    assert len(full_names) == 9
+    assert len(full_names) == 12
     assert {name.removesuffix(".png") + "_last50.png" for name in full_names} <= names
     full = captured["profanity_per_1k.png"]["lines"]
     recent = captured["profanity_per_1k_last50.png"]["lines"]
@@ -281,6 +283,8 @@ def test_last50_figures_filter_years_without_changing_rates(tmp_path, monkeypatc
                for tick in chart["ticks"])
     assert all(chart["ticks"] == list(range(1980, 2026, 5))
                for name, chart in captured.items() if "_last50" in name)
+    assert all(chart["ticks"] == [1980, 2000, 2025]
+               for name, chart in captured.items() if "_last50" not in name)
     assert captured["profanity_per_1k_last50.png"]["source"] == (
         "Sources: Stanford Hein (1977-2017) + GovInfo CREC (2017-present)."
     )

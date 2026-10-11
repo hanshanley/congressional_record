@@ -89,6 +89,7 @@ def _plot_by_party(ax, g: pd.DataFrame, col: str, parties=("D", "R"), *,
                     label=theme.PARTY_LABELS[party], **line_kw)
         ends.append((party, sub["year"].iloc[-1], float(sub[col].iloc[-1])))
     charts.fit_time_axis(ax, right_padding=0.13 if label_ends else 0.0)
+    _set_year_ticks(ax, g)
     if label_ends and ends:
         _place_end_labels(ax, ends)
 
@@ -159,7 +160,7 @@ def _grid_overview(g: pd.DataFrame, figs_dir: Path, plot_fn, suptitle: str,
         plot_fn(ax, g, col)
         charts.style_axes(ax, title, "Year", ylab)
         if last50:
-            _set_recent_year_ticks(ax, g)
+            _set_year_ticks(ax, g, interval=5)
             ax.tick_params(axis="x", labelsize=9)
     axes.flat[0].legend(loc="best", frameon=False, labelcolor=theme.TEXT, fontsize=legend_fontsize)
     fig.suptitle(suptitle, fontweight="bold")
@@ -175,11 +176,19 @@ def _span(g: pd.DataFrame) -> str:
     return f"{int(g['year'].min())}\u2013present"
 
 
-def _set_recent_year_ticks(ax, frame: pd.DataFrame) -> None:
+def _set_year_ticks(ax, frame: pd.DataFrame, *, interval: int = 20) -> None:
     first_year = int(frame["year"].min())
     last_year = int(frame["year"].max())
-    ticks = list(range(5 * ((first_year + 4) // 5), last_year + 1, 5))
+    ticks = list(range(
+        interval * ((first_year + interval - 1) // interval),
+        last_year + 1,
+        interval,
+    ))
+    if not ticks:
+        ticks.append(first_year)
     if last_year not in ticks:
+        if len(ticks) > 1 and last_year - ticks[-1] < interval * 0.6:
+            ticks.pop()
         ticks.append(last_year)
     ax.set_xticks(ticks)
 
@@ -271,7 +280,7 @@ def render(metrics_path: Path, out_dir: Path) -> List[Path]:
                     subtitle += f" \u2014 {_span(period_g)}"
                 charts.style_axes(ax, title, "Year", ylab, subtitle=subtitle)
                 if suffix:
-                    _set_recent_year_ticks(ax, period_g)
+                    _set_year_ticks(ax, period_g, interval=5)
                 written.append(charts.finish(
                     fig, ax, temp_figs / f"{col}{suffix}.png",
                     source=source_note, legend=False,
@@ -291,7 +300,7 @@ def render(metrics_path: Path, out_dir: Path) -> List[Path]:
                     charts.style_axes(ax, f"{title} \u2014 {label}", "Year", ylab,
                                       subtitle=subtitle)
                     if suffix:
-                        _set_recent_year_ticks(ax, sub)
+                        _set_year_ticks(ax, sub, interval=5)
                     written.append(charts.finish(
                         fig, ax, temp_figs / f"{col}_{chamber}{suffix}.png",
                         source=source_note, legend=False,
