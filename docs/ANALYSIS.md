@@ -19,6 +19,11 @@ time-series charts. It unifies two corpora into one speaker-turn table:
 
 These publication figures are generated from real Stanford/GovInfo Congressional Record text and
 are intentionally tracked under `outputs/figures/`. All rates are per 1,000 words unless noted.
+The historical series contains Congress-level totals, not separate annual observations. Earlier
+points use the Congress's convening year; the latest point uses the last covered calendar year
+within that Congress, derived from recorded floor dates. Thus the current 2025–2026 Congress
+appears at 2026 once 2026 records are present. Original years and counts remain in the data
+exports, and dashboard tooltips identify the current point as 2025–2026.
 Coverage limitations are documented under
 [Two ingest paths](DATA_PIPELINE.md#two-ingest-paths--check-coverage-before-you-trust-a-date). Note that the
 primary source switches from Stanford Hein to GovInfo CREC in 2017, so treat a step change

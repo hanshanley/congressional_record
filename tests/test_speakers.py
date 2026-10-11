@@ -21,6 +21,7 @@ sys.path.insert(0, str(ROOT))
 from analysis.speakers import (  # noqa: E402
     LANGUAGE_METRICS,
     PROFANITY_TERM_FAMILIES,
+    congress_plot_year,
     incomplete_profanity_term_rows,
     language_member_rates,
     language_timeseries,
@@ -43,6 +44,20 @@ import pyarrow.parquet as pq  # noqa: E402
 
 
 # ------------------------------------------------------------------ quotations
+
+
+@pytest.mark.parametrize("floor_date,expected", [
+    ("2025-12-31", 2025), ("2026-09-30", 2026), ("2027-01-02", 2026),
+])
+def test_congress_endpoint_uses_floor_dates_without_inventing_years(floor_date, expected):
+    daily = pd.DataFrame([
+        {"congress": 119, "date": floor_date, "chamber": "house", "party": "D"},
+        {"congress": 119, "date": "2027-01-02", "chamber": "extensions", "party": "R"},
+        {"congress": 120, "date": "2027-01-03", "chamber": "senate", "party": "R"},
+    ])
+    assert congress_plot_year(119, daily) == expected
+    assert congress_plot_year(119, None) == 2025
+    assert congress_plot_year(118, daily) == 2023
 
 
 def test_mask_quotations_splits_spoken_from_quoted():

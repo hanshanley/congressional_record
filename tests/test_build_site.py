@@ -166,6 +166,30 @@ def test_main_header_keeps_only_data_driven_update_date(store, latest_date, disp
     assert len(header.select(".byline p")) == 1
 
 
+def test_long_run_endpoint_tracks_real_coverage_without_changing_counts(store, tmp_path):
+    path, daily, bills = store
+    module = _load_build_site()
+    daily.loc[daily["bioguide"] == "NEW2", "date"] = "2026-09-30"
+    save_daily(daily, path)
+    original = module.load_long_run_payload()
+    out = tmp_path / "site"
+    with patch.object(module, "load_long_run_payload", return_value=original):
+        assert module.main([
+            "--daily", str(path), "--bills", str(bills), "--out", str(out),
+            "--min-words", "1000",
+        ]) == 0
+    result = json.loads((out / "data/long_run_language.json").read_text())
+    assert result["last_year"] == 2025
+    assert result["last_plot_year"] == 2026
+    assert any(row["plot_year"] == 2026 for row in result["series"])
+    source = json.loads(module.LONG_RUN_DATA_PATH.read_text())
+    for key in ("series", "chamber_series"):
+        assert [
+            {name: value for name, value in row.items() if name != "plot_year"}
+            for row in result[key]
+        ] == source[key]
+
+
 # ------------------------------------------------------------------------- output
 
 

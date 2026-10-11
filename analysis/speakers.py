@@ -37,9 +37,27 @@ import pandas as pd
 import pyarrow.parquet as pq
 
 from analysis.inputs import select_turn_files
+from analysis.ingest.schema import year_from_congress
 from analysis.score.scorers import Scorers
 
 LOG = logging.getLogger("analysis.speakers")
+
+
+def congress_plot_year(congress: int, daily: Optional[pd.DataFrame]) -> int:
+    """Locate a Congress endpoint using recorded floor dates, not the current clock."""
+    first_year = year_from_congress(congress)
+    if daily is None:
+        return first_year
+    scope = daily[
+        daily["congress"].eq(congress)
+        & daily["chamber"].isin(["house", "senate"])
+        & daily["party"].isin(["D", "R"])
+    ]
+    if scope.empty:
+        return first_year
+    last_year = int(pd.to_datetime(scope["date"], errors="raise").max().year)
+    return max(first_year, min(first_year + 1, last_year))
+
 
 LANGUAGE_METRICS = {
     "profanity": {

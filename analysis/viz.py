@@ -22,6 +22,7 @@ from analysis.aggregate import RATE_TO_HITCOL
 from analysis.ingest.schema import congress_from_year, year_from_congress
 from analysis.plotting import charts, theme
 from analysis.score.registry import CHAMBER_METRICS, HEADLINE_METRICS, METRICS
+from analysis.speakers import congress_plot_year
 
 LOG = logging.getLogger("analysis.viz")
 
@@ -230,6 +231,16 @@ def render(metrics_path: Path, out_dir: Path) -> List[Path]:
     df = df[df["chamber"].isin(["house", "senate"])].copy()
     g = _by_congress_party(df)
     gc = _by_year_chamber_party(df)
+    latest_congress = int(df["congress"].max())
+    daily_path = (
+        metrics_path.parents[2] / "site" / "speaker_daily"
+        / f"congress_{latest_congress}.parquet"
+    )
+    daily = pd.read_parquet(daily_path) if daily_path.exists() else None
+    endpoint_year = congress_plot_year(latest_congress, daily)
+    plot_g, plot_gc = g.copy(), gc.copy()
+    for frame in (plot_g, plot_gc):
+        frame.loc[frame["congress"].eq(latest_congress), "year"] = endpoint_year
     # A measure is drawn only when the metrics table scored it; a codebook addition
     # appears after the historical rescore instead of as a flat line of false zeros.
     def present(panels: List[tuple]) -> List[tuple]:
@@ -248,12 +259,12 @@ def render(metrics_path: Path, out_dir: Path) -> List[Path]:
     temp_figs = Path(tempfile.mkdtemp(prefix=".figures-", dir=figs_dir.parent))
     try:
         written: List[Path] = []
-        scopes = [("", g, gc)]
+        scopes = [("", plot_g, plot_gc)]
         current_year = date.today().year
         # Inclusive calendar-year window: in 2026, 1977 through 2026.
         first_year = current_year - 49
-        recent_g = g[g["year"].between(first_year, current_year)]
-        recent_gc = gc[gc["year"].between(first_year, current_year)]
+        recent_g = plot_g[plot_g["year"].between(first_year, current_year)]
+        recent_gc = plot_gc[plot_gc["year"].between(first_year, current_year)]
         if not recent_g.empty:
             scopes.append(("_last50", recent_g, recent_gc))
 

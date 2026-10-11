@@ -30,10 +30,12 @@ from analysis.bills import (  # noqa: E402
     member_activity,
 )
 from analysis.daily_language import restrict_to_complete_metrics  # noqa: E402
+from analysis.ingest.schema import congress_from_year  # noqa: E402
 from analysis.plotting import charts, site_charts, term_charts, theme  # noqa: E402
 from analysis.score.registry import HEADLINE_METRICS  # noqa: E402
 from analysis.speakers import (  # noqa: E402
     LANGUAGE_METRICS,
+    congress_plot_year,
     censor_profanity_term,
     incomplete_profanity_term_rows,
     language_member_rates,
@@ -506,7 +508,10 @@ function renderYearlyPanel(sourceSeries, metric, scopeLabel) {
     role: 'img',
     'aria-label': `${metric.label}, Democrats compared with Republicans, ${scopeLabel}`,
   });
-  const years = [...new Set(sourceSeries.map(row => Number(row.year)))].sort((a, b) => a - b);
+  const plotYear = row => Number(row.plot_year ?? row.year);
+  const periodLabel = row => plotYear(row) === Number(row.year)
+    ? String(row.year) : `${row.year}\u2013${plotYear(row)}`;
+  const years = [...new Set(sourceSeries.map(plotYear))].sort((a, b) => a - b);
   const values = sourceSeries.map(row => Number(row[metric.rate]) || 0);
   const maxValue = Math.max(0.01, ...values) * 1.08;
   const x = year => margin.left + (
@@ -535,7 +540,7 @@ function renderYearlyPanel(sourceSeries, metric, scopeLabel) {
     const rows = sourceSeries.filter(row => row.party === party)
       .sort((a, b) => Number(a.year) - Number(b.year));
     const points = rows.map(row => [
-      x(Number(row.year)), y(Number(row[metric.rate]) || 0), row,
+      x(plotYear(row)), y(Number(row[metric.rate]) || 0), row,
     ]);
     svg.appendChild(svgNode('polyline', {
       points: points.map(point => `${point[0]},${point[1]}`).join(' '),
@@ -553,7 +558,7 @@ function renderYearlyPanel(sourceSeries, metric, scopeLabel) {
         cx: px, cy: py, r: 7, fill: 'transparent', 'data-party': party,
       });
       bindTooltip(mark, wrapper, tooltip,
-        `${row.year} ${label}: ${Number(row[metric.rate]).toFixed(3)} ${metric.units} ` +
+        `${periodLabel(row)} ${label}: ${Number(row[metric.rate]).toFixed(3)} ${metric.units} ` +
         `(${Number(row[metric.hits]).toLocaleString()} hits; ` +
         `${Number(row.words).toLocaleString()} words)`);
       svg.appendChild(mark);
@@ -563,9 +568,9 @@ function renderYearlyPanel(sourceSeries, metric, scopeLabel) {
   addAccessibleTable(
     wrapper,
     `${metric.label}, ${scopeLabel}`,
-    ['Year', 'Party', metric.units, 'Hits', 'Words'],
+    ['Period', 'Party', metric.units, 'Hits', 'Words'],
     sourceSeries.map(row => [
-      row.year, partyName(row.party), Number(row[metric.rate]).toFixed(3),
+      periodLabel(row), partyName(row.party), Number(row[metric.rate]).toFixed(3),
       Number(row[metric.hits]).toLocaleString(), Number(row.words).toLocaleString(),
     ]),
   );
@@ -579,7 +584,7 @@ INTERACTIVE_CHART_JS = (
 function renderLongRunPanel(longRun, key) {
   return renderYearlyPanel(
     longRunSeries(longRun), longRun.metrics[key],
-    `${longRun.first_year} to ${longRun.last_year}, ${chamberLabel(selectedLongRunChamber)}`,
+    `${longRun.first_year} to ${longRun.last_plot_year ?? longRun.last_year}, ${chamberLabel(selectedLongRunChamber)}`,
   );
 }
 
@@ -3223,6 +3228,17 @@ def main(argv: Optional[List[str]] = None) -> int:
     figs.mkdir(parents=True, exist_ok=True)
     data.mkdir(parents=True, exist_ok=True)
     long_run = load_long_run_payload()
+    last_year = int(long_run["last_year"])
+    endpoint_year = congress_plot_year(congress_from_year(last_year), daily)
+    long_run["last_plot_year"] = endpoint_year
+    for key in ("series", "chamber_series"):
+        long_run[key] = [
+            {
+                **row,
+                "plot_year": endpoint_year if int(row["year"]) == last_year else int(row["year"]),
+            }
+            for row in long_run[key]
+        ]
     (data / "long_run_language.json").write_text(
         json.dumps(long_run, indent=2) + "\n",
         encoding="utf-8",

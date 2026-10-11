@@ -9,6 +9,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 import pyarrow as pa  # noqa: E402
 import pyarrow.parquet as pq  # noqa: E402
+import pytest
 
 from analysis.aggregate import (  # noqa: E402
     _select_primary_source,
@@ -211,7 +212,10 @@ def test_viz_draws_only_measures_present_in_the_metrics_table(tmp_path) -> None:
     assert not any("_last50" in name for name in names)
 
 
-def test_last50_figures_filter_years_without_changing_rates(tmp_path, monkeypatch) -> None:
+@pytest.mark.parametrize("coverage_date", ["2025-12-31", "2026-10-09"])
+def test_last50_figures_filter_years_without_changing_rates(
+    tmp_path, monkeypatch, coverage_date,
+) -> None:
     from datetime import date
 
     from matplotlib.figure import Figure
@@ -235,6 +239,12 @@ def test_last50_figures_filter_years_without_changing_rates(tmp_path, monkeypatc
         for chamber in ("house", "senate") for party in ("D", "R")
     ])
     frame.to_parquet(metrics, index=False)
+    daily_path = tmp_path / "data/site/speaker_daily/congress_119.parquet"
+    daily_path.parent.mkdir(parents=True)
+    pd.DataFrame([{
+        "congress": 119, "chamber": "house", "party": "D", "date": coverage_date,
+    }]).to_parquet(daily_path, index=False)
+    endpoint_year = int(coverage_date[:4])
     captured = {}
     finish = viz.charts.finish
 
@@ -275,15 +285,19 @@ def test_last50_figures_filter_years_without_changing_rates(tmp_path, monkeypatc
     assert {name.removesuffix(".png") + "_last50.png" for name in full_names} <= names
     full = captured["profanity_per_1k.png"]["lines"]
     recent = captured["profanity_per_1k_last50.png"]["lines"]
-    assert all(years == [1976, 1977, 2025] for years, _ in full)
-    assert all(years == [1977, 2025] for years, _ in recent)
+    assert all(years == [1976, 1977, endpoint_year] for years, _ in full)
+    assert all(years == [1977, endpoint_year] for years, _ in recent)
     assert [rates for _, rates in recent] == [rates[1:] for _, rates in full]
-    assert all(1977 <= tick <= 2025
+    assert all(1977 <= tick <= endpoint_year
                for name, chart in captured.items() if "_last50" in name
                for tick in chart["ticks"])
-    assert all(chart["ticks"] == list(range(1980, 2026, 5))
+    expected_ticks = (
+        list(range(1980, 2026, 5)) if endpoint_year == 2025
+        else [*range(1980, 2025, 5), 2026]
+    )
+    assert all(chart["ticks"] == expected_ticks
                for name, chart in captured.items() if "_last50" in name)
-    assert all(chart["ticks"] == [1980, 2000, 2025]
+    assert all(chart["ticks"] == [1980, 2000, endpoint_year]
                for name, chart in captured.items() if "_last50" not in name)
     assert captured["profanity_per_1k_last50.png"]["source"] == (
         "Sources: Stanford Hein (1977-2017) + GovInfo CREC (2017-present)."
@@ -292,6 +306,7 @@ def test_last50_figures_filter_years_without_changing_rates(tmp_path, monkeypatc
         tmp_path / "data" / "reports" / "tables" / "metrics_by_congress_party.csv"
     )
     assert 1976 in set(exported["year"])
+    assert exported.loc[exported["congress"].eq(119), "year"].eq(2025).all()
 
 
 def test_source_note_spans_every_hein_edition_and_ends_at_present(tmp_path) -> None:

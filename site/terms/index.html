@@ -629,7 +629,10 @@ function renderYearlyPanel(sourceSeries, metric, scopeLabel) {
     role: 'img',
     'aria-label': `${metric.label}, Democrats compared with Republicans, ${scopeLabel}`,
   });
-  const years = [...new Set(sourceSeries.map(row => Number(row.year)))].sort((a, b) => a - b);
+  const plotYear = row => Number(row.plot_year ?? row.year);
+  const periodLabel = row => plotYear(row) === Number(row.year)
+    ? String(row.year) : `${row.year}\u2013${plotYear(row)}`;
+  const years = [...new Set(sourceSeries.map(plotYear))].sort((a, b) => a - b);
   const values = sourceSeries.map(row => Number(row[metric.rate]) || 0);
   const maxValue = Math.max(0.01, ...values) * 1.08;
   const x = year => margin.left + (
@@ -658,7 +661,7 @@ function renderYearlyPanel(sourceSeries, metric, scopeLabel) {
     const rows = sourceSeries.filter(row => row.party === party)
       .sort((a, b) => Number(a.year) - Number(b.year));
     const points = rows.map(row => [
-      x(Number(row.year)), y(Number(row[metric.rate]) || 0), row,
+      x(plotYear(row)), y(Number(row[metric.rate]) || 0), row,
     ]);
     svg.appendChild(svgNode('polyline', {
       points: points.map(point => `${point[0]},${point[1]}`).join(' '),
@@ -676,7 +679,7 @@ function renderYearlyPanel(sourceSeries, metric, scopeLabel) {
         cx: px, cy: py, r: 7, fill: 'transparent', 'data-party': party,
       });
       bindTooltip(mark, wrapper, tooltip,
-        `${row.year} ${label}: ${Number(row[metric.rate]).toFixed(3)} ${metric.units} ` +
+        `${periodLabel(row)} ${label}: ${Number(row[metric.rate]).toFixed(3)} ${metric.units} ` +
         `(${Number(row[metric.hits]).toLocaleString()} hits; ` +
         `${Number(row.words).toLocaleString()} words)`);
       svg.appendChild(mark);
@@ -686,9 +689,9 @@ function renderYearlyPanel(sourceSeries, metric, scopeLabel) {
   addAccessibleTable(
     wrapper,
     `${metric.label}, ${scopeLabel}`,
-    ['Year', 'Party', metric.units, 'Hits', 'Words'],
+    ['Period', 'Party', metric.units, 'Hits', 'Words'],
     sourceSeries.map(row => [
-      row.year, partyName(row.party), Number(row[metric.rate]).toFixed(3),
+      periodLabel(row), partyName(row.party), Number(row[metric.rate]).toFixed(3),
       Number(row[metric.hits]).toLocaleString(), Number(row.words).toLocaleString(),
     ]),
   );
