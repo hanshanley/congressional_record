@@ -2802,10 +2802,7 @@ courtesy, profanity, and slurs.">
 <h1>The Language of Congress</h1>
 </div>
 <div class="feature-summary">
-<p class="dek">How Congress speaks, from historical trends to individual members.</p>
 <div class="byline">
-<p>By Hans W. A. Hanley</p>
-<p>Congressional Record, 1873–present</p>
 <p>Updated through {html.escape(_long_date(coverage['speech_last_date']))}</p>
 </div>
 </div>

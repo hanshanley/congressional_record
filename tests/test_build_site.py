@@ -140,6 +140,31 @@ def test_ci_default_ranks_the_sitting_congress_only(store, tmp_path):
     assert {row["speaker_name"] for row in board} == {"Mr. NEW", "Ms. NEW2"}
 
 
+@pytest.mark.parametrize(
+    ("latest_date", "display_date"),
+    [("2026-10-09", "October 9, 2026"), ("2026-10-10", "October 10, 2026")],
+)
+def test_main_header_keeps_only_data_driven_update_date(store, latest_date, display_date):
+    path, _, bills = store
+    module = _load_build_site()
+    daily = module.load_daily(path)
+    daily.loc[daily["bioguide"] == "NEW2", "date"] = latest_date
+    payload = module.build_payload(
+        daily, module.load_bills(bills), 119,
+        top=20, min_words=1000, generated_utc="2026-10-11T00:00:00Z",
+    )
+    document = BeautifulSoup(
+        module._render_html(payload, [118, 119], {"source_note": "Test source"}),
+        "html.parser",
+    )
+    header = document.select_one(".feature-header")
+    assert header.get_text(" ", strip=True) == (
+        f"Congress / Data The Language of Congress Updated through {display_date}"
+    )
+    assert header.select_one(".dek") is None
+    assert len(header.select(".byline p")) == 1
+
+
 # ------------------------------------------------------------------------- output
 
 
