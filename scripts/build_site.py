@@ -1435,7 +1435,7 @@ HOUSE_CSS = """
   .masthead nav ul { display:flex; gap:1.4rem; margin:0; padding:0 0 .3rem; list-style:none;
                      font-family:var(--sans); font-size:.78rem; letter-spacing:.1em;
                      text-transform:uppercase; }
-  .masthead nav a { text-decoration:none; }
+  .masthead nav a { text-decoration:none; white-space:nowrap; }
   .masthead nav .subscribe-link { padding:.5rem .7rem; background:var(--signal);
                                   color:var(--paper); }
   main { min-height:60vh; }
@@ -1567,14 +1567,15 @@ HOUSE_CSS = """
   .dashboard-page .notes { margin:1rem 0 0; border:0; }
   .dashboard-page .notes summary { color:var(--muted); font-size:.62rem; }
   .dashboard-page .notes[open] > summary { color:var(--ink); }
+  @media (max-width:900px) {
+    .masthead { grid-template-columns:1fr; gap:1.2rem; }
+  }
   @media (max-width:760px) {
     :root { --page:calc(100vw - 28px); }
     body { font-size:16px; }
     .edition-line { justify-content:end; }
     .edition-line span:first-child { display:none; }
-    .masthead { grid-template-columns:1fr; gap:1.2rem; }
-    .masthead nav ul { display:grid; grid-template-columns:repeat(4,auto); gap:.4rem;
-                       justify-content:space-between; width:100%; font-size:.7rem; }
+    .masthead nav ul { flex-wrap:wrap; gap:1rem; width:100%; font-size:.7rem; }
     .masthead nav .subscribe-link { padding:.4rem .5rem; }
     .feature-header { grid-template-columns:1fr; row-gap:1.5rem; }
     .feature-header > *:not(.byline),.byline { grid-row:auto; grid-column:1; }
@@ -1835,6 +1836,7 @@ def _site_header() -> str:
         for href, label, attrs in (
             ("/", "Latest", ""),
             ("/archive/", "Archive", ""),
+            ("/interactive-analysis/", "Interactive analysis", ""),
             ("/about/", "About", ""),
             (SUBSCRIBE_URL, "Subscribe", ' class="subscribe-link"'),
         )

@@ -491,9 +491,10 @@ def test_pages_use_margin_of_error_masthead_and_footer(store, tmp_path):
         document = BeautifulSoup((out / rel).read_text(), "html.parser")
         header = document.select_one("header.site-header")
         assert header.select_one('a.wordmark[href="/"]'), rel
-        assert [a["href"] for a in header.select("nav a")][:3] == [
-            "/", "/archive/", "/about/",
+        assert [a["href"] for a in header.select("nav a")][:4] == [
+            "/", "/archive/", "/interactive-analysis/", "/about/",
         ], rel
+        assert header.select_one('nav a[href="/interactive-analysis/"]').get_text() == "Interactive analysis", rel
         assert document.select_one("footer.site-footer .copyright"), rel
         assert document.select_one('.feature-nav a[aria-current="page"]')["href"] == "./"
         assert document.select_one("article.dashboard-page"), rel
