@@ -38,6 +38,42 @@ def _load_build_site():
     return module
 
 
+def test_chart_hover_uses_nearest_visible_observation_and_containing_bar():
+    import shutil
+
+    node = shutil.which("node")
+    if node is None:
+        pytest.skip("Node.js is required to execute the chart interaction helpers")
+    module = _load_build_site()
+    javascript = r"""
+const assert = require('node:assert/strict');
+const window = {addEventListener() {}};
+const document = {addEventListener() {}};
+""" + module.CHART_HELPERS_JS + r"""
+function observation(tagName, left, top, width, height, visible = true) {
+  return {mark: {
+    tagName,
+    getClientRects: () => visible ? [{}] : [],
+    getBoundingClientRect: () => ({
+      left, top, width, height, right: left + width, bottom: top + height,
+    }),
+  }};
+}
+const first = observation('circle', 0, 0, 10, 10);
+const last = observation('circle', 100, 0, 10, 10);
+const hidden = observation('circle', 50, 0, 10, 10, false);
+assert.equal(nearestObservation([first, last, hidden], 45, 5), first);
+assert.equal(nearestObservation([first, last, hidden], 65, 5), last);
+assert.equal(nearestObservation([hidden], 55, 5), null);
+const wideBar = observation('rect', 0, 0, 200, 20);
+const shortBar = observation('rect', 0, 30, 30, 20);
+assert.equal(nearestObservation([wideBar, shortBar], 5, 15), wideBar);
+assert.notEqual(formatObservedRate(0.000012345), '0');
+assert.equal(Number(formatObservedRate(1 / 3)), 0.333333);
+"""
+    subprocess.run([node, "-e", javascript], check=True, capture_output=True, text=True)
+
+
 def _daily(rows):
     return pd.DataFrame(rows, columns=[
         "bioguide", "date", "chamber", "speaker_name", "party", "state", "congress",

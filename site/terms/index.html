@@ -283,9 +283,13 @@
                   cursor:pointer; }
   .chart-toggle[aria-pressed="false"] { opacity:.4; text-decoration:line-through; }
   .chart-legend i { display:inline-block; width:1.5rem; height:3px; }
-  .chart-tooltip { position:absolute; z-index:2; max-width:18rem; pointer-events:none;
+  .chart-tooltip { position:fixed; z-index:60; max-width:min(18rem,calc(100vw - 16px));
+                   pointer-events:none; overflow-wrap:anywhere;
                    background:var(--ink); color:var(--paper); padding:.5rem .65rem;
                    font:.7rem/1.5 var(--mono); letter-spacing:.02em; }
+  .chart-focus-marker { fill:none; stroke:var(--signal); stroke-width:2;
+                        vector-effect:non-scaling-stroke; pointer-events:none; }
+  svg[data-chart-input="pointer"]:focus { outline:none; }
   .data-mark { cursor:pointer; transition:opacity .12s ease; }
   .data-mark:hover,.data-mark:focus { opacity:.6; outline:none; }
   #language-tables .card { margin:0; }
@@ -433,6 +437,12 @@ function isCompactChart() {
 function svgNode(tag, attributes = {}, text = '') {
   const node = document.createElementNS(SVG_NS, tag);
   Object.entries(attributes).forEach(([name, value]) => node.setAttribute(name, value));
+  if (tag === 'svg') {
+    node.setAttribute('tabindex', '0');
+    node.setAttribute('aria-description',
+      'Hover or tap for the nearest observed value. Use arrow keys to explore; ' +
+      'Home and End select endpoints, and Escape hides the value.');
+  }
   if (text !== '') node.textContent = text;
   return node;
 }
@@ -455,6 +465,10 @@ function formatRate(value) {
   return Number(value).toLocaleString(undefined, {
     minimumFractionDigits: 1, maximumFractionDigits: 1,
   });
+}
+
+function formatObservedRate(value) {
+  return Number(value).toLocaleString(undefined, {maximumSignificantDigits: 6});
 }
 
 function censorTerm(term) {
@@ -501,36 +515,176 @@ function spacedLabelIndices(length, maxLabels = 7) {
 function addTooltip(wrapper) {
   const tooltip = document.createElement('div');
   tooltip.className = 'chart-tooltip';
+  tooltip.id = `chart-tooltip-${++chartTooltipCount}`;
+  tooltip.setAttribute('role', 'status');
+  tooltip.setAttribute('aria-live', 'polite');
+  tooltip.setAttribute('aria-atomic', 'true');
   tooltip.hidden = true;
   wrapper.appendChild(tooltip);
   return tooltip;
 }
 
+let chartTooltipCount = 0;
+let activeChartInspector = null;
+const chartInspectors = new WeakMap();
+
+function visibleObservations(items) {
+  return items.filter(item => item.mark.getClientRects().length > 0);
+}
+
+function nearestObservation(items, clientX, clientY) {
+  let nearest = null;
+  let distance = Infinity;
+  visibleObservations(items).forEach(item => {
+    const bounds = item.mark.getBoundingClientRect();
+    const insideBar = item.mark.tagName.toLowerCase() === 'rect' &&
+      clientX >= bounds.left && clientX <= bounds.right &&
+      clientY >= bounds.top && clientY <= bounds.bottom;
+    const score = insideBar ? -1 : Math.hypot(
+      clientX - (bounds.left + bounds.width / 2),
+      clientY - (bounds.top + bounds.height / 2),
+    );
+    if (score < distance) {
+      nearest = item;
+      distance = score;
+    }
+  });
+  return nearest;
+}
+
+function createChartInspector(wrapper, tooltip) {
+  const items = [];
+  let selected = null;
+  let marker = null;
+  let pointerFocus = false;
+  const hide = () => {
+    tooltip.hidden = true;
+    if (marker) marker.style.display = 'none';
+    if (activeChartInspector === inspector) activeChartInspector = null;
+  };
+  const inspector = {wrapper, items, hide};
+  const show = item => {
+    if (!item) return;
+    if (selected === item && !tooltip.hidden) return;
+    if (activeChartInspector && activeChartInspector !== inspector) {
+      activeChartInspector.hide();
+    }
+    activeChartInspector = inspector;
+    selected = item;
+    const svg = wrapper.querySelector('svg');
+    svg.setAttribute('aria-describedby', tooltip.id);
+    const bounds = item.mark.getBoundingClientRect();
+    const point = svg.createSVGPoint();
+    point.x = bounds.left + bounds.width / 2;
+    point.y = bounds.top + bounds.height / 2;
+    const location = point.matrixTransform(svg.getScreenCTM().inverse());
+    if (!marker) {
+      marker = svgNode('circle', {
+        r: 6, class: 'chart-focus-marker', 'aria-hidden': 'true',
+      });
+      svg.appendChild(marker);
+    }
+    marker.setAttribute('cx', location.x);
+    marker.setAttribute('cy', location.y);
+    marker.style.display = '';
+    tooltip.textContent = `${item.text} · Nearest observed point.`;
+    tooltip.hidden = false;
+    const left = Math.max(8, Math.min(
+      point.x + 12, window.innerWidth - tooltip.offsetWidth - 8,
+    ));
+    const preferredTop = bounds.bottom + 12;
+    const top = preferredTop + tooltip.offsetHeight <= window.innerHeight - 8
+      ? preferredTop : bounds.top - tooltip.offsetHeight - 12;
+    tooltip.style.left = `${left}px`;
+    tooltip.style.top = `${Math.max(8, Math.min(
+      top, window.innerHeight - tooltip.offsetHeight - 8,
+    ))}px`;
+  };
+  const inspectPointer = event => {
+    if (!event.target.closest('svg')) return;
+    show(nearestObservation(items, event.clientX, event.clientY));
+  };
+  wrapper.addEventListener('pointermove', inspectPointer);
+  wrapper.addEventListener('pointerup', event => {
+    inspectPointer(event);
+    if (event.target.closest('svg')) {
+      const svg = wrapper.querySelector('svg');
+      svg.dataset.chartInput = 'pointer';
+      pointerFocus = true;
+      svg.focus({preventScroll: true});
+      pointerFocus = false;
+    }
+  });
+  wrapper.addEventListener('pointerleave', event => {
+    if (event.pointerType !== 'touch') hide();
+  });
+  wrapper.addEventListener('pointercancel', hide);
+  wrapper.addEventListener('focusin', event => {
+    if (event.target !== wrapper.querySelector('svg')) return;
+    event.target.dataset.chartInput = pointerFocus ? 'pointer' : 'keyboard';
+    const visible = visibleObservations(items);
+    const firstSeries = visible.filter(item =>
+      item.mark.dataset.party === visible[0]?.mark.dataset.party);
+    show(visible.includes(selected) ? selected : firstSeries[firstSeries.length - 1]);
+  });
+  wrapper.addEventListener('focusout', hide);
+  wrapper.addEventListener('keydown', event => {
+    if (event.target !== wrapper.querySelector('svg')) return;
+    event.target.dataset.chartInput = 'keyboard';
+    if (event.key === 'Escape') {
+      hide();
+      return;
+    }
+    if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End']
+        .includes(event.key)) return;
+    const visible = visibleObservations(items);
+    if (!visible.length) return;
+    event.preventDefault();
+    if (!visible.includes(selected)) selected = visible[0];
+    const isBar = selected.mark.tagName.toLowerCase() === 'rect';
+    const series = isBar ? visible : visible.filter(item =>
+      item.mark.dataset.party === selected.mark.dataset.party);
+    let index = series.indexOf(selected);
+    if (event.key === 'Home') index = 0;
+    else if (event.key === 'End') index = series.length - 1;
+    else if (!isBar && ['ArrowUp', 'ArrowDown'].includes(event.key)) {
+      const parties = [...new Set(visible.map(item => item.mark.dataset.party))];
+      const partyIndex = parties.indexOf(selected.mark.dataset.party);
+      const nextParty = parties[(partyIndex +
+        (event.key === 'ArrowDown' ? 1 : parties.length - 1)) % parties.length];
+      const bounds = selected.mark.getBoundingClientRect();
+      const x = bounds.left + bounds.width / 2;
+      const otherSeries = visible.filter(item => item.mark.dataset.party === nextParty);
+      const distance = item => {
+        const otherBounds = item.mark.getBoundingClientRect();
+        return Math.abs(otherBounds.left + otherBounds.width / 2 - x);
+      };
+      show(otherSeries.reduce((nearest, item) =>
+        distance(item) < distance(nearest) ? item : nearest));
+      return;
+    } else index += ['ArrowRight', 'ArrowDown'].includes(event.key) ? 1 : -1;
+    show(series[Math.max(0, Math.min(series.length - 1, index))]);
+  });
+  return inspector;
+}
+
 function bindTooltip(mark, wrapper, tooltip, text) {
   mark.classList.add('data-mark');
-  mark.setAttribute('tabindex', '0');
+  mark.removeAttribute('tabindex');
   mark.setAttribute('aria-label', text);
-  const showAt = (left, top) => {
-    tooltip.textContent = text;
-    tooltip.hidden = false;
-    const maxLeft = Math.max(8, wrapper.clientWidth - tooltip.offsetWidth - 8);
-    const maxTop = Math.max(8, wrapper.clientHeight - tooltip.offsetHeight - 8);
-    tooltip.style.left = `${Math.max(8, Math.min(left, maxLeft))}px`;
-    tooltip.style.top = `${Math.max(8, Math.min(top, maxTop))}px`;
-  };
-  mark.addEventListener('pointermove', event => {
-    const bounds = wrapper.getBoundingClientRect();
-    showAt(event.clientX - bounds.left + 12, event.clientY - bounds.top + 12);
-  });
-  mark.addEventListener('pointerleave', () => { tooltip.hidden = true; });
-  mark.addEventListener('focus', () => {
-    const bounds = wrapper.getBoundingClientRect();
-    const markBounds = mark.getBoundingClientRect();
-    showAt(markBounds.left - bounds.left + markBounds.width / 2,
-      markBounds.top - bounds.top + markBounds.height + 8);
-  });
-  mark.addEventListener('blur', () => { tooltip.hidden = true; });
+  if (!chartInspectors.has(wrapper)) {
+    chartInspectors.set(wrapper, createChartInspector(wrapper, tooltip));
+  }
+  chartInspectors.get(wrapper).items.push({mark, text});
 }
+
+window.addEventListener('scroll', () => activeChartInspector?.hide(), true);
+window.addEventListener('resize', () => activeChartInspector?.hide());
+document.addEventListener('pointerdown', event => {
+  if (activeChartInspector && !activeChartInspector.wrapper.contains(event.target)) {
+    activeChartInspector.hide();
+  }
+});
 
 function addPanelHeading(wrapper, metric, detail) {
   const heading = document.createElement('div');
@@ -680,7 +834,7 @@ function renderYearlyPanel(sourceSeries, metric, scopeLabel) {
         cx: px, cy: py, r: 7, fill: 'transparent', 'data-party': party,
       });
       bindTooltip(mark, wrapper, tooltip,
-        `${periodLabel(row)} ${label}: ${Number(row[metric.rate]).toFixed(3)} ${metric.units} ` +
+        `${periodLabel(row)} ${label}: ${formatObservedRate(row[metric.rate])} ${metric.units} ` +
         `(${Number(row[metric.hits]).toLocaleString()} hits; ` +
         `${Number(row.words).toLocaleString()} words)`);
       svg.appendChild(mark);
