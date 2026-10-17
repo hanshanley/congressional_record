@@ -74,6 +74,20 @@ _EDITORIAL_HEADING_RE = re.compile(
 _STAGE_DIRECTION_RE = re.compile(
     rf"(?m)^[ \t]*\({_MEMBER_MARKER}\s+asked and was given permission\b[^)]*\)"
 )
+_VALID_BIOGUIDE_RE = re.compile(r"^[A-Z]\d{6}$")
+_SHORT_CONTINUATION_HEADING = r"[^\n.!?]{1,120}"
+_INITIAL_FLOOR_ADDRESS_RE = {
+    "house": re.compile(
+        rf"^\s*(?:{_SHORT_CONTINUATION_HEADING}\r?\n[ \t]*\r?\n)?"
+        r"[ \t]*(?:Mr\.|Madam)\s+Speaker\s*,",
+        re.IGNORECASE,
+    ),
+    "senate": re.compile(
+        rf"^\s*(?:{_SHORT_CONTINUATION_HEADING}\r?\n[ \t]*\r?\n)?"
+        r"[ \t]*(?:Mr\.|Madam)\s+President\s*,",
+        re.IGNORECASE,
+    ),
+}
 
 # Standard Record formulas that introduce printed bills, amendments, exhibits, or
 # other material that was inserted into the Record rather than spoken on the floor.
@@ -300,6 +314,75 @@ def _material_sections(body: str) -> Iterator[Tuple[str, bool]]:
         remaining = inserted[resumed.start():]
 
 
+def has_initial_floor_address(text: str, chamber: str) -> bool:
+    """Whether text starts with a chamber-correct direct floor address.
+
+    A single short heading may precede the address, separated by a blank line.
+    No attribution is inferred from the heading or the prose itself.
+    """
+    pattern = _INITIAL_FLOOR_ADDRESS_RE.get(chamber)
+    return bool(pattern and pattern.match(text or ""))
+
+
+def identify_unmarked_floor_continuation(
+    text: str,
+    members: List[Dict[str, str]],
+    chamber: str,
+    *,
+    non_spoken: bool = False,
+) -> Tuple[Optional[Dict[str, str]], str]:
+    """Prove an unmarked initial continuation from authoritative MODS metadata.
+
+    Attribution is allowed only for floor text with an explicit, chamber-correct
+    address and exactly one unique valid-Bioguide member whose MODS role is
+    ``SPEAKING``. Repeated entries for that same Bioguide are harmless; any
+    unnamed speaking entry or second speaking identity keeps the text unknown.
+    """
+    if non_spoken:
+        return None, "non_spoken_content"
+    if chamber not in {"house", "senate"}:
+        return None, "nonfloor_chamber"
+    if not has_initial_floor_address(text, chamber):
+        return None, "no_direct_floor_address"
+
+    expected_member_chamber = "H" if chamber == "house" else "S"
+    speaking = [
+        member for member in members
+        if (member.get("role") or "").strip().upper() == "SPEAKING"
+    ]
+    if not speaking:
+        return None, "no_speaking_author"
+    if any(
+        not _VALID_BIOGUIDE_RE.fullmatch((member.get("bioguide") or "").strip())
+        for member in speaking
+    ):
+        return None, "speaking_author_without_valid_bioguide"
+    if any(
+        member.get("chamber")
+        and member["chamber"].strip().upper() != expected_member_chamber
+        for member in speaking
+    ):
+        return None, "speaking_author_chamber_mismatch"
+
+    by_bioguide: Dict[str, List[Dict[str, str]]] = {}
+    for member in speaking:
+        by_bioguide.setdefault(member["bioguide"].strip(), []).append(member)
+    if len(by_bioguide) != 1:
+        return None, "multiple_speaking_authors"
+
+    duplicates = next(iter(by_bioguide.values()))
+    member = max(
+        duplicates,
+        key=lambda item: (
+            bool(item.get("parsed_name")),
+            bool(item.get("name")),
+            bool(item.get("party")),
+            bool(item.get("state")),
+        ),
+    )
+    return member, "proven"
+
+
 def build_turns(
     text: str,
     members: List[Dict[str, str]],
@@ -343,6 +426,11 @@ def build_turns(
             info = candidates[0] if len(candidates) == 1 else {}
             if member_lookup and len(candidates) <= 1 and not info.get("bioguide"):
                 info = member_lookup(marker)
+        elif i == 0 and not marker and not procedural:
+            proven, _ = identify_unmarked_floor_continuation(
+                body, members, chamber, non_spoken=non_spoken,
+            )
+            info = proven or {}
         sections = [(body, False)] if procedural else _material_sections(body)
         source_segment = " ".join(body.split())
         source_fingerprint = hashlib.sha256(source_segment.encode("utf-8")).hexdigest()
@@ -364,7 +452,11 @@ def build_turns(
                 "date": date,
                 "congress": congress,
                 "chamber": chamber,
-                "speaker_name": "Inserted material" if inserted else marker or info.get("name", ""),
+                "speaker_name": (
+                    "Inserted material" if inserted else marker
+                    or info.get("parsed_name")
+                    or info.get("name", "")
+                ),
                 "speaker_id": "",
                 "bioguide": attributed.get("bioguide", ""),
                 "party": party,
@@ -391,7 +483,10 @@ def normalize_members(raw_members: List[Dict[str, str]]) -> List[Dict[str, str]]
                 "party": m.get("party", ""),
                 "bioguide": m.get("bioGuideId", ""),
                 "name": m.get("name", ""),
+                "parsed_name": m.get("parsed_name", ""),
                 "state": m.get("state", ""),
+                "role": m.get("role", ""),
+                "chamber": m.get("chamber", ""),
             }
         )
     return out

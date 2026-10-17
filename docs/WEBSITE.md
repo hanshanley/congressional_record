@@ -52,6 +52,9 @@ Long duplicate remarks in overlapping granules are also compared independently o
 surrounding bill metadata and editorial underscore separators. Original MODS page ranges
 must overlap; identical remarks on disjoint physical pages or repeated within the same
 granule are not discarded. Broader page views are processed before their individual views.
+Malformed source page bounds are logged and are never sorted into an invented interval;
+that granule cannot use page-dependent body matching. The original exact-segment identity
+remains the fallback when physical-page metadata is unavailable.
 
 Bill-introduction headings cannot restart the preceding member's remarks. Verified
 external radio and telephone transcripts, telegram text, and directly attributed
@@ -59,6 +62,9 @@ external remarks lacking quotation marks use source-specific
 opening and closing cues, not a blanket rule based on a word or topic; nested quotations
 are counted only once. These reviewed regions affect member attribution, not the
 historical aggregate's existing treatment of quoted language.
+Reviewed quotations also distinguish external words from a member's own sarcastic
+bill names. Source-specific delimiter repairs preserve offsets when mixed quotation
+punctuation would otherwise swallow unquoted floor remarks. The original text is unchanged.
 An explicitly introduced, indented quotation can be a single line; it is still separate
 from the member's resumed remarks.
 
@@ -111,6 +117,10 @@ word from suppressing the same actual curse elsewhere. These exclusions never al
 text or its word denominator, and their data are part of the aggregate cache fingerprint.
 An ambiguous context is not automatically classified as a confirmed error. Original-turn
 validation is required before promoting a provisional review decision into this codebook.
+`scripts/compile_profanity_context_reviews.py` joins each semantic decision to the current
+audit by original identity, exact offsets, and form, then verifies the complete original turn
+and lexical occurrence before producing a content-addressed manifest. Missing, duplicate,
+or conflicting decisions fail compilation; uncertainty never becomes an exclusion.
 
 The homepage, published at <https://www.themarginoferror.com/congressional_profanity/>, leads
 with interactive long-run panels for formal courtesy, profanity, and slurs. Each panel compares Democrats with Republicans from 1873 to the

@@ -58,6 +58,24 @@ def test_audit_records_original_quoted_and_inserted_words_without_charging_membe
     assert mismatch is None
 
 
+@pytest.mark.parametrize(("text", "wrong_score"), [
+    ("Ordinary neutral words with no lexical occurrence.", 1),
+    ("This is damn wrong.", 0),
+])
+def test_full_audit_still_checks_scalar_errors_on_zero_match_and_positive_match_text(text, wrong_score):
+    class BrokenScalar(Scorers):
+        def score_profanity(self, text):
+            return {"profanity_mild": wrong_score, "profanity_strong": 0, "profanity_hits": wrong_score}
+
+    row = {
+        "text": text, "turn_id": "original", "chamber": "house", "party": "D",
+        "bioguide": "A",
+    }
+    _, _, mismatch = inspect_turn(row, ReferenceMatcher(), BrokenScalar(), "members")
+    assert mismatch is not None
+    assert mismatch["scored_hits"] == wrong_score
+
+
 def test_audit_preserves_the_raw_word_and_flags_incorrect_stored_counts(tmp_path):
     path = tmp_path / "govinfo_bulk_119.parquet"
     pd.DataFrame([{
@@ -163,7 +181,10 @@ def test_historical_aggregate_reconciles_each_original_source_separately(tmp_pat
         validate_aggregate_counts(frame, evidence)
 
 
-def test_one_download_retains_distinct_member_and_aggregate_quotation_policies(tmp_path, monkeypatch):
+@pytest.mark.parametrize("fail_ingestion", [False, True])
+def test_one_download_retains_distinct_member_and_aggregate_quotation_policies(
+    tmp_path, monkeypatch, fail_ingestion,
+):
     rows = [{
         "turn_id": "crec:CREC-2017-03-01-pt1-PgH1#1", "source": "govinfo",
         "date": "2017-03-01", "congress": 115, "chamber": "house",
@@ -180,18 +201,27 @@ def test_one_download_retains_distinct_member_and_aggregate_quotation_policies(t
     def ingest(packages, bulk, out, **kwargs):
         downloads.append(list(packages))
         write_turns_parquet(out / "turns/govinfo_bulk_115.parquet", iter(rows))
+        if fail_ingestion:
+            raise RuntimeError("A later original package failed")
         return 1, []
 
     monkeypatch.setattr(audit_profanity_families, "discover_packages", lambda *a: [
         "CREC-2017-03-01",
     ])
     monkeypatch.setattr("analysis.ingest.govinfo_bulk.run_incremental_bulk", ingest)
-    assert audit_profanity_families.main([
+    arguments = [
         "--fetch-congress", "115", "--out", str(tmp_path / "audit"),
         "--daily", str(daily), "--candidate-out", str(tmp_path / "members"),
         "--aggregate-out", str(tmp_path / "aggregates"),
         "--source-out", str(tmp_path / "originals"),
-    ]) == 0
+    ]
+    if fail_ingestion:
+        with pytest.raises(RuntimeError, match="later original package failed"):
+            audit_profanity_families.main(arguments)
+        assert pd.read_parquet(tmp_path / "originals/govinfo_bulk_115.parquet").iloc[0]["text"] == rows[0]["text"]
+        assert not (tmp_path / "audit/summary.json").exists()
+        return
+    assert audit_profanity_families.main(arguments) == 0
     member = pd.read_parquet(tmp_path / "members/congress_115.parquet").iloc[0]
     aggregate = pd.read_parquet(tmp_path / "aggregates/congress_115.parquet").iloc[0]
     assert member.profanity_hits == 1

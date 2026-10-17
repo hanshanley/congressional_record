@@ -54,7 +54,13 @@ def _granule_part(root: ET.Element) -> Optional[ET.Element]:
 
 
 def parse_members(scope: ET.Element) -> List[Dict[str, str]]:
-    """Extract congMember entries (speakers/voters) from a MODS scope element."""
+    """Extract congMember entries (speakers/voters) from a MODS scope element.
+
+    The raw ``role`` attribute and parsed display form are retained separately.
+    Callers may therefore distinguish authoritative speakers from voters or
+    mentioned members without sacrificing the printed marker (for example,
+    ``Mr. SCHUMER``) to the preferred authority name.
+    """
     members: List[Dict[str, str]] = []
     for node in scope.iter():
         if _localname(node.tag) != "congMember":
@@ -68,10 +74,11 @@ def parse_members(scope: ET.Element) -> List[Dict[str, str]]:
                 ntype = name.attrib.get("type", "")
                 if name.text and name.text.strip():
                     names[ntype] = name.text.strip()
+        member["parsed_name"] = names.get("parsed") or ""
         member["name"] = (
             names.get("authority-fnf")
             or names.get("authority-lnf")
-            or names.get("parsed")
+            or member["parsed_name"]
             or ""
         )
         members.append(member)
@@ -124,4 +131,3 @@ def parse_mods(xml_bytes: bytes) -> Dict[str, Any]:
         {m["bioGuideId"] for m in members if m.get("bioGuideId")}
     )
     return meta
-

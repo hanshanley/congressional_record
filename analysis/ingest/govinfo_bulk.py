@@ -86,7 +86,11 @@ def _page_range(node: ET.Element) -> Optional[Tuple[str, int, int]]:
         if first and last and first[1].upper() == last[1].upper():
             start, end = int(first[2]), int(last[2])
             if start > end:
-                raise ValueError(f"Reversed original page range: {pages}")
+                LOG.warning(
+                    "%s: reversed source page range %s; disabling page-dependent body deduplication",
+                    node.attrib.get("ID", ""), pages,
+                )
+                return None
             return first[1].upper(), start, end
     return None
 

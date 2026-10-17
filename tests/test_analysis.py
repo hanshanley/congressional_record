@@ -533,6 +533,19 @@ def test_mods_page_ranges_support_physical_overlap_checks():
     assert metadata["CREC-example"]["page_range"] == ("S", 5999, 6000)
 
 
+def test_corrupt_source_page_bounds_are_reported_without_guessing_or_losing_the_granule(caplog):
+    from analysis.ingest.govinfo_bulk import parse_package_mods
+
+    metadata = parse_package_mods(b"""
+        <mods><relatedItem type="constituent" ID="id-CREC-source">
+          <extent unit="pages"><start>H16951</start><end>H12138</end></extent>
+        </relatedItem></mods>
+    """)
+    assert metadata["CREC-source"]["page_range"] is None
+    assert "reversed source page range" in caplog.text
+    assert "disabling page-dependent body deduplication" in caplog.text
+
+
 def test_fuzzy_keyword_matching() -> None:
     from analysis.score.scorers import morph_variants, plural_variants
     assert {"colleague", "colleagues"}.issubset(morph_variants("colleague"))

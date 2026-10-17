@@ -114,14 +114,21 @@ def congress_window(congress, today):
 
 def inspect_turn(row, matcher, scorer, mode):
     text = row.get("text") or ""
+    raw_matches = list(matcher.matches(text))
     quotes = quotation_regions(text, row.get("turn_id")) if mode == "members" else []
     blocked = {
-        "mild": [match.span() for match in _MILD_PROFANITY_EXCLUSIONS.finditer(text.lower())],
-        "strong": [match.span() for match in _STRONG_PROFANITY_EXCLUSIONS.finditer(text.lower())],
+        "mild": (
+            [match.span() for match in _MILD_PROFANITY_EXCLUSIONS.finditer(text.lower())]
+            if raw_matches else []
+        ),
+        "strong": (
+            [match.span() for match in _STRONG_PROFANITY_EXCLUSIONS.finditer(text.lower())]
+            if raw_matches else []
+        ),
     }
-    reviewed = scorer.reviewed_profanity_spans(text)
+    reviewed = scorer.reviewed_profanity_spans(text) if raw_matches else {}
     for tier in blocked:
-        blocked[tier].extend(reviewed[tier])
+        blocked[tier].extend(reviewed.get(tier, []))
     eligible = (
         not row.get("is_procedural")
         and row.get("chamber") in {"house", "senate"}
@@ -135,7 +142,7 @@ def inspect_turn(row, matcher, scorer, mode):
         for start, end in quotes:
             production_text[start:end] = " " * (end - start)
         production_text = "".join(production_text)
-    for start, end, form, tier in matcher.matches(text):
+    for start, end, form, tier in raw_matches:
         if overlaps((start, end), blocked[tier]):
             disposition = "literal_context_exclusion"
         elif not eligible:
@@ -159,8 +166,8 @@ def inspect_turn(row, matcher, scorer, mode):
             "matched_text": text[start:end],
             "context": text[max(0, start - 180):min(len(text), end + 180)],
         })
-    actual = scorer.profanity_term_counts(production_text) if eligible else Counter()
-    score = scorer.score_turn(production_text)["profanity_hits"] if eligible else 0
+    score = scorer.score_profanity(production_text)["profanity_hits"] if eligible else 0
+    actual = scorer.profanity_term_counts(production_text) if score else Counter()
     mismatch = None
     if actual != expected or score != sum(expected.values()):
         mismatch = {
@@ -393,13 +400,17 @@ def main(argv=None):
         }, indent=2) + "\n")
         with tempfile.TemporaryDirectory(prefix="crec-family-audit-") as temporary:
             root = Path(temporary)
-            _, deferred = run_incremental_bulk(packages, root / "bulk", root, end=end, workers=6)
+            try:
+                _, deferred = run_incremental_bulk(
+                    packages, root / "bulk", root, end=end, workers=6,
+                )
+            finally:
+                if args.source_out:
+                    args.source_out.mkdir(parents=True, exist_ok=True)
+                    for path in sorted((root / "turns").glob("*.parquet")):
+                        shutil.copy2(path, args.source_out / path.name)
             if deferred:
                 raise RuntimeError(f"Audit coverage is incomplete: {deferred}")
-            if args.source_out:
-                args.source_out.mkdir(parents=True, exist_ok=True)
-                for path in select_turn_files(root / "turns"):
-                    shutil.copy2(path, args.source_out / path.name)
             summary = audit(
                 select_turn_files(root / "turns"), args.out,
                 mode=args.mode, daily=daily, congress=congress,

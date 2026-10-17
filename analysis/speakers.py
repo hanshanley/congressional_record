@@ -103,10 +103,36 @@ _REVIEWED_SOURCE_QUOTES = {
     "crec:CREC-2022-06-09-pt1-PgH5415": (
         ("Spare me the\nbullshit about constitutional rights.", "So pardon us"),
     ),
+    "crec:CREC-2025-01-21-pt1-PgS267-3": (
+        (
+            "It is\nnot one damn thing after another. It is the same damn thing over and\nover again.",
+            "And here we have that being shown",
+        ),
+    ),
+    "crec:CREC-2025-06-05-pt1-PgH2499": (
+        ("the entire DOGE effort was bullshit.", "I am not trying--"),
+    ),
+    "crec:CREC-2025-06-11-pt1-PgH2639": (
+        ("if they were just total bullshit.", "That is a quote"),
+    ),
+    "crec:CREC-2025-06-27-pt1-PgH3024-5": (
+        ("We are putting out a damn paper tomorrow,", "and that they did."),
+    ),
+    "crec:CREC-2026-02-02-pt1-PgH1940-6": (
+        ("When you have succeeded in dehumanizing the Negro;", "Lincoln's words uttered"),
+    ),
 }
 _REVIEWED_QUOTE_DELIMITERS = {
     "crec:CREC-2023-04-26-pt1-PgS1370-5": (
         ('Here is a ``how high":', "Here is a ``how high''"),
+    ),
+}
+_REVIEWED_OWN_QUOTES = {
+    "crec:CREC-2026-03-23-pt1-PgS1535": (
+        "``Save Your Ass Act''", "``Save Our Asses Act,''",
+    ),
+    "crec:CREC-2026-03-26-pt1-PgS1648": (
+        "``Save Their Asses Act.''",
     ),
 }
 
@@ -463,7 +489,10 @@ def quotation_regions(text: str, turn_id: Optional[str] = None) -> List[Tuple[in
             raise ValueError(f"Reviewed quotation delimiter no longer matches uniquely: {turn_id}")
         parsed = parsed.replace(original, repaired, 1)
     regions = (
-        [match.span() for match in _QUOTE_RE.finditer(parsed)]
+        [
+            match.span() for match in _QUOTE_RE.finditer(parsed)
+            if text[match.start():match.end()] not in _REVIEWED_OWN_QUOTES.get(source, ())
+        ]
         if any(mark in parsed for mark in ("``", "\u2018\u2018", "\u201c")) else []
     )
     for opening, closing in _REVIEWED_SOURCE_QUOTES.get((turn_id or "").split("#")[0], ()):
@@ -551,7 +580,7 @@ def speaker_counts(
             party = row.get("party") or "other"
             scored = scorers.score_turn(spoken)
             quoted_scored = scorers.score_turn(quoted) if quoted else None
-            turn_terms = scorers.profanity_term_counts(spoken)
+            turn_terms = scorers.profanity_term_counts(spoken) if scored["profanity_hits"] else Counter()
             if sum(turn_terms.values()) != int(scored["profanity_hits"]):
                 raise RuntimeError(
                     "profanity surface-form counts diverged from accepted hit count"

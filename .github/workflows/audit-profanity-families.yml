@@ -16,7 +16,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: profanity-source-audit
+  group: profanity-source-audit-${{ join(fromJSON(inputs.congresses), '-') }}
   cancel-in-progress: false
 
 jobs:

@@ -427,6 +427,8 @@ class Scorers:
         curated tiers and mild-term exclusions as ``score_turn``; slurs
         are counted separately and never as profanity.
         """
+        if not self.score_profanity(text)["profanity_hits"]:
+            return Counter()
         low = (text or "").lower()
         spans = self._accepted_profanity_spans(text)
         return Counter(
@@ -434,9 +436,7 @@ class Scorers:
             for start, end in sorted(spans["mild"] + spans["strong"])
         )
 
-    def score_turn(self, text: str) -> Dict[str, int]:
-        low = (text or "").lower()
-        tokens = Counter(_TOKEN_RE.findall(low))
+    def _profanity_counts(self, text: str, low: str, tokens: Counter) -> Tuple[int, int]:
         mild = self.profanity["mild"].count(tokens, low)
         if mild and _MILD_PROFANITY_EXCLUSIONS.search(low):
             mild = len(self._mild_profanity_spans(low))
@@ -448,6 +448,22 @@ class Scorers:
             if any(reviewed.values()):
                 spans = self._accepted_profanity_spans(text)
                 mild, strong = len(spans["mild"]), len(spans["strong"])
+        return mild, strong
+
+    def score_profanity(self, text: str) -> Dict[str, int]:
+        low = (text or "").lower()
+        tokens = Counter(_TOKEN_RE.findall(low))
+        mild, strong = self._profanity_counts(text, low, tokens)
+        return {
+            "profanity_mild": mild,
+            "profanity_strong": strong,
+            "profanity_hits": mild + strong,
+        }
+
+    def score_turn(self, text: str) -> Dict[str, int]:
+        low = (text or "").lower()
+        tokens = Counter(_TOKEN_RE.findall(low))
+        mild, strong = self._profanity_counts(text, low, tokens)
         return {
             "n_words": sum(tokens.values()),
             "formal_courtesy_hits": self.formal_courtesy.count(tokens, low),

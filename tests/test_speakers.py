@@ -240,6 +240,29 @@ def test_reviewed_mixed_quote_delimiter_does_not_swallow_the_members_own_questio
         mask_quotations(text + '\nHere is a ``how high":', "crec:CREC-2023-04-26-pt1-PgS1370-5#other")
 
 
+@pytest.mark.parametrize(("source", "own_quote", "form"), [
+    ("crec:CREC-2026-03-23-pt1-PgS1535", "``Save Your Ass Act''", "ass"),
+    ("crec:CREC-2026-03-23-pt1-PgS1535", "``Save Our Asses Act,''", "asses"),
+    ("crec:CREC-2026-03-26-pt1-PgS1648", "``Save Their Asses Act.''", "asses"),
+])
+def test_members_own_sarcastic_bill_names_are_not_external_quotations(source, own_quote, form):
+    text = f"I call this the {own_quote} They said ``bullshit'' about it."
+    spoken, quoted = mask_quotations(text, source + "#1")
+    assert Scorers().profanity_term_counts(spoken) == {form: 1}
+    assert Scorers().profanity_term_counts(quoted) == {"bullshit": 1}
+    assert mask_quotations(text, "another-source")[0].count(form) == 0
+
+
+def test_external_newspaper_headline_is_separate_from_the_members_own_use_of_the_same_word():
+    text = (
+        "The Capital issued a statement: We are putting out a damn paper tomorrow,\n"
+        "and that they did. They made Maryland damn proud."
+    )
+    spoken, quoted = mask_quotations(text, "crec:CREC-2025-06-27-pt1-PgH3024-5#2")
+    assert Scorers().profanity_term_counts(spoken) == {"damn": 1}
+    assert Scorers().profanity_term_counts(quoted) == {"damn": 1}
+
+
 def test_turns_without_a_bioguide_are_dropped(turn_file):
     path = turn_file([
         _row(turn_id="a", bioguide=None, text="damn"),
