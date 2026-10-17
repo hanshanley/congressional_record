@@ -2,6 +2,11 @@ name: Audit all profanity families
 
 on:
   workflow_dispatch:
+    inputs:
+      congresses:
+        description: "JSON array of Congresses to audit (allows targeted recovery)"
+        type: string
+        default: "[103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119]"
 
 permissions:
   contents: read
@@ -18,7 +23,7 @@ jobs:
       fail-fast: false
       max-parallel: 4
       matrix:
-        congress: [103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119]
+        congress: ${{ fromJSON(inputs.congresses) }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -30,10 +35,12 @@ jobs:
       - name: Test every codebook form and independent matcher
         run: python -m pytest tests/test_profanity_audit.py tests/test_analysis.py -q
       - name: Check original transcripts against every family and stored counts
+        env:
+          AUDIT_CONGRESS: ${{ matrix.congress }}
         run: |
           python scripts/audit_profanity_families.py \
-            --fetch-congress ${{ matrix.congress }} \
-            --out audit/member-${{ matrix.congress }}
+            --fetch-congress "$AUDIT_CONGRESS" \
+            --out "audit/member-$AUDIT_CONGRESS"
       - name: Retain all match evidence, exclusions, and differences
         if: always()
         uses: actions/upload-artifact@v4

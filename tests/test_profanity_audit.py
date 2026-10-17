@@ -1,10 +1,13 @@
 import json
 
 import pandas as pd
+import pytest
 
 from analysis.score.scorers import Scorers
 from analysis.speakers import PROFANITY_TERM_FAMILIES
-from scripts.audit_profanity_families import ReferenceMatcher, audit, inspect_turn
+from scripts.audit_profanity_families import (
+    ReferenceMatcher, audit, congress_window, discover_packages, inspect_turn,
+)
 
 
 def test_independent_reference_recognizes_every_actual_codebook_form():
@@ -85,3 +88,29 @@ def test_literal_context_exclusions_and_attached_compounds_retain_original_evide
     assert [(item["matched_text"], item["disposition"]) for item in evidence] == [
         ("damn", "literal_context_exclusion"), ("damn", "accepted"),
     ]
+
+
+def test_multi_year_source_discovery_is_paginated_and_rejects_missing_stored_dates():
+    class Client:
+        def paginate(self, url, **kwargs):
+            assert "2003-01-03/2005-01-02" in url
+            assert kwargs["items_key"] == "packages"
+            yield {"packageId": "CREC-2004-12-20"}
+            yield {"packageId": "CREC-2003-01-07"}
+            yield {"packageId": "CREC-2003-01-07"}
+            yield {"packageId": "CREC-2005-01-03"}
+
+        def url(self, path):
+            return f"https://api.govinfo.gov{path}"
+
+    assert discover_packages(
+        "2003-01-03", "2005-01-02", {"2003-01-07", "2004-12-20"}, Client(),
+    ) == ["CREC-2003-01-07", "CREC-2004-12-20"]
+    with pytest.raises(RuntimeError, match="omits 1 stored dates"):
+        discover_packages("2003-01-03", "2005-01-02", {"2004-01-20"}, Client())
+
+
+def test_source_audit_keeps_known_outgoing_congress_boundary_dates():
+    assert congress_window(103, "2026-10-17") == ("1994-01-25", "1995-01-03")
+    assert congress_window(110, "2026-10-17") == ("2007-01-01", "2009-01-03")
+    assert congress_window(119, "2026-10-17") == ("2025-01-01", "2026-10-17")

@@ -75,6 +75,31 @@ def overlaps(span, regions):
     return any(span[0] < end and start < span[1] for start, end in regions)
 
 
+def discover_packages(start, end, expected_dates, client=None):
+    from crec.api import GovInfoClient
+    from crec.enumerate import iter_packages
+
+    packages = sorted({
+        item["packageId"]
+        for item in iter_packages(client or GovInfoClient(), start, end)
+        if re.fullmatch(r"CREC-\d{4}-\d{2}-\d{2}", item["packageId"])
+        and start <= item["packageId"][5:] <= end
+    })
+    missing = set(expected_dates) - {package[5:] for package in packages}
+    if missing:
+        raise RuntimeError(
+            f"Original-source enumeration omits {len(missing)} stored dates: {sorted(missing)}"
+        )
+    return packages
+
+
+def congress_window(congress, today):
+    start = "1994-01-25" if congress == 103 else f"{1787 + 2 * congress}-01-01"
+    # A few outgoing Congresses have recorded floor proceedings on January 3.
+    end = min(f"{1789 + 2 * congress}-01-03", today)
+    return start, end
+
+
 def inspect_turn(row, matcher, scorer, mode):
     text = row.get("text") or ""
     quotes = [match.span() for match in _QUOTE_RE.finditer(text)]
@@ -227,15 +252,21 @@ def main(argv=None):
     if args.mode == "members" and args.fetch_congress and (daily is None or daily.empty):
         parser.error("the stored member table is required for a full source comparison")
     if args.fetch_congress:
-        from analysis.ingest.govinfo_bulk import probe_packages, run_incremental_bulk
+        from analysis.ingest.govinfo_bulk import run_incremental_bulk
         congress = args.fetch_congress
         if congress < 103:
             parser.error("member audit coverage begins with Congress 103")
-        start = f"{1787 + 2 * congress}-01-03"
-        if congress == 103:
-            start = "1994-01-25"
-        end = min(f"{1789 + 2 * congress}-01-02", dt.date.today().isoformat())
-        packages = probe_packages(start, end, workers=6)
+        start, end = congress_window(congress, dt.date.today().isoformat())
+        expected_dates = (
+            set(daily.loc[daily["congress"] == congress, "date"].astype(str))
+            if daily is not None else set()
+        )
+        packages = discover_packages(start, end, expected_dates)
+        args.out.mkdir(parents=True, exist_ok=True)
+        (args.out / "source_coverage.json").write_text(json.dumps({
+            "start": start, "end": end, "packages": packages,
+            "stored_dates": sorted(expected_dates),
+        }, indent=2) + "\n")
         with tempfile.TemporaryDirectory(prefix="crec-family-audit-") as temporary:
             root = Path(temporary)
             _, deferred = run_incremental_bulk(packages, root / "bulk", root, end=end, workers=6)
