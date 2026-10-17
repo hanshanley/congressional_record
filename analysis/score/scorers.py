@@ -14,10 +14,12 @@ phrases fall back to regex. This keeps the full-corpus scan tractable.
 
 from __future__ import annotations
 
+import hashlib
+import json
 import re
 from collections import Counter
 from pathlib import Path
-from typing import Dict, List, Optional, Set, Tuple
+from typing import Dict, List, NamedTuple, Optional, Set, Tuple
 
 LEXDIR = Path(__file__).parent / "lexicons"
 
@@ -40,6 +42,7 @@ _MILD_PROFANITY_EXCLUSIONS = re.compile(
     r"|\bthe\s{1,12}best\s{1,12}damn\s{1,12}band\s{1,12}in\s{1,12}the"
     r"\s{1,12}land\b"
     r"|\bblaze\s{1,12}damned\s{1,12}more\s{1,12}than\b"
+    r"|\bb-17,\s{1,12}the\s{1,12}damn\s{1,12}yankee\b"
 )
 _STRONG_PROFANITY_EXCLUSIONS = re.compile(
     r"\bwilliam\s+the\s+bastard\b"
@@ -52,6 +55,13 @@ _STRONG_PROFANITY_EXCLUSIONS = re.compile(
     r"|\briding\s{1,12}a\s{1,12}jackass\b"
     r"|\bsuch\s{1,12}ass\s{1,12}loons\b"
     r"|\box\s{1,12}or\s{1,12}(?:the\s{1,12})?ass\b"
+    r"|\bto\s{1,12}asses\s{1,12}or\s{1,12}challenge\b"
+    r"|\baccurately\s{1,12}asses\s{1,12}both\s{1,12}bases\b"
+    r"|\bto\s{1,12}asses\s{1,12}such\s{1,12}injuries\b"
+    r"|\bto\s{1,12}asses\s{1,12}its\s{1,12}effectiveness\b"
+    r"|\bhelp\s{1,12}them\s{1,12}asses\s{1,12}their\s{1,12}own\b"
+    r"|\bmichael\s{1,12}oxley\s{1,12}ass\s{1,12}the\s{1,12}sarbanes-oxley\b"
+    r"|\bbattered\s{1,12}bastards\s{1,12}of\s{1,12}bastogne\b"
 )
 # Slur forms that double as other words. A slur span overlapping one of these is not counted.
 _SLUR_EXCLUSIONS = re.compile(
@@ -278,12 +288,53 @@ def _load_profanity() -> Dict[str, "_Lexicon"]:
     return lex
 
 
+class _ProfanityContext(NamedTuple):
+    start: int
+    end: int
+    form: str
+    tier: str
+    matched_text: str
+
+
+def _load_profanity_contexts(records: Optional[List[dict]] = None):
+    if records is None:
+        payload = json.loads((LEXDIR / "profanity_contexts.json").read_text(encoding="utf-8"))
+        if type(payload.get("version")) is not int or payload["version"] != 1:
+            raise ValueError("Unsupported profanity context schema")
+        records = payload.get("records")
+    if not isinstance(records, list):
+        raise ValueError("Profanity context records must be a list")
+    tiers = {line.split("\t")[0]: line.split("\t")[1] for line in _load_lines("profanity.txt")}
+    contexts: Dict[str, List[_ProfanityContext]] = {}
+    seen = set()
+    for row in records:
+        digest = row["text_sha256"]
+        start, end = row["start"], row["end"]
+        form, tier, matched = row["form"], row["tier"], row["matched_text"]
+        if (
+            not isinstance(digest, str) or not re.fullmatch(r"[0-9a-f]{64}", digest)
+            or type(start) is not int or type(end) is not int or not 0 <= start < end
+            or not isinstance(matched, str) or len(matched) != end - start
+            or " ".join(matched.lower().split()) != form or tiers.get(form) != tier
+            or not isinstance(row.get("source_turn_id"), str) or not row["source_turn_id"].strip()
+            or not isinstance(row.get("reason"), str) or not row["reason"].strip()
+        ):
+            raise ValueError(f"Invalid reviewed profanity context: {row}")
+        identity = (digest, start, end)
+        if identity in seen:
+            raise ValueError(f"Duplicate reviewed profanity context: {identity}")
+        seen.add(identity)
+        contexts.setdefault(digest, []).append(_ProfanityContext(start, end, form, tier, matched))
+    return contexts
+
+
 class Scorers:
     """Holds compiled lexicons; reused across all turns."""
 
-    def __init__(self, fuzzy: bool = True) -> None:
+    def __init__(self, fuzzy: bool = True, profanity_contexts: Optional[List[dict]] = None) -> None:
         self.formal_courtesy = _Lexicon(_load_lines("formal_courtesy.txt"), fuzzy=fuzzy)
         self.profanity = _load_profanity()
+        self.profanity_contexts = _load_profanity_contexts(profanity_contexts)
         # Slurs are exact curated forms, separate from profanity, and never inflected.
         self.slurs = _Lexicon(_load_lines("slurs.txt"), fuzzy=False)
         overlap = self.slurs.singles & (
@@ -318,13 +369,51 @@ class Scorers:
         # Exclusion contexts are rare, so only pay for span matching when a slur matched.
         return len(self._slur_spans(low)) if count else 0
 
+    def reviewed_profanity_spans(
+        self, text: str, *, lower_offsets: bool = False,
+    ) -> Dict[str, List[Tuple[int, int]]]:
+        """Content-addressed decisions preserve original words and their denominator."""
+        blocked: Dict[str, List[Tuple[int, int]]] = {"mild": [], "strong": []}
+        if not self.profanity_contexts:
+            return blocked
+        digest = hashlib.sha256(text.encode("utf-8")).hexdigest()
+        lexical_spans = {}
+        for row in self.profanity_contexts.get(digest, []):
+            if text[row.start:row.end] != row.matched_text:
+                raise ValueError(f"Reviewed profanity context no longer matches: {digest}")
+            span = (len(text[:row.start].lower()), len(text[:row.end].lower()))
+            if row.tier not in lexical_spans:
+                lexical_spans[row.tier] = set(self.profanity[row.tier].find_spans(text.lower()))
+            if span not in lexical_spans[row.tier]:
+                raise ValueError(f"Reviewed exclusion is not a complete codebook occurrence: {digest}")
+            blocked[row.tier].append(span if lower_offsets else (row.start, row.end))
+        return blocked
+
+    def _accepted_profanity_spans(self, text: str) -> Dict[str, List[Tuple[int, int]]]:
+        low = (text or "").lower()
+        spans = {
+            "mild": self._mild_profanity_spans(low),
+            "strong": self._strong_profanity_spans(low),
+        }
+        if not any(spans.values()):
+            return spans
+        blocked = self.reviewed_profanity_spans(text, lower_offsets=True)
+        return {
+            tier: [
+                span for span in matches
+                if not any(span[0] < end and start < span[1] for start, end in blocked[tier])
+            ]
+            for tier, matches in spans.items()
+        }
+
     def signal_spans(self, text: str) -> Dict[str, List[Tuple[int, int]]]:
         """Return scorer-accepted spans for deterministic validation sampling."""
         low = (text or "").lower()
+        profanity = self._accepted_profanity_spans(text)
         return {
             "formal_courtesy": self.formal_courtesy.find_spans(low),
             "profanity": sorted(
-                self._mild_profanity_spans(low) + self._strong_profanity_spans(low)
+                profanity["mild"] + profanity["strong"]
             ),
             "slur": self._slur_spans(low),
         }
@@ -337,10 +426,10 @@ class Scorers:
         are counted separately and never as profanity.
         """
         low = (text or "").lower()
-        strong = self._strong_profanity_spans(low)
+        spans = self._accepted_profanity_spans(text)
         return Counter(
             " ".join(low[start:end].split())
-            for start, end in sorted(self._mild_profanity_spans(low) + strong)
+            for start, end in sorted(spans["mild"] + spans["strong"])
         )
 
     def score_turn(self, text: str) -> Dict[str, int]:
@@ -352,6 +441,11 @@ class Scorers:
         strong = self.profanity["strong"].count(tokens, low)
         if strong and _STRONG_PROFANITY_EXCLUSIONS.search(low):
             strong = len(self._strong_profanity_spans(low))
+        if (mild or strong) and self.profanity_contexts:
+            reviewed = self.reviewed_profanity_spans(text)
+            if any(reviewed.values()):
+                spans = self._accepted_profanity_spans(text)
+                mild, strong = len(spans["mild"]), len(spans["strong"])
         return {
             "n_words": sum(tokens.values()),
             "formal_courtesy_hits": self.formal_courtesy.count(tokens, low),

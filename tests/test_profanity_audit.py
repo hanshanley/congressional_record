@@ -142,6 +142,27 @@ def test_aggregate_artifact_must_reconcile_the_actual_tiers_not_just_the_total(t
     validate_aggregate_counts(frame, evidence)
 
 
+def test_historical_aggregate_reconciles_each_original_source_separately(tmp_path):
+    evidence = tmp_path / "evidence.jsonl"
+    rows = [
+        {"source": source, "congress": 109, "chamber": "house", "party": "D",
+         "tier": tier, "disposition": "accepted"}
+        for source, tier in [("hein_bound", "mild"), ("hein_daily", "strong")]
+    ]
+    evidence.write_text("".join(json.dumps(row) + "\n" for row in rows))
+    frame = pd.DataFrame([
+        {**row, "profanity_hits": 1, "profanity_mild_hits": int(row["tier"] == "mild"),
+         "profanity_strong_hits": int(row["tier"] == "strong")}
+        for row in rows
+    ])
+    validate_aggregate_counts(frame, evidence)
+    frame[["profanity_mild_hits", "profanity_strong_hits"]] = (
+        frame[["profanity_strong_hits", "profanity_mild_hits"]].to_numpy()
+    )
+    with pytest.raises(RuntimeError, match="original-source reference"):
+        validate_aggregate_counts(frame, evidence)
+
+
 def test_one_download_retains_distinct_member_and_aggregate_quotation_policies(tmp_path, monkeypatch):
     rows = [{
         "turn_id": "crec:CREC-2017-03-01-pt1-PgH1#1", "source": "govinfo",

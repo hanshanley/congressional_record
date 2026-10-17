@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import hashlib
 import html
 import json
 import logging
@@ -62,6 +63,35 @@ SUBSCRIBE_URL = (
 )
 SOURCE_REPOSITORY_URL = "https://github.com/hanshanley/congressional_record"
 ALL_MEMBER_SCOPE_LABEL = "1994–present"
+
+
+def validate_historical_audit(root: Path) -> None:
+    audit = root / "audit" / "historical" / "summary.json"
+    if not audit.exists():
+        return
+    summary = json.loads(audit.read_text(encoding="utf-8"))
+    files = {
+        "scorer_sha256": "analysis/score/scorers.py",
+        "codebook_sha256": "analysis/score/lexicons/profanity.txt",
+        "ingester_sha256": "analysis/ingest/govinfo.py",
+        "pdf_ingester_sha256": "analysis/ingest/govinfo_pdf.py",
+        "member_scorer_sha256": "analysis/speakers.py",
+    }
+    contexts = root / "analysis/score/lexicons/profanity_contexts.json"
+    if contexts.exists():
+        payload = json.loads(contexts.read_text(encoding="utf-8"))
+        if payload.get("records") or "context_exclusions_sha256" in summary:
+            files["context_exclusions_sha256"] = str(contexts.relative_to(root))
+    for key, name in files.items():
+        current = hashlib.sha256((root / name).read_bytes()).hexdigest()
+        if summary.get(key) != current:
+            raise ValueError(
+                f"Historical source audit used a different policy for {name}; "
+                "rescore the retained original turns before publishing."
+            )
+    if summary.get("scorer_disagreements") != 0 or not summary.get("turns_checked"):
+        raise ValueError("Historical publication requires a complete, disagreement-free source audit")
+
 
 CAVEATS = [
     "Speech counts include only remarks attributable to a specific member by Bioguide ID; "
@@ -3459,6 +3489,7 @@ def main(argv: Optional[List[str]] = None) -> int:
         LOG.error("--top must be positive and --min-words cannot be negative")
         return 1
 
+    validate_historical_audit(ROOT)
     daily = load_daily(args.daily)
     if daily is None or daily.empty:
         LOG.error("no speaker table at %s; run scripts/update_speakers.py first", args.daily)

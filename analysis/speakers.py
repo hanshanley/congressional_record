@@ -85,7 +85,7 @@ _QUOTE_RE = re.compile(
     r"|\u201c(.{0,4000}?)\u201d",
     re.S,
 )
-# Source-reviewed transcripts without enclosing quotation marks. Boundaries preserve
+# Source-reviewed external words without enclosing quotation marks. Boundaries preserve
 # the member's own remarks before and after the reported dialogue.
 _REVIEWED_SOURCE_QUOTES = {
     "crec:CREC-1998-02-24-pt1-PgH550": (
@@ -93,6 +93,15 @@ _REVIEWED_SOURCE_QUOTES = {
     ),
     "crec:CREC-1999-11-03-pt1-PgH11472": (
         ("Kohl:", "The Berlin Wall did not come down in a day."),
+    ),
+    "crec:CREC-2022-02-04-pt1-PgH971": (
+        ("beat\nthose commie bastards?", "We don't have any of that here."),
+    ),
+    "crec:CREC-2022-02-02-pt1-PgH909": (
+        ("Beat those Commie bastards.", "That is what we ought to be saying."),
+    ),
+    "crec:CREC-2022-06-09-pt1-PgH5415": (
+        ("Spare me the\nbullshit about constitutional rights.", "So pardon us"),
     ),
 }
 

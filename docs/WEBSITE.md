@@ -50,7 +50,8 @@ or the dated roster, never guessed. Short recovered fragments retain their origi
 identity for overlap deduplication.
 
 Bill-introduction headings cannot restart the preceding member's remarks. Verified
-external radio and telephone transcripts lacking quotation marks use source-specific
+external radio and telephone transcripts, telegram text, and directly attributed
+external remarks lacking quotation marks use source-specific
 opening and closing cues, not a blanket rule based on a word or topic; nested quotations
 are counted only once. These reviewed regions affect member attribution, not the
 historical aggregate's existing treatment of quoted language.
@@ -77,6 +78,32 @@ For Congresses 115 onward, candidate runs also emit `aggregate-congress-N` metri
 These are separately audited with the aggregate quotation policy and reconciled by
 party, chamber, and profanity tier, using the same downloaded original turns. They are
 not reconstructed from member counts and do not require another GovInfo corpus download.
+
+Subsequent profanity-only context corrections can use
+`scripts/rescore_audited_profanity.py` with the complete retained original turns and an
+immutable checkout of the audited producer. It runs both actual scoring versions, requires
+every baseline profanity counter and surface form to reconcile, and refuses changes to the
+codebook, tokenization, eligibility, or courtesy. Only then
+does it replace profanity numerators and recompute their rates using the original full-corpus
+word denominators. Its audit is explicitly a replay of the retained candidate turns, not a
+claim to have downloaded or scanned every zero-match turn again.
+
+The replay also permits additive source-reviewed quotation boundaries without changing
+any member-scoring logic. Each new opening cue must contain a complete profanity occurrence,
+which proves that every affected original turn was retained. Only the exact additional
+quoted words leave the member denominator; slurs can move into quoted counters but cannot
+be created or lost. Aggregate quotation policy and denominators are unchanged.
+Site publication rejects a retained historical audit when its producer hashes no longer
+match the current policy, including nonempty reviewed-context data. A long-running rebuild
+cannot silently publish pre-correction counts after rebasing newer source rules.
+
+Reviewed OCR or literal-sense exclusions can be content-addressed to a complete normalized
+turn in `analysis/score/lexicons/profanity_contexts.json`. Exact text hashes, original offsets,
+matched words, codebook tiers, and source identities prevent a decision about one corrupt
+word from suppressing the same actual curse elsewhere. These exclusions never alter source
+text or its word denominator, and their data are part of the aggregate cache fingerprint.
+An ambiguous context is not automatically classified as a confirmed error. Original-turn
+validation is required before promoting a provisional review decision into this codebook.
 
 The homepage, published at <https://www.themarginoferror.com/congressional_profanity/>, leads
 with interactive long-run panels for formal courtesy, profanity, and slurs. Each panel compares Democrats with Republicans from 1873 to the

@@ -118,6 +118,9 @@ def inspect_turn(row, matcher, scorer, mode):
         "mild": [match.span() for match in _MILD_PROFANITY_EXCLUSIONS.finditer(text.lower())],
         "strong": [match.span() for match in _STRONG_PROFANITY_EXCLUSIONS.finditer(text.lower())],
     }
+    reviewed = scorer.reviewed_profanity_spans(text)
+    for tier in blocked:
+        blocked[tier].extend(reviewed[tier])
     eligible = (
         not row.get("is_procedural")
         and row.get("chamber") in {"house", "senate"}
@@ -203,19 +206,22 @@ def validate_candidate_counts(candidate, evidence_path):
 
 
 def validate_aggregate_counts(frame, evidence_path):
+    dimensions = ["congress", "chamber", "party"]
+    if "source" in frame:
+        dimensions.insert(0, "source")
     expected = Counter()
     with evidence_path.open() as handle:
         for line in handle:
             row = json.loads(line)
             if row["disposition"] == "accepted":
-                expected[(row["congress"], row["chamber"], row["party"], row["tier"])] += 1
+                expected[(*[row[name] for name in dimensions], row["tier"])] += 1
     actual = Counter()
     seen = set()
     scoped = frame[
         frame["party"].isin(["D", "R"]) & frame["chamber"].isin(["house", "senate"])
     ]
     for row in scoped.itertuples(index=False):
-        key = (int(row.congress), row.chamber, row.party)
+        key = tuple(getattr(row, name) for name in dimensions)
         if key in seen:
             raise ValueError(f"Duplicate aggregate identity: {key}")
         seen.add(key)
@@ -300,6 +306,9 @@ def audit(files, output, *, mode, daily=None, congress=None):
         ).hexdigest(),
         "member_scorer_sha256": hashlib.sha256(
             (ROOT / "analysis/speakers.py").read_bytes()
+        ).hexdigest(),
+        "context_exclusions_sha256": hashlib.sha256(
+            (LEXDIR / "profanity_contexts.json").read_bytes()
         ).hexdigest(),
         "reference": "Original normalized transcript words, never website display labels",
         "stored_comparison_performed": daily is not None,

@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import importlib.util
 import ast
+import hashlib
 import json
 import re
 import subprocess
@@ -36,6 +37,36 @@ def _load_build_site():
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module
+
+
+@pytest.mark.parametrize("changed", [
+    "analysis/score/scorers.py",
+    "analysis/score/lexicons/profanity_contexts.json",
+])
+def test_historical_publication_rejects_an_audit_from_before_policy_changes(tmp_path, changed):
+    module = _load_build_site()
+    paths = {
+        "scorer_sha256": "analysis/score/scorers.py",
+        "codebook_sha256": "analysis/score/lexicons/profanity.txt",
+        "ingester_sha256": "analysis/ingest/govinfo.py",
+        "pdf_ingester_sha256": "analysis/ingest/govinfo_pdf.py",
+        "member_scorer_sha256": "analysis/speakers.py",
+    }
+    summary = {"turns_checked": 1000, "scorer_disagreements": 0}
+    for key, name in paths.items():
+        target = tmp_path / name
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text("original policy\n")
+        summary[key] = hashlib.sha256(target.read_bytes()).hexdigest()
+    audit = tmp_path / "audit/historical/summary.json"
+    audit.parent.mkdir(parents=True)
+    audit.write_text(json.dumps(summary))
+    contexts = tmp_path / "analysis/score/lexicons/profanity_contexts.json"
+    contexts.write_text('{"version":1,"records":[]}')
+    module.validate_historical_audit(tmp_path)
+    (tmp_path / changed).write_text('{"version":1,"records":[{"verified":"source correction"}]}')
+    with pytest.raises(ValueError, match="rescore the retained original turns"):
+        module.validate_historical_audit(tmp_path)
 
 
 def test_chart_hover_uses_nearest_visible_observation_and_containing_bar():

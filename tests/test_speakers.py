@@ -18,6 +18,7 @@ import pytest
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
+from analysis.score.scorers import Scorers  # noqa: E402
 from analysis.speakers import (  # noqa: E402
     LANGUAGE_METRICS,
     PROFANITY_TERM_FAMILIES,
@@ -204,6 +205,23 @@ def test_reviewed_telephone_transcript_preserves_own_words_and_does_not_double_c
         "Kohl: This is damn serious. The Berlin Wall did not come down in a day.",
         "a-different-original-source",
     )[1] == ""
+
+
+def test_source_reviewed_external_quote_preserves_the_members_own_use_of_the_same_word(turn_file):
+    text = (
+        "Another member said, Spare me the\nbullshit about constitutional rights. "
+        "So pardon us for disagreeing. That is no bullshit; we will."
+    )
+    counts = speaker_counts([turn_file([_row(
+        turn_id="crec:CREC-2022-06-09-pt1-PgH5415#33",
+        bioguide="A000001", text=text,
+    )])])
+    assert counts.iloc[0]["profanity_hits"] == 1
+    assert counts.iloc[0]["profanity_quoted_hits"] == 1
+    assert counts.iloc[0]["words"] == Scorers().score_turn(
+        "Another member said, So pardon us for disagreeing. That is no bullshit; we will."
+    )["n_words"]
+    assert mask_quotations(text, "another-source")[1] == ""
 
 
 def test_turns_without_a_bioguide_are_dropped(turn_file):

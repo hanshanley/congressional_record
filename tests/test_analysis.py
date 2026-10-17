@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import sys
 from pathlib import Path
 
@@ -622,6 +623,14 @@ def test_phrase_boundaries_agree_with_whole_token_counting(text, expected):
     "Mercury affects waterfowl such ass loons.",
     "The wind-fueled blaze damned more than 30 buildings.",
     "If the ox or the ass were in the pit, pull him out.",
+    "Communities are unable to asses or challenge the recommendations.",
+    "Did the Pentagon accurately asses both bases?",
+    "The EPA ignored demands to asses such injuries.",
+    "The program is evaluated to asses its effectiveness.",
+    "The documents help them asses their own effectiveness.",
+    "He was a pilot of a B-17, the Damn Yankee, in World War II.",
+    "They teamed up with Michael Oxley ass the Sarbanes-Oxley legislation.",
+    "These people and the battered bastards of Bastogne died for freedom.",
 ])
 def test_verified_literal_and_transcription_contexts_are_not_curses(text):
     scorer = Scorers()
@@ -635,11 +644,60 @@ def test_verified_literal_and_transcription_contexts_are_not_curses(text):
     ("The battling bastards of Bataan fought those bastards.", {"bastards": 1}),
     ("They hunt buggers and run these buggers out of business.", {"buggers": 2}),
     ("He was riding a jackass. Stop being a jackass.", {"jackass": 1}),
+    ("I will not defer to asses or fools, or to asses such as those.", {"asses": 2}),
+    ("A B-17, the Damn Yankee, fought in the war. We damn Yankees remember it.", {"damn": 1}),
+    ("The battered bastards of Bastogne fought those bastards.", {"bastards": 1}),
+    ("They worked with Michael Oxley ass the Sarbanes-Oxley bill. My ass.", {"ass": 1}),
 ])
 def test_new_literal_filters_preserve_separate_actual_curses(text, expected):
     scorer = Scorers()
     assert scorer.profanity_term_counts(text) == expected
     assert scorer.score_turn(text)["profanity_hits"] == sum(expected.values())
+
+
+def test_content_addressed_ocr_review_preserves_other_curses_and_word_denominators():
+    text = "The final cunt was twenty votes. That bastard lied."
+    start = text.index("cunt")
+    review = {
+        "text_sha256": hashlib.sha256(text.encode()).hexdigest(),
+        "start": start, "end": start + 4, "matched_text": "cunt",
+        "form": "cunt", "tier": "strong", "source_turn_id": "hein_bound:example",
+        "reason": "The vote-count noun is an OCR error, not a vulgar word.",
+    }
+    baseline = Scorers(profanity_contexts=[]).score_turn(text)
+    scorer = Scorers(profanity_contexts=[review])
+    corrected = scorer.score_turn(text)
+    assert scorer.profanity_term_counts(text) == {"bastard": 1}
+    assert corrected["profanity_hits"] == corrected["profanity_strong"] == 1
+    assert corrected["n_words"] == baseline["n_words"]
+    assert corrected["formal_courtesy_hits"] == baseline["formal_courtesy_hits"]
+    assert corrected["slur_hits"] == baseline["slur_hits"]
+    assert scorer.signal_spans(text)["profanity"] == [(text.index("bastard"), text.index("bastard") + 7)]
+    assert scorer.score_turn("That is a cunt.")["profanity_hits"] == 1
+    with pytest.raises(ValueError, match="no longer matches"):
+        Scorers(profanity_contexts=[{**review, "start": start + 1, "end": start + 5}]).score_turn(text)
+
+
+def test_reviewed_original_offsets_remain_correct_when_casefolding_expands_earlier_text():
+    from scripts.audit_profanity_families import ReferenceMatcher, inspect_turn
+
+    text = "İİİİİ cunt is an OCR error. That bastard lied."
+    start = text.index("cunt")
+    scorer = Scorers(profanity_contexts=[{
+        "text_sha256": hashlib.sha256(text.encode()).hexdigest(),
+        "start": start, "end": start + 4, "matched_text": "cunt",
+        "form": "cunt", "tier": "strong", "source_turn_id": "hein_bound:example",
+        "reason": "Verified source-context fixture.",
+    }])
+    row = {
+        "turn_id": "hein_bound:example", "text": text, "party": "D",
+        "chamber": "house", "bioguide": "",
+    }
+    counts, evidence, mismatch = inspect_turn(row, ReferenceMatcher(), scorer, "aggregate")
+    assert mismatch is None
+    assert counts == {"bastard": 1}
+    assert evidence[0]["disposition"] == "literal_context_exclusion"
+    assert scorer.profanity_term_counts(text) == counts
 
 
 def test_scorer_still_excludes_ambiguous_profanity_candidates() -> None:

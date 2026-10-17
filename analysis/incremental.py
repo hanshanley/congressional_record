@@ -108,7 +108,9 @@ def config_fingerprint(
     digest.update(f"procedural={int(include_procedural)}".encode("utf-8"))
 
     lexicon_dir = Path(scorers_module.LEXDIR)
-    for path in sorted(lexicon_dir.glob("*.txt")):
+    for path in sorted(
+        path for path in lexicon_dir.iterdir() if path.suffix in {".txt", ".json"}
+    ):
         digest.update(path.name.encode("utf-8"))
         digest.update(hashlib.sha256(path.read_bytes()).digest())
 

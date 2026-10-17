@@ -179,6 +179,19 @@ def test_scoring_flags_are_part_of_the_fingerprint():
     assert config_fingerprint(True) != config_fingerprint(False)
 
 
+def test_reviewed_context_data_changes_invalidate_cached_counts(monkeypatch, tmp_path):
+    from analysis.score import scorers as scorers_module
+
+    lex = tmp_path / "lex"
+    lex.mkdir()
+    path = lex / "profanity_contexts.json"
+    path.write_text('{"version":1,"records":[]}')
+    monkeypatch.setattr(scorers_module, "LEXDIR", lex)
+    baseline = config_fingerprint(False)
+    path.write_text('{"version":1,"records":[{"text_sha256":"changed"}]}')
+    assert config_fingerprint(False) != baseline
+
+
 def test_display_only_changes_do_not_invalidate_the_cache(tmp_path):
     # A metric's title is display-only. Hashing whole modules meant renaming a chart
     # label invalidated all 89 shards and forced a ~74 minute rescore that could not
