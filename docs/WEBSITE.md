@@ -71,7 +71,8 @@ downloading the entire corpus again. A normal historical rebuild now audits the 
 corpus before rebuilding metrics and retains publication inputs for recovery.
 Replacement partitions must reconcile to every original-source accepted form before
 being saved. Recovery artifacts also retain the full historical metrics and coverage
-tables, not only the rendered figures.
+tables, not only the rendered figures. Rebuild the long-run JSON from those checked
+metrics during recovery: the committed JSON is not refreshed until the publication step.
 For Congresses 115 onward, candidate runs also emit `aggregate-congress-N` metrics.
 These are separately audited with the aggregate quotation policy and reconciled by
 party, chamber, and profanity tier, using the same downloaded original turns. They are
