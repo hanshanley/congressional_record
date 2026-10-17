@@ -377,6 +377,25 @@ def test_pdf_non_direct_and_small_print_markers_cannot_impersonate_members(monke
     assert jones[0]["text"] == "Real floor remarks."
 
 
+def test_pdf_member_can_resume_after_a_small_print_quote_without_a_new_marker(monkeypatch):
+    _mock_roster(monkeypatch)
+    monkeypatch.setattr("analysis.ingest.govinfo_pdf._paragraphs", lambda *_: [
+        _Paragraph("Mr. SMITH. Let me read the letter.", direct=True),
+        _Paragraph("The letter contains fucking and bullshit.", printed=True),
+        _Paragraph("Now I resume my own damn remarks.", direct=True),
+    ])
+    rows = list(_section_turns(
+        b"layout covered separately", "CREC-2026-09-16-house",
+        "2026-09-16", 119, "house",
+    ))
+    eligible = [row for row in rows if row["bioguide"] and not row["is_procedural"]]
+    assert [row["text"] for row in eligible] == [
+        "Let me read the letter.", "Now I resume my own damn remarks.",
+    ]
+    assert all(row["bioguide"] == "S1" for row in eligible)
+    assert any(row["is_procedural"] and "fucking" in row["text"] for row in rows)
+
+
 def test_pdf_archive_missing_a_declared_section_fails():
     pkg = "CREC-2026-09-16"
     with pytest.raises(ValueError, match="missing or unsupported house section PDF"):

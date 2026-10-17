@@ -372,6 +372,73 @@ def test_indented_inserted_letter_is_not_scored_as_floor_remarks():
     assert turns[1]["is_procedural"] and not turns[1]["bioguide"]
 
 
+def test_indented_quotes_do_not_swallow_the_members_resumed_remarks():
+    turns = list(build_turns(
+        "Mr. SMITH. Let me read the letter.\n\n"
+        "       The author used fucking and bullshit in the letter.\n"
+        "     This is still the letter, not the member speaking.\n\n"
+        "  Now I resume my own remarks. This is damn important.\n"
+        "I am not quoting the letter here.\n\n"
+        "       Another excerpt from the same letter follows.\n"
+        "     This indented line is also inserted material.\n\n"
+        "  He did one hell of a job.\n",
+        [{"name": "Smith, Member", "bioguide": "S1", "party": "D", "state": "CA"}],
+        "CREC-1994-05-25-pt1-PgS8", "1994-05-25", 103, "senate",
+    ))
+    assert len(turns) == 5
+    spoken = [turn for turn in turns if not turn["is_procedural"]]
+    inserted = [turn for turn in turns if turn["is_procedural"]]
+    assert all(turn["bioguide"] == "S1" for turn in spoken)
+    assert all(not turn["bioguide"] for turn in inserted)
+    assert len({turn["turn_id"] for turn in turns}) == len(turns)
+    counts = Scorers().profanity_term_counts(" ".join(turn["text"] for turn in spoken))
+    assert counts == {"damn": 1, "hell of a": 1}
+    assert "fucking" not in " ".join(turn["text"] for turn in spoken)
+
+
+def test_missing_period_before_explicit_floor_address_starts_a_new_member_turn():
+    turns = list(build_turns(
+        "Mr. GOSS. I include this chart in the Record.\n\n"
+        "       The first printed row in the chart.\n"
+        "     The second printed row in the chart.\n\n"
+        "  Mr. SOLOMON Mr. Speaker, I thank the gentleman for yielding.\n"
+        "  The rest of the House be damned.\n",
+        [
+            {"name": "Goss, Porter", "bioguide": "G1", "party": "R", "state": "FL"},
+            {"name": "Solomon, Gerald", "bioguide": "S1", "party": "R", "state": "NY"},
+        ],
+        "CREC-1994-10-05-pt1-PgH14", "1994-10-05", 103, "house",
+    ))
+    matched = [turn for turn in turns if "damned" in turn["text"]]
+    assert len(matched) == 1
+    assert matched[0]["speaker_name"] == "Mr. SOLOMON"
+    assert matched[0]["bioguide"] == "S1"
+    assert not matched[0]["is_procedural"]
+
+
+def test_short_resumed_remarks_deduplicate_only_with_the_same_original_segment():
+    from analysis.ingest.govinfo_bulk import _turn_fingerprint
+
+    def resumed(prefix):
+        turns = list(build_turns(
+            f"Mr. SMITH. {prefix}\n\n"
+            "       Inserted letter with a first line.\n"
+            "     Inserted letter with a second line.\n\n"
+            "  This is damn wrong.\n",
+            [{"name": "Smith, Member", "bioguide": "S1", "party": "D", "state": "CA"}],
+            "CREC-2025-01-06-pt1-PgH1", "2025-01-06", 119, "house",
+        ))
+        return turns[-1]
+
+    first = resumed("Substantive remarks " * 50)
+    duplicate = resumed("Substantive remarks " * 50)
+    separate = resumed("A different set of substantive remarks " * 50)
+    assert len(first["text"]) < 500
+    assert _turn_fingerprint(first)
+    assert _turn_fingerprint(first) == _turn_fingerprint(duplicate)
+    assert _turn_fingerprint(first) != _turn_fingerprint(separate)
+
+
 def test_single_centered_editorial_heading_does_not_hide_floor_remarks():
     turns = list(build_turns(
         "Mr. SMITH. First topic.\n\n"
@@ -489,6 +556,18 @@ def test_phrase_boundaries_agree_with_whole_token_counting(text, expected):
     scorer = Scorers()
     assert scorer.profanity_term_counts(text) == expected
     assert scorer.score_turn(text)["profanity_hits"] == sum(expected.values())
+
+
+@pytest.mark.parametrize("text", [
+    "William the Bastard brought feudalism to England.",
+    "We need information to asses the fees established by the Commission.",
+    "The workers were building this damn, and needed doctors.",
+])
+def test_verified_literal_and_transcription_contexts_are_not_curses(text):
+    scorer = Scorers()
+    assert scorer.score_turn(text)["profanity_hits"] == 0
+    assert scorer.profanity_term_counts(text) == {}
+    assert scorer.signal_spans(text)["profanity"] == []
 
 
 def test_scorer_still_excludes_ambiguous_profanity_candidates() -> None:

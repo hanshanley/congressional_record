@@ -90,25 +90,47 @@ jobs:
             --end "$(date -u +%F)" \
             --workers 12
 
+      - name: Audit every profanity family against original historical transcripts
+        run: |
+          python scripts/audit_profanity_families.py \
+            --turns data/interim/turns \
+            --mode aggregate \
+            --out audit/historical
+
+      - name: Retain historical match evidence and disagreements
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: profanity-audit-historical
+          path: audit/
+          if-no-files-found: error
+          retention-days: 30
+
       - name: Rebuild all aggregate language metrics
         if: ${{ !inputs.audit_only }}
         run: |
           python -m analysis.run aggregate --full
           python -m analysis.run viz
 
+      - name: Retain checked historical publication inputs for recovery
+        if: ${{ !inputs.audit_only }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: audited-historical-publication-inputs
+          path: |
+            data/site/long_run_language.json
+            outputs/figures/
+          if-no-files-found: error
+          retention-days: 30
+
       - name: Commit rebuilt historical data
         if: ${{ !inputs.audit_only }}
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "hanshanley"
+          git config user.email "hwahhanley@gmail.com"
           git add data/site/long_run_language.json outputs/figures
-          historical_commit=false
           if ! git diff --cached --quiet; then
-            git commit \
-              -m "Rebuild historical language with v4 codebook" \
-              -m "Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>" \
-              -m "Copilot-Session: 20de2f9c-02b3-4617-b28a-82ccd88b0490"
-            historical_commit=true
+            git commit -m "Rebuild audited historical language"
           fi
 
           # Rebase the data-only commit before generating the site so concurrent
@@ -119,32 +141,8 @@ jobs:
           python scripts/build_term_graphs.py
           git add -A data/site site outputs/figures/profanity_terms
           if ! git diff --cached --quiet; then
-            if [[ "$historical_commit" == true ]]; then
-              git commit --amend --no-edit
-            else
-              git commit \
-                -m "Refresh historical language site" \
-                -m "Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>" \
-                -m "Copilot-Session: 20de2f9c-02b3-4617-b28a-82ccd88b0490"
-            fi
+            git commit -m "Refresh audited historical language site"
           fi
           if [[ "$(git rev-list --count origin/master..HEAD)" -gt 0 ]]; then
             git push
           fi
-
-      - name: Audit every profanity family against original historical transcripts
-        if: ${{ inputs.audit_only }}
-        run: |
-          python scripts/audit_profanity_families.py \
-            --turns data/interim/turns \
-            --mode aggregate \
-            --out audit/historical
-
-      - name: Retain historical match evidence and disagreements
-        if: ${{ always() && inputs.audit_only }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: profanity-audit-historical
-          path: audit/
-          if-no-files-found: error
-          retention-days: 30

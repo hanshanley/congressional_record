@@ -21,10 +21,11 @@ import pyarrow.parquet as pq  # noqa: E402
 
 from analysis.inputs import select_turn_files  # noqa: E402
 from analysis.score.scorers import (  # noqa: E402
-    LEXDIR, Scorers, _MILD_PROFANITY_EXCLUSIONS,
+    LEXDIR, Scorers, _MILD_PROFANITY_EXCLUSIONS, _STRONG_PROFANITY_EXCLUSIONS,
 )
 from analysis.speakers import (  # noqa: E402
     PROFANITY_TERM_FAMILIES, _QUOTE_RE, load_daily, parse_profanity_terms,
+    save_daily, speaker_counts,
 )
 
 LOG = logging.getLogger("audit_profanity_families")
@@ -103,7 +104,10 @@ def congress_window(congress, today):
 def inspect_turn(row, matcher, scorer, mode):
     text = row.get("text") or ""
     quotes = [match.span() for match in _QUOTE_RE.finditer(text)]
-    blocked = [match.span() for match in _MILD_PROFANITY_EXCLUSIONS.finditer(text.lower())]
+    blocked = {
+        "mild": [match.span() for match in _MILD_PROFANITY_EXCLUSIONS.finditer(text.lower())],
+        "strong": [match.span() for match in _STRONG_PROFANITY_EXCLUSIONS.finditer(text.lower())],
+    }
     eligible = (
         not row.get("is_procedural")
         and row.get("chamber") in {"house", "senate"}
@@ -118,7 +122,7 @@ def inspect_turn(row, matcher, scorer, mode):
             production_text[start:end] = " " * (end - start)
         production_text = "".join(production_text)
     for start, end, form, tier in matcher.matches(text):
-        if tier == "mild" and overlaps((start, end), blocked):
+        if overlaps((start, end), blocked[tier]):
             disposition = "literal_context_exclusion"
         elif not eligible:
             disposition = (
@@ -188,6 +192,7 @@ def audit(files, output, *, mode, daily=None, congress=None):
         stored = {}
         stored_keys = set()
         scoped = daily if congress is None else daily[daily["congress"] == congress]
+        scoped = scoped[scoped["chamber"].isin(["house", "senate"])]
         for row in scoped.itertuples(index=False):
             key = (row.bioguide, row.date, row.chamber)
             if key in stored_keys:
@@ -210,6 +215,9 @@ def audit(files, output, *, mode, daily=None, congress=None):
         "audited_utc": dt.datetime.now(dt.timezone.utc).isoformat(),
         "codebook_sha256": hashlib.sha256((LEXDIR / "profanity.txt").read_bytes()).hexdigest(),
         "scorer_sha256": hashlib.sha256((LEXDIR.parent / "scorers.py").read_bytes()).hexdigest(),
+        "ingester_sha256": hashlib.sha256(
+            (ROOT / "analysis/ingest/govinfo.py").read_bytes()
+        ).hexdigest(),
         "reference": "Original normalized transcript words, never website display labels",
         "stored_comparison_performed": daily is not None,
         "families": {
@@ -244,10 +252,16 @@ def main(argv=None):
     parser.add_argument("--mode", choices=["members", "aggregate"], default="members")
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--daily", type=Path, default=ROOT / "data/site/speaker_daily")
+    parser.add_argument(
+        "--candidate-out", type=Path,
+        help="Save independently checked replacement partitions as artifacts; never publish them.",
+    )
     args = parser.parse_args(argv)
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
     if bool(args.turns) == bool(args.fetch_congress):
         parser.error("provide exactly one of --turns or --fetch-congress")
+    if args.candidate_out and (not args.fetch_congress or args.mode != "members"):
+        parser.error("--candidate-out requires --fetch-congress with --mode members")
     daily = load_daily(args.daily) if args.mode == "members" and args.fetch_congress else None
     if args.mode == "members" and args.fetch_congress and (daily is None or daily.empty):
         parser.error("the stored member table is required for a full source comparison")
@@ -276,9 +290,18 @@ def main(argv=None):
                 select_turn_files(root / "turns"), args.out,
                 mode=args.mode, daily=daily, congress=congress,
             )
+            if args.candidate_out and not summary["scorer_disagreements"]:
+                candidate = speaker_counts(select_turn_files(root / "turns"))
+                candidate = candidate[candidate["congress"] == congress]
+                if candidate.empty:
+                    raise ValueError("No member rows are available for the candidate partition")
+                save_daily(candidate, args.candidate_out)
     else:
         summary = audit(select_turn_files(args.turns), args.out, mode=args.mode)
-    return int(bool(summary["scorer_disagreements"] or summary["stored_member_day_differences"]))
+    return int(bool(
+        summary["scorer_disagreements"]
+        or (summary["stored_member_day_differences"] and not args.candidate_out)
+    ))
 
 
 if __name__ == "__main__":

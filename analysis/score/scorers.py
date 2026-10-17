@@ -28,6 +28,11 @@ _MILD_PROFANITY_EXCLUSIONS = re.compile(
     r"|\bkilled\s+a\s+damn\s+in\b"
     r"|\bmy\s+damn\s+sin\b"
     r"|\bcrap\s+game\b"
+    r"|\bbuilding\s+this\s+damn(?=\s*[,.;:])"
+)
+_STRONG_PROFANITY_EXCLUSIONS = re.compile(
+    r"\bwilliam\s+the\s+bastard\b"
+    r"|\bto\s+asses\s+(?:the|a|an)\b"
 )
 # Slur forms that double as other words. A slur span overlapping one of these is not counted.
 _SLUR_EXCLUSIONS = re.compile(
@@ -282,6 +287,13 @@ class Scorers:
             if not any(span[0] < end and start < span[1] for start, end in blocked)
         ]
 
+    def _strong_profanity_spans(self, low: str) -> List[Tuple[int, int]]:
+        blocked = [match.span() for match in _STRONG_PROFANITY_EXCLUSIONS.finditer(low)]
+        return [
+            span for span in self.profanity["strong"].find_spans(low)
+            if not any(span[0] < end and start < span[1] for start, end in blocked)
+        ]
+
     def _slur_count(self, tokens: Counter, low: str) -> int:
         count = self.slurs.count(tokens, low)
         # Exclusion contexts are rare, so only pay for span matching when a slur matched.
@@ -293,7 +305,7 @@ class Scorers:
         return {
             "formal_courtesy": self.formal_courtesy.find_spans(low),
             "profanity": sorted(
-                self._mild_profanity_spans(low) + self.profanity["strong"].find_spans(low)
+                self._mild_profanity_spans(low) + self._strong_profanity_spans(low)
             ),
             "slur": self._slur_spans(low),
         }
@@ -306,7 +318,7 @@ class Scorers:
         are counted separately and never as profanity.
         """
         low = (text or "").lower()
-        strong = self.profanity["strong"].find_spans(low)
+        strong = self._strong_profanity_spans(low)
         return Counter(
             " ".join(low[start:end].split())
             for start, end in sorted(self._mild_profanity_spans(low) + strong)
@@ -321,6 +333,8 @@ class Scorers:
             - len(_MILD_PROFANITY_EXCLUSIONS.findall(low)),
         )
         strong = self.profanity["strong"].count(tokens, low)
+        if strong and _STRONG_PROFANITY_EXCLUSIONS.search(low):
+            strong = len(self._strong_profanity_spans(low))
         return {
             "n_words": sum(tokens.values()),
             "formal_courtesy_hits": self.formal_courtesy.count(tokens, low),

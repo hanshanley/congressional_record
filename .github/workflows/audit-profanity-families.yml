@@ -7,6 +7,10 @@ on:
         description: "JSON array of Congresses to audit (allows targeted recovery)"
         type: string
         default: "[103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119]"
+      save_candidates:
+        description: "Retain checked replacement partitions as artifacts for review, without publishing"
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -37,10 +41,24 @@ jobs:
       - name: Check original transcripts against every family and stored counts
         env:
           AUDIT_CONGRESS: ${{ matrix.congress }}
+          SAVE_CANDIDATES: ${{ inputs.save_candidates }}
         run: |
+          candidate_args=()
+          if [[ "$SAVE_CANDIDATES" == "true" ]]; then
+            candidate_args=(--candidate-out audit/candidates)
+          fi
           python scripts/audit_profanity_families.py \
             --fetch-congress "$AUDIT_CONGRESS" \
-            --out "audit/member-$AUDIT_CONGRESS"
+            --out "audit/member-$AUDIT_CONGRESS" \
+            "${candidate_args[@]}"
+      - name: Retain checked candidate partition without publishing it
+        if: ${{ success() && inputs.save_candidates }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: speaker-congress-${{ matrix.congress }}
+          path: audit/candidates/congress_${{ matrix.congress }}.parquet
+          if-no-files-found: error
+          retention-days: 30
       - name: Retain all match evidence, exclusions, and differences
         if: always()
         uses: actions/upload-artifact@v4

@@ -15,6 +15,7 @@ Segmentation is heuristic; procedural/chair turns are flagged and get party "oth
 from __future__ import annotations
 
 import json
+import hashlib
 import logging
 import os
 import tempfile
@@ -55,6 +56,10 @@ _PROCEDURAL_MARKER = (
 # Start-of-turn speaker markers at the beginning of a line.
 _SPEAKER_RE = re.compile(
     rf"(?m)^[ \t]*({_MEMBER_MARKER}|{_PROCEDURAL_MARKER})\.\s",
+)
+_MISSING_PERIOD_SPEAKER_RE = re.compile(
+    rf"(?m)^[ \t]*({_MEMBER_MARKER})"
+    r"(?=[ \t]+(?:Mr\.[ \t]+|Madam[ \t]+)(?:Speaker|President|Chairman)\b)[ \t]+"
 )
 _PROCEDURAL_SPEAKER = re.compile(r"^(the\s+)?(speaker|presiding|president|acting|chief|clerk|chair)", re.IGNORECASE)
 _PAGE_MARKER_RE = re.compile(r"\[\[Page [^\]]+\]\]")
@@ -271,6 +276,28 @@ def _split_inserted_material(body: str) -> Tuple[str, str]:
     return body[:match.start()].rstrip(), body[match.start():].lstrip()
 
 
+def _material_sections(body: str) -> Iterator[Tuple[str, bool]]:
+    """Keep separate indented quotations and the member's resumed floor paragraphs."""
+    remaining = body
+    while remaining:
+        spoken, inserted = _split_inserted_material(remaining)
+        if spoken:
+            yield spoken, False
+        if not inserted:
+            return
+        if _INSERTED_MATERIAL_RE.match(inserted):
+            yield inserted, True
+            return
+        resumed = re.search(
+            r"(?m)^ {2}(?=[A-Z][A-Za-z'\u2019]*(?:[ \t]|[.,:;!?]))", inserted,
+        )
+        if resumed is None:
+            yield inserted, True
+            return
+        yield inserted[:resumed.start()].rstrip(), True
+        remaining = inserted[resumed.start():]
+
+
 def build_turns(
     text: str,
     members: List[Dict[str, str]],
@@ -308,47 +335,44 @@ def build_turns(
             non_spoken or submitted
             or (bool(marker) and bool(_PROCEDURAL_SPEAKER.match(marker)))
         )
-        inserted = ""
-        if not procedural:
-            body, inserted = _split_inserted_material(body)
         info: Dict[str, str] = {}
         if marker and not procedural:
             candidates = _member_candidates(marker, index)
             info = candidates[0] if len(candidates) == 1 else {}
             if member_lookup and len(candidates) <= 1 and not info.get("bioguide"):
                 info = member_lookup(marker)
-        if body:
-            party = normalize_party(info.get("party")) if info else "other"
+        sections = [(body, False)] if procedural else _material_sections(body)
+        source_segment = " ".join(body.split())
+        source_fingerprint = hashlib.sha256(source_segment.encode("utf-8")).hexdigest()
+        spoken_index = inserted_index = 0
+        for section_index, (section, inserted) in enumerate(sections):
+            if not section:
+                continue
+            if inserted:
+                suffix = "-inserted" + (str(inserted_index) if inserted_index else "")
+                inserted_index += 1
+            else:
+                suffix = f"-resumed-{spoken_index}" if spoken_index else ""
+                spoken_index += 1
+            attributed = info if not inserted else {}
+            party = normalize_party(attributed.get("party")) if attributed else "other"
             yield {
-                "turn_id": f"crec:{gid}#{i}",
+                "turn_id": f"crec:{gid}#{i}{suffix}",
                 "source": "govinfo",
                 "date": date,
                 "congress": congress,
                 "chamber": chamber,
-                "speaker_name": marker or info.get("name", ""),
+                "speaker_name": "Inserted material" if inserted else marker or info.get("name", ""),
                 "speaker_id": "",
-                "bioguide": info.get("bioguide", ""),
+                "bioguide": attributed.get("bioguide", ""),
                 "party": party,
-                "state": info.get("state", ""),
-                "word_count": len(body.split()),
-                "is_procedural": procedural,
-                "text": body,
-            }
-        if inserted:
-            yield {
-                "turn_id": f"crec:{gid}#{i}-inserted",
-                "source": "govinfo",
-                "date": date,
-                "congress": congress,
-                "chamber": chamber,
-                "speaker_name": "Inserted material",
-                "speaker_id": "",
-                "bioguide": "",
-                "party": "other",
-                "state": "",
-                "word_count": len(inserted.split()),
-                "is_procedural": True,
-                "text": inserted,
+                "state": attributed.get("state", ""),
+                "word_count": len(section.split()),
+                "is_procedural": procedural or inserted,
+                "text": section,
+                "_source_segment_fingerprint": source_fingerprint,
+                "_source_segment_chars": len(source_segment),
+                "_source_fragment": section_index,
             }
 
 
@@ -381,10 +405,11 @@ def _segment(text: str) -> List[Tuple[str, str]]:
 
     Any preamble before the first marker is returned with an empty speaker.
     """
-    marks = [
-        match for match in _SPEAKER_RE.finditer(text)
+    marks = sorted([
+        match for pattern in (_SPEAKER_RE, _MISSING_PERIOD_SPEAKER_RE)
+        for match in pattern.finditer(text)
         if _is_floor_marker(match[1])
-    ]
+    ], key=lambda match: match.start())
     if not marks:
         return [("", text.strip())]
     segments: List[Tuple[str, str]] = []

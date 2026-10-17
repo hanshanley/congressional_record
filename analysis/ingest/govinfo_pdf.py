@@ -14,6 +14,7 @@ import pdfplumber
 
 from analysis.ingest.govinfo import (
     _SPEAKER_RE,
+    _MISSING_PERIOD_SPEAKER_RE,
     _split_inserted_material,
     build_turns,
     is_stage_direction,
@@ -179,6 +180,8 @@ def _section_turns(
     submitted = False
     block = 0
     floor_markers = 0
+    active_marker = None
+    hard_printing = False
 
     def flush() -> Iterator[dict]:
         nonlocal block
@@ -207,6 +210,8 @@ def _section_turns(
         if paragraph.kind == "boundary":
             yield from flush()
             attributed = False
+            active_marker = None
+            hard_printing = True
             if paragraph.text:
                 current.append(paragraph.text)
             continue
@@ -219,6 +224,8 @@ def _section_turns(
                 yield from flush()
                 attributed = False
                 printing = is_submitted
+                active_marker = None
+                hard_printing = True
             submitted = is_submitted
             text = text.strip()
             if not text:
@@ -227,21 +234,36 @@ def _section_turns(
                 yield from flush()
                 attributed = False
                 printing = True
+                active_marker = None
+                hard_printing = True
                 current.append(text)
                 continue
             if submitted:
                 current.append(text)
                 continue
-            marker = _SPEAKER_RE.match(text + " ")
-            if paragraph.direct and marker and chamber in {"house", "senate"}:
+            marker = (
+                _MISSING_PERIOD_SPEAKER_RE.match(text + " ")
+                or _SPEAKER_RE.match(text + " ")
+            )
+            if paragraph.direct and not paragraph.printed and marker and chamber in {"house", "senate"}:
                 yield from flush()
                 attributed = True
                 printing = False
+                active_marker = marker[1]
+                hard_printing = False
                 floor_markers += 1
             elif paragraph.printed or marker or _ROLLCALL.match(text):
                 yield from flush()
                 attributed = False
                 printing = True
+                if _ROLLCALL.match(text) or (marker and not paragraph.printed):
+                    active_marker = None
+                    hard_printing = True
+            elif paragraph.direct and printing and active_marker and not hard_printing:
+                yield from flush()
+                attributed = True
+                printing = False
+                current.append(f"{active_marker}.")
             spoken, inserted = _split_inserted_material(text)
             if inserted:
                 if spoken:
@@ -249,6 +271,8 @@ def _section_turns(
                 yield from flush()
                 attributed = False
                 printing = True
+                active_marker = None
+                hard_printing = True
                 current.append(inserted)
             else:
                 current.append(text)

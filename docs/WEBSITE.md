@@ -42,6 +42,20 @@ checks and evidence for contextual review, not an automatic semantic certificati
 every matched word is an intentionally uttered curse. Website censorship is display-only
 and is never the reference text for counting.
 
+The context review also checks transcription homographs and speech segmentation. Narrow,
+verified literal contexts are excluded, and indented quotations no longer discard the
+member's own resumed floor paragraphs. A missing surname period is recognized only when
+followed by an explicit floor address; identities are still resolved from source metadata
+or the dated roster, never guessed. Short recovered fragments retain their original-segment
+identity for overlap deduplication.
+
+Run the source audit with `save_candidates: true` to retain independently checked
+`speaker-congress-N` partitions as artifacts. This does not modify published data.
+After reviewing all scopes and matching the audited rule hashes, the existing backfill
+workflow's `source_run_id` recovery input can publish those saved partitions without
+downloading the entire corpus again. A normal historical rebuild now audits the original
+corpus before rebuilding metrics and retains publication inputs for recovery.
+
 The homepage, published at <https://www.themarginoferror.com/congressional_profanity/>, leads
 with interactive long-run panels for formal courtesy, profanity, and slurs. Each panel compares Democrats with Republicans from 1873 to the
 present and includes visible party controls, direct end labels, hover/focus values, and a

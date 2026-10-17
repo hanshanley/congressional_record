@@ -64,6 +64,9 @@ def test_audit_preserves_the_raw_word_and_flags_incorrect_stored_counts(tmp_path
     daily = pd.DataFrame([{
         "bioguide": "A", "date": "2025-03-01", "chamber": "house",
         "congress": 119, "profanity_hits": 1, "profanity_terms": '{"damn":1}',
+    }, {
+        "bioguide": "B", "date": "2025-03-01", "chamber": "extensions",
+        "congress": 119, "profanity_hits": 1, "profanity_terms": '{"crap":1}',
     }])
     out = tmp_path / "audit"
     summary = audit([path], out, mode="members", daily=daily, congress=119)

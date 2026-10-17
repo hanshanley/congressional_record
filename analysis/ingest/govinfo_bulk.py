@@ -130,6 +130,15 @@ def _package_congress(mods_bytes: bytes) -> int:
 
 def _turn_fingerprint(turn: Dict[str, Any]) -> str:
     """Stable fingerprint for long turns duplicated across overlapping granules."""
+    source_fingerprint = turn.get("_source_segment_fingerprint")
+    if source_fingerprint and turn.get("_source_segment_chars", 0) >= _MIN_DEDUPE_CHARS:
+        identity = "\0".join([
+            turn.get("bioguide") or "", turn.get("speaker_name") or "",
+            turn.get("chamber") or "", "1" if turn.get("is_procedural") else "0",
+            source_fingerprint,
+            str(turn["_source_fragment"]),
+        ])
+        return hashlib.sha256(identity.encode("utf-8")).hexdigest()
     text = strip_page_markers(turn.get("text") or "")
     normalized = " ".join(text.split())
     if len(normalized) < _MIN_DEDUPE_CHARS:
