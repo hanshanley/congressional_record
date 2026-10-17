@@ -241,10 +241,29 @@ def _utility_fixture(tmp_path: Path):
         f"Mr. SCHUMER. {long_body}",
         known_members, gids["broad"], "2025-01-30", 119, "senate",
     ))
+    inserted_text = (
+        "At the appropriate place, insert the following amendment language. " * 12
+    )
+    inserted = {
+        **{name: rows[-1][name] for name in ARROW_SCHEMA.names},
+        "turn_id": f"crec:{gids['broad']}#0-inserted",
+        "speaker_name": "Inserted material",
+        "bioguide": "",
+        "party": "other",
+        "state": "",
+        "word_count": len(inserted_text.split()),
+        "is_procedural": True,
+        "text": inserted_text,
+    }
+    rows.append(inserted)
     rows.extend(build_turns(
         long_body,
         [], gids["alias"], "2025-01-30", 119, "senate",
     ))
+    rows.append({
+        **inserted,
+        "turn_id": f"crec:{gids['alias']}#0-inserted",
+    })
     rows.extend(build_turns(
         f"Mr. SCHUMER. {long_body}",
         known_members, gids["repeat"], "2025-01-30", 119, "senate",
@@ -311,6 +330,8 @@ def test_complete_source_repair_preserves_text_and_rededuplicates_overlap(tmp_pa
     assert f"crec:{gids['alias']}#0" not in by_id
     assert f"crec:{gids['broad']}#0" in by_id
     assert f"crec:{gids['repeat']}#0" in by_id
+    assert f"crec:{gids['broad']}#0-inserted" in by_id
+    assert f"crec:{gids['alias']}#0-inserted" in by_id
     assert len(repaired) == len(rows) - 1
 
     proof = json.loads((out / "continuation_repair_proof.json").read_text())
@@ -326,6 +347,18 @@ def test_complete_source_repair_preserves_text_and_rededuplicates_overlap(tmp_pa
         },
         "removed_page_range": ["S", 510, 510],
         "removed_turn_id": f"crec:{gids['alias']}#0",
+    }]
+    assert proof["preexisting_duplicate_preservations"] == [{
+        "existing_provenance": {
+            "page_range": ["S", 510, 511],
+            "turn_id": f"crec:{gids['broad']}#0-inserted",
+        },
+        "page_range": ["S", 510, 510],
+        "reason": (
+            "Strict physical overlap already existed in the immutable input and "
+            "was preserved."
+        ),
+        "turn_id": f"crec:{gids['alias']}#0-inserted",
     }]
 
 

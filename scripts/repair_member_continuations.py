@@ -361,12 +361,29 @@ def _find_kept_provenance(
     return None
 
 
+def _strict_pair_duplicate(
+    first: Dict[str, Any],
+    first_range: Tuple[str, int, int],
+    second: Dict[str, Any],
+    second_range: Tuple[str, int, int],
+) -> bool:
+    probe = _TurnDeduplicator()
+    probe.duplicate(first, first_range)
+    return probe.duplicate(second, second_range)
+
+
 def _prepare_changes(
     files: List[Path],
     resolved: Dict[str, Dict[str, str]],
     metadata: Dict[str, Dict[str, Dict[str, Any]]],
     scoped_congress: int,
-) -> Tuple[Dict[str, Dict[str, Any]], set, List[Dict[str, Any]], List[Dict[str, Any]]]:
+) -> Tuple[
+    Dict[str, Dict[str, Any]],
+    set,
+    List[Dict[str, Any]],
+    List[Dict[str, Any]],
+    List[Dict[str, Any]],
+]:
     packages = {gid[:15] for gid in resolved}
     package_rows: Dict[str, List[Tuple[int, Dict[str, Any]]]] = defaultdict(list)
     ordinal = 0
@@ -380,8 +397,11 @@ def _prepare_changes(
     changes = []
     removals = set()
     removal_proof = []
+    preserved_preexisting_duplicates = []
     for package, indexed_rows in sorted(package_rows.items()):
-        by_granule: Dict[str, List[Tuple[int, Dict[str, Any]]]] = defaultdict(list)
+        by_granule: Dict[
+            str, List[Tuple[int, Dict[str, Any], Dict[str, Any], bool]]
+        ] = defaultdict(list)
         for index, original in indexed_rows:
             parts = _turn_parts(original["turn_id"])
             assert parts is not None
@@ -402,7 +422,7 @@ def _prepare_changes(
                         for field in ("speaker_name", "bioguide", "party", "state")
                     },
                 })
-            by_granule[parts[1]].append((index, row))
+            by_granule[parts[1]].append((index, original, row, bool(changed)))
 
         package_metadata = metadata[package]
         ranged = {
@@ -412,23 +432,46 @@ def _prepare_changes(
         }
         ordered = [gid for gid, _ in _ordered_granules(ranged)]
         deduplicator = _TurnDeduplicator()
-        kept: List[Tuple[Dict[str, Any], Tuple[str, int, int]]] = []
+        kept: List[
+            Tuple[Dict[str, Any], Dict[str, Any], Tuple[str, int, int], bool]
+        ] = []
         for gid in ordered:
             page_range = package_metadata[gid]["page_range"]
-            for _, row in sorted(by_granule[gid], key=lambda item: item[0]):
+            for _, original, row, changed in sorted(
+                by_granule[gid], key=lambda item: item[0]
+            ):
                 if not deduplicator.duplicate(row, page_range):
-                    kept.append((row, page_range))
+                    kept.append((original, row, page_range, changed))
                     continue
-                provenance = _find_kept_provenance(row, page_range, kept)
+                provenance = _find_kept_provenance(
+                    row, page_range, [(item[1], item[2]) for item in kept]
+                )
                 if provenance is None:
                     raise AssertionError(f"Strict deduplicator lost provenance for {row['turn_id']}")
-                previous, previous_range = provenance
-                if (
-                    row["turn_id"] not in changed_rows
-                    and previous["turn_id"] not in changed_rows
+                previous_row, previous_range = provenance
+                previous = next(
+                    item for item in reversed(kept)
+                    if item[1]["turn_id"] == previous_row["turn_id"]
+                )
+                if _strict_pair_duplicate(
+                    previous[0], previous_range, original, page_range,
                 ):
+                    preserved_preexisting_duplicates.append({
+                        "turn_id": row["turn_id"],
+                        "page_range": list(page_range),
+                        "existing_provenance": {
+                            "turn_id": previous_row["turn_id"],
+                            "page_range": list(previous_range),
+                        },
+                        "reason": (
+                            "Strict physical overlap already existed in the immutable "
+                            "input and was preserved."
+                        ),
+                    })
+                    continue
+                if not changed and not previous[3]:
                     raise ValueError(
-                        "Continuation replay found an unrelated pre-existing duplicate: "
+                        "Continuation replay found an unrelated new duplicate: "
                         f"{row['turn_id']}"
                     )
                 removals.add(row["turn_id"])
@@ -436,11 +479,17 @@ def _prepare_changes(
                     "removed_turn_id": row["turn_id"],
                     "removed_page_range": list(page_range),
                     "kept_provenance": {
-                        "turn_id": previous["turn_id"],
+                        "turn_id": previous_row["turn_id"],
                         "page_range": list(previous_range),
                     },
                 })
-    return changed_rows, removals, changes, removal_proof
+    return (
+        changed_rows,
+        removals,
+        changes,
+        removal_proof,
+        preserved_preexisting_duplicates,
+    )
 
 
 def _update_text_digest(digest, row: Dict[str, Any]) -> None:
@@ -562,9 +611,13 @@ def main(argv=None) -> int:
         args.workers,
     )
     resolved, unresolved = _resolve_candidates(candidates, metadata)
-    changed_rows, removals, changes, removal_proof = _prepare_changes(
-        files, resolved, metadata, summary["congress"],
-    )
+    (
+        changed_rows,
+        removals,
+        changes,
+        removal_proof,
+        preserved_preexisting_duplicates,
+    ) = _prepare_changes(files, resolved, metadata, summary["congress"])
 
     out.mkdir(parents=True, exist_ok=True)
     (
@@ -601,6 +654,7 @@ def main(argv=None) -> int:
         "proven_granules": sorted(resolved),
         "attribution_changes": changes,
         "duplicate_removals": removal_proof,
+        "preexisting_duplicate_preservations": preserved_preexisting_duplicates,
         "unresolved_non_actionable_reasons": unresolved,
         "adjacent_congress_boundary_rows": {
             **boundary,
