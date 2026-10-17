@@ -106,6 +106,9 @@ codebook, tokenization, eligibility, or courtesy. Only then
 does it replace profanity numerators and recompute their rates using the original full-corpus
 word denominators. Its audit is explicitly a replay of the retained candidate turns, not a
 claim to have downloaded or scanned every zero-match turn again.
+Historical normalization and party rules must also remain byte-identical. Aggregate replay
+does not apply member-only quotation or attribution rules; member replay still validates
+those rules separately.
 
 The replay also permits additive source-reviewed quotation boundaries without changing
 any member-scoring logic. Each new opening cue must contain a complete profanity occurrence,

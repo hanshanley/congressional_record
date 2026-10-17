@@ -98,7 +98,7 @@ def validate_quotation_extension(before, after):
     return old != new
 
 
-def validate_rules(baseline_root, summary):
+def validate_rules(baseline_root, summary, kind="members"):
     files = {
         "scorer_sha256": "analysis/score/scorers.py",
         "codebook_sha256": "analysis/score/lexicons/profanity.txt",
@@ -117,6 +117,7 @@ def validate_rules(baseline_root, summary):
         "analysis/aggregate.py", "analysis/score/registry.py",
         "analysis/inputs.py", "analysis/ingest/schema.py", "analysis/ingest/govinfo.py",
         "analysis/ingest/govinfo_pdf.py", "analysis/ingest/govinfo_bulk.py",
+        "analysis/ingest/hein.py", "analysis/normalize/parties.py",
     ]
     unchanged.extend(
         str(path.relative_to(baseline_root))
@@ -125,9 +126,11 @@ def validate_rules(baseline_root, summary):
     for name in unchanged:
         if (baseline_root / name).read_bytes() != (ROOT / name).read_bytes():
             raise ValueError(f"Source replay cannot cover this non-profanity change: {name}")
-    quotation_extension = validate_quotation_extension(
-        baseline_root / "analysis/speakers.py", ROOT / "analysis/speakers.py",
-    )
+    quotation_extension = False
+    if kind == "members":
+        quotation_extension = validate_quotation_extension(
+            baseline_root / "analysis/speakers.py", ROOT / "analysis/speakers.py",
+        )
     before = _definitions(baseline_root / "analysis/score/scorers.py")
     after = _definitions(ROOT / "analysis/score/scorers.py")
     for name in (
@@ -279,7 +282,7 @@ def main(argv=None):
     snapshot = (args.audit / "candidate_turns.parquet").resolve()
     if pq.ParquetFile(snapshot).metadata.num_rows != summary["candidate_turns_retained"]:
         raise ValueError("Retained original source count differs from the completed audit")
-    quotation_extension = validate_rules(args.baseline_root, summary)
+    quotation_extension = validate_rules(args.baseline_root, summary, args.kind)
     args.out.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(prefix="profanity-replay-") as temporary:
         directory = Path(temporary)

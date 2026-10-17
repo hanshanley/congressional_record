@@ -1,7 +1,15 @@
+import shutil
+
 import pandas as pd
 import pytest
 
-from scripts.rescore_audited_profanity import replace_counts, validate_quotation_extension
+from scripts.rescore_audited_profanity import (
+    ROOT,
+    checksum,
+    replace_counts,
+    validate_quotation_extension,
+    validate_rules,
+)
 
 
 def _member_inputs():
@@ -103,3 +111,38 @@ def test_aggregate_replay_recomputes_rates_from_real_full_words_not_sparse_cache
     assert corrected.loc[0, "profanity_strong_per_1k"] == 0.0
     for column in ["words", "turns", "slur_hits", "formal_courtesy_hits"]:
         pd.testing.assert_series_equal(baseline[column], corrected[column])
+
+
+def _baseline_policy(tmp_path):
+    shutil.copytree(
+        ROOT / "analysis", tmp_path / "analysis",
+        ignore=shutil.ignore_patterns("__pycache__"),
+    )
+    members = tmp_path / "analysis/speakers.py"
+    members.write_text(members.read_text() + "\ndef unrelated_member_rule(): return False\n")
+    paths = {
+        "scorer_sha256": "analysis/score/scorers.py",
+        "codebook_sha256": "analysis/score/lexicons/profanity.txt",
+        "ingester_sha256": "analysis/ingest/govinfo.py",
+        "bulk_ingester_sha256": "analysis/ingest/govinfo_bulk.py",
+        "pdf_ingester_sha256": "analysis/ingest/govinfo_pdf.py",
+        "member_scorer_sha256": "analysis/speakers.py",
+        "context_exclusions_sha256": "analysis/score/lexicons/profanity_contexts.json",
+    }
+    return {key: checksum(tmp_path / path) for key, path in paths.items()}
+
+
+def test_aggregate_replay_allows_irrelevant_member_only_changes_but_member_replay_does_not(tmp_path):
+    summary = _baseline_policy(tmp_path)
+    assert not validate_rules(tmp_path, summary, "aggregate")
+    with pytest.raises(ValueError, match="cannot change member scoring"):
+        validate_rules(tmp_path, summary, "members")
+
+
+@pytest.mark.parametrize("path", ["analysis/ingest/hein.py", "analysis/normalize/parties.py"])
+def test_aggregate_replay_rejects_historical_normalization_or_party_policy_changes(tmp_path, path):
+    summary = _baseline_policy(tmp_path)
+    source = tmp_path / path
+    source.write_text(source.read_text() + "\n# Different source policy.\n")
+    with pytest.raises(ValueError, match="non-profanity change"):
+        validate_rules(tmp_path, summary, "aggregate")
