@@ -25,6 +25,23 @@ July 23, 2020 floor quotation, are excluded by policy; masked source spellings a
 expanded into guessed words. This describes this dataset and filtering, not an assertion
 that no member ever said the word.
 
+### Source-level profanity audit
+
+`Audit all profanity families` is a read-only workflow that independently scans original
+GovInfo transcript words across all 17 covered Congresses and compares the resulting
+member-day surface-form counts with the stored table. Its reference matcher walks words
+and whitespace rather than using the production phrase regex. `Rebuild historical language`
+also accepts `audit_only: true` to audit the Stanford/GovInfo aggregate corpus without
+replacing published data.
+
+Audit artifacts retain every lexical occurrence with its original matched text, source turn
+identity, offsets, surrounding context, family, and accepted/excluded disposition.
+Quotations and inserted material remain available for review rather than disappearing.
+The scorer and codebook hashes identify the audited rules. These are lexical consistency
+checks and evidence for contextual review, not an automatic semantic certification that
+every matched word is an intentionally uttered curse. Website censorship is display-only
+and is never the reference text for counting.
+
 The homepage, published at <https://www.themarginoferror.com/congressional_profanity/>, leads
 with interactive long-run panels for formal courtesy, profanity, and slurs. Each panel compares Democrats with Republicans from 1873 to the
 present and includes visible party controls, direct end labels, hover/focus values, and a

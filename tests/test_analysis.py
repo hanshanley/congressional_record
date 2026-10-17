@@ -24,6 +24,7 @@ from analysis.ingest.govinfo import (  # noqa: E402
 )
 from analysis.ingest.schema import congress_from_year, year_from_congress  # noqa: E402
 from analysis.score.registry import METRICS, SCORE_KEYS  # noqa: E402
+from analysis.speakers import PROFANITY_TERM_FAMILIES, grouped_profanity_terms  # noqa: E402
 
 
 def test_relocated_adjudication_validator_finds_batches_from_another_directory(
@@ -459,18 +460,35 @@ def test_scorer_conservative_profanity_expansion() -> None:
     }
 
 
-@pytest.mark.parametrize("form", [
-    "fuck", "fucked", "fucking", "fucker", "fuckers", "fucks", "fuckin",
-    "fuck off", "fuck you", "fuck up", "fucked up", "fucking up",
+@pytest.mark.parametrize(("family", "form"), [
+    (family, form)
+    for family, forms in PROFANITY_TERM_FAMILIES.items()
+    for form in forms
 ])
-def test_f_word_forms_are_counted_once_and_grouped_consistently(form) -> None:
-    from analysis.speakers import grouped_profanity_terms
-
+def test_every_profanity_form_is_counted_and_grouped_consistently(family, form) -> None:
     scorer = Scorers()
-    text = f"This is {form}."
-    assert scorer.score_turn(text)["profanity_strong"] == 1
-    assert scorer.profanity_term_counts(text) == {form: 1}
-    assert grouped_profanity_terms(scorer.profanity_term_counts(text)) == {"fuck": 1}
+    for text, count in [(f"This is {form}.", 1), (form.upper(), 1), (f"{form}; {form}", 2)]:
+        assert scorer.score_turn(text)["profanity_hits"] == count
+        assert scorer.profanity_term_counts(text) == {form: count}
+        assert grouped_profanity_terms(scorer.profanity_term_counts(text)) == {family: count}
+
+
+@pytest.mark.parametrize(("text", "expected"), [
+    ("god damn-like", {}),
+    ("god damn's", {}),
+    ("prefix-fuck off", {}),
+    ("prefix'fuck off", {}),
+    ("mother fucker-like", {}),
+    ("kick ass's", {}),
+    ("shit bag-like", {"shit": 1}),
+    ("god damn-like damn", {"damn": 1}),
+    ("'fuck off'", {"fuck off": 1}),
+    ("god damn-", {"god damn": 1}),
+])
+def test_phrase_boundaries_agree_with_whole_token_counting(text, expected):
+    scorer = Scorers()
+    assert scorer.profanity_term_counts(text) == expected
+    assert scorer.score_turn(text)["profanity_hits"] == sum(expected.values())
 
 
 def test_scorer_still_excludes_ambiguous_profanity_candidates() -> None:

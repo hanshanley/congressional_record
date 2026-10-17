@@ -180,7 +180,12 @@ def _phrase_regex(phrases: List[Tuple[str, ...]], fuzzy: bool = True) -> Optiona
     # alternation makes the counts depend on the process. Longest-first also resolves
     # genuine ambiguity in favour of the more specific phrase.
     ordered = sorted(set(phrases), key=lambda p: (-len(" ".join(p)), p))
-    parts = [r"\b" + r"\s+".join(frag(w) for w in p) + r"\b" for p in ordered]
+    # Match whole tokenizer words, not a phrase fragment inside an attached compound.
+    parts = [
+        r"\b(?<![a-z0-9][-'’])" + r"\s+".join(frag(w) for w in p)
+        + r"\b(?![-'’][a-z0-9])"
+        for p in ordered
+    ]
     # No re.IGNORECASE: patterns are built from lowercased tokens and only ever matched
     # against lowercased text (`low`/`win`), so the flag is pure overhead (~2.7x/scan).
     return re.compile("|".join(parts))

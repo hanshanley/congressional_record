@@ -2,6 +2,11 @@ name: Rebuild historical language
 
 on:
   workflow_dispatch:
+    inputs:
+      audit_only:
+        description: "Read-only source audit of every profanity family; do not change published counts"
+        type: boolean
+        default: false
 
 concurrency:
   group: update-site
@@ -86,11 +91,13 @@ jobs:
             --workers 12
 
       - name: Rebuild all aggregate language metrics
+        if: ${{ !inputs.audit_only }}
         run: |
           python -m analysis.run aggregate --full
           python -m analysis.run viz
 
       - name: Commit rebuilt historical data
+        if: ${{ !inputs.audit_only }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -124,3 +131,20 @@ jobs:
           if [[ "$(git rev-list --count origin/master..HEAD)" -gt 0 ]]; then
             git push
           fi
+
+      - name: Audit every profanity family against original historical transcripts
+        if: ${{ inputs.audit_only }}
+        run: |
+          python scripts/audit_profanity_families.py \
+            --turns data/interim/turns \
+            --mode aggregate \
+            --out audit/historical
+
+      - name: Retain historical match evidence and disagreements
+        if: ${{ always() && inputs.audit_only }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: profanity-audit-historical
+          path: audit/
+          if-no-files-found: error
+          retention-days: 30
