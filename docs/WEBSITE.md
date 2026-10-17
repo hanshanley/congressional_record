@@ -92,6 +92,12 @@ These are separately audited with the aggregate quotation policy and reconciled 
 party, chamber, and profanity tier, using the same downloaded original turns. They are
 not reconstructed from member counts and do not require another GovInfo corpus download.
 
+`Audit retained historical source batches` preserves all 72 normalized Stanford
+partitions in six checksum-verified artifacts before scoring. Independent batch jobs
+then produce complete by-source metrics and original-word audits, without downloading
+the modern GovInfo corpus or publishing provisional counts. Its `source_run_id` input
+reuses those complete originals for subsequent scoring-policy corrections.
+
 Subsequent profanity-only context corrections can use
 `scripts/rescore_audited_profanity.py` with the complete retained original turns and an
 immutable checkout of the audited producer. It runs both actual scoring versions, requires

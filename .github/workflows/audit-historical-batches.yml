@@ -1,0 +1,159 @@
+name: Audit retained historical source batches
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_run_id:
+        description: "Reuse the six retained original-source artifacts from this run instead of downloading archives"
+        type: string
+        default: ""
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: retained-historical-source-audit
+  cancel-in-progress: false
+
+jobs:
+  originals:
+    if: ${{ inputs.source_run_id == '' }}
+    runs-on: macos-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: "requirements*.txt"
+      - run: pip install -r requirements-dev.txt
+      - name: Download canonical Stanford archives once
+        run: |
+          mkdir -p data/raw
+          curl -L -C - --fail --retry 20 --retry-all-errors --retry-delay 5 \
+            -o data/raw/hein-bound.zip \
+            https://stacks.stanford.edu/file/druid:md374tz9962/hein-bound.zip
+          curl -L -C - --fail --retry 20 --retry-all-errors --retry-delay 5 \
+            -o data/raw/hein-daily.zip \
+            https://stacks.stanford.edu/file/druid:md374tz9962/hein-daily.zip
+      - name: Verify and normalize canonical originals
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile
+          expected = {"hein-bound.zip": 7_590_593_783, "hein-daily.zip": 2_817_259_858}
+          for name, size in expected.items():
+              if (Path("data/raw") / name).stat().st_size != size:
+                  raise SystemExit(f"Incomplete canonical archive: {name}")
+          with ZipFile("data/raw/hein-daily.zip") as archive:
+              bad = archive.testzip()
+              if bad is not None:
+                  raise SystemExit(f"Corrupt daily original: {bad}")
+          PY
+          ditto -x -k data/raw/hein-bound.zip data/raw
+          test -f data/raw/hein-bound/043_SpeakerMap.txt
+          test -f data/raw/hein-bound/speeches_111.txt
+          rm data/raw/hein-bound.zip
+          python -m analysis.run ingest-hein
+          rm -r data/raw/hein-bound data/raw/hein-daily.zip
+          python scripts/prepare_hein_batches.py --turns data/interim/turns --out retained
+      - uses: actions/upload-artifact@v4
+        with:
+          name: hein-originals-43-54
+          path: retained/43-54/
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 30
+      - uses: actions/upload-artifact@v4
+        with:
+          name: hein-originals-55-66
+          path: retained/55-66/
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 30
+      - uses: actions/upload-artifact@v4
+        with:
+          name: hein-originals-67-78
+          path: retained/67-78/
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 30
+      - uses: actions/upload-artifact@v4
+        with:
+          name: hein-originals-79-90
+          path: retained/79-90/
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 30
+      - uses: actions/upload-artifact@v4
+        with:
+          name: hein-originals-91-102
+          path: retained/91-102/
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 30
+      - uses: actions/upload-artifact@v4
+        with:
+          name: hein-originals-103-114
+          path: retained/103-114/
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 30
+
+  score:
+    needs: originals
+    if: ${{ always() && (needs.originals.result == 'success' || inputs.source_run_id != '') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    strategy:
+      fail-fast: false
+      max-parallel: 6
+      matrix:
+        batch: ["43-54", "55-66", "67-78", "79-90", "91-102", "103-114"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: "requirements*.txt"
+      - run: pip install -r requirements-dev.txt
+      - uses: actions/download-artifact@v4
+        with:
+          name: hein-originals-${{ matrix.batch }}
+          path: originals
+          run-id: ${{ inputs.source_run_id || github.run_id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Score complete originals and independently audit all families
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import pandas as pd
+          from analysis.aggregate import score_and_aggregate
+          from analysis.inputs import select_turn_files
+          from scripts.audit_profanity_families import audit, validate_aggregate_counts
+          from scripts.prepare_hein_batches import validate_batch
+          validate_batch(Path("originals"))
+          score_and_aggregate(Path("originals/turns"), Path("checked"), incremental=False)
+          report = audit(
+              select_turn_files(Path("originals/turns")),
+              Path("checked/audit"), mode="aggregate",
+          )
+          if report["scorer_disagreements"]:
+              raise SystemExit("Original-word reference disagrees with production scoring")
+          validate_aggregate_counts(
+              pd.read_parquet("checked/metrics/civility_metrics_by_source.parquet"),
+              Path("checked/audit/evidence.jsonl"),
+          )
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: hein-checked-${{ matrix.batch }}
+          path: |
+            checked/
+            originals/source_manifest.json
+          if-no-files-found: error
+          retention-days: 30
