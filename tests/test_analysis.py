@@ -551,6 +551,7 @@ def test_every_profanity_form_is_counted_and_grouped_consistently(family, form) 
     ("god damn-like damn", {"damn": 1}),
     ("'fuck off'", {"fuck off": 1}),
     ("god damn-", {"god damn": 1}),
+    ("A lock and damn-like policy is damn wrong.", {"damn": 1}),
 ])
 def test_phrase_boundaries_agree_with_whole_token_counting(text, expected):
     scorer = Scorers()

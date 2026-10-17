@@ -327,11 +327,9 @@ class Scorers:
     def score_turn(self, text: str) -> Dict[str, int]:
         low = (text or "").lower()
         tokens = Counter(_TOKEN_RE.findall(low))
-        mild = max(
-            0,
-            self.profanity["mild"].count(tokens, low)
-            - len(_MILD_PROFANITY_EXCLUSIONS.findall(low)),
-        )
+        mild = self.profanity["mild"].count(tokens, low)
+        if mild and _MILD_PROFANITY_EXCLUSIONS.search(low):
+            mild = len(self._mild_profanity_spans(low))
         strong = self.profanity["strong"].count(tokens, low)
         if strong and _STRONG_PROFANITY_EXCLUSIONS.search(low):
             strong = len(self._strong_profanity_spans(low))
