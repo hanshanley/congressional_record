@@ -631,6 +631,8 @@ def test_phrase_boundaries_agree_with_whole_token_counting(text, expected):
     "He was a pilot of a B-17, the Damn Yankee, in World War II.",
     "They teamed up with Michael Oxley ass the Sarbanes-Oxley legislation.",
     "These people and the battered bastards of Bastogne died for freedom.",
+    "The caseworkers are: Buettner, Ruth; Bugger, Doug; Carlson, Brad.",
+    "He was the uncle of my veterans affairs caseworker, Doug Bugger.",
 ])
 def test_verified_literal_and_transcription_contexts_are_not_curses(text):
     scorer = Scorers()
@@ -648,6 +650,7 @@ def test_verified_literal_and_transcription_contexts_are_not_curses(text):
     ("A B-17, the Damn Yankee, fought in the war. We damn Yankees remember it.", {"damn": 1}),
     ("The battered bastards of Bastogne fought those bastards.", {"bastards": 1}),
     ("They worked with Michael Oxley ass the Sarbanes-Oxley bill. My ass.", {"ass": 1}),
+    ("The caseworker, Doug Bugger, listened. Stop being a bugger.", {"bugger": 1}),
 ])
 def test_new_literal_filters_preserve_separate_actual_curses(text, expected):
     scorer = Scorers()

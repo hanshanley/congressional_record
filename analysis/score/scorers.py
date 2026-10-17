@@ -43,6 +43,8 @@ _MILD_PROFANITY_EXCLUSIONS = re.compile(
     r"\s{1,12}land\b"
     r"|\bblaze\s{1,12}damned\s{1,12}more\s{1,12}than\b"
     r"|\bb-17,\s{1,12}the\s{1,12}damn\s{1,12}yankee\b"
+    r"|\bbuettner,\s{1,12}ruth;\s{1,12}bugger,\s{1,12}doug\b"
+    r"|\bcaseworker,\s{1,12}doug\s{1,12}bugger\b"
 )
 _STRONG_PROFANITY_EXCLUSIONS = re.compile(
     r"\bwilliam\s+the\s+bastard\b"
