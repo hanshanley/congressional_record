@@ -10,6 +10,21 @@ graphs: transparent backgrounds, house typography, party toggles, hover/focus va
 and screen-reader data tables. Publication PNG downloads remain available and provide
 a no-JavaScript fallback. The daily build updates the page and its matching publication PNGs.
 
+Both the dashboard and the family page expose the full included-word codebook, not just
+families with observed matches. The word-family selector initially shows `fuck` and its
+inflections, with the accepted count for the current scope. The family page can graph any
+included family, even when every observed year has zero matches; its full-codebook CSV and
+JSON retain the exact counts and word denominators. The five publication PNGs still show
+the most-used families. Missing term data are shown as unavailable, never as zero.
+
+The October 17, 2026 audit of member data through October 15 found no unquoted f-word
+matches surviving the attribution safeguards.
+The 26 previously attributed base-family hits on February 9–11, 2021 were in impeachment
+video/inserted material, not identified members' own remarks. Quoted uses, including the
+July 23, 2020 floor quotation, are excluded by policy; masked source spellings are not
+expanded into guessed words. This describes this dataset and filtering, not an assertion
+that no member ever said the word.
+
 The homepage, published at <https://www.themarginoferror.com/congressional_profanity/>, leads
 with interactive long-run panels for formal courtesy, profanity, and slurs. Each panel compares Democrats with Republicans from 1873 to the
 present and includes visible party controls, direct end labels, hover/focus values, and a

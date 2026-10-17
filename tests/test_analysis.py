@@ -5,6 +5,8 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from analysis.normalize.parties import normalize_party, opposing_party  # noqa: E402
@@ -455,6 +457,20 @@ def test_scorer_conservative_profanity_expansion() -> None:
         "motherfucking": 1,
         "shitshow": 1,
     }
+
+
+@pytest.mark.parametrize("form", [
+    "fuck", "fucked", "fucking", "fucker", "fuckers", "fucks", "fuckin",
+    "fuck off", "fuck you", "fuck up", "fucked up", "fucking up",
+])
+def test_f_word_forms_are_counted_once_and_grouped_consistently(form) -> None:
+    from analysis.speakers import grouped_profanity_terms
+
+    scorer = Scorers()
+    text = f"This is {form}."
+    assert scorer.score_turn(text)["profanity_strong"] == 1
+    assert scorer.profanity_term_counts(text) == {form: 1}
+    assert grouped_profanity_terms(scorer.profanity_term_counts(text)) == {"fuck": 1}
 
 
 def test_scorer_still_excludes_ambiguous_profanity_candidates() -> None:

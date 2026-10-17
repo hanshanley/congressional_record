@@ -497,6 +497,12 @@ def test_term_graphs_render_top_five_and_remove_stale_family_files(tmp_path) -> 
     assert persisted == payload
     exported = pd.read_csv(tmp_path / "timeseries.csv")
     assert len(exported["term"].unique()) == 5
+    all_families = pd.read_csv(tmp_path / "codebook_timeseries.csv")
+    assert set(all_families["term"]) == {item["term"] for item in payload["codebook"]}
+    zero_family = all_families[all_families["term"] == "motherfucker"]
+    assert not zero_family.empty
+    assert (zero_family["hits"] == 0).all()
+    assert (zero_family["rate_per_100k"] == 0).all()
     assert all((tmp_path / item["filename"]).is_file() for item in payload["terms"])
     term_charts.render(daily, tmp_path, top=1)
     assert len(list(tmp_path.glob("*_per_100k.png"))) == 1

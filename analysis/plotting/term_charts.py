@@ -81,6 +81,14 @@ def render(daily: pd.DataFrame, out_dir: Path, *, top: int = 5) -> dict:
         pd.DataFrame(rows, columns=[
             "term", "year", "party", "words", "hits", "rate_per_100k",
         ]).to_csv(staging / "timeseries.csv", index=False)
+        pd.DataFrame(
+            [
+                {"term": item["term"], **row}
+                for item in payload.get("codebook", [])
+                for row in item["series"]
+            ],
+            columns=["term", "year", "party", "words", "hits", "rate_per_100k"],
+        ).to_csv(staging / "codebook_timeseries.csv", index=False)
         for path in staging.iterdir():
             os.replace(path, out_dir / path.name)
         for old in out_dir.glob("*_per_100k.png"):

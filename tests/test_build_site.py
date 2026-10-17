@@ -273,13 +273,20 @@ def test_build_writes_html_json_and_figures(store, tmp_path):
                 "figures/language_trends.png", "figures/language_members.png"):
         assert (out / rel).exists(), rel
     terms = BeautifulSoup((out / "terms/index.html").read_text(), "html.parser")
-    assert terms.h1.get_text() == "Five swear-word families"
+    assert terms.h1.get_text() == "Swear-word families"
     assert terms.select_one('a[aria-current="page"]')["href"] == "./"
     assert len(terms.select("figure img")) == 2
     for image in terms.select("figure img"):
         assert (out / "terms" / image["src"]).exists()
         assert image.find_parent("noscript") is not None
-    assert len(terms.select(".term-family-plot")) == 2
+    assert len(terms.select(".term-family-plot")) == 3
+    assert terms.select_one("#codebook-family option[selected]")["value"] == "fuck"
+    assert "fu*k is included: 0 accepted matches" in terms.select_one("#codebook-result").get_text()
+    codebook = json.loads(terms.select_one("#term-codebook-data").string)
+    selected = next(item for item in codebook if item["term"] == "fuck")
+    assert selected["total_hits"] == 0
+    assert selected["series"] and all(row["hits"] == 0 for row in selected["series"])
+    assert terms.select_one('a[href="../figures/profanity_terms/codebook_timeseries.csv"]')
     exported_families = json.loads(
         (out / "figures/profanity_terms/index.json").read_text(),
     )["terms"]
@@ -301,6 +308,27 @@ def test_build_writes_html_json_and_figures(store, tmp_path):
         ).group(1)
         assert "border-bottom-color:var(--signal)" in selected_style, rel
         assert "color:var(--ink)" in selected_style, rel
+
+
+def test_codebook_panel_distinguishes_zero_from_unavailable_counts(store):
+    path, _, bills = store
+    module = _load_build_site()
+    daily = module.load_daily(path)
+    payload = module.build_payload(
+        daily, module.load_bills(bills), 119,
+        top=25, min_words=1000, generated_utc="2025-03-01T00:00:00+00:00",
+    )
+    book = payload["language"]["profanity_codebook"]
+    family = next(item for item in book if item["term"] == "fuck")
+    assert {"fuck", "fucking", "fucked up"} <= set(family["included_forms"])
+    zero = BeautifulSoup(module._codebook_panel(book, {}, available=True), "html.parser")
+    assert "fu*k is included: 0 accepted matches" in zero.get_text()
+    assert "fuck" not in zero.get_text()
+    observed = BeautifulSoup(module._codebook_panel(book, {"fuck": 3}, available=True), "html.parser")
+    assert "fu*k is included: 3 accepted matches" in observed.get_text()
+    missing = BeautifulSoup(module._codebook_panel(book, {}, available=False), "html.parser")
+    assert "counts are not available" in missing.get_text()
+    assert "0 accepted" not in missing.get_text()
 
 
 def test_legacy_leaderboard_dates_use_selected_congress_scope(store, tmp_path):

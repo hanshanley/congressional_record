@@ -37,6 +37,7 @@ from analysis.speakers import (  # noqa: E402
     LANGUAGE_METRICS,
     congress_plot_year,
     censor_profanity_term,
+    profanity_codebook,
     incomplete_profanity_term_rows,
     language_member_rates,
     language_metric_available,
@@ -728,9 +729,35 @@ function renderYearlyPanel(sourceSeries, metric, scopeLabel) {
 }
 """
 
+CODEBOOK_JS = r"""
+function renderCodebook(families, totals, available, onChange) {
+  const select = document.getElementById('codebook-family');
+  const selected = select.value || 'fuck';
+  if (!select.options.length) {
+    [...families].sort((a, b) => a.term.localeCompare(b.term)).forEach(family => {
+      const option = document.createElement('option');
+      option.value = family.term;
+      option.textContent = family.label;
+      select.appendChild(option);
+    });
+  }
+  select.value = selected;
+  select.disabled = false;
+  select.onchange = onChange;
+  const family = families.find(item => item.term === select.value);
+  if (!family) throw new Error('Selected word family is missing from the codebook.');
+  document.getElementById('codebook-result').textContent = available
+    ? `${family.label} is included: ${(totals.get(family.term) ?? 0).toLocaleString()} ` +
+      'accepted matches in this scope.'
+    : `${family.label} is included, but term counts are not available for this scope.`;
+  document.getElementById('codebook-forms').textContent =
+    `Included forms: ${family.included_labels.join(', ')}.`;
+}
+"""
+
 INTERACTIVE_CHART_JS = (
     CHART_BASE_JS + CHART_HELPERS_JS + YEARLY_CHART_JS
-    + INTERACTIVE_CHART_STATE_JS + RECENT_CHART_JS + r"""
+    + INTERACTIVE_CHART_STATE_JS + RECENT_CHART_JS + CODEBOOK_JS + r"""
 function renderLongRunPanel(longRun, key) {
   return renderYearlyPanel(
     longRunSeries(longRun), longRun.metrics[key],
@@ -1327,6 +1354,12 @@ function renderTermExplorer(language) {
   const summaries = summarizeTerms(records);
   const available = recentTermDetailAvailable(language);
   renderTermTable(language, summaries);
+  renderCodebook(
+    language.profanity_codebook,
+    new Map(summaries.map(item => [item.term, item.total_hits])),
+    available,
+    () => renderTermExplorer(currentLanguage),
+  );
   renderStateMap(language, records);
   document.getElementById('term-leaders-scope').textContent =
     `${language.scope_label} · ${selectedTermParty === 'all' ? 'All parties' : selectedTermParty} · ` +
@@ -1340,9 +1373,30 @@ function renderTermExplorer(language) {
 """
 )
 
-TERM_CHART_JS = CHART_BASE_JS + CHART_HELPERS_JS + YEARLY_CHART_JS + r"""
+TERM_CHART_JS = CHART_BASE_JS + CHART_HELPERS_JS + YEARLY_CHART_JS + CODEBOOK_JS + r"""
 const families = JSON.parse(document.getElementById('term-family-data').textContent);
+const codebook = JSON.parse(document.getElementById('term-codebook-data').textContent);
+function renderSelectedFamily() {
+  if (!codebook.length) return;
+  renderCodebook(
+    codebook,
+    new Map(codebook.map(item => [item.term, item.total_hits])),
+    true,
+    renderSelectedFamily,
+  );
+  const family = codebook.find(item =>
+    item.term === document.getElementById('codebook-family').value);
+  document.getElementById('codebook-chart').replaceChildren(
+    renderYearlyPanel(family.series, {
+      label: `${family.label} word family`,
+      rate: 'rate_per_100k',
+      hits: 'hits',
+      units: 'hits per 100,000 words',
+    }, 'All covered years, House + Senate, Democrats and Republicans'),
+  );
+}
 function renderFamilies() {
+  renderSelectedFamily();
   families.forEach((family, index) => {
     const years = family.series.map(row => Number(row.year));
     document.getElementById(`term-family-${index}`).replaceChildren(
@@ -1779,6 +1833,11 @@ MAIN_CSS = """
                   padding:1rem 0; border:0; }
   .term-controls { grid-template-columns:repeat(2,minmax(0,12rem)); margin:0;
                    padding:0; border:0; }
+  .codebook-panel { margin:1.5rem 0; padding:1.25rem 0; border-block:1px solid var(--rule); }
+  .codebook-panel h3 { margin:0 0 .75rem; font-size:1.15rem; font-weight:400; }
+  .codebook-panel .explorer-controls { grid-template-columns:minmax(0,20rem); }
+  .codebook-panel p { max-width:52rem; overflow-wrap:anywhere; }
+  #codebook-result { margin:.5rem 0; }
   .term-toolbar .tab-row { border:0; }
   .focus-panel { min-width:0; }
   .source-note { max-width:52rem; margin:1rem 0 0; font-size:.88rem; font-style:italic; }
@@ -2486,6 +2545,7 @@ def _language_payload(
             for chamber, frames in chamber_rankings.items()
         },
         "profanity_term_leaders": enrich_term_leaders(term_leaders),
+        "profanity_codebook": profanity_codebook(),
         "profanity_term_member_counts": profanity_term_member_counts(daily, congress),
         "profanity_term_detail_available": term_detail_available,
         "profanity_term_leaders_by_chamber": {
@@ -2906,6 +2966,36 @@ def _term_leaders_table(rows: list[dict], *, available: bool) -> str:
     )
 
 
+def _codebook_panel(families: list[dict], totals: dict[str, int], *, available: bool) -> str:
+    if not families:
+        return ""
+    selected = next(item for item in families if item["term"] == "fuck")
+    options = "".join(
+        f'<option value="{html.escape(item["term"], quote=True)}"'
+        f'{" selected" if item["term"] == selected["term"] else ""}>'
+        f'{html.escape(item["label"])}</option>'
+        for item in sorted(families, key=lambda item: item["term"])
+    )
+    result = (
+        f'{selected["label"]} is included: {totals.get(selected["term"], 0):,} '
+        "accepted matches in this scope."
+        if available else
+        f'{selected["label"]} is included, but term counts are not available for this scope.'
+    )
+    return (
+        '<section class="codebook-panel" aria-labelledby="codebook-heading">'
+        '<h3 id="codebook-heading">Included word families</h3>'
+        '<div class="explorer-controls"><label>Check a word family'
+        f'<select id="codebook-family" disabled>{options}</select></label></div>'
+        f'<p id="codebook-result" aria-live="polite">{html.escape(result)}</p>'
+        '<p class="definition" id="codebook-forms">Included forms: '
+        f'{html.escape(", ".join(selected["included_labels"]))}.</p>'
+        '<p class="definition">Recognized quotations and inserted material are excluded. '
+        'Masked source spellings are not inferred. Zero means no accepted matches, '
+        'not that a word is missing from the codebook.</p></section>'
+    )
+
+
 def _render_html(payload: dict, congresses: list[int], long_run: dict) -> str:
     recent_selected = payload["label"].startswith("Last 5 Congresses")
     all_selected = " selected" if payload["congress"] is None and not recent_selected else ""
@@ -3056,6 +3146,11 @@ Related forms are grouped; only accepted, unquoted uses count.</p>
 <label>Chamber<select id="term-chamber"></select></label>
 </div>
 </div>
+{_codebook_panel(
+    language["profanity_codebook"],
+    {item["term"]: item["total_hits"] for item in language["profanity_term_leaders"]},
+    available=language["profanity_term_detail_available"],
+)}
 <div class="term-explorer-grid">
 <div class="card table-wrap">{_term_leaders_table(
     language['profanity_term_leaders'],
@@ -3315,31 +3410,42 @@ def _render_term_graphs_html(payload: dict, generated_utc: str) -> str:
     limitation = html.escape(payload.get("limitation", ""))
     downloads = (
         '<p><a href="../figures/profanity_terms/timeseries.csv">Download yearly counts (CSV)</a> · '
+        '<a href="../figures/profanity_terms/codebook_timeseries.csv">All included families (CSV)</a> · '
         '<a href="../figures/profanity_terms/index.json">Grouped forms and coverage (JSON)</a></p>'
-        if payload["terms"] else ""
+        if payload["terms"] or payload.get("codebook") else ""
     )
+    codebook = payload.get("codebook", [])
+    explorer = _codebook_panel(
+        codebook, {item["term"]: item["total_hits"] for item in codebook},
+        available=bool(coverage),
+    )
+    if explorer:
+        explorer += '<div id="codebook-chart" class="term-family-plot"></div>'
     return f"""<!doctype html>
 <html lang="en">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Swear-word families — The Margin of Error</title>
+<meta name="description" content="Explore every included profanity family, including zero-match families, and the five most-used families in congressional floor text.">
 {_head_links(PUBLIC_URL + "terms/")}
 <style>{HOUSE_CSS}{MAIN_CSS}</style></head>
 <body><a class="skip-link" href="#main-content">Skip to content</a>{_site_header()}
 <main id="main-content"><article class="feature dashboard-page terms-page">
 <header class="feature-header"><p class="kicker">Congress / Vocabulary</p>
-<h1>Five swear-word families</h1>
-<p class="dek">The most-used families in member-attributed House and Senate text, ranked by total matches.
-Variants are combined; annual rates use each party's attributed word total.</p>
+<h1>Swear-word families</h1>
+<p class="dek">Explore any included family, even with no accepted matches, followed by the five most-used
+families in member-attributed House and Senate text. Variants are combined; annual rates use each party's attributed word total.</p>
 <div class="byline"><p>By Hans W. A. Hanley</p><p>{html.escape(dates)}</p></div></header>
 {_feature_nav("terms")}
 <details class="notes"><summary>Sources and how to read these graphs</summary>
 <p>{limitation}</p>
 <p>These graphs use GovInfo member-level data, not the separate Stanford series back to 1873.</p>
 </details>
+{explorer}
 {"".join(sections)}
 {downloads}
 </article></main>{_site_footer(generated_utc)}
 <script type="application/json" id="term-family-data">{_script_json(payload["terms"])}</script>
+<script type="application/json" id="term-codebook-data">{_script_json(codebook)}</script>
 <script>{TERM_CHART_JS}</script></body></html>"""
 
 

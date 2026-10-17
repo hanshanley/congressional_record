@@ -273,6 +273,19 @@ def grouped_profanity_terms(value) -> Counter:
     return grouped
 
 
+def profanity_codebook() -> List[dict]:
+    """Return included families even when no accepted matches were observed."""
+    return [
+        {
+            "term": family,
+            "label": censor_profanity_term(family),
+            "included_forms": list(forms),
+            "included_labels": [censor_profanity_term(form) for form in forms],
+        }
+        for family, forms in sorted(PROFANITY_TERM_FAMILIES.items())
+    ]
+
+
 def censor_profanity_term(term: str) -> str:
     """Use the website's display masking without changing the stored surface form."""
     def masked(word: str) -> str:
@@ -330,8 +343,10 @@ def profanity_family_timeseries(daily: pd.DataFrame, *, top: int = 5) -> dict:
             variants[family].add(term)
         annual[(row.year, row.party)].update(grouped)
         totals.update(grouped)
-    terms = []
-    for family, hits in sorted(totals.items(), key=lambda item: (-item[1], item[0]))[:top]:
+    codebook = []
+    families = set(PROFANITY_TERM_FAMILIES) | set(totals)
+    for family in sorted(families, key=lambda term: (-totals[term], term)):
+        hits = totals[family]
         series = []
         for (year, party), words in denominators.items():
             count = int(annual[(int(year), party)][family])
@@ -339,9 +354,14 @@ def profanity_family_timeseries(daily: pd.DataFrame, *, top: int = 5) -> dict:
                 "year": int(year), "party": party, "words": int(words),
                 "hits": count, "rate_per_100k": 100_000 * count / int(words),
             })
-        terms.append({
+        codebook.append({
             "term": family, "label": censor_profanity_term(family),
             "total_hits": int(hits), "variants": sorted(variants[family]),
+            "included_forms": list(PROFANITY_TERM_FAMILIES.get(family, (family,))),
+            "included_labels": [
+                censor_profanity_term(form)
+                for form in PROFANITY_TERM_FAMILIES.get(family, (family,))
+            ],
             "series": series,
         })
     return {
@@ -357,7 +377,8 @@ def profanity_family_timeseries(daily: pd.DataFrame, *, top: int = 5) -> dict:
             "parties": ["D", "R"],
             "source": "GovInfo Congressional Record",
         },
-        "terms": terms,
+        "terms": [item for item in codebook if item["total_hits"] > 0][:top],
+        "codebook": codebook,
     }
 
 

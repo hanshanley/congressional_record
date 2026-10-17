@@ -532,6 +532,32 @@ def test_family_timeseries_refuses_missing_term_counts():
         profanity_family_timeseries(daily)
 
 
+def test_family_codebook_keeps_zero_match_strong_words_and_exact_denominators():
+    from analysis.speakers import profanity_family_timeseries
+
+    daily = _daily([
+        ["A", "2025-01-02", "house", "Alpha", "D", "CA", 119, 1, 1_000, 2, 0, 0, 0],
+        ["B", "2025-01-03", "senate", "Beta", "R", "TX", 119, 1, 4_000, 1, 0, 0, 0],
+    ])
+    daily["profanity_terms"] = ['{"fucking":1,"damn":1}', '{"damned":1}']
+    payload = profanity_family_timeseries(daily, top=1)
+    assert [item["term"] for item in payload["terms"]] == ["damn"]
+    families = {item["term"]: item for item in payload["codebook"]}
+    assert families["fuck"]["total_hits"] == 1
+    assert families["fuck"]["variants"] == ["fucking"]
+    assert {"fuck", "fucked", "fucking"} <= set(families["fuck"]["included_forms"])
+    assert families["fuck"]["series"] == [
+        {"year": 2025, "party": "D", "words": 1000, "hits": 1, "rate_per_100k": 100.0},
+        {"year": 2025, "party": "R", "words": 4000, "hits": 0, "rate_per_100k": 0.0},
+    ]
+    assert families["motherfucker"]["total_hits"] == 0
+    assert families["motherfucker"]["series"] and all(
+        row["hits"] == row["rate_per_100k"] == 0
+        for row in families["motherfucker"]["series"]
+    )
+    assert sum(item["total_hits"] for item in families.values()) == 3
+
+
 def test_multitoken_term_labels_mask_profanity_after_the_first_word():
     from analysis.speakers import censor_profanity_term
 
