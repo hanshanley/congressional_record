@@ -396,6 +396,25 @@ def test_pdf_member_can_resume_after_a_small_print_quote_without_a_new_marker(mo
     assert any(row["is_procedural"] and "fucking" in row["text"] for row in rows)
 
 
+def test_pdf_bill_header_cannot_resume_the_previous_members_remarks(monkeypatch):
+    _mock_roster(monkeypatch)
+    monkeypatch.setattr("analysis.ingest.govinfo_pdf._paragraphs", lambda *_: [
+        _Paragraph("Mr. SMITH. I conclude.", direct=True),
+        _Paragraph("By Mr. JONES:", printed=True),
+        _Paragraph("S. 1924. A bill to authorize a certificate.", direct=True),
+        _Paragraph("The vessel Damn Yankee is included in this bill.", direct=True),
+        _Paragraph("Ms. JONES. My own remarks resume.", direct=True),
+    ])
+    rows = list(_section_turns(
+        b"layout covered separately", "CREC-2026-09-16-house",
+        "2026-09-16", 119, "house",
+    ))
+    assert [row["text"] for row in rows if row["bioguide"]] == [
+        "I conclude.", "My own remarks resume.",
+    ]
+    assert any(row["is_procedural"] and "Damn Yankee" in row["text"] for row in rows)
+
+
 def test_pdf_archive_missing_a_declared_section_fails():
     pkg = "CREC-2026-09-16"
     with pytest.raises(ValueError, match="missing or unsupported house section PDF"):

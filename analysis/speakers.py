@@ -85,6 +85,16 @@ _QUOTE_RE = re.compile(
     r"|\u201c(.{0,4000}?)\u201d",
     re.S,
 )
+# Source-reviewed transcripts without enclosing quotation marks. Boundaries preserve
+# the member's own remarks before and after the reported dialogue.
+_REVIEWED_SOURCE_QUOTES = {
+    "crec:CREC-1998-02-24-pt1-PgH550": (
+        ("The MiG-29:", "The judge continues:"),
+    ),
+    "crec:CREC-1999-11-03-pt1-PgH11472": (
+        ("Kohl:", "The Berlin Wall did not come down in a day."),
+    ),
+}
 
 _READ_COLS = [
     "turn_id", "source", "date", "congress", "chamber", "party", "state",
@@ -428,23 +438,46 @@ def language_metric_available(frame: pd.DataFrame, key: str) -> bool:
     return column in frame and not frame[column].isna().any()
 
 
-def mask_quotations(text: str) -> Tuple[str, str]:
-    """Return ``(spoken, quoted)`` -- the text outside and inside quotation marks.
+def quotation_regions(text: str, turn_id: Optional[str] = None) -> List[Tuple[int, int]]:
+    """Locate marked quotations and independently reviewed original-source passages."""
+    regions = (
+        [match.span() for match in _QUOTE_RE.finditer(text)]
+        if any(mark in text for mark in ("``", "\u2018\u2018", "\u201c")) else []
+    )
+    for opening, closing in _REVIEWED_SOURCE_QUOTES.get((turn_id or "").split("#")[0], ()):
+        start = text.find(opening)
+        if start < 0:
+            continue
+        end = text.find(closing, start + len(opening))
+        if end < 0:
+            raise ValueError(f"Reviewed quotation lost its closing cue: {turn_id}")
+        regions.append((start, end))
+    merged: List[Tuple[int, int]] = []
+    for start, end in sorted(regions):
+        if merged and start < merged[-1][1]:
+            merged[-1] = (merged[-1][0], max(end, merged[-1][1]))
+        else:
+            merged.append((start, end))
+    return merged
+
+
+def mask_quotations(text: str, turn_id: Optional[str] = None) -> Tuple[str, str]:
+    """Return ``(spoken, quoted)`` outside and inside recognized quoted material.
 
     Quoted regions are replaced by spaces rather than removed so that any
     character offsets and word boundaries either side stay intact.
     """
-    if not text or not any(mark in text for mark in ("``", "\u2018\u2018", "\u201c")):
-        return text, ""
     quoted_parts: List[str] = []
-    spans: List[Tuple[int, int]] = []
-    for match in _QUOTE_RE.finditer(text):
-        quoted_parts.append(next(part for part in match.groups() if part is not None))
-        spans.append(match.span())
+    spans = quotation_regions(text, turn_id)
     if not spans:
         return text, ""
     chars = list(text)
     for start, end in spans:
+        region = text[start:end]
+        match = _QUOTE_RE.fullmatch(region)
+        quoted_parts.append(
+            next(part for part in match.groups() if part is not None) if match else region
+        )
         for i in range(start, end):
             chars[i] = " "
     return "".join(chars), " ".join(quoted_parts)
@@ -492,7 +525,7 @@ def speaker_counts(
                 seen_turn_ids.add(turn_id)
 
             text = row.get("text") or ""
-            spoken, quoted = mask_quotations(text)
+            spoken, quoted = mask_quotations(text, row.get("turn_id"))
             party = row.get("party") or "other"
             scored = scorers.score_turn(spoken)
             quoted_scored = scorers.score_turn(quoted) if quoted else None

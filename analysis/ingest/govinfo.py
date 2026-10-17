@@ -83,10 +83,12 @@ _INSERTED_MATERIAL_RE = re.compile(
     r"|There being no objection,[\s\S]{0,300}?\bordered\s+to\s+be\s+printed\s+in\s+the\s+Record\b"
     r"|Pursuant to the adoption of House Resolution\b"
     r"|The text of\b[\s\S]{0,300}?\bis as follows:"
+    r"|(?:S\.|H\.[ \t]*R\.)[ \t]*\d+\.[ \t]+A[ \t]+bill\b"
     r")"
 )
 _INDENTED_MATERIAL_RE = re.compile(
     r"(?m)^[ \t]{5,}\S[^\n]*\n(?:[ \t]*\n)?[ \t]{5,}\S"
+    r"|(?<=:)[ \t]*\n(?:[ \t]*\n)?[ \t]{5,}\S[^\n]*"
 )
 
 # Standard CREC transcript header lines to drop before segmenting.

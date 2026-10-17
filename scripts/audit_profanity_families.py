@@ -17,14 +17,16 @@ import tempfile
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
+import pyarrow as pa  # noqa: E402
 import pyarrow.parquet as pq  # noqa: E402
 
+from analysis.ingest.schema import ARROW_SCHEMA  # noqa: E402
 from analysis.inputs import select_turn_files  # noqa: E402
 from analysis.score.scorers import (  # noqa: E402
     LEXDIR, Scorers, _MILD_PROFANITY_EXCLUSIONS, _STRONG_PROFANITY_EXCLUSIONS,
 )
 from analysis.speakers import (  # noqa: E402
-    PROFANITY_TERM_FAMILIES, _QUOTE_RE, load_daily, parse_profanity_terms,
+    PROFANITY_TERM_FAMILIES, load_daily, parse_profanity_terms, quotation_regions,
     save_daily, speaker_counts,
 )
 
@@ -88,6 +90,14 @@ def discover_packages(start, end, expected_dates, client=None):
     })
     missing = set(expected_dates) - {package[5:] for package in packages}
     if missing:
+        from analysis.ingest.govinfo_bulk import probe_packages
+
+        for day in sorted(missing):
+            LOG.warning("API enumeration omitted stored date %s; verifying its public archive", day)
+            packages.extend(probe_packages(day, day, workers=1))
+        packages = sorted(set(packages))
+        missing -= {package[5:] for package in packages}
+    if missing:
         raise RuntimeError(
             f"Original-source enumeration omits {len(missing)} stored dates: {sorted(missing)}"
         )
@@ -103,7 +113,7 @@ def congress_window(congress, today):
 
 def inspect_turn(row, matcher, scorer, mode):
     text = row.get("text") or ""
-    quotes = [match.span() for match in _QUOTE_RE.finditer(text)]
+    quotes = quotation_regions(text, row.get("turn_id")) if mode == "members" else []
     blocked = {
         "mild": [match.span() for match in _MILD_PROFANITY_EXCLUSIONS.finditer(text.lower())],
         "strong": [match.span() for match in _STRONG_PROFANITY_EXCLUSIONS.finditer(text.lower())],
@@ -157,6 +167,68 @@ def inspect_turn(row, matcher, scorer, mode):
     return expected, evidence, mismatch
 
 
+def member_day_counts(daily):
+    stored = {}
+    stored_keys = set()
+    for row in daily[daily["chamber"].isin(["house", "senate"])].itertuples(index=False):
+        key = (row.bioguide, row.date, row.chamber)
+        if key in stored_keys:
+            raise ValueError(f"Duplicate stored member-day identity: {key}")
+        stored_keys.add(key)
+        counts = parse_profanity_terms(row.profanity_terms)
+        if sum(counts.values()) != int(row.profanity_hits):
+            raise ValueError(f"Stored family counts differ from profanity hits: {key}")
+        if counts:
+            stored[key] = counts
+    return stored
+
+
+def validate_candidate_counts(candidate, evidence_path):
+    expected = defaultdict(Counter)
+    with evidence_path.open() as handle:
+        for line in handle:
+            row = json.loads(line)
+            if row["disposition"] == "accepted":
+                expected[(row["bioguide"], row["date"], row["chamber"])][row["form"]] += 1
+    actual = member_day_counts(candidate)
+    differences = [
+        key for key in set(expected) | set(actual)
+        if expected.get(key, Counter()) != actual.get(key, Counter())
+    ]
+    if differences:
+        raise RuntimeError(
+            f"Candidate differs from original-source reference on {len(differences)} member-days: "
+            f"{sorted(differences)[:5]}"
+        )
+
+
+def validate_aggregate_counts(frame, evidence_path):
+    expected = Counter()
+    with evidence_path.open() as handle:
+        for line in handle:
+            row = json.loads(line)
+            if row["disposition"] == "accepted":
+                expected[(row["congress"], row["chamber"], row["party"], row["tier"])] += 1
+    actual = Counter()
+    seen = set()
+    scoped = frame[
+        frame["party"].isin(["D", "R"]) & frame["chamber"].isin(["house", "senate"])
+    ]
+    for row in scoped.itertuples(index=False):
+        key = (int(row.congress), row.chamber, row.party)
+        if key in seen:
+            raise ValueError(f"Duplicate aggregate identity: {key}")
+        seen.add(key)
+        if int(row.profanity_hits) != int(row.profanity_mild_hits) + int(row.profanity_strong_hits):
+            raise ValueError(f"Aggregate tiers differ from total hits: {key}")
+        for tier in ("mild", "strong"):
+            count = int(getattr(row, f"profanity_{tier}_hits"))
+            if count:
+                actual[(*key, tier)] = count
+    if actual != expected:
+        raise RuntimeError("Aggregate tiers differ from original-source reference counts")
+
+
 def audit(files, output, *, mode, daily=None, congress=None):
     output.mkdir(parents=True, exist_ok=True)
     matcher, scorer = ReferenceMatcher(), Scorers()
@@ -165,7 +237,11 @@ def audit(files, output, *, mode, daily=None, congress=None):
     dispositions = defaultdict(Counter)
     mismatches = []
     turns = 0
-    with (output / "evidence.jsonl").open("w") as evidence_file:
+    candidate_turns = 0
+    candidate_batch = []
+    with (output / "evidence.jsonl").open("w") as evidence_file, pq.ParquetWriter(
+        output / "candidate_turns.parquet", ARROW_SCHEMA, compression="zstd",
+    ) as candidate_writer:
         for path in files:
             for batch in pq.ParquetFile(path).iter_batches(batch_size=5000):
                 for row in batch.to_pylist():
@@ -179,6 +255,14 @@ def audit(files, output, *, mode, daily=None, congress=None):
                     seen.add(identity)
                     turns += 1
                     counts, evidence, mismatch = inspect_turn(row, matcher, scorer, mode)
+                    if evidence:
+                        candidate_turns += 1
+                        candidate_batch.append(row)
+                        if len(candidate_batch) >= 1000:
+                            candidate_writer.write_table(
+                                pa.Table.from_pylist(candidate_batch, schema=ARROW_SCHEMA),
+                            )
+                            candidate_batch.clear()
                     for item in evidence:
                         dispositions[item["family"]][item["disposition"]] += 1
                         evidence_file.write(json.dumps(item, ensure_ascii=True) + "\n")
@@ -187,22 +271,14 @@ def audit(files, output, *, mode, daily=None, congress=None):
                         by_member_day[key].update(counts)
                     if mismatch:
                         mismatches.append(mismatch)
+        if candidate_batch:
+            candidate_writer.write_table(
+                pa.Table.from_pylist(candidate_batch, schema=ARROW_SCHEMA),
+            )
     differences = []
     if daily is not None:
-        stored = {}
-        stored_keys = set()
         scoped = daily if congress is None else daily[daily["congress"] == congress]
-        scoped = scoped[scoped["chamber"].isin(["house", "senate"])]
-        for row in scoped.itertuples(index=False):
-            key = (row.bioguide, row.date, row.chamber)
-            if key in stored_keys:
-                raise ValueError(f"Duplicate stored member-day identity: {key}")
-            stored_keys.add(key)
-            counts = parse_profanity_terms(row.profanity_terms)
-            if sum(counts.values()) != int(row.profanity_hits):
-                raise ValueError(f"Stored family counts differ from profanity hits: {key}")
-            if counts:
-                stored[key] = counts
+        stored = member_day_counts(scoped)
         for key in sorted(set(stored) | set(by_member_day)):
             before, after = stored.get(key, Counter()), by_member_day.get(key, Counter())
             if before != after:
@@ -212,11 +288,18 @@ def audit(files, output, *, mode, daily=None, congress=None):
                 })
     summary = {
         "mode": mode, "congress": congress, "turns_checked": turns,
+        "candidate_turns_retained": candidate_turns,
         "audited_utc": dt.datetime.now(dt.timezone.utc).isoformat(),
         "codebook_sha256": hashlib.sha256((LEXDIR / "profanity.txt").read_bytes()).hexdigest(),
         "scorer_sha256": hashlib.sha256((LEXDIR.parent / "scorers.py").read_bytes()).hexdigest(),
         "ingester_sha256": hashlib.sha256(
             (ROOT / "analysis/ingest/govinfo.py").read_bytes()
+        ).hexdigest(),
+        "pdf_ingester_sha256": hashlib.sha256(
+            (ROOT / "analysis/ingest/govinfo_pdf.py").read_bytes()
+        ).hexdigest(),
+        "member_scorer_sha256": hashlib.sha256(
+            (ROOT / "analysis/speakers.py").read_bytes()
         ).hexdigest(),
         "reference": "Original normalized transcript words, never website display labels",
         "stored_comparison_performed": daily is not None,
@@ -256,12 +339,20 @@ def main(argv=None):
         "--candidate-out", type=Path,
         help="Save independently checked replacement partitions as artifacts; never publish them.",
     )
+    parser.add_argument(
+        "--aggregate-out", type=Path,
+        help="Also audit and retain modern GovInfo aggregate metrics from the same source download.",
+    )
     args = parser.parse_args(argv)
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
     if bool(args.turns) == bool(args.fetch_congress):
         parser.error("provide exactly one of --turns or --fetch-congress")
     if args.candidate_out and (not args.fetch_congress or args.mode != "members"):
         parser.error("--candidate-out requires --fetch-congress with --mode members")
+    if args.aggregate_out and (
+        not args.candidate_out or not args.fetch_congress or args.fetch_congress < 115
+    ):
+        parser.error("--aggregate-out requires checked member candidates from Congress 115 onward")
     daily = load_daily(args.daily) if args.mode == "members" and args.fetch_congress else None
     if args.mode == "members" and args.fetch_congress and (daily is None or daily.empty):
         parser.error("the stored member table is required for a full source comparison")
@@ -295,7 +386,27 @@ def main(argv=None):
                 candidate = candidate[candidate["congress"] == congress]
                 if candidate.empty:
                     raise ValueError("No member rows are available for the candidate partition")
+                validate_candidate_counts(candidate, args.out / "evidence.jsonl")
                 save_daily(candidate, args.candidate_out)
+                if args.aggregate_out:
+                    from analysis.aggregate import score_and_aggregate
+
+                    aggregate_audit = args.out / "aggregate"
+                    aggregate_summary = audit(
+                        select_turn_files(root / "turns"), aggregate_audit,
+                        mode="aggregate", congress=congress,
+                    )
+                    if aggregate_summary["scorer_disagreements"]:
+                        raise RuntimeError("Original-source aggregate audit disagrees with the scorer")
+                    aggregate = score_and_aggregate(
+                        root / "turns", root / "aggregate", incremental=False,
+                    )
+                    aggregate = aggregate[aggregate["congress"] == congress]
+                    validate_aggregate_counts(aggregate, aggregate_audit / "evidence.jsonl")
+                    args.aggregate_out.mkdir(parents=True, exist_ok=True)
+                    aggregate.to_parquet(
+                        args.aggregate_out / f"congress_{congress}.parquet", index=False,
+                    )
     else:
         summary = audit(select_turn_files(args.turns), args.out, mode=args.mode)
     return int(bool(

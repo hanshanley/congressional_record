@@ -46,6 +46,9 @@ jobs:
           candidate_args=()
           if [[ "$SAVE_CANDIDATES" == "true" ]]; then
             candidate_args=(--candidate-out audit/candidates)
+            if [[ "$AUDIT_CONGRESS" -ge 115 ]]; then
+              candidate_args+=(--aggregate-out audit/aggregates)
+            fi
           fi
           python scripts/audit_profanity_families.py \
             --fetch-congress "$AUDIT_CONGRESS" \
@@ -57,6 +60,14 @@ jobs:
         with:
           name: speaker-congress-${{ matrix.congress }}
           path: audit/candidates/congress_${{ matrix.congress }}.parquet
+          if-no-files-found: error
+          retention-days: 30
+      - name: Retain independently checked modern aggregate metrics
+        if: ${{ success() && inputs.save_candidates && matrix.congress >= 115 }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: aggregate-congress-${{ matrix.congress }}
+          path: audit/aggregates/congress_${{ matrix.congress }}.parquet
           if-no-files-found: error
           retention-days: 30
       - name: Retain all match evidence, exclusions, and differences

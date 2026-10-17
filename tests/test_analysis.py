@@ -396,6 +396,47 @@ def test_indented_quotes_do_not_swallow_the_members_resumed_remarks():
     assert "fucking" not in " ".join(turn["text"] for turn in spoken)
 
 
+def test_bill_introduction_after_an_indented_block_is_not_resumed_floor_speech():
+    turns = list(build_turns(
+        "Mr. JEFFORDS. I conclude my own remarks.\n\n"
+        "      By Mr. STEVENS:\n"
+        "  S. 1924. A bill to authorize documentation for the vessel Damn Yankee;\n"
+        "to the Committee on Commerce, Science, and Transportation.\n"
+        "\u2211 Mr. STEVENS. Submitted explanation of the bill.\u2211\n"
+        "  Mr. JEFFORDS. Now I resume my own remarks. This is damn important.\n",
+        [
+            {"name": "Jeffords, James", "bioguide": "J1", "party": "R", "state": "VT"},
+            {"name": "Stevens, Ted", "bioguide": "S1", "party": "R", "state": "AK"},
+        ],
+        "CREC-1996-06-28-pt1-PgS7302-2", "1996-06-28", 104, "senate",
+    ))
+    spoken = [turn for turn in turns if not turn["is_procedural"]]
+    assert len(spoken) == 2
+    assert all(turn["bioguide"] == "J1" for turn in spoken)
+    assert "Damn Yankee" not in " ".join(turn["text"] for turn in spoken)
+    assert spoken[-1]["text"].endswith("This is damn important.")
+    assert any("S. 1924." in turn["text"] and turn["is_procedural"] for turn in turns)
+
+
+def test_single_indented_line_after_a_quotation_cue_is_not_the_members_own_words():
+    turns = list(build_turns(
+        "Mr. SMITH. The witness described it as:\n\n"
+        "     This is fucking bullshit.\n\n"
+        "  I disagree. This is damn serious.\n",
+        [{"name": "Smith, Member", "bioguide": "S1", "party": "D", "state": "CA"}],
+        "CREC-2004-04-22-pt1-PgS4334-2", "2004-04-22", 108, "senate",
+    ))
+    spoken = [turn for turn in turns if not turn["is_procedural"]]
+    assert len(spoken) == 2
+    assert all(turn["bioguide"] == "S1" for turn in spoken)
+    assert Scorers().profanity_term_counts(" ".join(turn["text"] for turn in spoken)) == {
+        "damn": 1,
+    }
+    assert any(
+        turn["is_procedural"] and "fucking bullshit" in turn["text"] for turn in turns
+    )
+
+
 def test_missing_period_before_explicit_floor_address_starts_a_new_member_turn():
     turns = list(build_turns(
         "Mr. GOSS. I include this chart in the Record.\n\n"
@@ -563,12 +604,42 @@ def test_phrase_boundaries_agree_with_whole_token_counting(text, expected):
     "William the Bastard brought feudalism to England.",
     "We need information to asses the fees established by the Commission.",
     "The workers were building this damn, and needed doctors.",
+    "PAEs should asses the need for affordable housing.",
+    "The agency was directed to asses all regulatory provisions.",
+    "The analysts interpret and asses that intelligence.",
+    "These are so-called bastard LATA's in telecommunications.",
+    "They were known as the battling bastards of Bataan.",
+    "He was not observed riding a jackass.",
+    "A father will hunt buggers, as they used to say; buggers or monsters.",
+    "They played at the crap tables.",
+    "This was a crap shooting deal.",
+    "The substitute offers a cheap crap shoot, with all bets off.",
+    "Trout take san juan worms, wooly buggers, and Joe's Hoppers.",
+    "They fish with woolly buggers.",
+    "The poison has burst the damn and flooded the suburbs.",
+    "Damn removal will irreversibly remove jobs, harm the economy and environment.",
+    "Ohio fans cheer The Best Damn Band in the Land.",
+    "Mercury affects waterfowl such ass loons.",
+    "The wind-fueled blaze damned more than 30 buildings.",
+    "If the ox or the ass were in the pit, pull him out.",
 ])
 def test_verified_literal_and_transcription_contexts_are_not_curses(text):
     scorer = Scorers()
     assert scorer.score_turn(text)["profanity_hits"] == 0
     assert scorer.profanity_term_counts(text) == {}
     assert scorer.signal_spans(text)["profanity"] == []
+
+
+@pytest.mark.parametrize(("text", "expected"), [
+    ("They should asses the proposal. Those asses ignored it.", {"asses": 1}),
+    ("The battling bastards of Bataan fought those bastards.", {"bastards": 1}),
+    ("They hunt buggers and run these buggers out of business.", {"buggers": 2}),
+    ("He was riding a jackass. Stop being a jackass.", {"jackass": 1}),
+])
+def test_new_literal_filters_preserve_separate_actual_curses(text, expected):
+    scorer = Scorers()
+    assert scorer.profanity_term_counts(text) == expected
+    assert scorer.score_turn(text)["profanity_hits"] == sum(expected.values())
 
 
 def test_scorer_still_excludes_ambiguous_profanity_candidates() -> None:

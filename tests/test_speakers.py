@@ -152,6 +152,60 @@ def test_unquoted_profanity_is_counted(turn_file):
     assert counts.iloc[0]["profanity_quoted_hits"] == 0
 
 
+def test_reported_radio_dialogue_is_not_charged_to_the_member(turn_file):
+    text = (
+        "I am damn concerned about this recording.\n"
+        "  The MiG-29: Give us authorization, damn it.\n"
+        "  Military Control: Fire.\n"
+        "  MiG-29: We hit him. Damn, we hit him.\n"
+        "  The judge continues: The missiles destroyed the planes.\n"
+        "This is a damn serious matter."
+    )
+    identity = "crec:CREC-1998-02-24-pt1-PgH550#2"
+    spoken, quoted = mask_quotations(text, identity)
+    assert len(spoken) == len(text)
+    assert "Military Control" not in spoken
+    assert "Military Control" in quoted
+    assert "The judge continues:" in spoken
+    assert spoken.endswith("This is a damn serious matter.")
+    counts = speaker_counts([turn_file([_row(
+        turn_id=identity, bioguide="A000001", text=text,
+    )])])
+    assert counts.iloc[0]["profanity_hits"] == 2
+    assert counts.iloc[0]["profanity_quoted_hits"] == 2
+
+
+def test_reported_radio_dialogue_requires_an_explicit_closing_cue():
+    text = "  MiG-29: An unmatched label is not a reason to hide this damn speech."
+    assert mask_quotations(text) == (text, "")
+    with pytest.raises(ValueError, match="closing cue"):
+        mask_quotations(
+            "The MiG-29: A source-reviewed passage lost its end.",
+            "crec:CREC-1998-02-24-pt1-PgH550#2",
+        )
+
+
+def test_reviewed_telephone_transcript_preserves_own_words_and_does_not_double_count_quotes(
+    turn_file,
+):
+    text = (
+        "I reject this crap.\n"
+        "  Kohl: We are discussing Germany.\n"
+        "  Bush to Kohl: Helmut, you are a hell of a campaigner.\n"
+        "  Kohl: ``Thank you.''\n"
+        "  The Berlin Wall did not come down in a day. This is damn important."
+    )
+    counts = speaker_counts([turn_file([_row(
+        turn_id="crec:CREC-1999-11-03-pt1-PgH11472#3", bioguide="A000001", text=text,
+    )])])
+    assert counts.iloc[0]["profanity_hits"] == 2
+    assert counts.iloc[0]["profanity_quoted_hits"] == 1
+    assert mask_quotations(
+        "Kohl: This is damn serious. The Berlin Wall did not come down in a day.",
+        "a-different-original-source",
+    )[1] == ""
+
+
 def test_turns_without_a_bioguide_are_dropped(turn_file):
     path = turn_file([
         _row(turn_id="a", bioguide=None, text="damn"),

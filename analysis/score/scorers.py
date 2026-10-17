@@ -29,10 +29,29 @@ _MILD_PROFANITY_EXCLUSIONS = re.compile(
     r"|\bmy\s+damn\s+sin\b"
     r"|\bcrap\s+game\b"
     r"|\bbuilding\s+this\s+damn(?=\s*[,.;:])"
+    r"|\bcrap\s{1,12}(?:games|tables?|shoot(?:s|ing|ers?)?)\b"
+    r"|\bhunt\s{1,12}buggers,\s{1,12}as\s{1,12}they\s{1,12}used\s{1,12}to"
+    r"\s{1,12}say;\s{1,12}buggers\s{1,12}or\s{1,12}monsters\b"
+    r"|\bbuggers\s{1,12}or\s{1,12}monsters\b"
+    r"|\bwooll?y\s{1,12}buggers?\b"
+    r"|\bburst\s{1,12}the\s{1,12}damn\s{1,12}and\s{1,12}flooded\b"
+    r"|\bdamn\s{1,12}removal\s{1,12}will\s{1,12}irreversibly"
+    r"\s{1,12}remove\s{1,12}jobs\b"
+    r"|\bthe\s{1,12}best\s{1,12}damn\s{1,12}band\s{1,12}in\s{1,12}the"
+    r"\s{1,12}land\b"
+    r"|\bblaze\s{1,12}damned\s{1,12}more\s{1,12}than\b"
 )
 _STRONG_PROFANITY_EXCLUSIONS = re.compile(
     r"\bwilliam\s+the\s+bastard\b"
     r"|\bto\s+asses\s+(?:the|a|an)\b"
+    r"|\b(?:to|should|must|will|would|can|could|may)\s{1,12}asses\s{1,12}"
+    r"(?:the|a|an|all|their|our|that|this)\b"
+    r"|\binterpret\s{1,12}and\s{1,12}asses\s{1,12}that\b"
+    r"|\bbastard\s{1,12}lata(?:['\u2019]s|s)?\b"
+    r"|\bbattling\s{1,12}bastards\s{1,12}of\s{1,12}bataan\b"
+    r"|\briding\s{1,12}a\s{1,12}jackass\b"
+    r"|\bsuch\s{1,12}ass\s{1,12}loons\b"
+    r"|\box\s{1,12}or\s{1,12}(?:the\s{1,12})?ass\b"
 )
 # Slur forms that double as other words. A slur span overlapping one of these is not counted.
 _SLUR_EXCLUSIONS = re.compile(

@@ -4,9 +4,13 @@ import pandas as pd
 import pytest
 
 from analysis.score.scorers import Scorers
-from analysis.speakers import PROFANITY_TERM_FAMILIES
+from analysis.ingest.schema import write_turns_parquet
+from analysis.speakers import PROFANITY_TERM_FAMILIES, save_daily, speaker_counts
+from scripts import audit_profanity_families
 from scripts.audit_profanity_families import (
     ReferenceMatcher, audit, congress_window, discover_packages, inspect_turn,
+    validate_candidate_counts,
+    validate_aggregate_counts,
 )
 
 
@@ -75,9 +79,104 @@ def test_audit_preserves_the_raw_word_and_flags_incorrect_stored_counts(tmp_path
     assert summary["families"]["fuck"]["accepted"] == 1
     evidence = json.loads((out / "evidence.jsonl").read_text())
     assert evidence["matched_text"] == "fucking"
+    snapshot = pd.read_parquet(out / "candidate_turns.parquet")
+    assert summary["candidate_turns_retained"] == 1
+    assert snapshot.iloc[0]["text"] == "That is fucking wrong."
+    assert snapshot.iloc[0]["turn_id"] == "source-1"
     difference = json.loads((out / "stored_differences.json").read_text())[0]
     assert difference["stored"] == {"damn": 1}
     assert difference["reference"] == {"fucking": 1}
+
+
+def test_audit_recognizes_the_external_dialogue_boundary_without_display_masking():
+    row = {
+        "text": (
+            "This is damn serious.\n"
+            "  The MiG-29: Give us authorization, damn it.\n"
+            "  Military Control: Fire.\n"
+            "  MiG-29: Damn, we hit him.\n"
+            "  The judge continues: These were civilians."
+        ),
+        "turn_id": "crec:CREC-1998-02-24-pt1-PgH550#2",
+        "chamber": "house", "bioguide": "A", "party": "R",
+    }
+    counts, evidence, mismatch = inspect_turn(row, ReferenceMatcher(), Scorers(), "members")
+    assert mismatch is None
+    assert counts == {"damn": 1}
+    assert [item["disposition"] for item in evidence] == [
+        "accepted", "quotation_exclusion", "quotation_exclusion",
+    ]
+
+
+def test_replacement_partition_must_match_actual_original_forms_not_just_hit_totals(tmp_path):
+    evidence = tmp_path / "evidence.jsonl"
+    evidence.write_text(json.dumps({
+        "bioguide": "A", "date": "2025-03-01", "chamber": "house",
+        "form": "fucking", "disposition": "accepted",
+    }) + "\n")
+    candidate = pd.DataFrame([{
+        "bioguide": "A", "date": "2025-03-01", "chamber": "house",
+        "profanity_hits": 1, "profanity_terms": '{"damn":1}',
+    }])
+    with pytest.raises(RuntimeError, match="original-source reference"):
+        validate_candidate_counts(candidate, evidence)
+    candidate.loc[0, "profanity_terms"] = '{"fucking":1}'
+    validate_candidate_counts(candidate, evidence)
+    with pytest.raises(ValueError, match="Duplicate"):
+        validate_candidate_counts(pd.concat([candidate, candidate]), evidence)
+
+
+def test_aggregate_artifact_must_reconcile_the_actual_tiers_not_just_the_total(tmp_path):
+    evidence = tmp_path / "evidence.jsonl"
+    evidence.write_text(json.dumps({
+        "congress": 119, "chamber": "house", "party": "D", "tier": "strong",
+        "disposition": "accepted",
+    }) + "\n")
+    frame = pd.DataFrame([{
+        "congress": 119, "chamber": "house", "party": "D",
+        "profanity_hits": 1, "profanity_mild_hits": 1, "profanity_strong_hits": 0,
+    }])
+    with pytest.raises(RuntimeError, match="original-source reference"):
+        validate_aggregate_counts(frame, evidence)
+    frame.loc[0, ["profanity_mild_hits", "profanity_strong_hits"]] = [0, 1]
+    validate_aggregate_counts(frame, evidence)
+
+
+def test_one_download_retains_distinct_member_and_aggregate_quotation_policies(tmp_path, monkeypatch):
+    rows = [{
+        "turn_id": "crec:CREC-2017-03-01-pt1-PgH1#1", "source": "govinfo",
+        "date": "2017-03-01", "congress": 115, "chamber": "house",
+        "bioguide": "A", "speaker_name": "Mr. ALPHA", "party": "D",
+        "word_count": 10, "is_procedural": False,
+        "text": "That is damn hard. I quote ``fucking nonsense''.",
+    }]
+    source = tmp_path / "seed/govinfo_bulk_115.parquet"
+    write_turns_parquet(source, iter(rows))
+    daily = tmp_path / "daily"
+    save_daily(speaker_counts([source]), daily)
+    downloads = []
+
+    def ingest(packages, bulk, out, **kwargs):
+        downloads.append(list(packages))
+        write_turns_parquet(out / "turns/govinfo_bulk_115.parquet", iter(rows))
+        return 1, []
+
+    monkeypatch.setattr(audit_profanity_families, "discover_packages", lambda *a: [
+        "CREC-2017-03-01",
+    ])
+    monkeypatch.setattr("analysis.ingest.govinfo_bulk.run_incremental_bulk", ingest)
+    assert audit_profanity_families.main([
+        "--fetch-congress", "115", "--out", str(tmp_path / "audit"),
+        "--daily", str(daily), "--candidate-out", str(tmp_path / "members"),
+        "--aggregate-out", str(tmp_path / "aggregates"),
+    ]) == 0
+    member = pd.read_parquet(tmp_path / "members/congress_115.parquet").iloc[0]
+    aggregate = pd.read_parquet(tmp_path / "aggregates/congress_115.parquet").iloc[0]
+    assert member.profanity_hits == 1
+    assert member.profanity_quoted_hits == 1
+    assert aggregate.profanity_hits == 2
+    assert aggregate.profanity_mild_hits == aggregate.profanity_strong_hits == 1
+    assert downloads == [["CREC-2017-03-01"]]
 
 
 def test_literal_context_exclusions_and_attached_compounds_retain_original_evidence():
@@ -93,7 +192,7 @@ def test_literal_context_exclusions_and_attached_compounds_retain_original_evide
     ]
 
 
-def test_multi_year_source_discovery_is_paginated_and_rejects_missing_stored_dates():
+def test_multi_year_source_discovery_is_paginated_and_rejects_missing_stored_dates(monkeypatch):
     class Client:
         def paginate(self, url, **kwargs):
             assert "2003-01-03/2005-01-02" in url
@@ -109,8 +208,30 @@ def test_multi_year_source_discovery_is_paginated_and_rejects_missing_stored_dat
     assert discover_packages(
         "2003-01-03", "2005-01-02", {"2003-01-07", "2004-12-20"}, Client(),
     ) == ["CREC-2003-01-07", "CREC-2004-12-20"]
+    monkeypatch.setattr("analysis.ingest.govinfo_bulk.probe_packages", lambda *a, **kw: [])
     with pytest.raises(RuntimeError, match="omits 1 stored dates"):
         discover_packages("2003-01-03", "2005-01-02", {"2004-01-20"}, Client())
+
+
+def test_api_omission_is_recovered_only_from_a_verified_existing_public_archive(monkeypatch):
+    class Client:
+        def paginate(self, *args, **kwargs):
+            yield {"packageId": "CREC-2009-01-02"}
+
+        def url(self, path):
+            return path
+
+    probes = []
+
+    def probe(start, end, **kwargs):
+        probes.append((start, end))
+        return ["CREC-2009-01-03"]
+
+    monkeypatch.setattr("analysis.ingest.govinfo_bulk.probe_packages", probe)
+    assert discover_packages(
+        "2007-01-01", "2009-01-03", {"2009-01-02", "2009-01-03"}, Client(),
+    ) == ["CREC-2009-01-02", "CREC-2009-01-03"]
+    assert probes == [("2009-01-03", "2009-01-03")]
 
 
 def test_source_audit_keeps_known_outgoing_congress_boundary_dates():

@@ -49,12 +49,33 @@ followed by an explicit floor address; identities are still resolved from source
 or the dated roster, never guessed. Short recovered fragments retain their original-segment
 identity for overlap deduplication.
 
+Bill-introduction headings cannot restart the preceding member's remarks. Verified
+external radio and telephone transcripts lacking quotation marks use source-specific
+opening and closing cues, not a blanket rule based on a word or topic; nested quotations
+are counted only once. These reviewed regions affect member attribution, not the
+historical aggregate's existing treatment of quoted language.
+An explicitly introduced, indented quotation can be a single line; it is still separate
+from the member's resumed remarks.
+
+Audit artifacts also retain `candidate_turns.parquet`: the complete original normalized
+turn for each lexical candidate, including excluded cases, so contextual review is not
+limited to an excerpt. HTML, PDF, member-scoring, and codebook hashes identify the rules.
+API omissions of known stored dates are checked against the official public day archive;
+an unresolved missing date still fails coverage rather than being treated as zero.
+
 Run the source audit with `save_candidates: true` to retain independently checked
 `speaker-congress-N` partitions as artifacts. This does not modify published data.
 After reviewing all scopes and matching the audited rule hashes, the existing backfill
 workflow's `source_run_id` recovery input can publish those saved partitions without
 downloading the entire corpus again. A normal historical rebuild now audits the original
 corpus before rebuilding metrics and retains publication inputs for recovery.
+Replacement partitions must reconcile to every original-source accepted form before
+being saved. Recovery artifacts also retain the full historical metrics and coverage
+tables, not only the rendered figures.
+For Congresses 115 onward, candidate runs also emit `aggregate-congress-N` metrics.
+These are separately audited with the aggregate quotation policy and reconciled by
+party, chamber, and profanity tier, using the same downloaded original turns. They are
+not reconstructed from member counts and do not require another GovInfo corpus download.
 
 The homepage, published at <https://www.themarginoferror.com/congressional_profanity/>, leads
 with interactive long-run panels for formal courtesy, profanity, and slurs. Each panel compares Democrats with Republicans from 1873 to the

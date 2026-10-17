@@ -119,6 +119,9 @@ jobs:
           name: audited-historical-publication-inputs
           path: |
             data/site/long_run_language.json
+            data/processed/metrics/
+            data/processed/coverage/
+            data/reports/tables/
             outputs/figures/
           if-no-files-found: error
           retention-days: 30
