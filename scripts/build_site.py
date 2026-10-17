@@ -74,6 +74,7 @@ def validate_historical_audit(root: Path) -> None:
         "scorer_sha256": "analysis/score/scorers.py",
         "codebook_sha256": "analysis/score/lexicons/profanity.txt",
         "ingester_sha256": "analysis/ingest/govinfo.py",
+        "bulk_ingester_sha256": "analysis/ingest/govinfo_bulk.py",
         "pdf_ingester_sha256": "analysis/ingest/govinfo_pdf.py",
         "member_scorer_sha256": "analysis/speakers.py",
     }

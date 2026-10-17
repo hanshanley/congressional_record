@@ -224,6 +224,22 @@ def test_source_reviewed_external_quote_preserves_the_members_own_use_of_the_sam
     assert mask_quotations(text, "another-source")[1] == ""
 
 
+def test_reviewed_mixed_quote_delimiter_does_not_swallow_the_members_own_question():
+    text = (
+        'Here is a ``how high": They eliminate the fee.\n'
+        "What the hell does permitting reform have to do with the debt limit?\n"
+        "But fossil fuel says ``jump,'' and House Republicans say ``how high?''"
+    )
+    spoken, quoted = mask_quotations(text, "crec:CREC-2023-04-26-pt1-PgS1370-5#27-resumed-6")
+    assert len(spoken) == len(text)
+    assert "What the hell does permitting reform" in spoken
+    assert "how high" not in spoken and "jump" not in spoken
+    assert "how high" in quoted and "jump" in quoted
+    assert Scorers().profanity_term_counts(spoken) == {"what the hell": 1}
+    with pytest.raises(ValueError, match="uniquely"):
+        mask_quotations(text + '\nHere is a ``how high":', "crec:CREC-2023-04-26-pt1-PgS1370-5#other")
+
+
 def test_turns_without_a_bioguide_are_dropped(turn_file):
     path = turn_file([
         _row(turn_id="a", bioguide=None, text="damn"),

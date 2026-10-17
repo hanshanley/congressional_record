@@ -76,6 +76,31 @@ def _members_of(scope: ET.Element) -> List[Dict[str, str]]:
     return normalize_members(parse_members(scope))
 
 
+def _page_range(node: ET.Element) -> Optional[Tuple[str, int, int]]:
+    for extent in node.iter():
+        if _localname(extent.tag) != "extent" or extent.attrib.get("unit") != "pages":
+            continue
+        pages = {_localname(child.tag): (child.text or "").strip() for child in extent}
+        first = re.fullmatch(r"([A-Za-z]+)(\d+)", pages.get("start", ""))
+        last = re.fullmatch(r"([A-Za-z]+)(\d+)", pages.get("end", ""))
+        if first and last and first[1].upper() == last[1].upper():
+            start, end = int(first[2]), int(last[2])
+            if start > end:
+                raise ValueError(f"Reversed original page range: {pages}")
+            return first[1].upper(), start, end
+    return None
+
+
+def _ordered_granules(granules):
+    return sorted(
+        granules.items(),
+        key=lambda item: (
+            -(item[1]["page_range"][2] - item[1]["page_range"][1] + 1)
+            if item[1].get("page_range") else 0
+        ),
+    )
+
+
 def parse_package_mods(mods_bytes: bytes) -> Dict[str, Dict[str, Any]]:
     """Map granuleId -> {granuleClass, chamber, members[]} from a package mods.xml."""
     try:
@@ -107,6 +132,7 @@ def parse_package_mods(mods_bytes: bytes) -> Dict[str, Dict[str, Any]]:
             "subGranuleClass": subclass,
             "chamber": chamber,
             "members": _members_of(node),
+            "page_range": _page_range(node),
         }
     return out
 
@@ -153,6 +179,43 @@ def _turn_fingerprint(turn: Dict[str, Any]) -> str:
     return hashlib.sha256(identity.encode("utf-8")).hexdigest()
 
 
+class _TurnDeduplicator:
+    def __init__(self):
+        self.seen = {}
+
+    def duplicate(self, turn, page_range):
+        granule = turn["turn_id"].split("#")[0]
+        segment = _turn_fingerprint(turn)
+        keys = [("segment", segment)] if segment else []
+        if page_range:
+            text = strip_page_markers(turn.get("text") or "")
+            text = re.sub(r"(?m)^[ \t]*_{3,}[ \t]*$", "", text)
+            normalized = " ".join(text.split())
+            if len(normalized) >= _MIN_DEDUPE_CHARS:
+                body = "\0".join([
+                    turn.get("bioguide") or "", turn.get("speaker_name") or "",
+                    turn.get("chamber") or "", "1" if turn.get("is_procedural") else "0",
+                    normalized,
+                ])
+                keys.append(("body", hashlib.sha256(body.encode("utf-8")).hexdigest()))
+        for key in keys:
+            for previous_granule, previous_pages in self.seen.get(key, []):
+                if previous_granule == granule:
+                    continue
+                if previous_pages is None or page_range is None:
+                    if key[0] == "segment":
+                        return True
+                elif (
+                    previous_pages[0] == page_range[0]
+                    and previous_pages[1] <= page_range[2]
+                    and page_range[1] <= previous_pages[2]
+                ):
+                    return True
+        for key in keys:
+            self.seen.setdefault(key, []).append((granule, page_range))
+        return False
+
+
 def _turns_from_zip(zip_bytes: bytes, pkg: str) -> Iterator[Dict[str, Any]]:
     z = zipfile.ZipFile(io.BytesIO(zip_bytes))
     names = z.namelist()
@@ -168,15 +231,18 @@ def _turns_from_zip(zip_bytes: bytes, pkg: str) -> Iterator[Dict[str, Any]]:
     if not congress:
         return
     htm_names = {n.rsplit("/", 1)[-1][:-4]: n for n in names if n.endswith(".htm")}
+    deduplicator = _TurnDeduplicator()
     if not htm_names:
         from analysis.ingest.govinfo_pdf import turns_from_pdfs
 
         LOG.info("%s has no HTML transcripts; ingesting section PDFs", pkg)
-        yield from turns_from_pdfs(z, gmap, pkg, date, congress)
+        for turn in turns_from_pdfs(z, dict(_ordered_granules(gmap)), pkg, date, congress):
+            gid = turn["turn_id"].split("#")[0].removeprefix("crec:")
+            if not deduplicator.duplicate(turn, gmap.get(gid, {}).get("page_range")):
+                yield turn
         return
-    seen_fingerprints: set[str] = set()
 
-    for gid, info in gmap.items():
+    for gid, info in _ordered_granules(gmap):
         htm = htm_names.get(gid)
         if not htm:
             continue
@@ -197,12 +263,8 @@ def _turns_from_zip(zip_bytes: bytes, pkg: str) -> Iterator[Dict[str, Any]]:
             ),
             non_spoken=info.get("subGranuleClass") in NON_SPOKEN_SUBCLASSES,
         ):
-            fingerprint = _turn_fingerprint(turn)
-            if fingerprint:
-                if fingerprint in seen_fingerprints:
-                    continue
-                seen_fingerprints.add(fingerprint)
-            yield turn
+            if not deduplicator.duplicate(turn, info.get("page_range")):
+                yield turn
 
 
 def probe_packages(

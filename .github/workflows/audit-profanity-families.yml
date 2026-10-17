@@ -25,7 +25,7 @@ jobs:
     timeout-minutes: 180
     strategy:
       fail-fast: false
-      max-parallel: 4
+      max-parallel: 6
       matrix:
         congress: ${{ fromJSON(inputs.congresses) }}
     steps:
@@ -45,7 +45,7 @@ jobs:
         run: |
           candidate_args=()
           if [[ "$SAVE_CANDIDATES" == "true" ]]; then
-            candidate_args=(--candidate-out audit/candidates)
+            candidate_args=(--candidate-out audit/candidates --source-out audit/originals)
             if [[ "$AUDIT_CONGRESS" -ge 115 ]]; then
               candidate_args+=(--aggregate-out audit/aggregates)
             fi

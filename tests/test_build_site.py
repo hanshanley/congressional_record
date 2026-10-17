@@ -49,6 +49,7 @@ def test_historical_publication_rejects_an_audit_from_before_policy_changes(tmp_
         "scorer_sha256": "analysis/score/scorers.py",
         "codebook_sha256": "analysis/score/lexicons/profanity.txt",
         "ingester_sha256": "analysis/ingest/govinfo.py",
+        "bulk_ingester_sha256": "analysis/ingest/govinfo_bulk.py",
         "pdf_ingester_sha256": "analysis/ingest/govinfo_pdf.py",
         "member_scorer_sha256": "analysis/speakers.py",
     }

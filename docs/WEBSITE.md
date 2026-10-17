@@ -48,6 +48,10 @@ member's own resumed floor paragraphs. A missing surname period is recognized on
 followed by an explicit floor address; identities are still resolved from source metadata
 or the dated roster, never guessed. Short recovered fragments retain their original-segment
 identity for overlap deduplication.
+Long duplicate remarks in overlapping granules are also compared independently of
+surrounding bill metadata and editorial underscore separators. Original MODS page ranges
+must overlap; identical remarks on disjoint physical pages or repeated within the same
+granule are not discarded. Broader page views are processed before their individual views.
 
 Bill-introduction headings cannot restart the preceding member's remarks. Verified
 external radio and telephone transcripts, telegram text, and directly attributed
@@ -66,6 +70,9 @@ an unresolved missing date still fails coverage rather than being treated as zer
 
 Run the source audit with `save_candidates: true` to retain independently checked
 `speaker-congress-N` partitions as artifacts. This does not modify published data.
+These artifacts now also retain every normalized original turn under `originals/`,
+including zero-match turns, so source-normalization corrections can be replayed with
+complete word denominators rather than another corpus download.
 After reviewing all scopes and matching the audited rule hashes, the existing backfill
 workflow's `source_run_id` recovery input can publish those saved partitions without
 downloading the entire corpus again. A normal historical rebuild now audits the original

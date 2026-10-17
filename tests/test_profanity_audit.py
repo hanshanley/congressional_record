@@ -190,6 +190,7 @@ def test_one_download_retains_distinct_member_and_aggregate_quotation_policies(t
         "--fetch-congress", "115", "--out", str(tmp_path / "audit"),
         "--daily", str(daily), "--candidate-out", str(tmp_path / "members"),
         "--aggregate-out", str(tmp_path / "aggregates"),
+        "--source-out", str(tmp_path / "originals"),
     ]) == 0
     member = pd.read_parquet(tmp_path / "members/congress_115.parquet").iloc[0]
     aggregate = pd.read_parquet(tmp_path / "aggregates/congress_115.parquet").iloc[0]
@@ -198,6 +199,8 @@ def test_one_download_retains_distinct_member_and_aggregate_quotation_policies(t
     assert aggregate.profanity_hits == 2
     assert aggregate.profanity_mild_hits == aggregate.profanity_strong_hits == 1
     assert downloads == [["CREC-2017-03-01"]]
+    retained = pd.read_parquet(tmp_path / "originals/govinfo_bulk_115.parquet")
+    assert retained.iloc[0]["text"] == rows[0]["text"]
 
 
 def test_literal_context_exclusions_and_attached_compounds_retain_original_evidence():

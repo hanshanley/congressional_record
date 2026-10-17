@@ -9,6 +9,7 @@ import datetime as dt
 import hashlib
 import json
 import logging
+import shutil
 from pathlib import Path
 import re
 import sys
@@ -301,6 +302,9 @@ def audit(files, output, *, mode, daily=None, congress=None):
         "ingester_sha256": hashlib.sha256(
             (ROOT / "analysis/ingest/govinfo.py").read_bytes()
         ).hexdigest(),
+        "bulk_ingester_sha256": hashlib.sha256(
+            (ROOT / "analysis/ingest/govinfo_bulk.py").read_bytes()
+        ).hexdigest(),
         "pdf_ingester_sha256": hashlib.sha256(
             (ROOT / "analysis/ingest/govinfo_pdf.py").read_bytes()
         ).hexdigest(),
@@ -352,6 +356,10 @@ def main(argv=None):
         "--aggregate-out", type=Path,
         help="Also audit and retain modern GovInfo aggregate metrics from the same source download.",
     )
+    parser.add_argument(
+        "--source-out", type=Path,
+        help="Retain every normalized original turn, including zero-match turns, for later recovery.",
+    )
     args = parser.parse_args(argv)
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
     if bool(args.turns) == bool(args.fetch_congress):
@@ -362,6 +370,8 @@ def main(argv=None):
         not args.candidate_out or not args.fetch_congress or args.fetch_congress < 115
     ):
         parser.error("--aggregate-out requires checked member candidates from Congress 115 onward")
+    if args.source_out and not args.fetch_congress:
+        parser.error("--source-out requires --fetch-congress")
     daily = load_daily(args.daily) if args.mode == "members" and args.fetch_congress else None
     if args.mode == "members" and args.fetch_congress and (daily is None or daily.empty):
         parser.error("the stored member table is required for a full source comparison")
@@ -386,6 +396,10 @@ def main(argv=None):
             _, deferred = run_incremental_bulk(packages, root / "bulk", root, end=end, workers=6)
             if deferred:
                 raise RuntimeError(f"Audit coverage is incomplete: {deferred}")
+            if args.source_out:
+                args.source_out.mkdir(parents=True, exist_ok=True)
+                for path in select_turn_files(root / "turns"):
+                    shutil.copy2(path, args.source_out / path.name)
             summary = audit(
                 select_turn_files(root / "turns"), args.out,
                 mode=args.mode, daily=daily, congress=congress,

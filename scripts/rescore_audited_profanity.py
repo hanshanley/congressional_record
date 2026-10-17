@@ -108,6 +108,8 @@ def validate_rules(baseline_root, summary):
     }
     if "context_exclusions_sha256" in summary:
         files["context_exclusions_sha256"] = "analysis/score/lexicons/profanity_contexts.json"
+    if "bulk_ingester_sha256" in summary:
+        files["bulk_ingester_sha256"] = "analysis/ingest/govinfo_bulk.py"
     for key, name in files.items():
         if summary.get(key) != checksum(baseline_root / name):
             raise ValueError(f"Producer source does not match its audit: {name}")

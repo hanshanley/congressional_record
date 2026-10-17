@@ -493,6 +493,46 @@ def test_single_centered_editorial_heading_does_not_hide_floor_remarks():
     assert turns[0]["text"].endswith("My floor remarks continue.")
 
 
+def test_overlapping_page_views_deduplicate_long_remarks_despite_editorial_footer():
+    from analysis.ingest.govinfo_bulk import _TurnDeduplicator, _ordered_granules
+
+    body = "A complete original floor paragraph with substantive remarks. " * 15
+    original = {
+        "turn_id": "crec:CREC-2023-12-14-pt1-PgS5999#1",
+        "bioguide": "C1", "speaker_name": "Mr. MEMBER", "chamber": "senate",
+        "is_procedural": False, "text": body, "_source_segment_chars": 2000,
+        "_source_segment_fingerprint": "parent-with-following-bill-metadata", "_source_fragment": 0,
+    }
+    duplicate = {
+        **original, "turn_id": "crec:CREC-2023-12-14-pt1-PgS5999-2#1",
+        "text": body + "\n                                 ______",
+        "_source_segment_fingerprint": "individual-without-following-metadata",
+    }
+    dedup = _TurnDeduplicator()
+    assert not dedup.duplicate(original, ("S", 5999, 6000))
+    assert dedup.duplicate(duplicate, ("S", 5999, 5999))
+    assert not dedup.duplicate({**original, "turn_id": original["turn_id"] + "-repeated"}, ("S", 5999, 6000))
+    assert not dedup.duplicate(
+        {**duplicate, "turn_id": "crec:CREC-2023-12-14-pt1-PgS6001#1"},
+        ("S", 6001, 6001),
+    )
+    assert [gid for gid, _ in _ordered_granules({
+        "individual": {"page_range": ("S", 5999, 5999)},
+        "umbrella": {"page_range": ("S", 5999, 6000)},
+    })] == ["umbrella", "individual"]
+
+
+def test_mods_page_ranges_support_physical_overlap_checks():
+    from analysis.ingest.govinfo_bulk import parse_package_mods
+
+    metadata = parse_package_mods(b"""
+        <mods><relatedItem type="constituent" ID="id-CREC-example">
+          <extent unit="pages"><start>S5999</start><end>S6000</end></extent>
+        </relatedItem></mods>
+    """)
+    assert metadata["CREC-example"]["page_range"] == ("S", 5999, 6000)
+
+
 def test_fuzzy_keyword_matching() -> None:
     from analysis.score.scorers import morph_variants, plural_variants
     assert {"colleague", "colleagues"}.issubset(morph_variants("colleague"))

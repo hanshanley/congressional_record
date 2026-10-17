@@ -104,6 +104,11 @@ _REVIEWED_SOURCE_QUOTES = {
         ("Spare me the\nbullshit about constitutional rights.", "So pardon us"),
     ),
 }
+_REVIEWED_QUOTE_DELIMITERS = {
+    "crec:CREC-2023-04-26-pt1-PgS1370-5": (
+        ('Here is a ``how high":', "Here is a ``how high''"),
+    ),
+}
 
 _READ_COLS = [
     "turn_id", "source", "date", "congress", "chamber", "party", "state",
@@ -449,9 +454,17 @@ def language_metric_available(frame: pd.DataFrame, key: str) -> bool:
 
 def quotation_regions(text: str, turn_id: Optional[str] = None) -> List[Tuple[int, int]]:
     """Locate marked quotations and independently reviewed original-source passages."""
+    parsed = text
+    source = (turn_id or "").split("#")[0]
+    for original, repaired in _REVIEWED_QUOTE_DELIMITERS.get(source, ()):
+        if original not in parsed:
+            continue
+        if len(original) != len(repaired) or parsed.count(original) != 1:
+            raise ValueError(f"Reviewed quotation delimiter no longer matches uniquely: {turn_id}")
+        parsed = parsed.replace(original, repaired, 1)
     regions = (
-        [match.span() for match in _QUOTE_RE.finditer(text)]
-        if any(mark in text for mark in ("``", "\u2018\u2018", "\u201c")) else []
+        [match.span() for match in _QUOTE_RE.finditer(parsed)]
+        if any(mark in parsed for mark in ("``", "\u2018\u2018", "\u201c")) else []
     )
     for opening, closing in _REVIEWED_SOURCE_QUOTES.get((turn_id or "").split("#")[0], ()):
         start = text.find(opening)
