@@ -416,7 +416,7 @@ def main(argv=None):
                 mode=args.mode, daily=daily, congress=congress,
             )
             if args.candidate_out and not summary["scorer_disagreements"]:
-                candidate = speaker_counts(select_turn_files(root / "turns"))
+                candidate = speaker_counts(select_turn_files(root / "turns"), congress=congress)
                 candidate = candidate[candidate["congress"] == congress]
                 if candidate.empty:
                     raise ValueError("No member rows are available for the candidate partition")

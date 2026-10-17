@@ -548,6 +548,8 @@ def _iter_rows(path: Path, batch_size: int = 10_000) -> Iterator[dict]:
 def speaker_counts(
     files: Iterable[Path],
     scorers: Optional[Scorers] = None,
+    *,
+    congress: Optional[int] = None,
 ) -> pd.DataFrame:
     """Score turns and accumulate per ``(bioguide, date, chamber)`` counts."""
     scorers = scorers or Scorers()
@@ -561,6 +563,8 @@ def speaker_counts(
 
     for path in files:
         for row in _iter_rows(path):
+            if congress is not None and row.get("congress") != congress:
+                continue
             if row.get("is_procedural"):
                 continue
             bioguide = (row.get("bioguide") or "").strip()

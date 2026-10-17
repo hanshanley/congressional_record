@@ -31,7 +31,11 @@ from analysis.ingest.govinfo_bulk import (  # noqa: E402
     _ordered_granules,
     parse_package_mods,
 )
-from analysis.ingest.schema import ARROW_SCHEMA, normalize_chamber  # noqa: E402
+from analysis.ingest.schema import (  # noqa: E402
+    ARROW_SCHEMA,
+    normalize_chamber,
+    year_from_congress,
+)
 from analysis.normalize.parties import normalize_party  # noqa: E402
 
 _PACKAGE_RE = re.compile(r"^CREC-\d{4}-\d{2}-\d{2}$")
@@ -81,9 +85,70 @@ def _iter_rows(files: Iterable[Path]) -> Iterator[Tuple[Path, Dict[str, Any]]]:
                 yield path, row
 
 
+def _load_source_coverage(summary_path: Path) -> Optional[Dict[str, Any]]:
+    path = summary_path.parent / "source_coverage.json"
+    if not path.exists():
+        return None
+    coverage = json.loads(path.read_text())
+    if (
+        not isinstance(coverage.get("start"), str)
+        or not isinstance(coverage.get("end"), str)
+        or not isinstance(coverage.get("packages"), list)
+        or not all(_PACKAGE_RE.fullmatch(package) for package in coverage["packages"])
+    ):
+        raise ValueError(f"Invalid retained source coverage: {path}")
+    return {
+        "path": path,
+        "sha256": checksum(path),
+        "start": coverage["start"],
+        "end": coverage["end"],
+        "packages": set(coverage["packages"]),
+    }
+
+
+def _boundary_window(congress: int) -> Dict[int, set]:
+    first_year = year_from_congress(congress)
+    return {
+        congress - 1: {f"{first_year}-01-{day:02d}" for day in range(1, 4)},
+        congress + 1: {f"{first_year + 2}-01-{day:02d}" for day in range(1, 4)},
+    }
+
+
+def _validate_boundary_row(
+    row: Dict[str, Any],
+    scoped_congress: int,
+    coverage: Optional[Dict[str, Any]],
+) -> Tuple[str, str]:
+    allowed = _boundary_window(scoped_congress)
+    row_congress = row["congress"]
+    date = row["date"]
+    if row_congress not in allowed or date not in allowed[row_congress]:
+        raise ValueError(
+            "Normalized source contains a non-boundary Congress row: "
+            f"congress={row_congress}, date={date}, turn_id={row['turn_id']}"
+        )
+    parts = _turn_parts(row["turn_id"])
+    if not parts or parts[0].removeprefix("CREC-") != date:
+        raise ValueError(
+            f"Boundary row lacks matching CREC package/date provenance: {row['turn_id']}"
+        )
+    package = parts[0]
+    if coverage and (
+        not coverage["start"] <= date <= coverage["end"]
+        or package not in coverage["packages"]
+    ):
+        raise ValueError(
+            "Boundary row is absent from retained source coverage: "
+            f"{package}, {date}"
+        )
+    return date, package
+
+
 def _validate_source(
-    files: List[Path], summary: Dict[str, Any],
-) -> Tuple[Dict[str, Dict[str, Any]], Dict[str, str], int]:
+    files: List[Path],
+    summary: Dict[str, Any],
+    coverage: Optional[Dict[str, Any]],
+) -> Tuple[Dict[str, Dict[str, Any]], Dict[str, str], int, Dict[str, Any]]:
     if summary.get("mode") != "members":
         raise ValueError("Continuation repair requires a member-source audit")
     congress = summary.get("congress")
@@ -98,10 +163,17 @@ def _validate_source(
     candidates: Dict[str, Dict[str, Any]] = {}
     ids = set()
     counts = Counter()
+    boundary_dates = Counter()
+    boundary_packages = Counter()
+    boundary_congresses = Counter()
     input_hashes = {path.name: checksum(path) for path in files}
     for _, row in _iter_rows(files):
         counts[row["congress"]] += 1
         if row["congress"] != congress:
+            date, package = _validate_boundary_row(row, congress, coverage)
+            boundary_dates[date] += 1
+            boundary_packages[package] += 1
+            boundary_congresses[row["congress"]] += 1
             continue
         turn_id = row["turn_id"]
         if turn_id in ids:
@@ -124,12 +196,36 @@ def _validate_source(
             }
     if sum(counts.values()) == 0:
         raise ValueError("Complete normalized source is empty")
-    if counts != Counter({congress: expected}) or len(ids) != expected:
+    if counts[congress] != expected or len(ids) != expected:
         raise ValueError(
-            "Normalized source is incomplete or not scoped to its audit: "
+            "Normalized source has an incomplete scoped Congress: "
             f"rows_by_congress={dict(counts)}, turns_checked={expected}"
         )
-    return candidates, input_hashes, expected
+    allowed = _boundary_window(congress)
+    boundary = {
+        "total": sum(boundary_congresses.values()),
+        "by_congress": {
+            str(key): value for key, value in sorted(boundary_congresses.items())
+        },
+        "by_date": dict(sorted(boundary_dates.items())),
+        "by_package": dict(sorted(boundary_packages.items())),
+        "allowed_adjacent_congress_dates": {
+            str(key): sorted(value) for key, value in sorted(allowed.items())
+        },
+        "source_coverage": (
+            {
+                "available": True,
+                "path": str(coverage["path"]),
+                "sha256": coverage["sha256"],
+                "start": coverage["start"],
+                "end": coverage["end"],
+                "verified_boundary_packages": sorted(boundary_packages),
+            }
+            if coverage else
+            {"available": False}
+        ),
+    }
+    return candidates, input_hashes, expected, boundary
 
 
 def _download_metadata(package: str, cache: Path) -> Path:
@@ -269,13 +365,14 @@ def _prepare_changes(
     files: List[Path],
     resolved: Dict[str, Dict[str, str]],
     metadata: Dict[str, Dict[str, Dict[str, Any]]],
+    scoped_congress: int,
 ) -> Tuple[Dict[str, Dict[str, Any]], set, List[Dict[str, Any]], List[Dict[str, Any]]]:
     packages = {gid[:15] for gid in resolved}
     package_rows: Dict[str, List[Tuple[int, Dict[str, Any]]]] = defaultdict(list)
     ordinal = 0
     for _, row in _iter_rows(files):
         parts = _turn_parts(row["turn_id"])
-        if parts and parts[0] in packages:
+        if row["congress"] == scoped_congress and parts and parts[0] in packages:
             package_rows[parts[0]].append((ordinal, row))
         ordinal += 1
 
@@ -346,14 +443,19 @@ def _prepare_changes(
     return changed_rows, removals, changes, removal_proof
 
 
-def _text_digest(rows: Iterable[Dict[str, Any]]) -> str:
-    digest = hashlib.sha256()
-    for row in rows:
-        digest.update((row["turn_id"] or "").encode("utf-8"))
-        digest.update(b"\0")
-        digest.update((row["text"] or "").encode("utf-8"))
-        digest.update(b"\0")
-    return digest.hexdigest()
+def _update_text_digest(digest, row: Dict[str, Any]) -> None:
+    digest.update((row["turn_id"] or "").encode("utf-8"))
+    digest.update(b"\0")
+    digest.update((row["text"] or "").encode("utf-8"))
+    digest.update(b"\0")
+
+
+def _update_row_digest(digest, row: Dict[str, Any]) -> None:
+    values = [row[name] for name in ARROW_SCHEMA.names]
+    digest.update(
+        json.dumps(values, ensure_ascii=True, separators=(",", ":")).encode("utf-8")
+    )
+    digest.update(b"\0")
 
 
 def _write_outputs(
@@ -362,9 +464,12 @@ def _write_outputs(
     out: Path,
     changed_rows: Dict[str, Dict[str, Any]],
     removals: set,
-) -> Tuple[Dict[str, int], str]:
+    scoped_congress: int,
+) -> Tuple[Dict[str, int], str, str, int]:
     counts = {}
     source_text = hashlib.sha256()
+    boundary_rows = hashlib.sha256()
+    boundary_count = 0
     for path in files:
         relative = path.relative_to(turns)
         target = out / relative
@@ -383,6 +488,9 @@ def _write_outputs(
                     source_text.update(b"\0")
                     source_text.update((original["text"] or "").encode("utf-8"))
                     source_text.update(b"\0")
+                    if original["congress"] != scoped_congress:
+                        _update_row_digest(boundary_rows, original)
+                        boundary_count += 1
                     rows.append(row)
                 if rows:
                     writer.write_table(pa.Table.from_pylist(rows, schema=ARROW_SCHEMA))
@@ -390,16 +498,30 @@ def _write_outputs(
         finally:
             writer.close()
         counts[str(relative)] = count
-    return counts, source_text.hexdigest()
-
-
-def _output_text_digest(out: Path, files: List[Path], turns: Path) -> str:
-    rows = (
-        row
-        for path in files
-        for _, row in _iter_rows([out / path.relative_to(turns)])
+    return (
+        counts,
+        source_text.hexdigest(),
+        boundary_rows.hexdigest(),
+        boundary_count,
     )
-    return _text_digest(rows)
+
+
+def _output_digests(
+    out: Path,
+    files: List[Path],
+    turns: Path,
+    scoped_congress: int,
+) -> Tuple[str, str, int]:
+    text = hashlib.sha256()
+    boundary_rows = hashlib.sha256()
+    boundary_count = 0
+    for path in files:
+        for _, row in _iter_rows([out / path.relative_to(turns)]):
+            _update_text_digest(text, row)
+            if row["congress"] != scoped_congress:
+                _update_row_digest(boundary_rows, row)
+                boundary_count += 1
+    return text.hexdigest(), boundary_rows.hexdigest(), boundary_count
 
 
 def main(argv=None) -> int:
@@ -430,7 +552,10 @@ def main(argv=None) -> int:
         raise ValueError(f"No normalized source parquets found in {turns}")
     summary_path = _summary_path(args.audit.resolve())
     summary = json.loads(summary_path.read_text())
-    candidates, input_hashes, original_count = _validate_source(files, summary)
+    coverage = _load_source_coverage(summary_path)
+    candidates, input_hashes, original_count, boundary = _validate_source(
+        files, summary, coverage,
+    )
     metadata, metadata_hashes = _load_metadata(
         (candidate["package"] for candidate in candidates.values()),
         metadata_cache,
@@ -438,16 +563,29 @@ def main(argv=None) -> int:
     )
     resolved, unresolved = _resolve_candidates(candidates, metadata)
     changed_rows, removals, changes, removal_proof = _prepare_changes(
-        files, resolved, metadata,
+        files, resolved, metadata, summary["congress"],
     )
 
     out.mkdir(parents=True, exist_ok=True)
-    final_counts, source_text_hash = _write_outputs(
-        files, turns, out, changed_rows, removals,
+    (
+        final_counts,
+        source_text_hash,
+        source_boundary_hash,
+        source_boundary_count,
+    ) = _write_outputs(
+        files, turns, out, changed_rows, removals, summary["congress"],
     )
-    output_text_hash = _output_text_digest(out, files, turns)
+    output_text_hash, output_boundary_hash, output_boundary_count = _output_digests(
+        out, files, turns, summary["congress"],
+    )
     if source_text_hash != output_text_hash:
         raise AssertionError("Continuation repair changed original transcript text")
+    if (
+        source_boundary_hash != output_boundary_hash
+        or source_boundary_count != output_boundary_count
+        or source_boundary_count != boundary["total"]
+    ):
+        raise AssertionError("Continuation repair changed an out-of-scope boundary row")
     after_hashes = {path.name: checksum(path) for path in files}
     if after_hashes != input_hashes:
         raise AssertionError("Continuation repair modified an input parquet")
@@ -464,6 +602,14 @@ def main(argv=None) -> int:
         "attribution_changes": changes,
         "duplicate_removals": removal_proof,
         "unresolved_non_actionable_reasons": unresolved,
+        "adjacent_congress_boundary_rows": {
+            **boundary,
+            "preservation": {
+                "asserted": True,
+                "input_rows_sha256": source_boundary_hash,
+                "output_rows_sha256": output_boundary_hash,
+            },
+        },
         "original_text_preservation": {
             "asserted": True,
             "kept_input_turn_text_sha256": source_text_hash,

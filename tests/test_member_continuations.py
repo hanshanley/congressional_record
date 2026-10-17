@@ -201,6 +201,27 @@ def _write_turns(path: Path, rows) -> None:
     )
 
 
+def _write_coverage(audit: Path, start: str, end: str, packages) -> None:
+    (audit / "source_coverage.json").write_text(json.dumps({
+        "start": start,
+        "end": end,
+        "packages": list(packages),
+    }))
+
+
+def _boundary_row(congress: int, date: str):
+    package = f"CREC-{date}"
+    return list(build_turns(
+        "Nomination at the Congress boundary\n\n"
+        "  Mr. President, this out-of-scope attribution must remain untouched.",
+        [],
+        f"{package}-pt1-PgS1",
+        date,
+        congress,
+        "senate",
+    ))[0]
+
+
 def _utility_fixture(tmp_path: Path):
     package = "CREC-2025-01-30"
     known_members = normalize_members([_member()])
@@ -312,13 +333,87 @@ def test_candidate_only_source_is_rejected_as_incomplete(tmp_path):
     rows, _, _, audit, cache, _ = _utility_fixture(tmp_path)
     candidates = tmp_path / "candidate-only"
     _write_turns(candidates / "congress_119.parquet", [rows[-1]])
+    boundary = _boundary_row(118, "2025-01-02")
+    _write_turns(candidates / "congress_118.parquet", [boundary])
+    _write_coverage(
+        audit, "2025-01-01", "2027-01-03",
+        ["CREC-2025-01-02"],
+    )
 
-    with pytest.raises(ValueError, match="incomplete or not scoped"):
+    with pytest.raises(ValueError, match="incomplete scoped Congress"):
         repair_main([
             "--turns", str(candidates),
             "--audit", str(audit),
             "--metadata-cache", str(cache),
             "--out", str(tmp_path / "must-not-exist"),
+        ])
+
+
+def test_legitimate_adjacent_congress_boundary_is_preserved_and_proven(tmp_path):
+    rows, _, turns, audit, cache, _ = _utility_fixture(tmp_path)
+    boundary = _boundary_row(118, "2025-01-02")
+    boundary_path = turns / "govinfo_bulk_118.parquet"
+    _write_turns(boundary_path, [boundary])
+    _write_coverage(
+        audit, "2025-01-01", "2027-01-03",
+        ["CREC-2025-01-02", "CREC-2025-01-30"],
+    )
+    out = tmp_path / "boundary-repaired"
+
+    assert repair_main([
+        "--turns", str(turns),
+        "--audit", str(audit),
+        "--metadata-cache", str(cache),
+        "--out", str(out),
+    ]) == 0
+
+    repaired_boundary = pq.read_table(out / boundary_path.name).to_pylist()
+    expected = [{name: boundary[name] for name in ARROW_SCHEMA.names}]
+    assert repaired_boundary == expected
+    proof = json.loads((out / "continuation_repair_proof.json").read_text())
+    boundary_proof = proof["adjacent_congress_boundary_rows"]
+    assert boundary_proof["total"] == 1
+    assert boundary_proof["by_congress"] == {"118": 1}
+    assert boundary_proof["by_date"] == {"2025-01-02": 1}
+    assert boundary_proof["by_package"] == {"CREC-2025-01-02": 1}
+    assert boundary_proof["source_coverage"]["available"] is True
+    assert boundary_proof["preservation"]["asserted"] is True
+    assert proof["scoped_original_turn_count"] == len(rows)
+
+
+def test_arbitrary_mixed_congress_row_is_rejected(tmp_path):
+    _, _, turns, audit, cache, _ = _utility_fixture(tmp_path)
+    invalid = _boundary_row(117, "2025-01-02")
+    _write_turns(turns / "govinfo_bulk_117.parquet", [invalid])
+    _write_coverage(
+        audit, "2025-01-01", "2027-01-03",
+        ["CREC-2025-01-02"],
+    )
+
+    with pytest.raises(ValueError, match="non-boundary Congress row"):
+        repair_main([
+            "--turns", str(turns),
+            "--audit", str(audit),
+            "--metadata-cache", str(cache),
+            "--out", str(tmp_path / "invalid-mixed"),
+        ])
+
+
+def test_adjacent_boundary_must_be_in_retained_coverage(tmp_path):
+    _, _, turns, audit, cache, _ = _utility_fixture(tmp_path)
+    boundary = _boundary_row(118, "2025-01-02")
+    _write_turns(turns / "govinfo_bulk_118.parquet", [boundary])
+    _write_coverage(
+        audit, "2025-01-01", "2027-01-03",
+        ["CREC-2025-01-03"],
+    )
+
+    with pytest.raises(ValueError, match="absent from retained source coverage"):
+        repair_main([
+            "--turns", str(turns),
+            "--audit", str(audit),
+            "--metadata-cache", str(cache),
+            "--out", str(tmp_path / "invalid-coverage"),
         ])
 
 

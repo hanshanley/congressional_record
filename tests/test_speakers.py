@@ -263,6 +263,25 @@ def test_external_newspaper_headline_is_separate_from_the_members_own_use_of_the
     assert Scorers().profanity_term_counts(quoted) == {"damn": 1}
 
 
+def test_congress_scope_is_applied_before_boundary_rows_can_change_member_metadata(turn_file):
+    source = turn_file([
+        _row(
+            turn_id="old", congress=111, date="2010-12-30", bioguide="A",
+            party="D", speaker_name="Earlier name", text="This is damn wrong.",
+        ),
+        _row(
+            turn_id="incoming", congress=112, date="2011-01-03", bioguide="A",
+            party="R", speaker_name="Incoming name", text="That is bullshit.",
+        ),
+    ])
+    frame = speaker_counts([source], congress=111)
+    assert len(frame) == 1
+    row = frame.iloc[0]
+    assert row["party"] == "D" and row["speaker_name"] == "Earlier name"
+    assert row["congress"] == 111 and row["profanity_hits"] == 1
+    assert row["profanity_terms"] == '{"damn":1}'
+
+
 def test_turns_without_a_bioguide_are_dropped(turn_file):
     path = turn_file([
         _row(turn_id="a", bioguide=None, text="damn"),
