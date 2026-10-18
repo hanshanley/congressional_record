@@ -42,8 +42,13 @@ def _load_build_site():
 @pytest.mark.parametrize("changed", [
     "analysis/score/scorers.py",
     "analysis/score/lexicons/profanity_contexts.json",
+    "crec/metadata.py",
 ])
-def test_historical_publication_rejects_an_audit_from_before_policy_changes(tmp_path, changed):
+@pytest.mark.parametrize("audit_name", [
+    "audit/historical/summary.json",
+    "data/site/source_audit.json",
+])
+def test_historical_publication_rejects_an_audit_from_before_policy_changes(tmp_path, changed, audit_name):
     module = _load_build_site()
     paths = {
         "scorer_sha256": "analysis/score/scorers.py",
@@ -52,6 +57,7 @@ def test_historical_publication_rejects_an_audit_from_before_policy_changes(tmp_
         "bulk_ingester_sha256": "analysis/ingest/govinfo_bulk.py",
         "pdf_ingester_sha256": "analysis/ingest/govinfo_pdf.py",
         "member_scorer_sha256": "analysis/speakers.py",
+        "metadata_sha256": "crec/metadata.py",
     }
     summary = {"turns_checked": 1000, "scorer_disagreements": 0}
     for key, name in paths.items():
@@ -59,7 +65,7 @@ def test_historical_publication_rejects_an_audit_from_before_policy_changes(tmp_
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text("original policy\n")
         summary[key] = hashlib.sha256(target.read_bytes()).hexdigest()
-    audit = tmp_path / "audit/historical/summary.json"
+    audit = tmp_path / audit_name
     audit.parent.mkdir(parents=True)
     audit.write_text(json.dumps(summary))
     contexts = tmp_path / "analysis/score/lexicons/profanity_contexts.json"

@@ -68,7 +68,9 @@ ALL_MEMBER_SCOPE_LABEL = "1994–present"
 def validate_historical_audit(root: Path) -> None:
     audit = root / "audit" / "historical" / "summary.json"
     if not audit.exists():
-        return
+        audit = root / "data" / "site" / "source_audit.json"
+        if not audit.exists():
+            return
     summary = json.loads(audit.read_text(encoding="utf-8"))
     files = {
         "scorer_sha256": "analysis/score/scorers.py",
@@ -78,6 +80,8 @@ def validate_historical_audit(root: Path) -> None:
         "pdf_ingester_sha256": "analysis/ingest/govinfo_pdf.py",
         "member_scorer_sha256": "analysis/speakers.py",
     }
+    if "metadata_sha256" in summary:
+        files["metadata_sha256"] = "crec/metadata.py"
     contexts = root / "analysis/score/lexicons/profanity_contexts.json"
     if contexts.exists():
         payload = json.loads(contexts.read_text(encoding="utf-8"))

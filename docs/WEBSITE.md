@@ -134,11 +134,13 @@ or conflicting decisions fail compilation; uncertainty never becomes an exclusio
 The complete historical review covers all 10,113 original codebook occurrences in
 17,766,619 normalized turns across Congresses 43–114. All 8,420 candidate turns were
 retained in full. Reviewers read each occurrence, using adjacent original debate turns
-and archival pages where a short or corrupted turn lacked context. The 3,192 verified
+and archival pages where a short or corrupted turn lacked context. The 3,191 verified
 nonprofane occurrences are content-addressed exclusions; some were already outside
-the counted scope, so this is not a claim that 3,192 published hits were removed.
+the counted scope, so this is not a claim that 3,191 published hits were removed.
 Genuine quoted, religious, and metaphorical uses remain in the aggregate series.
 The final manifest was checked across all batches for identical-text conflicts.
+An unusual word confirmed in the printed source is retained when its intended meaning
+is unresolved, rather than silently replaced with a guessed word.
 
 The homepage, published at <https://www.themarginoferror.com/congressional_profanity/>, leads
 with interactive long-run panels for formal courtesy, profanity, and slurs. Each panel compares Democrats with Republicans from 1873 to the

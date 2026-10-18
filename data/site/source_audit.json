@@ -1,0 +1,269 @@
+{
+  "mode": "aggregate",
+  "congress": null,
+  "turns_checked": 9762,
+  "candidate_turns_retained": 9762,
+  "audited_utc": "2026-10-18T00:30:40.180072+00:00",
+  "codebook_sha256": "07f0e28ba4716fbb466d4d4c35c27869a442de9c2fb6e3ee57e5f3b6b95d468d",
+  "scorer_sha256": "22091f71146577a4d1226dea30c015e46a0d03e32f77c2092c7777708bb43224",
+  "ingester_sha256": "7091276836429964a339792f76f4d2eef513bea2b52aea731b434f8c58a78f10",
+  "bulk_ingester_sha256": "db1973f966906cb41970e13914bf6d23c38750dcdeae6856474815f7b2ebdd00",
+  "pdf_ingester_sha256": "7fd9faa92ed4bd57267be04389e983d00655f0116f3ab690e923809057686305",
+  "member_scorer_sha256": "039f6b28e45d1f602f89bb66f3aa32976e99adc5cba94a5236aa8e9fdb6cbe1c",
+  "context_exclusions_sha256": "b88035822e93e3cf21e7836dedbb39b95974e2794030a0c76fe6611121c298f8",
+  "reference": "Original normalized transcript words, never website display labels",
+  "stored_comparison_performed": false,
+  "scorer_disagreements": 0,
+  "stored_member_day_differences": 0,
+  "limitation": "Current-policy rechecks of every retained lexical candidate reconcile exactly to complete original-source baselines. The unchanged codebook, tokenization, source eligibility, and full word denominators preserve all zero-match turns. Historical aggregate includes genuine quoted words; member rates exclude marked and reviewed external quotations. Counts are not judgments of personal intent.",
+  "metadata_sha256": "856b2455a6e0e3f27bd77940ed15601d0ce5f7a571c8cc511e19b811ae596395",
+  "full_original_aggregate_turns_checked_before_context_replay": 18819134,
+  "semantic_review": {
+    "historical_congresses": [
+      43,
+      114
+    ],
+    "original_occurrences_reviewed": 10113,
+    "nonprofane_source_occurrences": 3191,
+    "unresolved_decisions": 0,
+    "historical_counted_hits_before_context_review": 7659,
+    "historical_counted_hits_after_context_review": 5557,
+    "note": "Nonprofane review decisions include already-excluded and out-of-scope occurrences.",
+    "recorded_lexical_ambiguities": [
+      {
+        "historical_turn_id": "hein_daily:1120107709",
+        "parallel_govinfo_turn_id": "crec:CREC-2012-05-18-pt1-PgH3155-2#2",
+        "form": "wank",
+        "treatment": "The official printed source confirms this word. It remains a recorded lexical match; intended wording is unresolved and is not silently corrected."
+      }
+    ]
+  },
+  "source_run_id": 39073243450,
+  "replay_proofs": {
+    "historical/43-54": {
+      "proof_sha256": "8c4f2d0a4b20d401ab5182c92b29c910a962eb22f9d25fdc88a729e7b94cdf28",
+      "original_full_turns_checked": 2003829,
+      "candidate_turns_rechecked": 1048,
+      "changed_groups": 75,
+      "words_before": 150610175,
+      "words_after": 150610175
+    },
+    "historical/55-66": {
+      "proof_sha256": "4cbd20ebd4166d622b1a12df0fd5fed012b13834faf677500d897f4713c7b545",
+      "original_full_turns_checked": 3116141,
+      "candidate_turns_rechecked": 1009,
+      "changed_groups": 69,
+      "words_before": 198097800,
+      "words_after": 198097800
+    },
+    "historical/67-78": {
+      "proof_sha256": "c07eaab788bcc8390a5ee74c118a61f7fd55ee88ad007a35df7a719798600d63",
+      "original_full_turns_checked": 3150272,
+      "candidate_turns_rechecked": 1541,
+      "changed_groups": 60,
+      "words_before": 208618078,
+      "words_after": 208618078
+    },
+    "historical/79-90": {
+      "proof_sha256": "d660806ef229ae62904a79ef5b1c8901af9e920ec4542e5a6643a4f2aad50dae",
+      "original_full_turns_checked": 3466771,
+      "candidate_turns_rechecked": 1180,
+      "changed_groups": 60,
+      "words_before": 369104743,
+      "words_after": 369104743
+    },
+    "historical/91-102": {
+      "proof_sha256": "537554e222661ea6a0cc43d1ef86271d9b0b81ab3603f3daf3d4fa75f8ceddb3",
+      "original_full_turns_checked": 3779104,
+      "candidate_turns_rechecked": 2493,
+      "changed_groups": 77,
+      "words_before": 524166631,
+      "words_after": 524166631
+    },
+    "historical/103-114": {
+      "proof_sha256": "7ab6e90a40d21150ed30d710546450792ef98c144888b10effc2cbd9be5538ea",
+      "original_full_turns_checked": 2250502,
+      "candidate_turns_rechecked": 1149,
+      "changed_groups": 51,
+      "words_before": 424057385,
+      "words_after": 424057385
+    },
+    "members/103": {
+      "proof_sha256": "900de1f7b59bb43e54012fb95f02971c7d8c530f4922c3327144d73340bae03a",
+      "original_full_turns_checked": 168371,
+      "candidate_turns_rechecked": 138,
+      "changed_groups": 0,
+      "words_before": 18252770,
+      "words_after": 18252770
+    },
+    "members/104": {
+      "proof_sha256": "43f20cdf6534962d41f09107964eb1a5911301811b102812844d03e62e47beab",
+      "original_full_turns_checked": 403271,
+      "candidate_turns_rechecked": 271,
+      "changed_groups": 0,
+      "words_before": 44703721,
+      "words_after": 44703721
+    },
+    "members/105": {
+      "proof_sha256": "51dbf29c517f366dbe512daf4cf17c91d157eafb1e16c61b7fe2e71d13fbd60b",
+      "original_full_turns_checked": 317396,
+      "candidate_turns_rechecked": 132,
+      "changed_groups": 0,
+      "words_before": 36750020,
+      "words_after": 36750020
+    },
+    "members/106": {
+      "proof_sha256": "1763162003eb3c3e0cdf0b12026b68d186b391bdf85bd31b7e2d8bce915dc32a",
+      "original_full_turns_checked": 325003,
+      "candidate_turns_rechecked": 148,
+      "changed_groups": 0,
+      "words_before": 39427906,
+      "words_after": 39427906
+    },
+    "members/107": {
+      "proof_sha256": "8d3a062e395c85a5a6de4a30e94723375f7666e4564dafa4e38b7a097eeb87e0",
+      "original_full_turns_checked": 293654,
+      "candidate_turns_rechecked": 116,
+      "changed_groups": 0,
+      "words_before": 34966501,
+      "words_after": 34966501
+    },
+    "members/108": {
+      "proof_sha256": "e1a3748731cf7eaebb702b2432ba8f6acdae5f5a340ac66cc60a4fd3595f85a6",
+      "original_full_turns_checked": 318921,
+      "candidate_turns_rechecked": 113,
+      "changed_groups": 0,
+      "words_before": 38274435,
+      "words_after": 38274435
+    },
+    "members/109": {
+      "proof_sha256": "7767acc8c9545567a713d8f1c3ef937160b9faddf2df443929e2c395d00988ca",
+      "original_full_turns_checked": 306262,
+      "candidate_turns_rechecked": 93,
+      "changed_groups": 0,
+      "words_before": 36422170,
+      "words_after": 36422170
+    },
+    "members/110": {
+      "proof_sha256": "26919eecc729b015613606851da23445d20b3525f586626ae89acae3b6058b59",
+      "original_full_turns_checked": 338841,
+      "candidate_turns_rechecked": 106,
+      "changed_groups": 0,
+      "words_before": 39220577,
+      "words_after": 39220577
+    },
+    "members/111": {
+      "proof_sha256": "b9dd8215f27d7b7ad406bb9b292425e1b95a96ebb4c48c50aa65499653a6f9d9",
+      "original_full_turns_checked": 325473,
+      "candidate_turns_rechecked": 96,
+      "changed_groups": 0,
+      "words_before": 36401656,
+      "words_after": 36401656
+    },
+    "members/112": {
+      "proof_sha256": "924e943aa142e40c1472c261e190ea2d839c294ff847c778e4737d2d2b2db3fe",
+      "original_full_turns_checked": 275457,
+      "candidate_turns_rechecked": 104,
+      "changed_groups": 0,
+      "words_before": 27942681,
+      "words_after": 27942681
+    },
+    "members/113": {
+      "proof_sha256": "52a6df1e12554c1de8c0aa4a4a31008dfb5b7da2de9c71585892f3b0785764c2",
+      "original_full_turns_checked": 253577,
+      "candidate_turns_rechecked": 81,
+      "changed_groups": 0,
+      "words_before": 24869163,
+      "words_after": 24869163
+    },
+    "members/114": {
+      "proof_sha256": "92802daa1aaff1a07e027ab72ba3ecd73cc5c5e21a1a18f20ce854ade1ecf85c",
+      "original_full_turns_checked": 246327,
+      "candidate_turns_rechecked": 83,
+      "changed_groups": 0,
+      "words_before": 23248777,
+      "words_after": 23248777
+    },
+    "members/115": {
+      "proof_sha256": "3336b8d58d372faf49f50f4cb4fee0a43104d4d49ea36655f84d15f0fecab13c",
+      "original_full_turns_checked": 241543,
+      "candidate_turns_rechecked": 117,
+      "changed_groups": 0,
+      "words_before": 23569119,
+      "words_after": 23569119
+    },
+    "members/116": {
+      "proof_sha256": "d018e0e349fa83b3d9ba7a5f10c38bcf38fbb015e60a8d12321a07558f055173",
+      "original_full_turns_checked": 210274,
+      "candidate_turns_rechecked": 154,
+      "changed_groups": 0,
+      "words_before": 18530854,
+      "words_after": 18530854
+    },
+    "members/117": {
+      "proof_sha256": "36d6cc2d0a1b21769f7ac3cc3023363f67c3280a005cca9bf9ff4135d63b3761",
+      "original_full_turns_checked": 206364,
+      "candidate_turns_rechecked": 270,
+      "changed_groups": 0,
+      "words_before": 16459555,
+      "words_after": 16459555
+    },
+    "members/118": {
+      "proof_sha256": "8ec3262406708266f1341c94d533beb87aaff4da282e957132162b3bf756aa5e",
+      "original_full_turns_checked": 199969,
+      "candidate_turns_rechecked": 293,
+      "changed_groups": 0,
+      "words_before": 15289703,
+      "words_after": 15289703
+    },
+    "members/119": {
+      "proof_sha256": "3ae0e8148088b253ff81770c8cd09469069bb066b8ebd15739e0bd4fef9d22f0",
+      "original_full_turns_checked": 194365,
+      "candidate_turns_rechecked": 508,
+      "changed_groups": 0,
+      "words_before": 15060833,
+      "words_after": 15060833
+    },
+    "aggregates/115": {
+      "proof_sha256": "5f2f5442bbddb73a2276f78af50470603564eda0e76dad586294dc64e030e6ce",
+      "original_full_turns_checked": 241543,
+      "candidate_turns_rechecked": 117,
+      "changed_groups": 0,
+      "words_before": 27764329,
+      "words_after": 27764329
+    },
+    "aggregates/116": {
+      "proof_sha256": "34f1db97f00faf88d7ca331062321a7fe29fe7f6ebacf4236b3d221961ec8364",
+      "original_full_turns_checked": 210274,
+      "candidate_turns_rechecked": 154,
+      "changed_groups": 0,
+      "words_before": 22296904,
+      "words_after": 22296904
+    },
+    "aggregates/117": {
+      "proof_sha256": "9e95fd9a60d188b85ec2c3e92beeb89086bfe9504d9e5b73f789a6a0dcc70bbb",
+      "original_full_turns_checked": 206364,
+      "candidate_turns_rechecked": 270,
+      "changed_groups": 0,
+      "words_before": 20470536,
+      "words_after": 20470536
+    },
+    "aggregates/118": {
+      "proof_sha256": "0390f37c7d38f170234f9cf91ddcacca531e6a29f7b86dd882697c51b85176e5",
+      "original_full_turns_checked": 199969,
+      "candidate_turns_rechecked": 293,
+      "changed_groups": 0,
+      "words_before": 18553943,
+      "words_after": 18553943
+    },
+    "aggregates/119": {
+      "proof_sha256": "aefb7f45461d67cd6ab7ec71f0843759bd596d76f3e058ca58ae82e807f10002",
+      "original_full_turns_checked": 194365,
+      "candidate_turns_rechecked": 508,
+      "changed_groups": 0,
+      "words_before": 18378095,
+      "words_after": 18378095
+    }
+  },
+  "metrics_sha256": "d45d1947f949728a5370334f39d6ddc5ac24f76141d4692bdf6fb32aebb3d5bb"
+}
