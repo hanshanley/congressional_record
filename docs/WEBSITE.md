@@ -10,11 +10,10 @@ graphs: transparent backgrounds, house typography, party toggles, hover/focus va
 and screen-reader data tables. Publication PNG downloads remain available and provide
 a no-JavaScript fallback. The daily build updates the page and its matching publication PNGs.
 
-Both the dashboard and the family page expose the full included-word codebook, not just
-families with observed matches. The word-family selector initially shows the most-used
-family in the current scope and lists its included forms, without giving any word special
-treatment. The family page graphs the five most-used families; zero-match families remain
-in the word list and full-codebook CSV and JSON with exact counts and word denominators.
+The family page's downloads retain the full included-word codebook, not just families
+with observed matches. The page graphs the five most-used families, without a separate
+word-family checker. Zero-match families remain in the full-codebook CSV and JSON with
+exact counts and word denominators.
 Its update date follows the full dataset, while the downloads retain the dates of actual
 D/R speech coverage. Missing term data are shown as unavailable, never as zero.
 

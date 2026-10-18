@@ -367,11 +367,12 @@ def test_build_writes_html_json_and_figures(store, tmp_path):
         assert image.find_parent("noscript") is not None
     assert len(terms.select(".term-family-plot")) == 2
     assert terms.select_one("#codebook-chart") is None
-    assert terms.select_one("#codebook-result").has_attr("hidden")
-    assert not terms.select_one("#codebook-result").get_text()
-    codebook = json.loads(terms.select_one("#term-codebook-data").string)
-    most_used = min(codebook, key=lambda item: (-item["total_hits"], item["term"]))
-    assert terms.select_one("#codebook-family option[selected]")["value"] == most_used["term"]
+    assert terms.select_one(".codebook-panel") is None
+    assert terms.select_one("#codebook-family") is None
+    assert "Check a word family" not in terms.get_text()
+    codebook = json.loads(
+        (out / "figures/profanity_terms/index.json").read_text(),
+    )["codebook"]
     selected = next(item for item in codebook if item["term"] == "fuck")
     assert selected["total_hits"] == 0
     assert selected["series"] and all(row["hits"] == 0 for row in selected["series"])
@@ -388,6 +389,8 @@ def test_build_writes_html_json_and_figures(store, tmp_path):
     assert "Passage share" not in passed.get_text()
     for rel in ("index.html", "activity/index.html"):
         document = (out / rel).read_text()
+        assert "Check a word family" not in document
+        assert "codebook-family" not in document
         radii = re.findall(r"border(?:-[a-z]+)*-radius\s*:\s*([^;}]+)", document)
         assert radii and all(value.strip() == "0" for value in radii), rel
         assert "*,*::before,*::after" in document
@@ -403,31 +406,6 @@ def test_build_writes_html_json_and_figures(store, tmp_path):
         ).group(1)
         assert "border-bottom-color:var(--signal)" in selected_style, rel
         assert "color:var(--ink)" in selected_style, rel
-
-
-def test_codebook_panel_omits_inclusion_count_and_preserves_unavailable_notice(store):
-    path, _, bills = store
-    module = _load_build_site()
-    daily = module.load_daily(path)
-    payload = module.build_payload(
-        daily, module.load_bills(bills), 119,
-        top=25, min_words=1000, generated_utc="2025-03-01T00:00:00+00:00",
-    )
-    book = payload["language"]["profanity_codebook"]
-    family = next(item for item in book if item["term"] == "fuck")
-    assert {"fuck", "fucking", "fucked up"} <= set(family["included_forms"])
-    available = BeautifulSoup(
-        module._codebook_panel(book, {"ass": 3}, available=True), "html.parser",
-    )
-    assert available.select_one("#codebook-family option[selected]")["value"] == "ass"
-    assert available.select_one("#codebook-result").has_attr("hidden")
-    assert not available.select_one("#codebook-result").get_text()
-    assert "accepted matches in this scope" not in available.get_text()
-    assert "fuck" not in available.get_text()
-    missing = BeautifulSoup(module._codebook_panel(book, {}, available=False), "html.parser")
-    assert not missing.select_one("#codebook-result").has_attr("hidden")
-    assert "counts are not available" in missing.get_text()
-    assert "0 accepted" not in missing.get_text()
 
 
 def test_legacy_leaderboard_dates_use_selected_congress_scope(store, tmp_path):

@@ -772,36 +772,9 @@ function renderYearlyPanel(sourceSeries, metric, scopeLabel) {
 }
 """
 
-CODEBOOK_JS = r"""
-function renderCodebook(families, available, onChange) {
-  const select = document.getElementById('codebook-family');
-  const selected = select.value || families[0]?.term;
-  if (!select.options.length) {
-    [...families].sort((a, b) => a.term.localeCompare(b.term)).forEach(family => {
-      const option = document.createElement('option');
-      option.value = family.term;
-      option.textContent = family.label;
-      select.appendChild(option);
-    });
-  }
-  select.value = selected;
-  select.disabled = false;
-  select.onchange = onChange;
-  const family = families.find(item => item.term === select.value);
-  if (!family) throw new Error('Selected word family is missing from the codebook.');
-  const result = document.getElementById('codebook-result');
-  result.hidden = available;
-  result.textContent = available
-    ? ''
-    : `${family.label} is included, but term counts are not available for this scope.`;
-  document.getElementById('codebook-forms').textContent =
-    `Included forms: ${family.included_labels.join(', ')}.`;
-}
-"""
-
 INTERACTIVE_CHART_JS = (
     CHART_BASE_JS + CHART_HELPERS_JS + YEARLY_CHART_JS
-    + INTERACTIVE_CHART_STATE_JS + RECENT_CHART_JS + CODEBOOK_JS + r"""
+    + INTERACTIVE_CHART_STATE_JS + RECENT_CHART_JS + r"""
 function renderLongRunPanel(longRun, key) {
   return renderYearlyPanel(
     longRunSeries(longRun), longRun.metrics[key],
@@ -1398,11 +1371,6 @@ function renderTermExplorer(language) {
   const summaries = summarizeTerms(records);
   const available = recentTermDetailAvailable(language);
   renderTermTable(language, summaries);
-  renderCodebook(
-    language.profanity_codebook,
-    available,
-    () => renderTermExplorer(currentLanguage),
-  );
   renderStateMap(language, records);
   document.getElementById('term-leaders-scope').textContent =
     `${language.scope_label} · ${selectedTermParty === 'all' ? 'All parties' : selectedTermParty} · ` +
@@ -1416,19 +1384,9 @@ function renderTermExplorer(language) {
 """
 )
 
-TERM_CHART_JS = CHART_BASE_JS + CHART_HELPERS_JS + YEARLY_CHART_JS + CODEBOOK_JS + r"""
+TERM_CHART_JS = CHART_BASE_JS + CHART_HELPERS_JS + YEARLY_CHART_JS + r"""
 const families = JSON.parse(document.getElementById('term-family-data').textContent);
-const codebook = JSON.parse(document.getElementById('term-codebook-data').textContent);
-function renderSelectedFamily() {
-  if (!codebook.length) return;
-  renderCodebook(
-    codebook,
-    true,
-    renderSelectedFamily,
-  );
-}
 function renderFamilies() {
-  renderSelectedFamily();
   families.forEach((family, index) => {
     const years = family.series.map(row => Number(row.year));
     document.getElementById(`term-family-${index}`).replaceChildren(
@@ -1865,11 +1823,6 @@ MAIN_CSS = """
                   padding:1rem 0; border:0; }
   .term-controls { grid-template-columns:repeat(2,minmax(0,12rem)); margin:0;
                    padding:0; border:0; }
-  .codebook-panel { margin:1.5rem 0; padding:1.25rem 0; border-block:1px solid var(--rule); }
-  .codebook-panel h3 { margin:0 0 .75rem; font-size:1.15rem; font-weight:400; }
-  .codebook-panel .explorer-controls { grid-template-columns:minmax(0,20rem); }
-  .codebook-panel p { max-width:52rem; overflow-wrap:anywhere; }
-  #codebook-result { margin:.5rem 0; }
   .term-toolbar .tab-row { border:0; }
   .focus-panel { min-width:0; }
   .source-note { max-width:52rem; margin:1rem 0 0; font-size:.88rem; font-style:italic; }
@@ -3006,36 +2959,6 @@ def _term_leaders_table(rows: list[dict], *, available: bool) -> str:
     )
 
 
-def _codebook_panel(families: list[dict], totals: dict[str, int], *, available: bool) -> str:
-    if not families:
-        return ""
-    selected = min(families, key=lambda item: (-totals.get(item["term"], 0), item["term"]))
-    options = "".join(
-        f'<option value="{html.escape(item["term"], quote=True)}"'
-        f'{" selected" if item["term"] == selected["term"] else ""}>'
-        f'{html.escape(item["label"])}</option>'
-        for item in sorted(families, key=lambda item: item["term"])
-    )
-    result = (
-        ""
-        if available else
-        f'{selected["label"]} is included, but term counts are not available for this scope.'
-    )
-    return (
-        '<section class="codebook-panel" aria-labelledby="codebook-heading">'
-        '<h3 id="codebook-heading">Included word families</h3>'
-        '<div class="explorer-controls"><label>Check a word family'
-        f'<select id="codebook-family" disabled>{options}</select></label></div>'
-        f'<p id="codebook-result" aria-live="polite"{" hidden" if available else ""}>'
-        f'{html.escape(result)}</p>'
-        '<p class="definition" id="codebook-forms">Included forms: '
-        f'{html.escape(", ".join(selected["included_labels"]))}.</p>'
-        '<p class="definition">Recognized quotations and inserted material are excluded. '
-        'Masked source spellings are not inferred. Zero means no accepted matches, '
-        'not that a word is missing from the codebook.</p></section>'
-    )
-
-
 def _render_html(payload: dict, congresses: list[int], long_run: dict) -> str:
     recent_selected = payload["label"].startswith("Last 5 Congresses")
     all_selected = " selected" if payload["congress"] is None and not recent_selected else ""
@@ -3186,11 +3109,6 @@ Related forms are grouped; only accepted, unquoted uses count.</p>
 <label>Chamber<select id="term-chamber"></select></label>
 </div>
 </div>
-{_codebook_panel(
-    language["profanity_codebook"],
-    {item["term"]: item["total_hits"] for item in language["profanity_term_leaders"]},
-    available=language["profanity_term_detail_available"],
-)}
 <div class="term-explorer-grid">
 <div class="card table-wrap">{_term_leaders_table(
     language['profanity_term_leaders'],
@@ -3456,16 +3374,11 @@ def _render_term_graphs_html(payload: dict, generated_utc: str) -> str:
         '<a href="../figures/profanity_terms/index.json">Grouped forms and coverage (JSON)</a></p>'
         if payload["terms"] or payload.get("codebook") else ""
     )
-    codebook = payload.get("codebook", [])
-    explorer = _codebook_panel(
-        codebook, {item["term"]: item["total_hits"] for item in codebook},
-        available=bool(coverage),
-    )
     return f"""<!doctype html>
 <html lang="en">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Swear-word families — The Margin of Error</title>
-<meta name="description" content="Explore every included profanity family, including zero-match families, and the five most-used families in congressional floor text.">
+<meta name="description" content="Annual graphs of the five most-used profanity families in congressional floor text, with counts and full-codebook downloads.">
 {_head_links(PUBLIC_URL + "terms/")}
 <style>{HOUSE_CSS}{MAIN_CSS}</style></head>
 <body><a class="skip-link" href="#main-content">Skip to content</a>{_site_header()}
@@ -3480,12 +3393,10 @@ Variants are combined; annual rates use each party's attributed word total.</p>
 <p>{limitation}</p>
 <p>These graphs use GovInfo member-level data, not the separate Stanford series back to 1873.</p>
 </details>
-{explorer}
 {"".join(sections)}
 {downloads}
 </article></main>{_site_footer(generated_utc)}
 <script type="application/json" id="term-family-data">{_script_json(payload["terms"])}</script>
-<script type="application/json" id="term-codebook-data">{_script_json(codebook)}</script>
 <script>{TERM_CHART_JS}</script></body></html>"""
 
 
