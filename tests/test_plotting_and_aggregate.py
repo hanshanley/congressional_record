@@ -486,9 +486,12 @@ def test_term_graphs_render_top_five_and_remove_stale_family_files(tmp_path) -> 
             ("2015-01-01", "house", "D", counts),
             ("2015-01-01", "senate", "R", {}),
             ("2025-01-01", "house", "D", {"fucking": 2}),
+            ("2025-10-15", "senate", "I", {}),
         ]
     ])
     payload = term_charts.render(daily, tmp_path)
+    assert payload["updated_through"] == "2025-10-15"
+    assert payload["coverage"]["last_date"] == "2025-01-01"
     assert len(payload["terms"]) == len(list(tmp_path.glob("*_per_100k.png"))) == 5
     assert {item["term"] for item in payload["terms"]} == {
         "damn", "crap", "fuck", "bitch", "bullshit",

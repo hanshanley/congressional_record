@@ -19,7 +19,7 @@
   "definitions": {
     "speech": "Attributed non-procedural spoken words; turns and active days provide context.",
     "sponsored": "Distinct H.R. and S. bills for which the member is the official sponsor.",
-    "passed": "Sponsored bills with an official measure-level House or Senate passage action.",
+    "passed": "Bills sponsored by the member that passed at least one chamber (House or Senate), counted once per bill. The percentage is the number passed divided by the number they sponsored: 8 out of 20 is 40%. Passing one chamber does not mean becoming law.",
     "enacted": "Sponsored bills with an assigned public or private law number.",
     "profanity": "Unquoted curated profanity hits per 100,000 attributed words."
   },

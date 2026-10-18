@@ -312,15 +312,19 @@ def test_build_writes_html_json_and_figures(store, tmp_path):
         assert (out / rel).exists(), rel
     terms = BeautifulSoup((out / "terms/index.html").read_text(), "html.parser")
     assert terms.h1.get_text() == "Swear-word families"
+    assert "Updated through" in terms.select_one(".byline").get_text()
     assert terms.select_one('a[aria-current="page"]')["href"] == "./"
     assert len(terms.select("figure img")) == 2
     for image in terms.select("figure img"):
         assert (out / "terms" / image["src"]).exists()
         assert image.find_parent("noscript") is not None
-    assert len(terms.select(".term-family-plot")) == 3
-    assert terms.select_one("#codebook-family option[selected]")["value"] == "fuck"
-    assert "fu*k is included: 0 accepted matches" in terms.select_one("#codebook-result").get_text()
+    assert len(terms.select(".term-family-plot")) == 2
+    assert terms.select_one("#codebook-chart") is None
+    assert terms.select_one("#codebook-result").has_attr("hidden")
+    assert not terms.select_one("#codebook-result").get_text()
     codebook = json.loads(terms.select_one("#term-codebook-data").string)
+    most_used = min(codebook, key=lambda item: (-item["total_hits"], item["term"]))
+    assert terms.select_one("#codebook-family option[selected]")["value"] == most_used["term"]
     selected = next(item for item in codebook if item["term"] == "fuck")
     assert selected["total_hits"] == 0
     assert selected["series"] and all(row["hits"] == 0 for row in selected["series"])
@@ -329,6 +333,12 @@ def test_build_writes_html_json_and_figures(store, tmp_path):
         (out / "figures/profanity_terms/index.json").read_text(),
     )["terms"]
     assert json.loads(terms.select_one("#term-family-data").string) == exported_families
+    activity = BeautifulSoup((out / "activity/index.html").read_text(), "html.parser")
+    passed = activity.select_one("#passed")
+    assert "% of sponsored bills passed" in passed.get_text()
+    assert "8 out of 20 is 40%" in passed.get_text()
+    assert "Passing one chamber does not mean becoming law" in passed.get_text()
+    assert "Passage share" not in passed.get_text()
     for rel in ("index.html", "activity/index.html"):
         document = (out / rel).read_text()
         radii = re.findall(r"border(?:-[a-z]+)*-radius\s*:\s*([^;}]+)", document)
@@ -348,7 +358,7 @@ def test_build_writes_html_json_and_figures(store, tmp_path):
         assert "color:var(--ink)" in selected_style, rel
 
 
-def test_codebook_panel_distinguishes_zero_from_unavailable_counts(store):
+def test_codebook_panel_omits_inclusion_count_and_preserves_unavailable_notice(store):
     path, _, bills = store
     module = _load_build_site()
     daily = module.load_daily(path)
@@ -359,12 +369,16 @@ def test_codebook_panel_distinguishes_zero_from_unavailable_counts(store):
     book = payload["language"]["profanity_codebook"]
     family = next(item for item in book if item["term"] == "fuck")
     assert {"fuck", "fucking", "fucked up"} <= set(family["included_forms"])
-    zero = BeautifulSoup(module._codebook_panel(book, {}, available=True), "html.parser")
-    assert "fu*k is included: 0 accepted matches" in zero.get_text()
-    assert "fuck" not in zero.get_text()
-    observed = BeautifulSoup(module._codebook_panel(book, {"fuck": 3}, available=True), "html.parser")
-    assert "fu*k is included: 3 accepted matches" in observed.get_text()
+    available = BeautifulSoup(
+        module._codebook_panel(book, {"ass": 3}, available=True), "html.parser",
+    )
+    assert available.select_one("#codebook-family option[selected]")["value"] == "ass"
+    assert available.select_one("#codebook-result").has_attr("hidden")
+    assert not available.select_one("#codebook-result").get_text()
+    assert "accepted matches in this scope" not in available.get_text()
+    assert "fuck" not in available.get_text()
     missing = BeautifulSoup(module._codebook_panel(book, {}, available=False), "html.parser")
+    assert not missing.select_one("#codebook-result").has_attr("hidden")
     assert "counts are not available" in missing.get_text()
     assert "0 accepted" not in missing.get_text()
 

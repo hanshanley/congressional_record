@@ -20,6 +20,8 @@ LOG = logging.getLogger(__name__)
 def render(daily: pd.DataFrame, out_dir: Path, *, top: int = 5) -> dict:
     """Publish graphs and their exact counts; refuse incomplete stored term data."""
     payload = profanity_family_timeseries(daily, top=top)
+    if not daily.empty:
+        payload["updated_through"] = str(daily["date"].max())[:10]
     if not payload["terms"]:
         LOG.warning("no accepted D/R profanity families available for individual graphs")
     out_dir.mkdir(parents=True, exist_ok=True)

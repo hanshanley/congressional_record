@@ -11,11 +11,12 @@ and screen-reader data tables. Publication PNG downloads remain available and pr
 a no-JavaScript fallback. The daily build updates the page and its matching publication PNGs.
 
 Both the dashboard and the family page expose the full included-word codebook, not just
-families with observed matches. The word-family selector initially shows `fuck` and its
-inflections, with the accepted count for the current scope. The family page can graph any
-included family, even when every observed year has zero matches; its full-codebook CSV and
-JSON retain the exact counts and word denominators. The five publication PNGs still show
-the most-used families. Missing term data are shown as unavailable, never as zero.
+families with observed matches. The word-family selector initially shows the most-used
+family in the current scope and lists its included forms, without giving any word special
+treatment. The family page graphs the five most-used families; zero-match families remain
+in the word list and full-codebook CSV and JSON with exact counts and word denominators.
+Its update date follows the full dataset, while the downloads retain the dates of actual
+D/R speech coverage. Missing term data are shown as unavailable, never as zero.
 
 The October 17, 2026 audit of member data through October 15 found no unquoted f-word
 matches surviving the attribution safeguards.

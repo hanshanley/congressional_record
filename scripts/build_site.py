@@ -129,7 +129,11 @@ SLUR_CAVEAT = (
 METRIC_DEFINITIONS = {
     "speech": "Attributed non-procedural spoken words; turns and active days provide context.",
     "sponsored": "Distinct H.R. and S. bills for which the member is the official sponsor.",
-    "passed": "Sponsored bills with an official measure-level House or Senate passage action.",
+    "passed": (
+        "Bills sponsored by the member that passed at least one chamber (House or Senate), "
+        "counted once per bill. The percentage is the number passed divided by the number "
+        "they sponsored: 8 out of 20 is 40%. Passing one chamber does not mean becoming law."
+    ),
     "enacted": "Sponsored bills with an assigned public or private law number.",
     "profanity": "Unquoted curated profanity hits per 100,000 attributed words.",
 }
@@ -765,9 +769,9 @@ function renderYearlyPanel(sourceSeries, metric, scopeLabel) {
 """
 
 CODEBOOK_JS = r"""
-function renderCodebook(families, totals, available, onChange) {
+function renderCodebook(families, available, onChange) {
   const select = document.getElementById('codebook-family');
-  const selected = select.value || 'fuck';
+  const selected = select.value || families[0]?.term;
   if (!select.options.length) {
     [...families].sort((a, b) => a.term.localeCompare(b.term)).forEach(family => {
       const option = document.createElement('option');
@@ -781,9 +785,10 @@ function renderCodebook(families, totals, available, onChange) {
   select.onchange = onChange;
   const family = families.find(item => item.term === select.value);
   if (!family) throw new Error('Selected word family is missing from the codebook.');
-  document.getElementById('codebook-result').textContent = available
-    ? `${family.label} is included: ${(totals.get(family.term) ?? 0).toLocaleString()} ` +
-      'accepted matches in this scope.'
+  const result = document.getElementById('codebook-result');
+  result.hidden = available;
+  result.textContent = available
+    ? ''
     : `${family.label} is included, but term counts are not available for this scope.`;
   document.getElementById('codebook-forms').textContent =
     `Included forms: ${family.included_labels.join(', ')}.`;
@@ -1391,7 +1396,6 @@ function renderTermExplorer(language) {
   renderTermTable(language, summaries);
   renderCodebook(
     language.profanity_codebook,
-    new Map(summaries.map(item => [item.term, item.total_hits])),
     available,
     () => renderTermExplorer(currentLanguage),
   );
@@ -1415,19 +1419,8 @@ function renderSelectedFamily() {
   if (!codebook.length) return;
   renderCodebook(
     codebook,
-    new Map(codebook.map(item => [item.term, item.total_hits])),
     true,
     renderSelectedFamily,
-  );
-  const family = codebook.find(item =>
-    item.term === document.getElementById('codebook-family').value);
-  document.getElementById('codebook-chart').replaceChildren(
-    renderYearlyPanel(family.series, {
-      label: `${family.label} word family`,
-      rate: 'rate_per_100k',
-      hits: 'hits',
-      units: 'hits per 100,000 words',
-    }, 'All covered years, House + Senate, Democrats and Republicans'),
   );
 }
 function renderFamilies() {
@@ -2847,7 +2840,7 @@ def _table(metric: str, rows: list[dict]) -> str:
             ],
         ),
         "sponsored": (
-            ["#", "Member", "Party", "State", "Bills", "Passed", "Enacted", "Examples"],
+            ["#", "Member", "Party", "State", "Bills", "Passed a chamber", "Enacted", "Examples"],
             lambda r: [
                 r["rank"], _member_cell(r), r["party"], r["state"],
                 _fmt_int(r["bills_sponsored"]), _fmt_int(r["bills_passed"]),
@@ -2855,7 +2848,8 @@ def _table(metric: str, rows: list[dict]) -> str:
             ],
         ),
         "passed": (
-            ["#", "Member", "Party", "State", "Passed", "Sponsored", "Passage share", "Examples"],
+            ["#", "Member", "Party", "State", "Passed a chamber", "Bills sponsored",
+             "% of sponsored bills passed", "Examples"],
             lambda r: [
                 r["rank"], _member_cell(r), r["party"], r["state"],
                 _fmt_int(r["bills_passed"]), _fmt_int(r["bills_sponsored"]),
@@ -3004,7 +2998,7 @@ def _term_leaders_table(rows: list[dict], *, available: bool) -> str:
 def _codebook_panel(families: list[dict], totals: dict[str, int], *, available: bool) -> str:
     if not families:
         return ""
-    selected = next(item for item in families if item["term"] == "fuck")
+    selected = min(families, key=lambda item: (-totals.get(item["term"], 0), item["term"]))
     options = "".join(
         f'<option value="{html.escape(item["term"], quote=True)}"'
         f'{" selected" if item["term"] == selected["term"] else ""}>'
@@ -3012,8 +3006,7 @@ def _codebook_panel(families: list[dict], totals: dict[str, int], *, available: 
         for item in sorted(families, key=lambda item: item["term"])
     )
     result = (
-        f'{selected["label"]} is included: {totals.get(selected["term"], 0):,} '
-        "accepted matches in this scope."
+        ""
         if available else
         f'{selected["label"]} is included, but term counts are not available for this scope.'
     )
@@ -3022,7 +3015,8 @@ def _codebook_panel(families: list[dict], totals: dict[str, int], *, available: 
         '<h3 id="codebook-heading">Included word families</h3>'
         '<div class="explorer-controls"><label>Check a word family'
         f'<select id="codebook-family" disabled>{options}</select></label></div>'
-        f'<p id="codebook-result" aria-live="polite">{html.escape(result)}</p>'
+        f'<p id="codebook-result" aria-live="polite"{" hidden" if available else ""}>'
+        f'{html.escape(result)}</p>'
         '<p class="definition" id="codebook-forms">Included forms: '
         f'{html.escape(", ".join(selected["included_labels"]))}.</p>'
         '<p class="definition">Recognized quotations and inserted material are excluded. '
@@ -3439,6 +3433,8 @@ def _render_term_graphs_html(payload: dict, generated_utc: str) -> str:
             'term counts are complete. No missing counts are shown as zero.</p>'
         )
     dates = (
+        f'Updated through {_long_date(payload["updated_through"])}'
+        if payload.get("updated_through") else
         f'{coverage["first_date"]} to {coverage["last_date"]}'
         if coverage else "Not yet available"
     )
@@ -3454,8 +3450,6 @@ def _render_term_graphs_html(payload: dict, generated_utc: str) -> str:
         codebook, {item["term"]: item["total_hits"] for item in codebook},
         available=bool(coverage),
     )
-    if explorer:
-        explorer += '<div id="codebook-chart" class="term-family-plot"></div>'
     return f"""<!doctype html>
 <html lang="en">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
@@ -3467,8 +3461,8 @@ def _render_term_graphs_html(payload: dict, generated_utc: str) -> str:
 <main id="main-content"><article class="feature dashboard-page terms-page">
 <header class="feature-header"><p class="kicker">Congress / Vocabulary</p>
 <h1>Swear-word families</h1>
-<p class="dek">Explore any included family, even with no accepted matches, followed by the five most-used
-families in member-attributed House and Senate text. Variants are combined; annual rates use each party's attributed word total.</p>
+<p class="dek">The five most-used swear-word families in member-attributed House and Senate text.
+Variants are combined; annual rates use each party's attributed word total.</p>
 <div class="byline"><p>By Hans W. A. Hanley</p><p>{html.escape(dates)}</p></div></header>
 {_feature_nav("terms")}
 <details class="notes"><summary>Sources and how to read these graphs</summary>
