@@ -470,7 +470,11 @@ function formatPeriod(period) {
 }
 
 function formatRate(value) {
-  return Number(value).toLocaleString(undefined, {
+  const number = Number(value);
+  if (number !== 0 && Number(number.toFixed(1)) === 0) {
+    return formatObservedRate(number);
+  }
+  return number.toLocaleString(undefined, {
     minimumFractionDigits: 1, maximumFractionDigits: 1,
   });
 }
@@ -854,7 +858,7 @@ function renderYearlyPanel(sourceSeries, metric, scopeLabel) {
     `${metric.label}, ${scopeLabel}`,
     ['Period', 'Party', metric.units, 'Hits', 'Words'],
     sourceSeries.map(row => [
-      periodLabel(row), partyName(row.party), Number(row[metric.rate]).toFixed(3),
+      periodLabel(row), partyName(row.party), formatObservedRate(row[metric.rate]),
       Number(row[metric.hits]).toLocaleString(), Number(row.words).toLocaleString(),
     ]),
   );

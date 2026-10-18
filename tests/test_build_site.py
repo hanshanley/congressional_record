@@ -112,6 +112,53 @@ assert.equal(Number(formatObservedRate(1 / 3)), 0.333333);
     subprocess.run([node, "-e", javascript], check=True, capture_output=True, text=True)
 
 
+def test_small_nonzero_chart_rates_keep_precision_in_labels_and_data_tables():
+    import shutil
+
+    node = shutil.which("node")
+    if node is None:
+        pytest.skip("Node.js is required to execute the chart interaction helpers")
+    module = _load_build_site()
+    javascript = r"""
+const assert = require('node:assert/strict');
+const window = {addEventListener() {}};
+const document = {addEventListener() {}, createElement() { return {appendChild() {}}; }};
+const chartColors = {D: 'blue', R: 'red', muted: 'gray', grid: 'gray'};
+let tableRows;
+""" + module.CHART_HELPERS_JS + r"""
+function isCompactChart() { return false; }
+function svgNode() { return {appendChild() {}}; }
+function addSvgText() {}
+function addPanelHeading() {}
+function addPartyLegend() {}
+function addTooltip() { return {}; }
+function bindTooltip() {}
+function partyName(party) { return party; }
+function addAccessibleTable(wrapper, caption, headers, rows) { tableRows = rows; }
+""" + module.YEARLY_CHART_JS + r"""
+const rate = 1000 / 8000000;
+assert.equal(Number(formatRate(rate)), rate);
+assert.equal(formatRate(0), '0.0');
+assert.equal(Number(formatRate(1.2345)), 1.2);
+renderYearlyPanel(
+  [{year: 2025, party: 'D', words: 8000000, hits: 1, rate}],
+  {label: 'Slurs', rate: 'rate', hits: 'hits', units: 'per 1,000 words'},
+  'Test scope',
+);
+assert.equal(Number(tableRows[0][2]), rate);
+assert.equal(tableRows[0][3], '1');
+"""
+    subprocess.run([node, "-e", javascript], check=True, capture_output=True, text=True)
+    table = BeautifulSoup(module._language_table("slurs", [{
+        "rank": 1, "speaker_name": "Example member", "party": "D",
+        "chamber": "house", "slurs_per_100k": 100000 / 8000000,
+        "slur_hits": 1, "words": 8000000,
+    }]), "html.parser")
+    assert float(table.select("tbody td")[4].get_text()) == 0.0125
+    assert module._fmt_language_rate(0.0125) == "0.0125"
+    assert module._fmt_language_rate(1.2345) == "1.2"
+
+
 def _daily(rows):
     return pd.DataFrame(rows, columns=[
         "bioguide", "date", "chamber", "speaker_name", "party", "state", "congress",

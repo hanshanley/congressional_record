@@ -259,7 +259,11 @@ function formatPeriod(period) {
 }
 
 function formatRate(value) {
-  return Number(value).toLocaleString(undefined, {
+  const number = Number(value);
+  if (number !== 0 && Number(number.toFixed(1)) === 0) {
+    return formatObservedRate(number);
+  }
+  return number.toLocaleString(undefined, {
     minimumFractionDigits: 1, maximumFractionDigits: 1,
   });
 }
@@ -669,7 +673,7 @@ function renderTrendPanel(language, key) {
     sourceSeries.map(row => [
       formatPeriod(row.period),
       row.party === 'D' ? 'Democrats' : 'Republicans',
-      formatRate(row[metric.rate]),
+      formatObservedRate(row[metric.rate]),
       Number(row[metric.hits]).toLocaleString(),
       Number(row.words).toLocaleString(),
     ]),
@@ -760,7 +764,7 @@ function renderYearlyPanel(sourceSeries, metric, scopeLabel) {
     `${metric.label}, ${scopeLabel}`,
     ['Period', 'Party', metric.units, 'Hits', 'Words'],
     sourceSeries.map(row => [
-      periodLabel(row), partyName(row.party), Number(row[metric.rate]).toFixed(3),
+      periodLabel(row), partyName(row.party), formatObservedRate(row[metric.rate]),
       Number(row[metric.hits]).toLocaleString(), Number(row.words).toLocaleString(),
     ]),
   );
@@ -947,7 +951,7 @@ function renderLanguageTable(language, key) {
     const values = [
       item.rank, item.speaker_name, item.party, item.chamber,
       ...(key === 'profanity' ? [item.favorite_profanity_term || '—'] : []),
-      formatRate(item[metric.rate]), Number(item[metric.hits]).toLocaleString(),
+      formatObservedRate(item[metric.rate]), Number(item[metric.hits]).toLocaleString(),
       Number(item.words).toLocaleString(),
     ];
     values.forEach((value, index) => {
@@ -2518,7 +2522,7 @@ def _language_payload(
         if abs(democratic_rate - republican_rate) < 0.05:
             party_finding = (
                 f"Democratic and Republican aggregate {metric['label'].lower()} rates are "
-                f"approximately equal at {democratic_rate:.1f} per 100,000 words."
+                f"approximately equal at {_fmt_language_rate(democratic_rate)} per 100,000 words."
             )
         else:
             higher = "Democrats" if democratic_rate > republican_rate else "Republicans"
@@ -2526,7 +2530,8 @@ def _language_payload(
             lower_rate = min(democratic_rate, republican_rate)
             party_finding = (
                 f"{higher} have the higher aggregate {metric['label'].lower()} rate "
-                f"({higher_rate:.1f} versus {lower_rate:.1f} per 100,000 words)."
+                f"({_fmt_language_rate(higher_rate)} versus {_fmt_language_rate(lower_rate)} "
+                "per 100,000 words)."
             )
         frame = rankings[key]
         leader = None if frame.empty else frame.iloc[0]
@@ -2557,7 +2562,7 @@ def _language_payload(
         findings.append(
             f"{party_finding} {leader['speaker_name']} has the highest eligible "
             f"{metric['label'].lower()} "
-            f"rate at {float(leader[metric['rate']]):.1f} per 100,000 words."
+            f"rate at {_fmt_language_rate(leader[metric['rate']])} per 100,000 words."
         )
     period_label = "yearly" if granularity == "year" else "monthly"
     measures = " and ".join(metric["label"].lower() for metric in metrics.values())
@@ -2756,6 +2761,12 @@ def _fmt_int(value) -> str:
     return f"{int(value or 0):,}"
 
 
+def _fmt_language_rate(value: float) -> str:
+    number = float(value)
+    rounded = f"{number:.1f}"
+    return f"{number:.6g}" if number != 0 and float(rounded) == 0 else rounded
+
+
 def _script_json(value) -> str:
     return (
         json.dumps(value, separators=(",", ":"))
@@ -2925,7 +2936,7 @@ def _language_table(metric: str, rows: list[dict]) -> str:
                 ]
                 if metric == "profanity" else []
             ),
-            f"{float(row[metadata['rate']]):.1f}",
+            f"{float(row[metadata['rate']]):.6g}",
             _fmt_int(row[metadata["hits"]]),
             _fmt_int(row["words"]),
         ]
