@@ -7,7 +7,7 @@
   "coverage": {
     "speech_first_date": "2025-01-06",
     "speech_last_date": "2026-11-09",
-    "speaker_days": 20586,
+    "speaker_days": 20588,
     "members_with_speech": 552,
     "bills": 15951,
     "members_with_bills": 547,
@@ -473,8 +473,8 @@
       {
         "period": "2026-11",
         "party": "D",
-        "words": 12478,
-        "turns": 47,
+        "words": 12541,
+        "turns": 49,
         "profanity_hits": 0,
         "slur_hits": 0,
         "profanity_per_100k": 0.0,
@@ -483,8 +483,8 @@
       {
         "period": "2026-11",
         "party": "R",
-        "words": 25786,
-        "turns": 104,
+        "words": 25770,
+        "turns": 103,
         "profanity_hits": 0,
         "slur_hits": 0,
         "profanity_per_100k": 0.0,
@@ -1376,8 +1376,8 @@
         "period": "2026-11",
         "party": "D",
         "chamber": "house",
-        "words": 7944,
-        "turns": 36,
+        "words": 8007,
+        "turns": 38,
         "profanity_hits": 0,
         "slur_hits": 0,
         "profanity_per_100k": 0.0,
@@ -1398,8 +1398,8 @@
         "period": "2026-11",
         "party": "R",
         "chamber": "house",
-        "words": 19662,
-        "turns": 74,
+        "words": 19646,
+        "turns": 73,
         "profanity_hits": 0,
         "slur_hits": 0,
         "profanity_per_100k": 0.0,
@@ -5833,27 +5833,27 @@
     },
     "parties": {
       "D": {
-        "words": 7176691,
+        "words": 7176754,
         "profanity_hits": 409,
         "slur_hits": 1,
-        "profanity_per_100k": 5.699005293665284,
-        "slurs_per_100k": 0.013933998273020253
+        "profanity_per_100k": 5.6989552658486,
+        "slurs_per_100k": 0.013933875955620048
       },
       "R": {
-        "words": 5578959,
+        "words": 5578943,
         "profanity_hits": 239,
         "slur_hits": 12,
-        "profanity_per_100k": 4.283953332512391,
-        "slurs_per_100k": 0.2150938911721703
+        "profanity_per_100k": 4.283965618576852,
+        "slurs_per_100k": 0.21509450804569968
       }
     },
     "highlights": [
       {
         "key": "profanity",
         "label": "Profanity",
-        "democratic_rate": 5.699005293665284,
-        "republican_rate": 4.283953332512391,
-        "difference": 1.4150519611528924,
+        "democratic_rate": 5.6989552658486,
+        "republican_rate": 4.283965618576852,
+        "difference": 1.4149896472717476,
         "higher_party": "Democrats",
         "leader_name": "Mr. McGOVERN",
         "leader_rate": 78.93361793905436,
@@ -5881,9 +5881,9 @@
       {
         "key": "slurs",
         "label": "Slurs",
-        "democratic_rate": 0.013933998273020253,
-        "republican_rate": 0.2150938911721703,
-        "difference": -0.20115989289915004,
+        "democratic_rate": 0.013933875955620048,
+        "republican_rate": 0.21509450804569968,
+        "difference": -0.20116063209007964,
         "higher_party": "Republicans",
         "leader_name": "Mr. GREEN of Texas",
         "leader_rate": 0.7412294030879617,
@@ -5902,7 +5902,7 @@
     "explanation": {
       "shown": "The charts show monthly Democratic and Republican rates for profanity and slurs, plus the highest-rate members in Congress 119. Rates are hits per 100,000 attributed spoken words.",
       "examined": "The trend panels compare party-wide rates over time. Member panels show the highest nonzero rates among speakers with substantial floor remarks.",
-      "finding": "Democrats have the higher aggregate profanity rate (5.7 versus 4.3 per 100,000 words). Mr. McGOVERN has the highest eligible profanity rate at 78.9 per 100,000 words. Republicans have the higher aggregate slurs rate (0.2 versus 0.013934 per 100,000 words). Mr. GREEN of Texas has the highest eligible slurs rate at 0.7 per 100,000 words.",
+      "finding": "Democrats have the higher aggregate profanity rate (5.7 versus 4.3 per 100,000 words). Mr. McGOVERN has the highest eligible profanity rate at 78.9 per 100,000 words. Republicans have the higher aggregate slurs rate (0.2 versus 0.0139339 per 100,000 words). Mr. GREEN of Texas has the highest eligible slurs rate at 0.7 per 100,000 words.",
       "limitation": "These are descriptive word-pattern counts, not judgments about intent. Quoted profanity and quoted slurs are excluded from a speaker's rate, but a member who repeats a slur to condemn or describe it is still counted."
     }
   },
