@@ -1183,11 +1183,12 @@ def test_probe_fails_loudly_when_govinfo_status_is_unknown():
             )
 
 
-def test_probe_retries_transient_govinfo_outage():
+@pytest.mark.parametrize("status", ["502", "520", "522"])
+def test_probe_retries_transient_govinfo_outage(status):
     from analysis.ingest.govinfo_bulk import probe_packages
 
     responses = iter([
-        subprocess.CompletedProcess([], 0, stdout="502", stderr=""),
+        subprocess.CompletedProcess([], 0, stdout=status, stderr=""),
         subprocess.CompletedProcess([], 0, stdout="200", stderr=""),
     ])
     with patch(
@@ -1202,6 +1203,80 @@ def test_probe_retries_transient_govinfo_outage():
         ) == ["CREC-2026-07-20"]
     assert run.call_count == 2
     sleep.assert_called_once_with(15)
+
+
+def test_probe_recovers_after_outage_exceeds_the_original_retry_window():
+    from analysis.ingest.govinfo_discovery import probe_packages
+
+    responses = [
+        subprocess.CompletedProcess([], 0, stdout=status, stderr="")
+        for status in ["522", "522", "522", "520", "200"]
+    ]
+    with patch(
+        "analysis.ingest.govinfo_bulk.subprocess.run", side_effect=responses,
+    ) as run, patch("analysis.ingest.govinfo_bulk.time.sleep") as sleep:
+        assert probe_packages(
+            "2026-11-12", "2026-11-12", workers=1,
+        ) == ["CREC-2026-11-12"]
+
+    assert run.call_count == 5
+    assert [call.args[0] for call in sleep.call_args_list] == [15, 30, 60, 120]
+
+
+def test_probe_retries_only_unknown_dates_and_preserves_known_results():
+    from analysis.ingest.govinfo_discovery import probe_packages
+
+    responses = [
+        subprocess.CompletedProcess([], 0, stdout=status, stderr="")
+        for status in ["200", "302", "522", "520", "200"]
+    ]
+    with patch(
+        "analysis.ingest.govinfo_bulk.subprocess.run", side_effect=responses,
+    ) as run, patch("analysis.ingest.govinfo_bulk.time.sleep"):
+        assert probe_packages(
+            "2026-11-09", "2026-11-11", workers=1,
+        ) == ["CREC-2026-11-09", "CREC-2026-11-11"]
+
+    urls = [call.args[0][-1] for call in run.call_args_list]
+    assert urls == [
+        f"https://www.govinfo.gov/content/pkg/CREC-{day}.zip"
+        for day in [
+            "2026-11-09", "2026-11-10", "2026-11-11",
+            "2026-11-11", "2026-11-11",
+        ]
+    ]
+
+
+def test_probe_persistent_outage_never_returns_a_partial_package_list():
+    from analysis.ingest.govinfo_discovery import probe_packages
+
+    def response(command, **kwargs):
+        status = "200" if "CREC-2026-11-09.zip" in command[-1] else "522"
+        return subprocess.CompletedProcess(command, 0, stdout=status, stderr="")
+
+    with patch(
+        "analysis.ingest.govinfo_bulk.subprocess.run", side_effect=response,
+    ) as run, patch("analysis.ingest.govinfo_bulk.time.sleep") as sleep:
+        with pytest.raises(RuntimeError, match="1 GovInfo packages exist: CREC-2026-11-10"):
+            probe_packages("2026-11-09", "2026-11-10", workers=1)
+
+    assert 900 <= sum(call.args[0] for call in sleep.call_args_list) <= 1800
+    assert run.call_count == sleep.call_count + 2
+    assert run.call_count < 10
+
+
+@pytest.mark.parametrize("script", ["update_speakers", "update_language"])
+def test_scheduled_updaters_use_outage_tolerant_discovery(script):
+    spec = importlib.util.spec_from_file_location(
+        f"{script}_under_test", ROOT / "scripts" / f"{script}.py",
+    )
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    with patch(
+        "analysis.ingest.govinfo_discovery.probe_packages", return_value=[],
+    ) as probe:
+        module.fetch_and_score("2026-11-09", "2026-11-14", workers=1)
+    probe.assert_called_once_with("2026-11-09", "2026-11-14", workers=1)
 
 
 def test_probe_distinguishes_published_and_missing_issues():

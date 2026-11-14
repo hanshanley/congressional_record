@@ -99,7 +99,8 @@ def fetch_and_score(
     end: str,
     workers: int,
 ) -> Optional[pd.DataFrame]:
-    from analysis.ingest.govinfo_bulk import probe_packages, run_incremental_bulk
+    from analysis.ingest.govinfo_bulk import run_incremental_bulk
+    from analysis.ingest.govinfo_discovery import probe_packages
 
     packages = []
     for window_start, window_end in probe_windows(start, end):

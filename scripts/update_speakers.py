@@ -90,7 +90,8 @@ def fetch_and_score(start: str, end: str, workers: int) -> pd.DataFrame:
     Package discovery probes the public bulk URLs rather than the GovInfo API, so
     the scheduled update needs no API key and no repository secret at all.
     """
-    from analysis.ingest.govinfo_bulk import probe_packages, run_incremental_bulk
+    from analysis.ingest.govinfo_bulk import run_incremental_bulk
+    from analysis.ingest.govinfo_discovery import probe_packages
 
     packages = probe_packages(start, end, workers=workers)
     if not packages:

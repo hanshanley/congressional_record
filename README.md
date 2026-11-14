@@ -98,6 +98,9 @@ Congress.gov bill seed. Raw and intermediate data live under `data/` (git-ignore
 The small state tables behind the website (`data/site/`) and the figures in `outputs/` are
 committed. Quotations, procedural speech, and printed material are excluded from member
 attributions, and the scheduled workflow runs the test suite before it publishes.
+GovInfo discovery retries only unresolved dates through seven bounded attempts,
+with nearly 16 minutes of backoff plus request time to ride out temporary outages.
+If availability remains unknown, the update fails without publishing partial data.
 
 Congressional Record data courtesy of the U.S. Government Publishing Office via
 [GovInfo](https://www.govinfo.gov/). The parsed Hein corpus is from Gentzkow, Shapiro & Taddy,
