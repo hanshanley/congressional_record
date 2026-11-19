@@ -1,13 +1,13 @@
 {
   "congress": 119,
   "label": "Congress 119",
-  "generated_utc": "2026-11-17T00:00:00+00:00",
+  "generated_utc": "2026-11-18T00:00:00+00:00",
   "min_words": 25000,
   "top": 25,
   "coverage": {
     "speech_first_date": "2025-01-06",
-    "speech_last_date": "2026-11-17",
-    "speaker_days": 20908,
+    "speech_last_date": "2026-11-18",
+    "speaker_days": 20986,
     "members_with_speech": 552,
     "bills": 15951,
     "members_with_bills": 547,
@@ -473,21 +473,21 @@
       {
         "period": "2026-11",
         "party": "D",
-        "words": 86865,
-        "turns": 302,
-        "profanity_hits": 9,
+        "words": 111963,
+        "turns": 366,
+        "profanity_hits": 10,
         "slur_hits": 0,
-        "profanity_per_100k": 10.3609048524,
+        "profanity_per_100k": 8.9315220207,
         "slurs_per_100k": 0.0
       },
       {
         "period": "2026-11",
         "party": "R",
-        "words": 117516,
-        "turns": 601,
+        "words": 157870,
+        "turns": 708,
         "profanity_hits": 11,
         "slur_hits": 0,
-        "profanity_per_100k": 9.3604275163,
+        "profanity_per_100k": 6.9677582821,
         "slurs_per_100k": 0.0
       }
     ],
@@ -1376,44 +1376,44 @@
         "period": "2026-11",
         "party": "D",
         "chamber": "house",
-        "words": 56026,
-        "turns": 240,
+        "words": 73156,
+        "turns": 280,
         "profanity_hits": 7,
         "slur_hits": 0,
-        "profanity_per_100k": 12.4941991218,
+        "profanity_per_100k": 9.5685931434,
         "slurs_per_100k": 0.0
       },
       {
         "period": "2026-11",
         "party": "D",
         "chamber": "senate",
-        "words": 30839,
-        "turns": 62,
-        "profanity_hits": 2,
+        "words": 38807,
+        "turns": 86,
+        "profanity_hits": 3,
         "slur_hits": 0,
-        "profanity_per_100k": 6.4852945945,
+        "profanity_per_100k": 7.7305640735,
         "slurs_per_100k": 0.0
       },
       {
         "period": "2026-11",
         "party": "R",
         "chamber": "house",
-        "words": 77257,
-        "turns": 386,
+        "words": 91347,
+        "turns": 432,
         "profanity_hits": 9,
         "slur_hits": 0,
-        "profanity_per_100k": 11.6494298251,
+        "profanity_per_100k": 9.8525403133,
         "slurs_per_100k": 0.0
       },
       {
         "period": "2026-11",
         "party": "R",
         "chamber": "senate",
-        "words": 40259,
-        "turns": 215,
+        "words": 66523,
+        "turns": 276,
         "profanity_hits": 2,
         "slur_hits": 0,
-        "profanity_per_100k": 4.9678332795,
+        "profanity_per_100k": 3.0064789622,
         "slurs_per_100k": 0.0
       }
     ],
@@ -1426,11 +1426,11 @@
           "party": "D",
           "state": "MA",
           "chamber": "house",
-          "words": 182228,
-          "turns": 927,
-          "active_days": 72,
+          "words": 182446,
+          "turns": 928,
+          "active_days": 73,
           "profanity_hits": 149,
-          "profanity_per_100k": 81.7657001119,
+          "profanity_per_100k": 81.6680003946,
           "favorite_profanity_term": "hell",
           "favorite_profanity_term_hits": 67,
           "member_url": "https://bioguide.congress.gov/search/bio/M000312"
@@ -1556,11 +1556,11 @@
           "party": "D",
           "state": "TX",
           "chamber": "house",
-          "words": 141224,
-          "turns": 110,
-          "active_days": 67,
+          "words": 141347,
+          "turns": 111,
+          "active_days": 68,
           "slur_hits": 1,
-          "slurs_per_100k": 0.7080949414,
+          "slurs_per_100k": 0.707478758,
           "member_url": "https://bioguide.congress.gov/search/bio/G000553"
         }
       ]
@@ -1575,11 +1575,11 @@
             "party": "D",
             "state": "MA",
             "chamber": "house",
-            "words": 182228,
-            "turns": 927,
-            "active_days": 72,
+            "words": 182446,
+            "turns": 928,
+            "active_days": 73,
             "profanity_hits": 149,
-            "profanity_per_100k": 81.7657001119,
+            "profanity_per_100k": 81.6680003946,
             "favorite_profanity_term": "hell",
             "favorite_profanity_term_hits": 67,
             "member_url": "https://bioguide.congress.gov/search/bio/M000312"
@@ -1607,11 +1607,11 @@
             "party": "R",
             "state": "FL",
             "chamber": "house",
-            "words": 48756,
-            "turns": 403,
-            "active_days": 28,
+            "words": 49592,
+            "turns": 410,
+            "active_days": 29,
             "profanity_hits": 7,
-            "profanity_per_100k": 14.3572073181,
+            "profanity_per_100k": 14.1151798677,
             "favorite_profanity_term": "damn",
             "favorite_profanity_term_hits": 7,
             "member_url": "https://bioguide.congress.gov/search/bio/M001199"
@@ -1705,11 +1705,11 @@
             "party": "D",
             "state": "TX",
             "chamber": "house",
-            "words": 141224,
-            "turns": 110,
-            "active_days": 67,
+            "words": 141347,
+            "turns": 111,
+            "active_days": 68,
             "slur_hits": 1,
-            "slurs_per_100k": 0.7080949414,
+            "slurs_per_100k": 0.707478758,
             "member_url": "https://bioguide.congress.gov/search/bio/G000553"
           }
         ]
@@ -1835,13 +1835,13 @@
             "party": "D",
             "state": "OR",
             "chamber": "senate",
-            "words": 260581,
-            "turns": 721,
-            "active_days": 82,
-            "profanity_hits": 28,
-            "profanity_per_100k": 10.7452193368,
+            "words": 261283,
+            "turns": 723,
+            "active_days": 83,
+            "profanity_hits": 29,
+            "profanity_per_100k": 11.0990764803,
             "favorite_profanity_term": "damn",
-            "favorite_profanity_term_hits": 17,
+            "favorite_profanity_term_hits": 18,
             "member_url": "https://bioguide.congress.gov/search/bio/M001176"
           }
         ],
@@ -1852,7 +1852,7 @@
       {
         "term": "damn",
         "leader_hits": 66,
-        "total_hits": 314,
+        "total_hits": 315,
         "variants": [
           "dammit",
           "damn",
@@ -3390,7 +3390,7 @@
         "state": "OR",
         "chamber": "senate",
         "term": "damn",
-        "hits": 17,
+        "hits": 18,
         "variants": [
           "damn",
           "damned"
@@ -5584,7 +5584,7 @@
         {
           "term": "damn",
           "leader_hits": 22,
-          "total_hits": 147,
+          "total_hits": 148,
           "variants": [
             "dammit",
             "damn",
@@ -5824,36 +5824,36 @@
     },
     "parties": {
       "D": {
-        "words": 7251078,
-        "profanity_hits": 418,
+        "words": 7276176,
+        "profanity_hits": 419,
         "slur_hits": 1,
-        "profanity_per_100k": 5.764660096057441,
-        "slurs_per_100k": 0.013791052861381438
+        "profanity_per_100k": 5.7585193101431305,
+        "slurs_per_100k": 0.013743482840437065
       },
       "R": {
-        "words": 5670689,
+        "words": 5711043,
         "profanity_hits": 250,
         "slur_hits": 12,
-        "profanity_per_100k": 4.408635352776356,
-        "slurs_per_100k": 0.2116144969332651
+        "profanity_per_100k": 4.3774841127969095,
+        "slurs_per_100k": 0.21011923741425165
       }
     },
     "highlights": [
       {
         "key": "profanity",
         "label": "Profanity",
-        "democratic_rate": 5.764660096057441,
-        "republican_rate": 4.408635352776356,
-        "difference": 1.3560247432810852,
+        "democratic_rate": 5.7585193101431305,
+        "republican_rate": 4.3774841127969095,
+        "difference": 1.381035197346221,
         "higher_party": "Democrats",
         "leader_name": "Mr. McGOVERN",
-        "leader_rate": 81.76570011194767,
+        "leader_rate": 81.66800039463732,
         "top_members": [
           {
             "rank": 1,
             "name": "Mr. McGOVERN",
             "party": "D",
-            "rate": 81.76570011194767
+            "rate": 81.66800039463732
           },
           {
             "rank": 2,
@@ -5872,18 +5872,18 @@
       {
         "key": "slurs",
         "label": "Slurs",
-        "democratic_rate": 0.013791052861381438,
-        "republican_rate": 0.2116144969332651,
-        "difference": -0.19782344407188365,
+        "democratic_rate": 0.013743482840437065,
+        "republican_rate": 0.21011923741425165,
+        "difference": -0.1963757545738146,
         "higher_party": "Republicans",
         "leader_name": "Mr. GREEN of Texas",
-        "leader_rate": 0.7080949413697388,
+        "leader_rate": 0.7074787579502926,
         "top_members": [
           {
             "rank": 1,
             "name": "Mr. GREEN of Texas",
             "party": "D",
-            "rate": 0.7080949413697388
+            "rate": 0.7074787579502926
           }
         ]
       }
@@ -5893,7 +5893,7 @@
     "explanation": {
       "shown": "The charts show monthly Democratic and Republican rates for profanity and slurs, plus the highest-rate members in Congress 119. Rates are hits per 100,000 attributed spoken words.",
       "examined": "The trend panels compare party-wide rates over time. Member panels show the highest nonzero rates among speakers with substantial floor remarks.",
-      "finding": "Democrats have the higher aggregate profanity rate (5.8 versus 4.4 per 100,000 words). Mr. McGOVERN has the highest eligible profanity rate at 81.8 per 100,000 words. Republicans have the higher aggregate slurs rate (0.2 versus 0.0137911 per 100,000 words). Mr. GREEN of Texas has the highest eligible slurs rate at 0.7 per 100,000 words.",
+      "finding": "Democrats have the higher aggregate profanity rate (5.8 versus 4.4 per 100,000 words). Mr. McGOVERN has the highest eligible profanity rate at 81.7 per 100,000 words. Republicans have the higher aggregate slurs rate (0.2 versus 0.0137435 per 100,000 words). Mr. GREEN of Texas has the highest eligible slurs rate at 0.7 per 100,000 words.",
       "limitation": "These are descriptive word-pattern counts, not judgments about intent. Quoted profanity and quoted slurs are excluded from a speaker's rate, but a member who repeats a slur to condemn or describe it is still counted."
     }
   },
@@ -5902,9 +5902,9 @@
       {
         "rank": 1,
         "bioguide": "D000563",
-        "turns": 1855,
-        "words": 418508,
-        "active_days": 245,
+        "turns": 1861,
+        "words": 419567,
+        "active_days": 246,
         "profanity_hits": 7,
         "profanity_quoted_hits": 3,
         "profanity_terms": "{\"damn\":3,\"damned\":3,\"effing\":1}",
@@ -5919,15 +5919,15 @@
         "party": "D",
         "state": "IL",
         "chamber": "senate",
-        "profanity_per_100k": 1.6726084089,
+        "profanity_per_100k": 1.6683866939,
         "member_url": "https://bioguide.congress.gov/search/bio/D000563"
       },
       {
         "rank": 2,
         "bioguide": "S000148",
-        "turns": 1303,
-        "words": 413616,
-        "active_days": 263,
+        "turns": 1308,
+        "words": 415276,
+        "active_days": 264,
         "profanity_hits": 37,
         "profanity_quoted_hits": 5,
         "profanity_terms": "{\"crap\":1,\"damn\":20,\"damned\":2,\"hell of a\":1,\"screw you\":1,\"what the hell\":12}",
@@ -5942,15 +5942,15 @@
         "party": "D",
         "state": "NY",
         "chamber": "senate",
-        "profanity_per_100k": 8.9454953387,
+        "profanity_per_100k": 8.9097371387,
         "member_url": "https://bioguide.congress.gov/search/bio/S000148"
       },
       {
         "rank": 3,
         "bioguide": "T000250",
-        "turns": 3296,
-        "words": 330636,
-        "active_days": 267,
+        "turns": 3304,
+        "words": 331583,
+        "active_days": 268,
         "profanity_hits": 0,
         "profanity_quoted_hits": 0,
         "profanity_terms": "{}",
@@ -5971,14 +5971,14 @@
       {
         "rank": 4,
         "bioguide": "M001176",
-        "turns": 721,
-        "words": 260581,
-        "active_days": 82,
-        "profanity_hits": 28,
+        "turns": 723,
+        "words": 261283,
+        "active_days": 83,
+        "profanity_hits": 29,
         "profanity_quoted_hits": 1,
-        "profanity_terms": "{\"bullshit\":1,\"damn\":16,\"damned\":1,\"hell of a\":3,\"shit\":1,\"what the hell\":6}",
+        "profanity_terms": "{\"bullshit\":1,\"damn\":17,\"damned\":1,\"hell of a\":3,\"shit\":1,\"what the hell\":6}",
         "favorite_profanity_term": "damn",
-        "favorite_profanity_term_hits": 17,
+        "favorite_profanity_term_hits": 18,
         "bills_sponsored": 99,
         "bills_passed": 2,
         "bills_enacted": 0,
@@ -5988,15 +5988,15 @@
         "party": "D",
         "state": "OR",
         "chamber": "senate",
-        "profanity_per_100k": 10.7452193368,
+        "profanity_per_100k": 11.0990764803,
         "member_url": "https://bioguide.congress.gov/search/bio/M001176"
       },
       {
         "rank": 5,
         "bioguide": "B001261",
-        "turns": 1644,
-        "words": 244992,
-        "active_days": 258,
+        "turns": 1651,
+        "words": 245890,
+        "active_days": 259,
         "profanity_hits": 0,
         "profanity_quoted_hits": 0,
         "profanity_terms": "{}",
@@ -6040,9 +6040,9 @@
       {
         "rank": 7,
         "bioguide": "M000312",
-        "turns": 927,
-        "words": 182228,
-        "active_days": 72,
+        "turns": 928,
+        "words": 182446,
+        "active_days": 73,
         "profanity_hits": 149,
         "profanity_quoted_hits": 0,
         "profanity_terms": "{\"ass\":2,\"batshit\":1,\"bullshit\":2,\"crap\":2,\"crappy\":7,\"damn\":56,\"damned\":9,\"frigging\":1,\"goddamned\":1,\"hell of a\":14,\"pissed off\":1,\"what the hell\":53}",
@@ -6057,7 +6057,7 @@
         "party": "D",
         "state": "MA",
         "chamber": "house",
-        "profanity_per_100k": 81.7657001119,
+        "profanity_per_100k": 81.6680003946,
         "member_url": "https://bioguide.congress.gov/search/bio/M000312"
       },
       {
@@ -6132,9 +6132,9 @@
       {
         "rank": 11,
         "bioguide": "K000384",
-        "turns": 275,
-        "words": 154920,
-        "active_days": 84,
+        "turns": 276,
+        "words": 155389,
+        "active_days": 85,
         "profanity_hits": 0,
         "profanity_quoted_hits": 0,
         "profanity_terms": "{}",
@@ -6155,9 +6155,9 @@
       {
         "rank": 12,
         "bioguide": "G000386",
-        "turns": 473,
-        "words": 154191,
-        "active_days": 223,
+        "turns": 475,
+        "words": 154854,
+        "active_days": 224,
         "profanity_hits": 0,
         "profanity_quoted_hits": 0,
         "profanity_terms": "{}",
@@ -6224,9 +6224,9 @@
       {
         "rank": 15,
         "bioguide": "G000553",
-        "turns": 110,
-        "words": 141224,
-        "active_days": 67,
+        "turns": 111,
+        "words": 141347,
+        "active_days": 68,
         "profanity_hits": 0,
         "profanity_quoted_hits": 0,
         "profanity_terms": "{}",
@@ -6339,9 +6339,9 @@
       {
         "rank": 20,
         "bioguide": "P000145",
-        "turns": 267,
-        "words": 120568,
-        "active_days": 114,
+        "turns": 274,
+        "words": 122876,
+        "active_days": 115,
         "profanity_hits": 2,
         "profanity_quoted_hits": 2,
         "profanity_terms": "{\"damned\":1,\"hell of a\":1}",
@@ -6356,7 +6356,7 @@
         "party": "D",
         "state": "CA",
         "chamber": "senate",
-        "profanity_per_100k": 1.6588149426,
+        "profanity_per_100k": 1.6276571503,
         "member_url": "https://bioguide.congress.gov/search/bio/P000145"
       },
       {
@@ -6479,9 +6479,9 @@
       {
         "rank": 1,
         "bioguide": "S001217",
-        "turns": 112,
-        "words": 35095,
-        "active_days": 46,
+        "turns": 114,
+        "words": 36198,
+        "active_days": 47,
         "profanity_hits": 2,
         "profanity_quoted_hits": 0,
         "profanity_terms": "{\"crappy\":1,\"what the hell\":1}",
@@ -6496,7 +6496,7 @@
         "party": "R",
         "state": "FL",
         "chamber": "senate",
-        "profanity_per_100k": 5.6988174954,
+        "profanity_per_100k": 5.5251671363,
         "member_url": "https://bioguide.congress.gov/search/bio/S001217",
         "examples": [
           {
@@ -6565,9 +6565,9 @@
       {
         "rank": 3,
         "bioguide": "B001243",
-        "turns": 207,
-        "words": 90657,
-        "active_days": 80,
+        "turns": 209,
+        "words": 92470,
+        "active_days": 81,
         "profanity_hits": 0,
         "profanity_quoted_hits": 0,
         "profanity_terms": "{}",
@@ -6694,9 +6694,9 @@
       {
         "rank": 6,
         "bioguide": "C001098",
-        "turns": 141,
-        "words": 37067,
-        "active_days": 50,
+        "turns": 142,
+        "words": 37074,
+        "active_days": 51,
         "profanity_hits": 0,
         "profanity_quoted_hits": 0,
         "profanity_terms": "{}",
@@ -6866,9 +6866,9 @@
       {
         "rank": 10,
         "bioguide": "D000563",
-        "turns": 1855,
-        "words": 418508,
-        "active_days": 245,
+        "turns": 1861,
+        "words": 419567,
+        "active_days": 246,
         "profanity_hits": 7,
         "profanity_quoted_hits": 3,
         "profanity_terms": "{\"damn\":3,\"damned\":3,\"effing\":1}",
@@ -6883,7 +6883,7 @@
         "party": "D",
         "state": "IL",
         "chamber": "senate",
-        "profanity_per_100k": 1.6726084089,
+        "profanity_per_100k": 1.6683866939,
         "member_url": "https://bioguide.congress.gov/search/bio/D000563",
         "examples": [
           {
@@ -6909,9 +6909,9 @@
       {
         "rank": 11,
         "bioguide": "C001075",
-        "turns": 190,
-        "words": 79148,
-        "active_days": 62,
+        "turns": 191,
+        "words": 79485,
+        "active_days": 63,
         "profanity_hits": 0,
         "profanity_quoted_hits": 0,
         "profanity_terms": "{}",
@@ -7038,14 +7038,14 @@
       {
         "rank": 14,
         "bioguide": "M001176",
-        "turns": 721,
-        "words": 260581,
-        "active_days": 82,
-        "profanity_hits": 28,
+        "turns": 723,
+        "words": 261283,
+        "active_days": 83,
+        "profanity_hits": 29,
         "profanity_quoted_hits": 1,
-        "profanity_terms": "{\"bullshit\":1,\"damn\":16,\"damned\":1,\"hell of a\":3,\"shit\":1,\"what the hell\":6}",
+        "profanity_terms": "{\"bullshit\":1,\"damn\":17,\"damned\":1,\"hell of a\":3,\"shit\":1,\"what the hell\":6}",
         "favorite_profanity_term": "damn",
-        "favorite_profanity_term_hits": 17,
+        "favorite_profanity_term_hits": 18,
         "bills_sponsored": 99,
         "bills_passed": 2,
         "bills_enacted": 0,
@@ -7055,7 +7055,7 @@
         "party": "D",
         "state": "OR",
         "chamber": "senate",
-        "profanity_per_100k": 10.7452193368,
+        "profanity_per_100k": 11.0990764803,
         "member_url": "https://bioguide.congress.gov/search/bio/M001176",
         "examples": [
           {
@@ -7081,9 +7081,9 @@
       {
         "rank": 15,
         "bioguide": "P000145",
-        "turns": 267,
-        "words": 120568,
-        "active_days": 114,
+        "turns": 274,
+        "words": 122876,
+        "active_days": 115,
         "profanity_hits": 2,
         "profanity_quoted_hits": 2,
         "profanity_terms": "{\"damned\":1,\"hell of a\":1}",
@@ -7098,7 +7098,7 @@
         "party": "D",
         "state": "CA",
         "chamber": "senate",
-        "profanity_per_100k": 1.6588149426,
+        "profanity_per_100k": 1.6276571503,
         "member_url": "https://bioguide.congress.gov/search/bio/P000145",
         "examples": [
           {
@@ -7599,9 +7599,9 @@
       {
         "rank": 2,
         "bioguide": "P000595",
-        "turns": 118,
-        "words": 44770,
-        "active_days": 57,
+        "turns": 119,
+        "words": 45181,
+        "active_days": 58,
         "profanity_hits": 0,
         "profanity_quoted_hits": 0,
         "profanity_terms": "{}",
@@ -7728,9 +7728,9 @@
       {
         "rank": 5,
         "bioguide": "C001098",
-        "turns": 141,
-        "words": 37067,
-        "active_days": 50,
+        "turns": 142,
+        "words": 37074,
+        "active_days": 51,
         "profanity_hits": 0,
         "profanity_quoted_hits": 0,
         "profanity_terms": "{}",
@@ -7857,9 +7857,9 @@
       {
         "rank": 8,
         "bioguide": "G000386",
-        "turns": 473,
-        "words": 154191,
-        "active_days": 223,
+        "turns": 475,
+        "words": 154854,
+        "active_days": 224,
         "profanity_hits": 0,
         "profanity_quoted_hits": 0,
         "profanity_terms": "{}",
@@ -8201,9 +8201,9 @@
       {
         "rank": 16,
         "bioguide": "B001321",
-        "turns": 42,
-        "words": 6407,
-        "active_days": 10,
+        "turns": 43,
+        "words": 7339,
+        "active_days": 11,
         "profanity_hits": 0,
         "profanity_quoted_hits": 0,
         "profanity_terms": "{}",
@@ -8805,9 +8805,9 @@
       {
         "rank": 5,
         "bioguide": "C001098",
-        "turns": 141,
-        "words": 37067,
-        "active_days": 50,
+        "turns": 142,
+        "words": 37074,
+        "active_days": 51,
         "profanity_hits": 0,
         "profanity_quoted_hits": 0,
         "profanity_terms": "{}",
@@ -9027,9 +9027,9 @@
       {
         "rank": 11,
         "bioguide": "B001243",
-        "turns": 207,
-        "words": 90657,
-        "active_days": 80,
+        "turns": 209,
+        "words": 92470,
+        "active_days": 81,
         "profanity_hits": 0,
         "profanity_quoted_hits": 0,
         "profanity_terms": "{}",
@@ -9089,9 +9089,9 @@
       {
         "rank": 13,
         "bioguide": "C001075",
-        "turns": 190,
-        "words": 79148,
-        "active_days": 62,
+        "turns": 191,
+        "words": 79485,
+        "active_days": 63,
         "profanity_hits": 0,
         "profanity_quoted_hits": 0,
         "profanity_terms": "{}",
@@ -9213,9 +9213,9 @@
       {
         "rank": 17,
         "bioguide": "P000595",
-        "turns": 118,
-        "words": 44770,
-        "active_days": 57,
+        "turns": 119,
+        "words": 45181,
+        "active_days": 58,
         "profanity_hits": 0,
         "profanity_quoted_hits": 0,
         "profanity_terms": "{}",
@@ -9461,9 +9461,9 @@
       {
         "rank": 25,
         "bioguide": "T000476",
-        "turns": 148,
-        "words": 45532,
-        "active_days": 55,
+        "turns": 149,
+        "words": 46150,
+        "active_days": 56,
         "profanity_hits": 4,
         "profanity_quoted_hits": 3,
         "profanity_terms": "{\"bastards\":2,\"damn\":2}",
@@ -9478,7 +9478,7 @@
         "party": "R",
         "state": "NC",
         "chamber": "senate",
-        "profanity_per_100k": 8.7850303084,
+        "profanity_per_100k": 8.6673889491,
         "member_url": "https://bioguide.congress.gov/search/bio/T000476",
         "examples": [
           {
@@ -9494,9 +9494,9 @@
       {
         "rank": 1,
         "bioguide": "M000312",
-        "turns": 927,
-        "words": 182228,
-        "active_days": 72,
+        "turns": 928,
+        "words": 182446,
+        "active_days": 73,
         "profanity_hits": 149,
         "profanity_quoted_hits": 0,
         "profanity_terms": "{\"ass\":2,\"batshit\":1,\"bullshit\":2,\"crap\":2,\"crappy\":7,\"damn\":56,\"damned\":9,\"frigging\":1,\"goddamned\":1,\"hell of a\":14,\"pissed off\":1,\"what the hell\":53}",
@@ -9511,7 +9511,7 @@
         "party": "D",
         "state": "MA",
         "chamber": "house",
-        "profanity_per_100k": 81.7657001119,
+        "profanity_per_100k": 81.6680003946,
         "member_url": "https://bioguide.congress.gov/search/bio/M000312"
       },
       {
@@ -9678,9 +9678,9 @@
       {
         "rank": 9,
         "bioguide": "M001199",
-        "turns": 403,
-        "words": 48756,
-        "active_days": 28,
+        "turns": 410,
+        "words": 49592,
+        "active_days": 29,
         "profanity_hits": 7,
         "profanity_quoted_hits": 0,
         "profanity_terms": "{\"damn\":7}",
@@ -9695,7 +9695,7 @@
         "party": "R",
         "state": "FL",
         "chamber": "house",
-        "profanity_per_100k": 14.3572073181,
+        "profanity_per_100k": 14.1151798677,
         "member_url": "https://bioguide.congress.gov/search/bio/M001199"
       },
       {
@@ -9770,14 +9770,14 @@
       {
         "rank": 13,
         "bioguide": "M001176",
-        "turns": 721,
-        "words": 260581,
-        "active_days": 82,
-        "profanity_hits": 28,
+        "turns": 723,
+        "words": 261283,
+        "active_days": 83,
+        "profanity_hits": 29,
         "profanity_quoted_hits": 1,
-        "profanity_terms": "{\"bullshit\":1,\"damn\":16,\"damned\":1,\"hell of a\":3,\"shit\":1,\"what the hell\":6}",
+        "profanity_terms": "{\"bullshit\":1,\"damn\":17,\"damned\":1,\"hell of a\":3,\"shit\":1,\"what the hell\":6}",
         "favorite_profanity_term": "damn",
-        "favorite_profanity_term_hits": 17,
+        "favorite_profanity_term_hits": 18,
         "bills_sponsored": 99,
         "bills_passed": 2,
         "bills_enacted": 0,
@@ -9787,7 +9787,7 @@
         "party": "D",
         "state": "OR",
         "chamber": "senate",
-        "profanity_per_100k": 10.7452193368,
+        "profanity_per_100k": 11.0990764803,
         "member_url": "https://bioguide.congress.gov/search/bio/M001176"
       },
       {
@@ -9816,9 +9816,9 @@
       {
         "rank": 15,
         "bioguide": "S000148",
-        "turns": 1303,
-        "words": 413616,
-        "active_days": 263,
+        "turns": 1308,
+        "words": 415276,
+        "active_days": 264,
         "profanity_hits": 37,
         "profanity_quoted_hits": 5,
         "profanity_terms": "{\"crap\":1,\"damn\":20,\"damned\":2,\"hell of a\":1,\"screw you\":1,\"what the hell\":12}",
@@ -9833,15 +9833,15 @@
         "party": "D",
         "state": "NY",
         "chamber": "senate",
-        "profanity_per_100k": 8.9454953387,
+        "profanity_per_100k": 8.9097371387,
         "member_url": "https://bioguide.congress.gov/search/bio/S000148"
       },
       {
         "rank": 16,
         "bioguide": "T000476",
-        "turns": 148,
-        "words": 45532,
-        "active_days": 55,
+        "turns": 149,
+        "words": 46150,
+        "active_days": 56,
         "profanity_hits": 4,
         "profanity_quoted_hits": 3,
         "profanity_terms": "{\"bastards\":2,\"damn\":2}",
@@ -9856,7 +9856,7 @@
         "party": "R",
         "state": "NC",
         "chamber": "senate",
-        "profanity_per_100k": 8.7850303084,
+        "profanity_per_100k": 8.6673889491,
         "member_url": "https://bioguide.congress.gov/search/bio/T000476"
       },
       {
@@ -10046,9 +10046,9 @@
       {
         "rank": 25,
         "bioguide": "S001217",
-        "turns": 112,
-        "words": 35095,
-        "active_days": 46,
+        "turns": 114,
+        "words": 36198,
+        "active_days": 47,
         "profanity_hits": 2,
         "profanity_quoted_hits": 0,
         "profanity_terms": "{\"crappy\":1,\"what the hell\":1}",
@@ -10063,7 +10063,7 @@
         "party": "R",
         "state": "FL",
         "chamber": "senate",
-        "profanity_per_100k": 5.6988174954,
+        "profanity_per_100k": 5.5251671363,
         "member_url": "https://bioguide.congress.gov/search/bio/S001217"
       }
     ]
